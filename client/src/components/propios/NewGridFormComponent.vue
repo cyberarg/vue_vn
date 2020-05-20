@@ -1,0 +1,244 @@
+<template>
+  <div>
+    <v-data-table
+      dense
+      :headers="headers"
+      :items="pars.items"
+      :search="search"
+      item-key="pars.itemkey"
+      class="elevation-5"
+      :loading="pars.loading"
+      :loading-text="pars.loadingtext"
+      :hide-default-footer="ocultarPaginacion"
+      :disable-sort="ocultarOredenamiento"
+      :hide-default-header="ocultarHeaders"
+    >
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>{{ pars.titleform }}</v-toolbar-title>
+        </v-toolbar>
+      </template>
+
+      <template v-slot:item="{ item }">
+        <template v-if="pars.grid == 'Resumen'">
+          <tr>
+            <td>{{ item.Nombre }}</td>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <td
+                  v-on="on"
+                  class="center"
+                  @click="showResumen(item.Nombre, item.Cantidad)"
+                >
+                  {{ item.Cantidad }}
+                </td>
+              </template>
+              <span>{{ getTooltipData(item.Cantidad) }}</span>
+            </v-tooltip>
+          </tr>
+        </template>
+        <template v-else>
+          <tr>
+            <td>{{ item.Tipo }}</td>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <td v-on="on" class="center">{{ item.Casos }}</td>
+              </template>
+              <span>{{ getTooltipData(item.Casos) }}</span>
+            </v-tooltip>
+            <td class="center">{{ getPorcentaje(item) }}</td>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <td v-on="on" class="center">{{ item.MontoHN | numFormat }}</td>
+              </template>
+              <span>{{ getTooltipData(item.MontoHN) }}</span>
+            </v-tooltip>
+            <td class="center">{{ getPorcentajeHN(item) }}</td>
+          </tr>
+        </template>
+      </template>
+
+      <template v-slot:item.VerDatos="{ item }">
+        <v-btn color="blue darken-1" text @click="getDato(item)"
+          >Ver Dato</v-btn
+        >
+      </template>
+    </v-data-table>
+  </div>
+</template>
+<script>
+import { mapState, mapActions } from "vuex";
+import XLSX from "xlsx";
+
+export default {
+  name: "NewGrid",
+  props: {
+    pars: {
+      type: Object,
+      required: true
+    },
+    headers: {
+      type: Array,
+      required: true
+    }
+  },
+
+  data() {
+    return {
+      search: ""
+    };
+  },
+
+  created() {
+    //this.$store.dispatch(this.module + "/getData", this.api);
+  },
+
+  computed: {
+    api() {
+      return this.pars.routeapi;
+    },
+    module() {
+      return this.pars.module;
+    },
+    grupoorden() {
+      return "32323466";
+    },
+    mostrarbuscar() {
+      if (typeof this.pars.mostrarbuscar !== "undefined") {
+        return this.pars.mostrarbuscar;
+      } else {
+        return true;
+      }
+    },
+
+    exportable() {
+      if (typeof this.pars.exportable !== "undefined") {
+        return this.pars.exportable;
+      } else {
+        return true;
+      }
+    },
+
+    ocultarPaginacion() {
+      if (typeof this.pars.disablepagination !== "undefined") {
+        return this.pars.disablepagination;
+      } else {
+        return true;
+      }
+    },
+    ocultarOredenamiento() {
+      if (typeof this.pars.disabledsort !== "undefined") {
+        return this.pars.disabledsort;
+      } else {
+        return true;
+      }
+    },
+
+    ocultarHeaders() {
+      if (typeof this.pars.hideheaders !== "undefined") {
+        return this.pars.hideheaders;
+      } else {
+        return false;
+      }
+    },
+
+    ...mapState("reporteacompras", ["items_filtrados"])
+  },
+
+  methods: {
+    exportExcel: function() {
+      let data = XLSX.utils.json_to_sheet(this.items);
+      const workbook = XLSX.utils.book_new();
+      const filename = "devschile-admins";
+      XLSX.utils.book_append_sheet(workbook, data, filename);
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
+    },
+
+    getPorcentaje(item) {
+      //console.log(item.TotalCasos);
+      if (item.TotalCasos > 0) {
+        return Math.round((item.Casos * 100) / item.TotalCasos) + "%";
+      }
+      return "";
+    },
+
+    getPorcentajeHN(item) {
+      // console.log(item.TotalMontoHN);
+      if (item.TotalMontoHN > 0) {
+        return Math.round((item.MontoHN * 100) / item.TotalMontoHN) + "%";
+      }
+      return "";
+    },
+
+    getTooltipData(cantidad) {
+      if (cantidad > 0) {
+        this.showToolTip = true;
+        if (cantidad == 1) {
+          return "Haga click para ver la operación.";
+        }
+
+        return "Haga click para ver las " + cantidad + " operaciones.";
+      } else {
+        this.showToolTip = false;
+      }
+    },
+
+    async showResumen(tipo, cantidad) {
+      var prop = "";
+
+      switch (tipo) {
+        case "SGA":
+          prop = "EsPropio";
+          break;
+        case "Propios":
+          prop = "EsPropio";
+          break;
+        case "Otras Sociedades":
+          prop = "EsOtrasSociedades";
+          break;
+        case "Universo Compra":
+          prop = "EsUniverso";
+          break;
+      }
+
+      await this.showResumenPropios(prop);
+      var titleForm = "Detalle de " + tipo + " - Cantidad: " + cantidad;
+      this.$router.push({
+        name: "detallereporte",
+        params: {
+          title: titleForm,
+          volverARuta: "reportecompras",
+          items: this.items_filtrados
+        }
+      });
+    },
+
+    ...mapActions({
+      showResumenPropios: "reporteacompras/showResumenPropios"
+    })
+  }
+};
+</script>
+<style lang="scss" scoped>
+.table-header {
+  thead {
+    background-color: black;
+  }
+}
+
+.fullw {
+  width: 100%;
+}
+
+.center {
+  text-align: center;
+}
+
+.v-data-table td {
+  //font-size: 18px;
+}
+
+.bold {
+  font-weight: bold;
+}
+</style>

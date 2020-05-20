@@ -1,0 +1,534 @@
+<template>
+  <v-app class="fullw">
+    <v-card>
+      <v-card-title>
+        {{ pars.titleform }} - {{ item.ApeNom }}
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+      </v-card-title>
+      <v-container>
+        <v-form v-model="valid">
+          <v-row>
+            <v-col cols="5" md="5">
+              <v-container>
+                <v-row>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Grupo"
+                      placeholder="Grupo"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.Grupo"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Orden"
+                      placeholder="Orden"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.Orden"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" md="12">
+                    <v-text-field
+                      dense
+                      label="Solicitud"
+                      placeholder="Solicitud"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.Solicitud"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+
+                <v-divider class="mx-1" inset horizontal></v-divider>
+
+                <v-row>
+                  <v-col cols="12" md="12">
+                    <v-text-field
+                      dense
+                      label="Haber Neto"
+                      placeholder="Haber Neto"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.HaberNeto"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" md="12">
+                    <v-text-field
+                      dense
+                      label="Avance"
+                      placeholder="Avance"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.Avance"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      dense
+                      label="Cuotas Pagas"
+                      placeholder="Cuotas Pagas"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.CPG"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      dense
+                      label="Cuotas Adelantadas"
+                      placeholder="Cuotas Adelantadas"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.CAD"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+            <v-col cols="7" md="7">
+              <v-container>
+                <v-row>
+                  <v-col cols="12" md="12">
+                    <v-text-field
+                      dense
+                      label="Nombres"
+                      placeholder="Nombres"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.Nombres"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" md="12">
+                    <v-text-field
+                      dense
+                      label="Apellido"
+                      placeholder="Apellido"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.Apellido"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Email 1"
+                      placeholder="Email 1"
+                      v-model="item.Email1"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Domicilio"
+                      placeholder="Domicilio"
+                      v-model="item.Domicilio"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Teléfono 1"
+                      placeholder="Teléfono 1"
+                      v-model="item.Telefono1"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Teléfono 2"
+                      placeholder="Teléfono 2"
+                      v-model="item.Telefono2"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Teléfono 3"
+                      placeholder="Teléfono 3"
+                      v-model="item.Telefono3"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Teléfono 4"
+                      placeholder="Teléfono 4"
+                      v-model="item.Telefono4"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Oficial"
+                      placeholder="Oficial"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.NomOficial"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="4">
+                    <v-select
+                      dense
+                      :items="estados"
+                      item-text="Nombre"
+                      item-value="Codigo"
+                      label="Estado"
+                      v-model="item.CodEstado"
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="6" md="2">
+                    <v-checkbox :label="`Vendido`" dense></v-checkbox>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Fecha Compra"
+                      placeholder="Fecha Compra"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.FechaCompra"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="6">
+                    <v-select
+                      dense
+                      :items="motivos"
+                      item-text="Nombre"
+                      item-value="Codigo"
+                      label="Motivo"
+                      v-model="item.Motivo"
+                    ></v-select>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Precio Máximo de Compra"
+                      placeholder="Precio Máximo de Compra"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.PrecioMaximoCompra"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Precio Compra"
+                      placeholder="Precio Compra"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.PrecioCompra"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+          </v-row>
+        </v-form>
+      </v-container>
+      <template>
+        <v-dialog v-model="dialog" v-show="dialog" max-width="650px">
+          <v-card>
+            <v-progress-linear
+              v-if="loading"
+              indeterminate
+              color="primary darken-1"
+            ></v-progress-linear>
+            <v-card-title>
+              <span class="headline">Nueva Observación</span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-textarea
+                      name="text-obs"
+                      label="Ingrese una nueva observación"
+                      v-model="observacion"
+                    ></v-textarea>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+              <v-btn color="blue darken-1" text @click="saveObs">Guardar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </template>
+
+      <v-data-table
+        dense
+        :headers="headersobs"
+        :items="observaciones"
+        item-key="pars.itemkey"
+        class="elevation-1"
+        :loading="loadingObs"
+        loading-text="Cargando Observaciones... Aguarde"
+      >
+        <template v-slot:item="{ item }">
+          <template v-if="item.Automatica == 1 && showAutObs">
+            <tr v-show="showAutObs">
+              <td>{{ item.login }}</td>
+              <td>{{ timestamp(item.Fecha) }}</td>
+              <td>
+                {{ item.Obs }}
+              </td>
+              <td>
+                <v-badge
+                  color="green"
+                  content="AUT"
+                  v-if="item.Automatica == 1"
+                >
+                </v-badge>
+              </td>
+            </tr>
+          </template>
+          <template v-else>
+            <tr v-show="item.Automatica != 1">
+              <td>{{ item.login }}</td>
+              <td>{{ timestamp(item.Fecha) }}</td>
+              <td>
+                {{ item.Obs }}
+              </td>
+              <td></td>
+            </tr>
+          </template>
+        </template>
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-toolbar-title>Observaciones</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-switch
+              v-model="showAutObs"
+              label="Incluir Observaciones Automáticas"
+              class="mt-2"
+            ></v-switch>
+          </v-toolbar>
+        </template>
+      </v-data-table>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue darken-1" text @click="nuevaObs">Nueva</v-btn>
+      </v-card-actions>
+
+      <v-card-actions>
+        <v-btn color="blue darken-1" text @click="submit">Aceptar</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="blue darken-1" text @click="volver">Volver</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-app>
+</template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+import moment from "moment";
+
+export default {
+  name: "detalledato",
+
+  props: ["id"],
+
+  data() {
+    return {
+      showAutObs: true,
+      color: "",
+      mode: "",
+      timeout: 2000,
+      x: null,
+      y: "top",
+      observacion: "",
+      obsAut: false,
+      items: [],
+      dialog: false,
+      headersobs: [
+        {
+          text: "Usuario",
+          align: "start",
+          value: "login"
+        },
+        { text: "Fecha", value: "Fecha" },
+        { text: "Observacion", value: "Obs" },
+        { text: "", value: "Automatica" }
+      ],
+
+      disabled: true,
+      filled: false,
+      pars: {
+        routeapi: "",
+        id: 0,
+        module: "",
+        titleform: "Detalle Dato"
+      },
+
+      valid: false,
+      firstname: "",
+      lastname: "",
+      nameRules: [
+        v => !!v || "Name is required",
+        v => v.length <= 10 || "Name must be less than 10 characters"
+      ],
+      email: "",
+      emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ]
+    };
+  },
+
+  created() {
+    this.$store.dispatch("gestiondatos/mostrarDato", this.id);
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    }
+  },
+
+  methods: {
+    ...mapActions({
+      updateDato: "gestiondatos/updateDato",
+      newObs: "gestiondatos/newObs",
+      saveDato: "gestiondatos/saveDato"
+    }),
+
+    async submit() {
+      await this.saveDato(this.item);
+      await this.showSwal();
+      this.volver();
+    },
+
+    saveObs() {
+      this.newObs({
+        id: this.id,
+        Obs: this.observacion,
+        Automatica: this.obsAut
+      });
+      this.dialog = false;
+    },
+
+    volver() {
+      this.$router.go(-1);
+    },
+    nuevaObs() {
+      this.dialog = true;
+    },
+    close() {
+      this.dialog = false;
+    },
+    timestamp(fecha) {
+      return moment(fecha).format("DD/MM/YYYY");
+    },
+    showSwal() {
+      //this.$swal("Good job!", dataStatusMsg, dataStatus);
+      this.$swal(this.dataStatusMsg, "", this.dataStatus);
+    }
+  },
+
+  computed: {
+    api() {
+      return "gestiondatos";
+      //return this.pars.routeapi;
+    },
+
+    /*
+    ID() {
+      return 34994;
+      // return this.pars.id;
+    },
+    */
+    module() {
+      return "gestiondatos";
+      //return this.pars.module;
+    },
+
+    ...mapState("gestiondatos", [
+      "item",
+      "observaciones",
+      "loading",
+      "loadingObs",
+      "dataStatus",
+      "dataStatusMsg",
+      "showMsg",
+      "estados",
+      "motivos"
+    ])
+  }
+};
+</script>
+
+<style scoped>
+.v-container {
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.fullw {
+  width: 100%;
+}
+
+.v-row {
+  height: 12px;
+}
+
+.v-select {
+  height: 10px;
+  font-size: 14px;
+}
+
+.v-checkbox {
+  height: 10px;
+  font-size: 8px;
+  padding-bottom: 15px;
+}
+
+.v-checkbox label {
+  height: 10px;
+  font-size: 8px;
+  padding-bottom: 15px;
+}
+
+.v-text-field {
+  height: 10px;
+  padding-bottom: 15px;
+  font-size: 14px;
+}
+
+.v-text-field .disabled {
+  height: 10px;
+}
+
+.v-text-field .filled {
+  height: 10px;
+}
+</style>
