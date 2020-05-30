@@ -1,8 +1,8 @@
 <template>
   <v-app class="fullw">
-    <v-card>
+    <v-card color="grey lighten-4">
       <v-card-title>
-        {{ pars.titleform }} - {{ item.ApeNom }}
+        {{ pars.titleform }} - {{ item.Apellido }}, {{ item.Nombres }}
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
       </v-card-title>
@@ -277,9 +277,13 @@
             </v-card-text>
 
             <v-card-actions>
+              <v-btn cclass="ma-2" outlined @click="saveObs"
+                ><v-icon left>mdi-content-save-outline</v-icon>Guardar</v-btn
+              >
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-              <v-btn color="blue darken-1" text @click="saveObs">Guardar</v-btn>
+              <v-btn cclass="ma-2" outlined @click="close"
+                ><v-icon left>mdi-cancel</v-icon>Cancelar</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -296,7 +300,7 @@
       >
         <template v-slot:item="{ item }">
           <template v-if="item.Automatica == 1 && showAutObs">
-            <tr v-show="showAutObs">
+            <tr v-show="showAutObs" :class="typeObs(item.CambioReconocimiento)">
               <td>{{ item.login }}</td>
               <td>{{ timestamp(item.Fecha) }}</td>
               <td>
@@ -337,13 +341,19 @@
       </v-data-table>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="nuevaObs">Nueva</v-btn>
+        <v-btn class="ma-2" outlined text @click="nuevaObs"
+          ><v-icon left>mdi-comment-plus-outline</v-icon>Nueva</v-btn
+        >
       </v-card-actions>
 
       <v-card-actions>
-        <v-btn color="blue darken-1" text @click="submit">Aceptar</v-btn>
+        <v-btn class="ma-2" outlined text @click="submit"
+          ><v-icon left>mdi-content-save-outline</v-icon>Aceptar</v-btn
+        >
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="volver">Volver</v-btn>
+        <v-btn class="ma-2" outlined text @click="volver"
+          ><v-icon left>mdi-arrow-left</v-icon>Volver</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-app>
@@ -449,6 +459,11 @@ export default {
     timestamp(fecha) {
       return moment(fecha).format("DD/MM/YYYY");
     },
+    typeObs(cambioRecon) {
+      if (cambioRecon == 1) {
+        return "cambioReconocimiento";
+      }
+    },
     showSwal() {
       //this.$swal("Good job!", dataStatusMsg, dataStatus);
       this.$swal(this.dataStatusMsg, "", this.dataStatus);
@@ -530,5 +545,9 @@ export default {
 
 .v-text-field .filled {
   height: 10px;
+}
+
+.cambioReconocimiento {
+  background: #eb952d;
 }
 </style>

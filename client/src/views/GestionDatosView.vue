@@ -9,14 +9,15 @@
                 titleform: 'Gestión de Datos',
                 routeapi: 'gestiondatos',
                 itemkey: 'Codigo',
-                module: 'gestiondatos'
+                module: 'gestiondatos',
+                items: this.items,
+                origen: 'gestiondatos'
               }"
               :headers="[
                 {
                   text: 'Grupo Orden',
                   value: 'GrupoOrden',
-                  align: 'center',
-                  width: '1%'
+                  align: 'center'
                 },
 
                 {
@@ -94,37 +95,34 @@
 </template>
 
 <script>
-/*
-
-
-:headers="[
-                {
-                  text: 'Oficial',
-                  align: 'start'
-                },
-                { text: 'Asignados' },
-                { text: 'Sin Gestionar'},
-                { text: 'Telefono Mal' },
-                { text: 'Deje Mensaje' },
-                { text: 'Entrevista Pendiente' },
-                { text: 'En Gestión'},
-                { text: 'No le Interesa' },
-                { text: 'Vende Plan'},
-                { text: 'Plan Subite'},
-                { text: 'Pasar a Venta'},
-              ]"
- 
-
-              */
-
-//import GridFormCrud from "@/components/propios/GridFormCrud.vue";
 import GridFormComponent from "@/components/propios/GridFormComponent.vue";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "gestiondatos",
   components: {
     GridFormComponent
     //GridFormCrud
+  },
+  computed: {
+    ...mapState("gestiondatos", ["items"])
+  },
+
+  created() {
+    this.getData("gestiondatos");
+  },
+
+  methods: {
+    goBack() {
+      console.log(this.volverARuta);
+      if (typeof this.volverARuta !== "undefined") {
+        this.$router.push(this.volverARuta);
+      }
+      this.volverARuta = undefined;
+    },
+    ...mapActions({
+      getData: "gestiondatos/getData"
+    })
   }
 };
 </script>

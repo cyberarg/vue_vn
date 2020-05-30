@@ -27,6 +27,14 @@ export const mutations = {
     state.loading = false;
   },
 
+  OK_RESPONSE_IMPORTACION(state, respuesta) {
+    state.obtuvoRespuesta = true;
+    state.unselect = true;
+    state.loading = false;
+    state.dataStatusMsg = "La planilla se ha procesado correctamente";
+    state.dataStatus = "success";
+  },
+
   DATOS_ERROR(state) {
     state.dataStatus = "error";
   },
@@ -71,7 +79,7 @@ export const actions = {
       })
       .then(response => {
         console.log(response);
-        commit("OK_RESPONSE", response);
+        commit("OK_RESPONSE_IMPORTACION", response);
       })
       .catch(err => {
         //console.log("get datos error");

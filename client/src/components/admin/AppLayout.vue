@@ -10,10 +10,7 @@
       :is-top-bar.sync="isTopBar"
       :minimized.sync="minimized"
     />
-    <app-topbar
-      class="app-layout__topbar"
-      v-if="isTopBar"
-    />
+    <app-topbar class="app-layout__topbar" v-if="isTopBar" />
     <div class="app-layout__container">
       <app-sidebar
         class="app-layout__sidebar"
@@ -22,14 +19,14 @@
       />
       <div
         class="app-layout__main"
-        :class="{'app-layout__main--top': isTopBar}"
+        :class="{ 'app-layout__main--top': isTopBar }"
       >
         <main
           class="app-layout__main-layout layout fluid gutter--xl"
           slot="content"
           role="main"
         >
-          <router-view/>
+          <router-view />
         </main>
       </div>
     </div>
@@ -37,58 +34,59 @@
 </template>
 
 <script>
-import AppPageLayout from './AppPageLayout'
-import AppNavbar from './app-navbar/AppNavbar'
-import AppTopbar from './app-topbar/AppTopbar'
-import AppSidebar from './app-sidebar/AppSidebar'
-import { originalTheme, corporateTheme } from 'vuestic-ui/src/services/themes'
+import AppPageLayout from "./AppPageLayout";
+import AppNavbar from "./app-navbar/AppNavbar";
+import AppTopbar from "./app-topbar/AppTopbar";
+import AppSidebar from "./app-sidebar/AppSidebar";
+import { originalTheme, corporateTheme } from "vuestic-ui/src/services/themes";
 import {
   ColorThemeActionsMixin,
-  ColorThemeMixin,
-} from '../../services/vuestic-ui'
+  ColorThemeMixin
+} from "../../services/vuestic-ui";
 
 export default {
-  name: 'app-layout',
+  name: "app-layout",
   components: {
     AppPageLayout,
     AppNavbar,
     AppTopbar,
-    AppSidebar,
+    AppSidebar
   },
-  data () {
+  data() {
     return {
       isTopBar: false,
       minimized: false,
-      mobileWidth: 767,
-    }
+      mobileWidth: 767
+    };
   },
-  inject: ['contextConfig'],
+  inject: ["contextConfig"],
   mixins: [ColorThemeActionsMixin, ColorThemeMixin],
-  created () {
-    if (this.$route.query && this.$route.query.theme === 'corporate') {
-      this.setTheme('corporate')
+  created() {
+    if (this.$route.query && this.$route.query.theme === "corporate") {
+      this.setTheme("corporate");
     }
-    this.$root.$on('change-theme', this.setTheme)
+    this.$root.$on("change-theme", this.setTheme);
   },
-  beforeDestroy () {
-    this.$root.$off('change-theme', this.setTheme)
+  beforeDestroy() {
+    this.$root.$off("change-theme", this.setTheme);
   },
   methods: {
-    setTheme (themeName) {
-      const theme = themeName === 'corporate' ? corporateTheme : originalTheme
-      this.setColors(theme.colors)
-      Object.keys(theme.context).forEach((key) => {
-        this.contextConfig[key] = theme.context[key]
-      })
-    },
-  },
-}
+    setTheme(themeName) {
+      const theme = themeName === "corporate" ? corporateTheme : originalTheme;
+      this.setColors(theme.colors);
+      Object.keys(theme.context).forEach(key => {
+        this.contextConfig[key] = theme.context[key];
+      });
+    }
+  }
+};
 </script>
 
 <style lang="scss">
 .app-layout {
   display: flex;
   flex-direction: column;
+  background-color: #eeeeee;
 
   &__container {
     display: flex;
@@ -96,6 +94,7 @@ export default {
     align-items: stretch;
     // TODO Probably there is a better way to achieve this.
     height: calc(100% - 65px);
+    background-color: #eeeeee;
 
     @include media-breakpoint-down(sm) {
       height: calc(100% - 110px);
@@ -108,6 +107,7 @@ export default {
     position: relative;
     max-height: 100%;
     min-height: 100%;
+    background-color: #eeeeee;
 
     &--top {
     }
@@ -122,6 +122,7 @@ export default {
       box-sizing: border-box;
       min-height: 100%;
       margin: 0;
+      background-color: #eeeeee;
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <v-app class="fullw">
-    <v-card class="padded">
+    <v-card class="padded" color="grey lighten-4">
       <v-card-title>
         Asignaciones por Período
         <v-divider class="mx-4" inset vertical></v-divider>
@@ -14,7 +14,7 @@
               item-text="Nombre"
               item-value="Codigo"
               label="Periodos"
-              v-model.Codigo="codperiodo"
+              v-model="codperiodo"
               @change="getAsignaciones()"
             ></v-select>
           </v-col>

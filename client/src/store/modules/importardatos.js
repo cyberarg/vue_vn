@@ -8,6 +8,7 @@ export const state = {
   items: [],
   loading: true,
   respuesta: [],
+  ocultar: [],
   obtuvoRespuesta: false
 };
 
@@ -23,18 +24,34 @@ export const mutations = {
     state.dataStatus = "success";
   },
 
-  OK_RESPONSE(state, respuesta) {
-    state.respuesta = respuesta.data;
+  OK_RESPONSE_CONCILIACION(state, respuesta) {
+    state.respuesta = respuesta.data.list;
+    state.ocultar = respuesta.data.ocultar;
     state.obtuvoRespuesta = true;
     state.unselect = true;
     state.loading = false;
   },
 
-  DATOS_ERROR(state) {
+  OK_RESPONSE_IMPORTACION(state, respuesta) {
+    state.obtuvoRespuesta = true;
+    state.unselect = true;
+    state.loading = false;
+    state.dataStatusMsg = "La planilla se ha procesado correctamente";
+    state.dataStatus = "success";
+  },
+
+  DATOS_ERROR(state, error) {
     state.dataStatus = "error";
+    state.dataStatusMsg =
+      "Ocurrió un error al intentar procesar los datos: " + error.message;
   },
 
   SEND_IMPORTACION(state) {
+    state.dataStatus = "loading";
+    state.obtuvoRespuesta = false;
+    state.loading = true;
+  },
+  SEND_CONCILIACION(state) {
     state.dataStatus = "loading";
     state.obtuvoRespuesta = false;
     state.loading = true;
@@ -49,14 +66,14 @@ export const getters = {
 
 export const actions = {
   importarDatos({ commit }, params) {
-    commit("SEND_IMPORTACION");
+    commit("SEND_CONCILIACION");
     return axios
       .post("/importardatos", {
         data: params
       })
       .then(response => {
         //console.log(response);
-        commit("OK_RESPONSE", response);
+        commit("OK_RESPONSE_CONCILIACION", response);
         //dispatch("reloadItems");
       })
       .catch(err => {
@@ -75,11 +92,12 @@ export const actions = {
       })
       .then(response => {
         console.log(response);
-        commit("OK_RESPONSE", response);
+        commit("OK_RESPONSE_IMPORTACION", response);
       })
       .catch(err => {
         //console.log("get datos error");
-        commit("DATOS_ERROR");
+        console.log(err);
+        commit("DATOS_ERROR", err);
       });
   }
 };

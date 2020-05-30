@@ -26,66 +26,50 @@
         :loading="loading"
         loading-text="Cargando Datos... Aguarde"
       >
-        <template v-slot:item="{ item, headers }">
-          <template v-if="(pars.origen = 'gestiondatos')">
-            <tr :class="setClass(item)">
-              <!--
-            <td v-for="column in headers">
-              {{ item[column.value] }}
-            </td>
-              -->
-              <td align="center">{{ item.Grupo }}-{{ item.Orden }}</td>
-              <td width="1%" align="center">${{ Math.round(item.HaberNeto) | numFormat }}</td>
-              <td align="start">{{ item.ApeNom }}</td>
-              <td width="1%" align="center">{{ item.CPG }}</td>
-              <td width="1%" align="center">{{ item.CAD }}</td>
-              <td width="1%" align="center">{{ item.Avance }}</td>
-              <td align="left">{{ getTextEstado(item.NomEstado) }}</td>
-              <td width="1%" align="center">{{ formatFecha(item.FechaCompra) }}</td>
-              <td width="1%" align="center">${{ Math.round(item.PrecioCompra) | numFormat }}</td>
-              <td width="1%" align="center">${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</td>
-              <td align="left">{{ getTextMotivo(item.Motivo) }}</td>
-              <td width="1%" align="center">{{ formatFecha(item.FechaUltObs) }}</td>
-              <td width="1%">
-                <v-btn text @click="getDato(item)">
-                  <v-icon left>mdi-text-search</v-icon>Ver Dato
-                </v-btn>
-              </td>
-            </tr>
-          </template>
+        <template v-slot:item.ApeNom="{ item }">
+          {{ item.Apellido }}, {{ item.Nombres }}
         </template>
 
-        <template v-slot:item.ApeNom="{ item }">{{ item.Apellido }}, {{ item.Nombres }}</template>
+        <template v-slot:item.HaberNeto="{ item }">
+          ${{ Math.round(item.HaberNeto) | numFormat }}
+        </template>
 
-        <template v-slot:item.HaberNeto="{ item }">${{ Math.round(item.HaberNeto) | numFormat }}</template>
+        <template v-slot:item.PrecioMaximoCompra="{ item }">
+          ${{ Math.round(item.PrecioMaximoCompra) | numFormat }}
+        </template>
 
-        <template
-          v-slot:item.PrecioMaximoCompra="{ item }"
-        >${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</template>
+        <template v-slot:item.PrecioCompra="{ item }">
+          ${{ Math.round(item.PrecioCompra) | numFormat }}
+        </template>
 
-        <template
-          v-slot:item.PrecioCompra="{ item }"
-        >${{ Math.round(item.PrecioCompra) | numFormat }}</template>
+        <template v-slot:item.GrupoOrden="{ item }">
+          {{ item.Grupo }}/{{ item.Orden }}
+        </template>
 
-        <template v-slot:item.GrupoOrden="{ item }">{{ item.Grupo }}/{{ item.Orden }}</template>
+        <template v-slot:item.FechaCompra="{ item }">
+          {{ formatFecha(item.FechaCompra) }}
+        </template>
 
-        <template v-slot:item.FechaCompra="{ item }">{{ formatFecha(item.FechaCompra) }}</template>
+        <template v-slot:item.Motivo="{ item }">
+          {{ getTextMotivo(item.Motivo) }}
+        </template>
 
-        <template v-slot:item.Motivo="{ item }">{{ getTextMotivo(item.Motivo) }}</template>
-
-        <template v-slot:item.FechaUltObs="{ item }">{{ formatFecha(item.FechaUltObs) }}</template>
+        <template v-slot:item.FechaUltObs="{ item }">
+          {{ formatFecha(item.FechaUltObs) }}
+        </template>
         <template v-slot:item.VerDatos="{ item }">
-          <v-btn text @click="getDato(item)">
-            <v-icon left>mdi-text-search</v-icon>Ver Dato
-          </v-btn>
+          <v-btn text @click="getDato(item)"
+            ><v-icon left>mdi-text-search</v-icon>Ver Dato</v-btn
+          >
         </template>
       </v-data-table>
 
       <v-card-actions v-show="exportable">
         <v-spacer></v-spacer>
         <v-btn cclass="ma-2" outlined text @click="exportExcel">
-          <v-icon left>mdi-file-excel-outline</v-icon>Excel
-        </v-btn>
+          <v-icon left>mdi-file-excel-outline</v-icon>
+          Excel</v-btn
+        >
       </v-card-actions>
     </v-card>
   </div>
@@ -109,8 +93,7 @@ export default {
 
   data() {
     return {
-      search: "",
-      loading: true
+      search: ""
     };
   },
 
@@ -142,7 +125,6 @@ export default {
         return this.pars.items;
       }
       this.setData(this.items);
-      this.loading = false;
       return this.items;
     },
 
@@ -154,20 +136,20 @@ export default {
       }
     },
 
-    ...mapState("gestiondatos", ["items"])
+    ...mapState("gestiondatos", ["items", "loading"])
   },
 
   methods: {
     exportExcel: function() {
       let data = XLSX.utils.json_to_sheet(this.items);
       const workbook = XLSX.utils.book_new();
-      const filename = "archivoexcel";
+      const filename = "devschile-admins";
       XLSX.utils.book_append_sheet(workbook, data, filename);
       XLSX.writeFile(workbook, `${filename}.xlsx`);
     },
 
     setClass(item) {
-      //console.log(item);
+      console.log(item);
 
       if (item.EsDatoNuevo == 1) {
         return "classDatoNuevo"; //NARANJA
@@ -215,8 +197,8 @@ export default {
     },
 
     getDato(item) {
-      //console.log(item);
-      //console.log(item.ID);
+      console.log(item);
+      console.log(item.ID);
       //this.mostrarDato(item.ID);
       this.$router.push({ name: "detalledato", params: { id: item.ID } });
     },

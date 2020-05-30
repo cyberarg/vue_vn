@@ -2,7 +2,7 @@
   <v-app>
     <div>
       <h3></h3>
-      <v-card>
+      <v-card color="grey lighten-4">
         <v-card-title>
           {{ pars.titleform }}
           <v-divider class="mx-4" inset vertical></v-divider>
@@ -33,18 +33,19 @@
           </template>
           <v-btn
             class="ma-2"
+            :disabled="disablePasarSinGestion"
             outlined
-            color="blue darken-1"
             text
             @click="pasarSinGestionar()"
-            >Pasar a Sin Gestionar</v-btn
+            ><v-icon left>mdi-undo-variant</v-icon>Pasar a Sin Gestionar</v-btn
           >
           <v-btn
             class="ma-2"
+            :disabled="disableAsignar"
             outlined
-            color="blue darken-1"
             text
             @click="asignarOficial()"
+            ><v-icon left>{{ userIcon }}</v-icon
             >Asignar {{ getTextAsignacion }}</v-btn
           >
         </v-card-title>
@@ -83,8 +84,8 @@
             {{ formatFecha(item.FechaUltObs) }}
           </template>
           <template v-slot:item.VerDatos="{ item }">
-            <v-btn color="blue darken-1" text @click="getDato(item)"
-              >Ver Dato</v-btn
+            <v-btn text @click="getDato(item)"
+              ><v-icon left>mdi-text-search</v-icon>Ver Dato</v-btn
             >
           </template>
 
@@ -99,7 +100,10 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="blue darken-1" text @click="exportExcel">Excel</v-btn>
+          <v-btn cclass="ma-2" outlined text @click="exportExcel">
+            <v-icon left>mdi-file-excel-outline</v-icon>
+            Excel</v-btn
+          >
         </v-card-actions>
       </v-card>
     </div>
@@ -127,6 +131,7 @@ export default {
       codOficialSelected: null,
       codSupervisorSelected: null,
       textAsignacion: "Oficial",
+      userIcon: "mdi-account-check-outline",
       showOficiales: true,
       singleSelect: false,
       selected: [],
@@ -139,14 +144,35 @@ export default {
   },
 
   computed: {
+    disableAsignar() {
+      if (this.showOficiales) {
+        if (this.codOficialSelected != null && this.selected.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        if (this.codSupervisorSelected != null && this.selected.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    },
+
+    disablePasarSinGestion() {
+      if (this.selected.length > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+
     api() {
       return this.pars.routeapi;
     },
     module() {
       return this.pars.module;
-    },
-    grupoorden() {
-      return "32323466";
     },
 
     getCountSelected() {
@@ -170,8 +196,10 @@ export default {
 
     getTextAsignacion() {
       if (this.showOficiales) {
+        this.userIcon = "mdi-account-check-outline";
         return "Oficial";
       }
+      this.userIcon = "mdi-account-tie";
       return "Supervisor";
     },
 
@@ -235,7 +263,10 @@ export default {
     },
 
     formatFecha(fecha) {
-      return moment(fecha).format("DD/MM/YYYY");
+      var date = moment(fecha);
+      if (date.isValid()) {
+        return moment(fecha).format("DD/MM/YYYY");
+      }
     },
 
     getDato(item) {

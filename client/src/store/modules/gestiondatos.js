@@ -29,6 +29,13 @@ export const mutations = {
     state.showMsg = false;
   },
 
+  SET_DATA_STATUS(state, colection) {
+    state.items = colection;
+    state.loading = false;
+    state.dataStatus = "success";
+    state.showMsg = false;
+  },
+
   SAVING_DATA(state) {
     state.loading = true;
     state.dataStatus = "loading";
@@ -63,6 +70,9 @@ export const mutations = {
   RESET_OBS(state) {
     state.observaciones = [];
     state.loadingObs = true;
+  },
+  RESET_ITEM(state) {
+    state.item = {};
   },
 
   DATOS_ERROR(state) {
@@ -120,8 +130,13 @@ export const actions = {
       });
   },
 
+  setData({ commit }, coleccion) {
+    commit("SET_DATA_STATUS", coleccion);
+  },
+
   mostrarDato({ commit, dispatch, getters }, id) {
     //console.log(id);
+    commit("RESET_ITEM");
     commit("RESET_OBS");
     var dato = getters.getDatoById(id);
     //console.log(dato);

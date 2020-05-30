@@ -14,6 +14,68 @@ class ReporteComprasResumenController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function getPrimerDiaPeriodo($periodo){
+        $periodoMes = substr($periodo, 4, strlen($periodo));
+        $periodoAnio = substr($periodo, 0, 4);
+        $periodoDia = "1";
+
+        return $periodoAnio."-".$periodoMes."-".$periodoDia;
+     }
+
+    public function getUltimoDiaPeriodo($periodo){
+        $periodoMes = substr($periodo, 4, strlen($periodo));
+        $periodoAnio = substr($periodo, 0, 4);
+
+        switch($periodoMes){
+            case "1":
+            case "3":
+            case "5":
+            case "7":
+            case "8":
+            case "10":
+            case "12":
+                $periodoDia = "31";
+            break;
+            case "2":
+                if (($periodoAnio % 4) == 0){
+                    $periodoDia = "29";
+                }else{
+                    $periodoDia = "28";
+                }
+            break;
+            case "4":
+            case "6":
+            case "9":
+            case "11":
+                $periodoDia = "30";
+            break;
+        }
+
+        if (strlen($periodoMes) == 1){
+            $periodoMes = "0".$periodoMes;
+        }
+
+        return $periodoAnio."-".$periodoMes."-".$periodoDia;
+    }
+
+    public function getUltimoDiaPeriodoAnterior($periodoAct){
+        $periodoMes = substr($periodoAct, 4, strlen($periodoAct));
+        $periodoAnio = substr($periodoAct, 0, 4);
+
+        if ($periodoMes == "12"){
+            $periodoAnioAnt = $periodoAnio + 1;
+            $periodoMesAnt =  "1";
+        }else{
+            $periodoAnioAnt = $periodoAnio;
+            $periodoMesAnt =  $periodoMes + 1;
+        }
+        $strPerAnt = $periodoAnioAnt.$periodoMesAnt;
+
+        return $this->getUltimoDiaPeriodo($strPerAnt);
+    }
+
+
     public function index(Request $request)
     {
         $emp1 = "AutoCervo";
@@ -44,11 +106,24 @@ class ReporteComprasResumenController extends Controller
         //return $estados;
         //return response()->json(compact('respuesta'));
 
-        $periodoActual = strtotime("2020-01-31");
-        $periodoAnterior = strtotime("2020-02-29");
+        $periodoAct = $this->getUltimoDiaPeriodo($request->periodo);
+        $periodoActPrimerDia = $this->getPrimerDiaPeriodo($request->periodo);
+        $periodoAnt = $this->getUltimoDiaPeriodoAnterior($request->periodo);
+
+        $periodoActual = strtotime($periodoAct);
+        $periodoAnterior = strtotime($periodoAnt);
+
+       // return $periodoAnt;
+
+     //   $periodoActual = strtotime("2020-01-31");
+     //   $periodoAnterior = strtotime("2020-02-29");
 
 
-        $result = DB::connection($db3)->select("CALL hnweb_subitereportecompras('2020-01-31');");
+        //$result = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+
+       // $result = DB::select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+        $result = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+
 //dd($result);
         $list = array();
         $listUniverso = array();
@@ -58,18 +133,20 @@ class ReporteComprasResumenController extends Controller
         $listCasosNuevos = array();
         $lstDatos = array();
 
+        $lstDeb = array();
+
         $list[0]['Nombre'] = 'SGA';
         $list[0]['Cantidad'] = 0;
-        $list[1]['Nombre'] = 'Propios';
+        $list[1]['Nombre'] = 'Propios y Otras Sociedades';
         $list[1]['Cantidad'] = 0; 
-        $list[2]['Nombre'] = 'Otras Sociedades';
+        //$list[2]['Nombre'] = 'Otras Sociedades';
+        //$list[2]['Cantidad'] = 0; 
+        $list[2]['Nombre'] = 'Universo Compra';
         $list[2]['Cantidad'] = 0; 
-        $list[3]['Nombre'] = 'Universo Compra';
+        $list[3]['Nombre'] = 'Nuevos Casos Mes Actual - Cantidad';
         $list[3]['Cantidad'] = 0; 
-        $list[4]['Nombre'] = 'Nuevos Casos Mes Actual - Cantidad';
+        $list[4]['Nombre'] = 'Nuevos Casos Mes Actual - Haber Neto';
         $list[4]['Cantidad'] = 0; 
-        $list[5]['Nombre'] = 'Nuevos Casos Mes Actual - Haber Neto';
-        $list[5]['Cantidad'] = 0; 
 
         $cant = 0;
 
@@ -87,7 +164,7 @@ class ReporteComprasResumenController extends Controller
             $oNomOrigen = $r->NomOrigen;
             $oSupervisor = $r->SupDeLaOP;
 
-            $FechaCalculoAvance = "2020-01-01";
+            $FechaCalculoAvance = $periodoActPrimerDia;
 
             //Cargo el objeto stdClass
             //Propiedades Nuevas para uso y filtros
@@ -97,6 +174,8 @@ class ReporteComprasResumenController extends Controller
             $oDet->EsUniverso = -1;
             $oDet->EsSGA = -1;
             $oDet->EsCasoNuevo = -1;
+            $oDet->EsMesActual = -1;
+            $oDet->EsMesAnterior = -1;
 
             $oDet->ID = $r->ID;
             $oDet->Marca = $oMarca; 
@@ -139,7 +218,19 @@ class ReporteComprasResumenController extends Controller
             $fcomp = strtotime($oDet->FechaCompra);
 
            // dd($oDet->FechaCompra);
-           $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fcav, $fvc2);
+           if ($oDet->FechaVtoCuota2 === NULL){
+                $oDet->AvanceAutomatico = 0;
+           }else{
+                $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fcav, $fvc2);
+           }
+           
+            /*
+            $debbug['GruOrd'] = $oDet->Grupo."-".$oDet->Orden;
+            $debbug['AvanceAutomatico'] = $oDet->AvanceAutomatico;
+            $debbug['FechaVtoCuota2'] = $oDet->FechaVtoCuota2;
+
+            array_push($lstDeb, $debbug);
+            */
 
             if ($oDet->AvanceAutomatico < 84){
                 $cant += 1;
@@ -152,36 +243,47 @@ class ReporteComprasResumenController extends Controller
                 if($this->esPropio($oDet->Nombres, $oDet->Apellido )){
                     $list[1]['Cantidad'] += 1;
                     $perteneceUniverso = false;
-
+                    $oDet->EsUniverso = -1;
                     $oDet->EsPropio = 1;
                 }
                 if($this->enOtraSociedad($oDet->Nombres, $oDet->Apellido )){
-                    $list[2]['Cantidad'] += 1;
+                    //$list[2]['Cantidad'] += 1;
+                    $list[1]['Cantidad'] += 1;
                     $perteneceUniverso = false;
+                    $oDet->EsUniverso = -1;
                     $oDet->EsOtrasSociedades = 1;
                 }
                 if($perteneceUniverso){
-                    $list[3]['Cantidad'] += 1;
+                    $list[2]['Cantidad'] += 1;
+                    $oDet->EsUniverso = 1;
                     array_push($listUniverso, $oDet);
                 }
                 
                 array_push($listDetalle, $oDet);    
 
-                if ((date('m', $fcomp) == date('m', $periodoActual)) && (date('Y', $fcomp)  == date('Y', $periodoActual))  ){
+                if ((date('m', $fcomp) === date('m', $periodoActual)) && (date('Y', $fcomp)  === date('Y', $periodoActual))  ){
+                    $oDet->EsMesActual = 1;
+                    $oDet->EsMesAnterior = 0;
                     array_push($listMesActual, $oDet); 
                 }
 
-                if ((date('m', $fcomp) == date('m', $periodoAnterior)) && (date('Y', $fcomp) == date('Y',$periodoAnterior))){
+                if ((date('m', $fcomp) === date('m', $periodoAnterior)) && (date('Y', $fcomp) === date('Y',$periodoAnterior))){
+                    $oDet->EsMesActual = 0;
+                    $oDet->EsMesAnterior = 1;
                     array_push($listMesAnterior, $oDet); 
                 }
 
                 if ($perteneceUniverso){
                     $oDet->EsUniverso = 1;
+                }else{
+                    $oDet->EsUniverso = -1;
                 }
+
+                array_push($lstDatos, $oDet); 
 
             } //if avance autom
             
-            array_push($lstDatos, $oDet); 
+            
             
         } //foreach
 
@@ -190,7 +292,7 @@ class ReporteComprasResumenController extends Controller
                 $encontro = false;
 
                 foreach ($listMesAnterior as $old) {
-                    if ($new->Grupo == $old->Grupo && $new->Orden == $old->Orden){
+                    if ($new->Grupo === $old->Grupo && $new->Orden === $old->Orden){
                         $encontro = true;
                     break;
                     }
@@ -202,7 +304,7 @@ class ReporteComprasResumenController extends Controller
             }
         } //foreach mesactual
 
-        $list[4]['Cantidad'] = count($listCasosNuevos);
+        $list[3]['Cantidad'] = count($listCasosNuevos);
 
         $casosNuevosHN = 0;
 
@@ -210,11 +312,12 @@ class ReporteComprasResumenController extends Controller
             $casosNuevosHN += $r->HaberNeto;
         }
 
-        $list[5]['Cantidad'] = $casosNuevosHN;
+        $list[4]['Cantidad'] = round($casosNuevosHN);
 
+       // $lst['Debbug'] = $lstDeb;
         $lst['Datos'] = $lstDatos;
         $lst['Resumen'] = $list;
-        $lst['MesActual'] = $this->getListMesActual($listMesActual);
+        $lst['MesActual'] = $this->getListMesActual($listCasosNuevos);
         $lst['Universo'] = $this->getListUniverso($listUniverso);
 
         //return $list;
@@ -231,41 +334,54 @@ class ReporteComprasResumenController extends Controller
         $listMes = array();
 
 
+        $listMes[0]['Capa'] = 0; 
         $listMes[0]['Tipo'] = 'Avance 0';
         $listMes[0]['Casos'] = 0;
         $listMes[0]['MontoHN'] = 0;
         $listMes[0]['TotalCasos'] = 0;
         $listMes[0]['TotalMontoHN'] = 0;
-       
-        $listMes[1]['Tipo'] = '1 a 60';
+
+        $listMes[1]['Capa'] = 44; 
+        $listMes[1]['Tipo'] = '1 a 44';
         $listMes[1]['Casos'] = 0; 
         $listMes[1]['MontoHN'] = 0;
         $listMes[1]['TotalCasos'] = 0;
         $listMes[1]['TotalMontoHN'] = 0;
        
-        $listMes[2]['Tipo'] = '61 a 70';
+        $listMes[2]['Capa'] = 60; 
+        $listMes[2]['Tipo'] = '45 a 60';
         $listMes[2]['Casos'] = 0; 
         $listMes[2]['MontoHN'] = 0;
         $listMes[2]['TotalCasos'] = 0;
         $listMes[2]['TotalMontoHN'] = 0;
        
-        $listMes[3]['Tipo'] = '71 a 80';
+        $listMes[3]['Capa'] = 70; 
+        $listMes[3]['Tipo'] = '61 a 70';
         $listMes[3]['Casos'] = 0; 
         $listMes[3]['MontoHN'] = 0;
         $listMes[3]['TotalCasos'] = 0;
         $listMes[3]['TotalMontoHN'] = 0;
        
-        $listMes[4]['Tipo'] = '81 a 83';
+        $listMes[4]['Capa'] = 80; 
+        $listMes[4]['Tipo'] = '71 a 80';
         $listMes[4]['Casos'] = 0; 
         $listMes[4]['MontoHN'] = 0;
         $listMes[4]['TotalCasos'] = 0;
         $listMes[4]['TotalMontoHN'] = 0;
        
-        $listMes[5]['Tipo'] = 'Total';
+        $listMes[5]['Capa'] = 83; 
+        $listMes[5]['Tipo'] = '81 a 83';
         $listMes[5]['Casos'] = 0; 
         $listMes[5]['MontoHN'] = 0;
         $listMes[5]['TotalCasos'] = 0;
         $listMes[5]['TotalMontoHN'] = 0;
+       
+        $listMes[6]['Capa'] = -1; 
+        $listMes[6]['Tipo'] = 'Total';
+        $listMes[6]['Casos'] = 0; 
+        $listMes[6]['MontoHN'] = 0;
+        $listMes[6]['TotalCasos'] = 0;
+        $listMes[6]['TotalMontoHN'] = 0;
      
 
         foreach ($lstMesActual as $r) {
@@ -275,21 +391,27 @@ class ReporteComprasResumenController extends Controller
                     $listMes[0]['Casos'] += 1;
                     $listMes[0]['MontoHN'] += $r->HaberNeto;
                 break;
-                case (1 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <= 60):
+                case (1 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <= 44):
                     $listMes[1]['Casos'] += 1; 
                     $listMes[1]['MontoHN'] += $r->HaberNeto;
                 break;
-                case (61 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <= 70):
+
+                case (45 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <= 60):
                     $listMes[2]['Casos'] += 1; 
                     $listMes[2]['MontoHN'] += $r->HaberNeto;
                 break;
-                case (71 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  80):
+
+                case (61 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <= 70):
                     $listMes[3]['Casos'] += 1; 
                     $listMes[3]['MontoHN'] += $r->HaberNeto;
                 break;
-                case (81 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  83):
+                case (71 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  80):
                     $listMes[4]['Casos'] += 1; 
                     $listMes[4]['MontoHN'] += $r->HaberNeto;
+                break;
+                case (81 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  83):
+                    $listMes[5]['Casos'] += 1; 
+                    $listMes[5]['MontoHN'] += $r->HaberNeto;
                 break;
 
             }
@@ -309,8 +431,8 @@ class ReporteComprasResumenController extends Controller
             $listMes[$i]['TotalMontoHN'] = round($hnTotM);
         }
 
-        $listMes[5]['Casos'] = round($cantTotM); 
-        $listMes[5]['MontoHN'] = round($hnTotM); 
+        $listMes[6]['Casos'] = round($cantTotM); 
+        $listMes[6]['MontoHN'] = round($hnTotM); 
 
         return $listMes;
 
@@ -324,51 +446,61 @@ class ReporteComprasResumenController extends Controller
         $arrSegmentos = array();
 
         $p = 0;
+        $arrSegmentos[$p]['Capa'] = 0;
         $arrSegmentos[$p]['Nombre'] = 'Avance 0';
         $arrSegmentos[$p]['Desde'] = 0;
         $arrSegmentos[$p]['Hasta'] = 0;
 
         $p ++; //1
+        $arrSegmentos[$p]['Capa'] = 20;
         $arrSegmentos[$p]['Nombre'] = '1 a 20';
         $arrSegmentos[$p]['Desde'] = 1;
         $arrSegmentos[$p]['Hasta'] = 20;
 
         $p ++; //2
+        $arrSegmentos[$p]['Capa'] = 30;
         $arrSegmentos[$p]['Nombre'] = '21 a 30';
         $arrSegmentos[$p]['Desde'] = 21;
         $arrSegmentos[$p]['Hasta'] = 30;
 
         $p ++; //3
+        $arrSegmentos[$p]['Capa'] = 40;
         $arrSegmentos[$p]['Nombre'] = '31 a 40';
         $arrSegmentos[$p]['Desde'] = 31;
         $arrSegmentos[$p]['Hasta'] = 40;
 
         $p ++; //4
+        $arrSegmentos[$p]['Capa'] = 50;
         $arrSegmentos[$p]['Nombre'] = '41 a 50';
         $arrSegmentos[$p]['Desde'] = 41;
         $arrSegmentos[$p]['Hasta'] = 50;
         
         $p ++; //5
+        $arrSegmentos[$p]['Capa'] = 60;
         $arrSegmentos[$p]['Nombre'] = '51 a 60';
         $arrSegmentos[$p]['Desde'] = 51;
         $arrSegmentos[$p]['Hasta'] = 60;
 
         $p ++; //6
+        $arrSegmentos[$p]['Capa'] = 70;
         $arrSegmentos[$p]['Nombre'] = '61 a 70';
         $arrSegmentos[$p]['Desde'] = 61;
         $arrSegmentos[$p]['Hasta'] = 70;
 
         $p ++; //7
+        $arrSegmentos[$p]['Capa'] = 80;
         $arrSegmentos[$p]['Nombre'] = '71 a 80';
         $arrSegmentos[$p]['Desde'] = 71;
         $arrSegmentos[$p]['Hasta'] = 80;
     
         $p ++; //8
+        $arrSegmentos[$p]['Capa'] = 83;
         $arrSegmentos[$p]['Nombre'] =  '81 a 83';
         $arrSegmentos[$p]['Desde'] = 81;
         $arrSegmentos[$p]['Hasta'] = 83;
     
         for ($i=0; $i <= $p; $i++) { 
+            $listUniv[$i]['Capa'] = $arrSegmentos[$i]['Capa'];
             $listUniv[$i]['Tipo'] = $arrSegmentos[$i]['Nombre'];
             $listUniv[$i]['Casos'] = 0; 
             $listUniv[$i]['MontoHN'] = 0;
@@ -434,6 +566,7 @@ class ReporteComprasResumenController extends Controller
             $listUniv[$i]['TotalMontoHN'] = round($hnTot);
         }
 
+        $listUniv[9]['Capa'] = -1; 
         $listUniv[9]['Tipo'] = 'Total'; 
         $listUniv[9]['Casos'] = round($cantTot); 
         $listUniv[9]['MontoHN'] = round($hnTot); 
@@ -498,29 +631,33 @@ class ReporteComprasResumenController extends Controller
 
     public function getAvanceAutomatico($FechaCalculoAvance, $FechaVtoCuota2){
 
-
+        $avance = 0;
         if (isset($FechaCalculoAvance)){
             $fecha = $FechaCalculoAvance;
         }else{
             $fecha = now();
         }
 
-        $fvtoc2 = date_create(date('Y-m-d', $FechaVtoCuota2));
-        $ff = date_create(date('Y-m-d', $fecha));       
-
-
-        if (isset($FechaVtoCuota2) && checkdate(date('m', $FechaVtoCuota2), date('d', $FechaVtoCuota2), date('Y', $FechaVtoCuota2))){
-            $diff = date_diff($fvtoc2 , $ff);
-            $avance = ($diff->format('%y') * 12 + $diff->format('%m')) + 2;
-
-           //dd($avance);
-            /*    
-            if (isset($FechaCalculoAvance)){
-                if (date('d', $fecha) <= 10){
-                    $avance -= 1;
+        if ($FechaVtoCuota2 === NULL){
+            return 0;
+        }else{
+            $fvtoc2 = date_create(date('Y-m-d', $FechaVtoCuota2));
+            $ff = date_create(date('Y-m-d', $fecha));       
+    
+            if (checkdate(date('m', $FechaVtoCuota2), date('d', $FechaVtoCuota2), date('Y', $FechaVtoCuota2))){
+                $diff = date_diff($fvtoc2 , $ff);
+                $avance = ($diff->format('%y') * 12 + $diff->format('%m')) + 2;
+    
+               //dd($avance);
+                    /*
+                if (isset($FechaCalculoAvance)){
+                    if (date('d', $fecha) <= 10){
+                        $avance -= 1;
+                    }
                 }
+                */
+                
             }
-            */
         }
 
         if ($avance > 84){

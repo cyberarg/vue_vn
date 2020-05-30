@@ -11,6 +11,8 @@ import * as importardatos from "./modules/importardatos.js";
 import * as importarhn from "./modules/importarhn.js";
 import * as reporteasignacion from "./modules/reporteasignacion.js";
 import * as reporteacompras from "./modules/reporteacompras.js";
+import * as haberneto from "./modules/haberneto.js";
+import * as cotizaciondolar from "./modules/cotizaciondolar.js";
 
 Vue.use(Vuex);
 
@@ -28,7 +30,9 @@ const store = new Vuex.Store({
     importardatos,
     importarhn,
     reporteasignacion,
-    reporteacompras
+    reporteacompras,
+    haberneto,
+    cotizaciondolar
   },
   state: {
     tableList: [],

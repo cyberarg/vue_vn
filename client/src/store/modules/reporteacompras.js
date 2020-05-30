@@ -22,8 +22,7 @@ export const state = {
   loadingtextuniv: "Cargando datos de Universo de Compra... Aguarde por favor",
   okResponse: false,
   showTable: false,
-  items_filtrados: [],
-  mostrarInfo: false
+  items_filtrados: []
 };
 
 export const mutations = {
@@ -31,6 +30,11 @@ export const mutations = {
     state.dataStatus = "loading";
     state.items_resumen = [];
     state.loading = true;
+    state.items_casos_mes = [];
+    state.loadingmes = true;
+    state.items_universo = [];
+    state.loadinguniv = true;
+    state.showTable = true;
   },
 
   DATOS_SUCCESS(state, datos) {
@@ -72,7 +76,26 @@ export const mutations = {
 
   RESUMEN_PROPIOS(state, datos) {
     state.items_filtrados = datos;
-    state.mostrarInfo = true;
+    state.showTable = true;
+  },
+
+  GETTING_DETALLE_AVANCE(state) {
+    state.dataStatus = "loading";
+  },
+
+  DETALLE_AVANCE(state, datos) {
+    state.items_filtrados = datos;
+    state.showTable = true;
+  },
+
+  GETTING_DETALLE_UNIVERSO(state) {
+    state.dataStatus = "loading";
+  },
+
+  DETALLE_UNIVERSO(state, datos) {
+    state.items_filtrados = datos;
+    console.log(datos);
+    state.showTable = true;
   }
 };
 
@@ -83,7 +106,7 @@ export const actions = {
     return axios
       .get("/reportecomprasresumen?periodo=" + periodo)
       .then(response => {
-        console.log(response.data.Datos);
+        console.log(response.data.Debbug);
         commit("DATOS_SUCCESS", response.data.Datos);
         commit("RESUMEN_SUCCESS", response.data.Resumen);
         commit("MESACTUAL_SUCCESS", response.data.MesActual);
@@ -99,12 +122,17 @@ export const actions = {
   showResumenPropios({ commit, getters }, propiedad) {
     commit("GETTING_RESUMEN");
     switch (propiedad) {
+      case "PropiosyOtrasSoc":
+        var datos = getters.getPropiosSociedadesFromResumen;
+        break;
+
       case "EsPropio":
         var datos = getters.getPropiosFromResumen;
         break;
       case "EsOtrasSociedades":
         var datos = getters.getSociedadesFromResumen;
         break;
+
       case "EsUniverso":
         var datos = getters.getUniversoFromResumen;
         break;
@@ -114,6 +142,20 @@ export const actions = {
     }
 
     commit("RESUMEN_PROPIOS", datos);
+  },
+
+  showDetalleAvanceMes({ commit, getters }, tipo) {
+    commit("GETTING_DETALLE_AVANCE");
+    var datos = getters.getAvanceMesActual(tipo);
+    //console.log(getters.getAvanceMesActual(tipo));
+    commit("DETALLE_AVANCE", datos);
+  },
+
+  showDetalleUniverso({ commit, getters }, tipo) {
+    commit("GETTING_DETALLE_UNIVERSO");
+    var datos = getters.getUniverso(tipo);
+    //console.log(getters.getAvanceMesActual(tipo));
+    commit("DETALLE_UNIVERSO", datos);
   }
 };
 
@@ -124,10 +166,198 @@ export const getters = {
   getSociedadesFromResumen: state => {
     return state.items_totales.filter(item => item.EsOtrasSociedades === 1);
   },
+  getPropiosSociedadesFromResumen: state => {
+    return state.items_totales.filter(function(item) {
+      return item.EsOtrasSociedades === 1 || item.EsPropio === 1;
+    });
+  },
+
   getUniversoFromResumen: state => {
     return state.items_totales.filter(item => item.EsUniverso === 1);
   },
   getSGAFromResumen: state => {
     return state.items_totales;
+  },
+
+  getUniverso: state => tipo => {
+    switch (tipo) {
+      case -1:
+        return state.items_totales.filter(function(item) {
+          return item.EsUniverso === 1;
+        });
+      case 0:
+        return state.items_totales.filter(function(item) {
+          return item.AvanceAutomatico === 0 && item.EsUniverso === 1;
+        });
+
+        break;
+
+      case 20:
+        //console.log("Entro en el case 60");
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 1 &&
+            item.AvanceAutomatico <= 20 &&
+            item.EsUniverso === 1
+          );
+        });
+
+        break;
+
+      case 30:
+        //console.log("Entro en el case 60");
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 21 &&
+            item.AvanceAutomatico <= 30 &&
+            item.EsUniverso === 1
+          );
+        });
+
+        break;
+
+      case 40:
+        //console.log("Entro en el case 60");
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 31 &&
+            item.AvanceAutomatico <= 40 &&
+            item.EsUniverso === 1
+          );
+        });
+
+        break;
+
+      case 50:
+        //console.log("Entro en el case 60");
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 41 &&
+            item.AvanceAutomatico <= 50 &&
+            item.EsUniverso === 1
+          );
+        });
+
+        break;
+      case 60:
+        //console.log("Entro en el case 60");
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 51 &&
+            item.AvanceAutomatico <= 60 &&
+            item.EsUniverso === 1
+          );
+        });
+
+        break;
+      case 70:
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 61 &&
+            item.AvanceAutomatico <= 70 &&
+            item.EsUniverso === 1
+          );
+        });
+
+        break;
+      case 80:
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 71 &&
+            item.AvanceAutomatico <= 80 &&
+            item.EsUniverso === 1
+          );
+        });
+
+        break;
+      case 83:
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 81 &&
+            item.AvanceAutomatico <= 83 &&
+            item.EsUniverso === 1
+          );
+        });
+
+        break;
+    }
+  },
+
+  getAvanceMesActual: state => tipo => {
+    switch (tipo) {
+      case -1:
+        return state.items_totales.filter(function(item) {
+          return item.EsUniverso === 1 && item.EsMesActual === 1;
+        });
+      case 0:
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico === 0 &&
+            item.EsUniverso === 1 &&
+            item.EsMesActual === 1
+          );
+        });
+
+        break;
+
+      case 44:
+        //console.log("Entro en el case 60");
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 1 &&
+            item.AvanceAutomatico <= 44 &&
+            item.EsUniverso === 1 &&
+            item.EsMesActual === 1
+          );
+        });
+
+        break;
+
+      case 60:
+        //console.log("Entro en el case 60");
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 45 &&
+            item.AvanceAutomatico <= 60 &&
+            item.EsUniverso === 1 &&
+            item.EsMesActual === 1
+          );
+        });
+
+        break;
+      case 70:
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 61 &&
+            item.AvanceAutomatico <= 70 &&
+            item.EsUniverso === 1 &&
+            item.EsMesActual === 1
+          );
+        });
+
+        break;
+      case 80:
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 71 &&
+            item.AvanceAutomatico <= 80 &&
+            item.EsUniverso === 1 &&
+            item.EsMesActual === 1
+          );
+        });
+
+        break;
+      case 83:
+        return state.items_totales.filter(function(item) {
+          return (
+            item.AvanceAutomatico >= 81 &&
+            item.AvanceAutomatico <= 83 &&
+            item.EsUniverso === 1 &&
+            item.EsMesActual === 1
+          );
+        });
+
+        break;
+    }
   }
 };

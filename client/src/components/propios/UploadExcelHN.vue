@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <h3></h3>
-    <v-card>
+    <v-card color="grey lighten-4">
       <v-card-title>
         Importación de Haber Neto
         <v-spacer></v-spacer>
@@ -9,7 +9,6 @@
           :on-success="handleSuccess"
           :before-upload="beforeUpload"
         />
-        <v-spacer></v-spacer>
 
         <v-btn
           class="ma-2"
@@ -17,7 +16,8 @@
           color="blue darken-1"
           text
           @click="procesarRegistrosHN()"
-          >Procesasr</v-btn
+          :disabled="disableButton"
+          ><v-icon left>mdi-cog-outline</v-icon>Procesar</v-btn
         >
       </v-card-title>
 
@@ -28,6 +28,7 @@
         class="elevation-1"
         :loading="loading"
         loading-text="Cargando Datos... Aguarde"
+        no-data-text="Seleccione la planilla de Haberes Netos a importar."
         show-select
         v-model="selected"
         :single-select="singleSelect"
@@ -55,6 +56,7 @@ export default {
     return {
       singleSelect: false,
       loading: false,
+      disableButton: true,
       selected: [],
       tableData: [],
       tableHeader: [],
@@ -92,6 +94,16 @@ export default {
       await this.importarDatos(results);
       this.loading = false;
       this.tableData = this.respuesta;
+      this.preSelect(this.respuesta);
+      this.disableButton = false;
+    },
+
+    preSelect(items) {
+      items.forEach(element => {
+        if (element.Procesar) {
+          this.selected.push(element);
+        }
+      });
     },
 
     async procesarRegistrosHN() {
@@ -106,12 +118,25 @@ export default {
         if (this.unselect) {
           this.selected = [];
           this.loading = false;
+          this.disableButton = true;
+          this.showSwal();
         }
       }
+    },
+
+    showSwal() {
+      //this.$swal("Good job!", dataStatusMsg, dataStatus);
+      this.$swal(this.dataStatusMsg, "", this.dataStatus);
     }
   },
   computed: {
-    ...mapState("importarhn", ["respuesta", "unselect", "loading"]),
+    ...mapState("importarhn", [
+      "respuesta",
+      "unselect",
+      "loading",
+      "dataStatusMsg",
+      "dataStatus"
+    ]),
 
     computedHeaders() {
       return this.headers.filter(header => header.text !== "ID");

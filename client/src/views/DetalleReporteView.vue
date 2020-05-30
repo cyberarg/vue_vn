@@ -4,13 +4,14 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
-            <GridFormComponent
+            <GridFormComponentDetalle
               :pars="{
                 titleform: this.title,
-                routeapi: 'gestiondatos',
+                routeapi: 'detalle',
                 items: this.items_f,
                 itemkey: 'Codigo',
-                module: 'gestiondatos'
+                module: 'gestiondatos',
+                origen: 'detalle'
               }"
               :headers="[
                 {
@@ -22,8 +23,7 @@
                 {
                   text: 'Grupo Orden',
                   value: 'GrupoOrden',
-                  align: 'center',
-                  width: '1%'
+                  align: 'center'
                 },
                 {
                   text: 'Solicitud',
@@ -34,20 +34,19 @@
                 {
                   text: 'Haber Neto',
                   value: 'HaberNeto',
-                  align: 'center',
-                  width: '1%'
+                  align: 'center'
                 },
                 {
                   text: 'Nombre y Apellido',
                   value: 'ApeNom',
-                  align: 'center'
+                  align: 'start'
                 },
                 {
                   text: 'Supervisor',
                   value: 'NomSup',
-                  align: 'center',
-                  width: '1%'
+                  align: 'center'
                 },
+                /*
                 {
                   text: 'Domicilio',
                   value: 'Domicilio',
@@ -72,6 +71,7 @@
                   align: 'center',
                   width: '1%'
                 },
+                */
                 {
                   text: 'Cuotas PG',
                   value: 'CPG',
@@ -93,8 +93,7 @@
                 {
                   text: 'Estado',
                   value: 'NomEstado',
-                  align: 'center',
-                  width: '1%'
+                  align: 'center'
                 },
                 {
                   text: 'Fecha Compra',
@@ -128,7 +127,7 @@
                 },
                 { text: '', value: 'VerDatos', align: 'center', width: '1%' }
               ]"
-            ></GridFormComponent>
+            ></GridFormComponentDetalle>
           </div>
         </div>
       </div>
@@ -137,7 +136,7 @@
 </template>
 
 <script>
-import GridFormComponent from "@/components/propios/GridFormComponent.vue";
+import GridFormComponentDetalle from "@/components/propios/GridFormComponentDetalle.vue";
 import moment from "moment";
 import { mapState } from "vuex";
 import closeMixin from "@/assets/js/close.js";
@@ -145,7 +144,7 @@ import closeMixin from "@/assets/js/close.js";
 export default {
   name: "detallereporte",
   components: {
-    GridFormComponent
+    GridFormComponentDetalle
     //GridFormCrud
   },
 
@@ -158,6 +157,11 @@ export default {
   mixins: [closeMixin],
 
   props: ["title", "volverARuta", "items_f"],
+
+  created() {
+    console.log("items_f:");
+    console.log(this.items_f);
+  },
 
   computed: {
     ...mapState("reporteasignacion", ["items_filtrados"])

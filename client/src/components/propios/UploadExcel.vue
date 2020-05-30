@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <h3></h3>
-    <v-card>
+    <v-card color="grey lighten-4">
       <v-card-title>
         Importar Datos
         <v-spacer></v-spacer>
@@ -9,27 +9,32 @@
           :on-success="handleSuccess"
           :before-upload="beforeUpload"
         />
-        <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Buscar"
-          single-line
-          hide-details
-        ></v-text-field>
+        <v-btn
+          class="ma-2"
+          outlined
+          color="blue darken-1"
+          text
+          @click="procesarRegistrosDatos()"
+          :disabled="disableButton"
+          ><v-icon left>mdi-cog-outline</v-icon>Procesar</v-btn
+        >
       </v-card-title>
 
       <v-data-table
         :headers="headers"
         :items="tableData"
-        :search="search"
-        item-key="Grupo/Orden"
+        item-key="Codigo"
+        :items-per-page="-1"
         class="elevation-1"
         :loading="loading"
         loading-text="Cargando Datos... Aguarde"
+        no-data-text="Seleccione la planilla de Datos a importar."
+        show-select
+        v-model="selected"
+        :single-select="singleSelect"
       >
         <template v-slot:item.GrupoOrden="{ item }">
-          {{ item.Grupo }}/{{ item.Orden }}
+          {{ item.Grupo }}-{{ item.Orden }}
         </template>
         <template v-slot:item.NroSolicitud="{ item }">
           <template v-if="obtuvoRespuesta">
@@ -41,7 +46,7 @@
         </template>
         <template v-slot:item.Accion="{ item }">
           <template v-if="obtuvoRespuesta">
-            {{ item.Accion }}
+            {{ item.Accion.Texto }}
           </template>
           <template v-else>
               <v-icon>fas fa-spinner fa-spin</v-icon>
@@ -59,6 +64,7 @@
         <template v-slot:item.ImporteHN="{ item }">
           ${{ Math.round(item.ImporteHN) | numFormat }}
         </template>
+
       </v-data-table>
     </v-card>
   </v-app>
@@ -75,6 +81,9 @@ export default {
   components: { UploadExcelComponent, DataTableActions },
   data() {
     return {
+      singleSelect: false,
+      selected: [],
+      disableButton: true,
       search: "",
       loading: false,
       tableData: [],
@@ -94,7 +103,7 @@ export default {
   },
 
   computed: {
-    ...mapState("importardatos", ["respuesta", "unselect", "obtuvoRespuesta"])
+    ...mapState("importardatos", ["respuesta", "unselect", "obtuvoRespuesta", "dataStatusMsg", "dataStatus"])
   },
 
   methods: {
@@ -109,10 +118,12 @@ export default {
         this.loading = true;
         return true;
       }
-      this.$message({
+      alert('Atención - El tamaño del archivo no puede superar los 3 MB');
+     console.log({
         message: "Please do not upload files larger than 3m in size.",
         type: "warning"
       });
+
       this.loading = false;
       return false;
     },
@@ -123,27 +134,47 @@ export default {
       this.conciliarDatos(results);
     },
 
+    preSelect(items) {
+
+      items.forEach(element => {
+        if (element.Procesar){
+          this.selected.push(element);
+        }
+      });
+     
+    },
+
     async conciliarDatos(coleccion) {
       await this.importarDatos(coleccion);
       this.tableData = this.respuesta;
+      this.preSelect(this.respuesta);
+      this.disableButton = false;
       this.loading = false;
     },
 
-    async procesarRegistrosHN() {
+    async procesarRegistrosDatos() {
+
       if (this.selected.length > 0) {
         this.loading = true;
         var params = {
           data: this.selected,
           login: localStorage.getItem("login")
         };
-        //console.log(params);
+        console.log(params);
         await this.procesarRegistros(params);
-        if (this.unselect) {
-          this.selected = [];
           this.loading = false;
-        }
+           this.disableButton = true;
+          this.showSwal();
+          
+
       }
+
     },
+    showSwal() {
+      //this.$swal("Good job!", dataStatusMsg, dataStatus);
+      this.$swal(this.dataStatusMsg, "", this.dataStatus);
+    },
+
     formatFecha(fecha) {
       if (fecha != "" && this.obtuvoRespuesta) {
         return moment(fecha).format("DD/MM/YYYY");

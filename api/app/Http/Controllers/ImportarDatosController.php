@@ -35,8 +35,12 @@ class ImportarDatosController extends Controller
         //    p_MARCA INT,
         //    p_SOLOCARONE TINYINT(1)
         
+        $lst = array(); 
         $lstImp = array();
         $listOculta = array();
+
+        $lst['list'] = $lstImp;
+        $lst['ocultar'] = $listOculta;
 
         //foreach ($arr2 as $dato) {
         foreach ($arrObj as $dato) {
@@ -105,9 +109,13 @@ class ImportarDatosController extends Controller
                 $oImp->NroSolicitud = $buscado[0]->Solicitud;
                 
             }else{
+
                 $_Accion->Codigo = 'A';
                 $_Accion->Texto = 'Grabar - Inexistente en Operaciones';
-                $oImp->Accion = "A: Grabar - Inexistente en Operaciones";
+                
+                $oImp->Accion = $_Accion;
+                $oImp->Procesar = true;
+                //$oImp->Accion = "A: Grabar - Inexistente en Operaciones";
             }
 
             $ApeNom = $js->ApellidoyNombre;
@@ -119,10 +127,14 @@ class ImportarDatosController extends Controller
                 $apellido = trim($arrApeNom[0]);
                 $nombre = trim($arrApeNom[1]);
 
+                $oImp->Apellido = $apellido;
+                $oImp->Nombres = $nombre;
                 $oImp->ApellidoyNombre = $arrApeNom;
             }else{
                 $apellido = $ApeNom;
 
+                $oImp->Apellido = $apellido;
+                $oImp->Nombres = null;
                 $oImp->ApellidoyNombre = $apellido;
             }
                 
@@ -155,18 +167,18 @@ class ImportarDatosController extends Controller
 
         } // Termina el foreach que recorre los registros del excel
 
-        return $lstImp;
+        //return $lstImp;
 
         //CONCILIACION
 
         $lstSubite = DB::select("CALL hnweb_subitegetdatos(NULL, NULL, 1);");
 
-        return $lstSubite;
+        //return $lstSubite;
          //hnweb_subitegetdatos`(p_ID INT,  p_SUP INT, p_ESOFICIALYSUP TINYINT)
         
         foreach ($lstImp as $imp) {
             $grupo = $imp->Grupo;
-            $oreden = $imp->Orden;
+            $orden = $imp->Orden;
 
             $itemBuscado = $this->searchGyOyM($lstSubite, $grupo, $orden, $marca);
 
@@ -183,7 +195,9 @@ class ImportarDatosController extends Controller
                     $_Accion->Codigo = 'E';
                     $_Accion->Texto = 'Ya existe. Se grabará la Fecha Vto. Cuota (Op), Nombre y Apellido (Excel).';
                     
-                    $imp->Accion = "E: Ya existe. Se grabará la Fecha Vto. Cuota (Op), Nombre y Apellido (Excel).";
+                    $imp->Accion = $_Accion;
+
+                    //$imp->Accion = "E: Ya existe. Se grabará la Fecha Vto. Cuota (Op), Nombre y Apellido (Excel).";
                     $imp->Procesar = true;
                 }else{
                     $_Accion = new \stdClass();
@@ -191,7 +205,9 @@ class ImportarDatosController extends Controller
                     $_Accion->Codigo = 'N';
                     $_Accion->Texto = 'Ya existe. Por inexistencia de op no hay FechaVtoCuota para grabar. Solo se grabará Nombre y Apellido (Excel).';
                     
-                    $imp->Accion = "N: Ya existe. Por inexistencia de op no hay FechaVtoCuota para grabar. Solo se grabará Nombre y Apellido (Excel).";
+                    $imp->Accion = $_Accion;
+
+                    //$imp->Accion = "N: Ya existe. Por inexistencia de op no hay FechaVtoCuota para grabar. Solo se grabará Nombre y Apellido (Excel).";
                     $imp->Procesar = true;
                 } 
             }else{
@@ -201,13 +217,14 @@ class ImportarDatosController extends Controller
                     $_Accion->Codigo = 'A';
                     $_Accion->Texto = 'Grabar.';
                     
-                    $imp->Accion = "A: Grabar.";
+                    $imp->Accion = $_Accion;
+                    //$imp->Accion = "A: Grabar.";
                     $imp->Procesar = true;
                 } 
             }
         }
 
-        /*
+        
         //ARMO LIST CON LOS QUE SE VAN A OCULTAR
         foreach ($lstSubite as $s) {
             $encontro = false;
@@ -223,8 +240,12 @@ class ImportarDatosController extends Controller
                 array_push($listOculta, $s);
             }
         }
-        */
-        return $lstImp;
+        //return $listOculta;
+        //return $lstImp;
+        $lst['list'] = $lstImp;
+        $lst['ocultar'] = $listOculta;
+
+        return $lst;
 
     }
 
@@ -234,28 +255,63 @@ class ImportarDatosController extends Controller
         $arrObj = $request->data;
         
         $str = array();
+
+        $origen = 1;
        
         foreach ($arrObj as $dato) {
             
             $js = json_decode(json_encode($dato));
 
-           // $str[] = $js;
+            if(!isset($js->Nombres) || $js->Nombres == ""){
+                $js->Nombres = NULL;
+            }
+            if(!isset($js->TelefonoFijo) || $js->TelefonoFijo == ""){
+                $js->TelefonoFijo = NULL;
+            }
+            if(!isset($js->Celular) || $js->Celular == ""){
+                $js->Celular = NULL;
+            }
+            if(!isset($js->Domicilio) || $js->Domicilio == ""){
+                $js->Domicilio = NULL;
+            }
+            if(!isset($js->FechaVtoCuota) || $js->FechaVtoCuota == ""){
+                $js->FechaVtoCuota = NULL;
+            }
 
-            $str[] = "CALL hnweb_subitemodifhn(".$js->Marca.", '".$js->Grupo."', ".$js->Orden.", ".$js->ImporteHN.", '".$login."', ".$js->PrecioMaximoCompra.");";
-            $res[] = DB::select("CALL hnweb_subitemodifhn(".$js->Marca.", '".$js->Grupo."', ".$js->Orden.", ".$js->ImporteHN.", '".$login."', ".$js->PrecioMaximoCompra.");");
-        
-            //
-            //hnweb_subitemodifhn(p_MARCA INT,
-            //    p_GRUPO VARCHAR(5),
-            //    p_ORDEN INT,   
-            //    p_HABERNETO DECIMAL(18, 2),
-            //   p_LOGIN VARCHAR(50),
-            //    p_PRECIOCOMPRAMAXANT INT
+            $dateFechaVtoCuota = '20200101';
             
+
+            //DB::statement('CALL hnweb_subiteimpdatos(?, ?, ?, ?)',[$js->Accion->Codigo,$js->Marca, "'".$js->Grupo."'", $js->Orden, $js->NroSolicitud, "'".$js->Apellido."'", "'".$js->Nombres."'", "'".$js->TelefonoFijo."'", '".$js->Celular."', ".$js->FechaVtoCuota.", ".$js->ImporteHN.", '".$js->Domicilio."', ".$origen.", 0]);
+
+            $res[] = DB::statement('CALL hnweb_subiteimpdatos(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',[$js->Accion->Codigo,$js->Marca, $js->Grupo, $js->Orden, $js->NroSolicitud, $js->Apellido, $js->Nombres, $js->TelefonoFijo, $js->Celular, $dateFechaVtoCuota, $js->ImporteHN, $js->Domicilio, $origen, 0]);
+
+
+            $str[] = "CALL hnweb_subiteimpdatos('".$js->Accion->Codigo."', ".$js->Marca.", '".$js->Grupo."', ".$js->Orden.", ".$js->NroSolicitud.", '".$js->Apellido."', '".$js->Nombres."', '".$js->TelefonoFijo."', '".$js->Celular."', ".$js->FechaVtoCuota.", ".$js->ImporteHN.", '".$js->Domicilio."', ".$origen.", 0);";
+            //$res[] = DB::select("CALL hnweb_subiteimpdatos('".$js->Accion->Codigo."', ".$js->Marca.", '".$js->Grupo."', ".$js->Orden.", ".$js->NroSolicitud.", '".$js->Apellido."', '".$js->Nombres."', '".$js->TelefonoFijo."', '".$js->Celular."', ".$js->FechaVtoCuota.", ".$js->ImporteHN.", '".$js->Domicilio."', ".$origen.", 0);");
+        
+            /*
+            hnweb_subiteimpdatos
+            p_ACCION CHAR(1),
+            p_MARCA INT,
+            p_GRUPO VARCHAR(5),
+            p_ORDEN INT,
+            p_SOLICITUD INT,
+            p_APELLIDO VARCHAR(50),
+            p_NOMBRES VARCHAR(50),
+            p_TELEFONO1 VARCHAR(50),
+            p_TELEFONO2 VARCHAR(50),
+            p_FECHAVTOCUOTA2 DATETIME,
+            p_HABERNETO DECIMAL(18, 2),
+            p_DOMICILIO VARCHAR(200),
+            p_ORIGEN INT,
+            p_AVANCE INT,
+            OUT p_RET BIGINT
+            */
 
         }
     
-        return $str;
+
+        return $res;
 
     }
 

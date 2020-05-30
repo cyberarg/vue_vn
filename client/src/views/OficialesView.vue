@@ -46,5 +46,6 @@ export default {
 <style scoped>
 .contenedor {
   width: 100%;
+  background-color: #eeeeee;
 }
 </style>

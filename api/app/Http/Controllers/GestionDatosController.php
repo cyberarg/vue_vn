@@ -16,7 +16,59 @@ class GestionDatosController extends Controller
      */
     public function index(Request $request)
     {
-            return DB::select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
+        $db3= "CG";
+        $result = DB::select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
+       // $result = DB::connection($db3)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
+        $list = array();
+  
+        foreach ($result as $r) {
+
+            $oDet = json_decode(json_encode($r), FALSE);
+
+            $oDet->ApeNom = $oDet->Apellido.", ".$oDet->Nombres;
+
+            $fcav = null;
+            $fvc2 = strtotime($oDet->FechaVtoCuota2);
+
+            if ($oDet->FechaVtoCuota2 === NULL){
+                $oDet->AvanceAutomatico = 0;
+           }else{
+                $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fvc2);
+                $oDet->Avance = $oDet->AvanceAutomatico;
+           }
+//dd($oDet);
+           array_push($list, $oDet);
+
+        } //end foreach
+
+        return $list;
+                
+    }
+
+
+    public function getAvanceAutomatico($FechaVtoCuota2){
+
+        $avance = 0;
+
+        $fecha = strtotime(now());
+
+        if ($FechaVtoCuota2 === NULL){
+            return 0;
+        }else{
+            $fvtoc2 = date_create(date('Y-m-d', $FechaVtoCuota2));
+            $ff = date_create(date('Y-m-d', $fecha));       
+    
+            if (checkdate(date('m', $FechaVtoCuota2), date('d', $FechaVtoCuota2), date('Y', $FechaVtoCuota2))){
+                $diff = date_diff($fvtoc2 , $ff);
+                $avance = ($diff->format('%y') * 12 + $diff->format('%m')) + 2;
+            }
+        }
+
+        if ($avance > 84){
+            $avance = 84;
+        }
+
+        return $avance;
     }
 
     /**
@@ -48,8 +100,8 @@ class GestionDatosController extends Controller
      */
     public function show($id)
     {
-        return DB::select("CALL hnweb_subitegetdatos(".$id.", NULL, 0);");
-  
+        //return DB::select("CALL hnweb_subitegetdatos(".$id.", NULL, 0);");
+        return DB::connection($db3)->select("CALL hnweb_subitegetdatos(".$id.", NULL, 0);");
     }
 
     /**

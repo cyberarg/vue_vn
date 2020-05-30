@@ -63,7 +63,6 @@ export const actions = {
           commit("AUTH_SUCCESS", { token });
           commit("SET_USER", user);
           commit("SET_LOGIN", userData.login);
-          //dispatch("attempt", token);
 
           resolve(response);
         })

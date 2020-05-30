@@ -6,7 +6,8 @@ export const state = {
   },
   config: {
     palette: {
-      primary: "#4ae387",
+      //primary: "#4ae387",
+      primary: "#7d8899",
       danger: "#e34a4a",
       info: "#4ab2e3",
       success: "#db76df",

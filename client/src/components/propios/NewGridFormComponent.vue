@@ -30,10 +30,10 @@
                   class="center"
                   @click="showResumen(item.Nombre, item.Cantidad)"
                 >
-                  {{ item.Cantidad }}
+                  {{ formatItem(item) }}
                 </td>
               </template>
-              <span>{{ getTooltipData(item.Cantidad) }}</span>
+              <span>{{ getTooltipData(item) }}</span>
             </v-tooltip>
           </tr>
         </template>
@@ -42,16 +42,29 @@
             <td>{{ item.Tipo }}</td>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <td v-on="on" class="center">{{ item.Casos }}</td>
+                <td
+                  v-on="on"
+                  class="center"
+                  @click="showDetalle(item.Capa, item.Tipo, item.Casos, 0)"
+                >
+                  {{ item.Casos }}
+                </td>
               </template>
+
               <span>{{ getTooltipData(item.Casos) }}</span>
             </v-tooltip>
             <td class="center">{{ getPorcentaje(item) }}</td>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <td v-on="on" class="center">{{ item.MontoHN | numFormat }}</td>
+                <td
+                  v-on="on"
+                  class="center"
+                  @click="showDetalle(item.Capa, item.Tipo, item.MontoHN, 1)"
+                >
+                  ${{ item.MontoHN | numFormat }}
+                </td>
               </template>
-              <span>{{ getTooltipData(item.MontoHN) }}</span>
+              <span>{{ getTooltipDataHN(item.MontoHN) }}</span>
             </v-tooltip>
             <td class="center">{{ getPorcentajeHN(item) }}</td>
           </tr>
@@ -154,32 +167,64 @@ export default {
       XLSX.writeFile(workbook, `${filename}.xlsx`);
     },
 
+    formatItem(item) {
+      if (item.Nombre == "Nuevos Casos Mes Actual - Haber Neto") {
+        return "$" + this.$options.filters.numFormat(item.Cantidad);
+      } else {
+        return item.Cantidad;
+      }
+    },
+
     getPorcentaje(item) {
       //console.log(item.TotalCasos);
-      if (item.TotalCasos > 0) {
-        return Math.round((item.Casos * 100) / item.TotalCasos) + "%";
+      if (item.Tipo == "Total") {
+        return "-";
+      } else {
+        if (item.TotalCasos > 0) {
+          return Math.round((item.Casos * 100) / item.TotalCasos) + "%";
+        }
+        return "";
       }
-      return "";
     },
 
     getPorcentajeHN(item) {
-      // console.log(item.TotalMontoHN);
-      if (item.TotalMontoHN > 0) {
-        return Math.round((item.MontoHN * 100) / item.TotalMontoHN) + "%";
+      if (item.Tipo == "Total") {
+        return "-";
+      } else {
+        if (item.TotalMontoHN > 0) {
+          return Math.round((item.MontoHN * 100) / item.TotalMontoHN) + "%";
+        }
+        return "";
       }
-      return "";
     },
 
-    getTooltipData(cantidad) {
+    getTooltipDataHN(cantidad) {
       if (cantidad > 0) {
         this.showToolTip = true;
-        if (cantidad == 1) {
-          return "Haga click para ver la operación.";
-        }
 
-        return "Haga click para ver las " + cantidad + " operaciones.";
+        return "Haga click para ver el detalle del Monto HN $" + cantidad + ".";
       } else {
         this.showToolTip = false;
+      }
+    },
+
+    getTooltipData(item) {
+      if (item.Nombre == "Nuevos Casos Mes Actual - Haber Neto") {
+        this.showToolTip = true;
+        return (
+          "Haga click para ver el detalle del Monto HN $" + item.Cantidad + "."
+        );
+      } else {
+        if (item.Cantidad > 0) {
+          this.showToolTip = true;
+          if (item.Cantidad == 1) {
+            return "Haga click para ver la operación.";
+          }
+
+          return "Haga click para ver las " + item.Cantidad + " operaciones.";
+        } else {
+          this.showToolTip = false;
+        }
       }
     },
 
@@ -189,6 +234,9 @@ export default {
       switch (tipo) {
         case "SGA":
           prop = "EsPropio";
+          break;
+        case "Propios y Otras Sociedades":
+          prop = "PropiosyOtrasSoc";
           break;
         case "Propios":
           prop = "EsPropio";
@@ -202,19 +250,58 @@ export default {
       }
 
       await this.showResumenPropios(prop);
-      var titleForm = "Detalle de " + tipo + " - Cantidad: " + cantidad;
+      var titleForm = "Detalle de " + tipo + " - ";
+      if (tipo == "Nuevos Casos Mes Actual - Haber Neto") {
+        titleForm = titleForm + "Monto HN: $";
+      } else {
+        titleForm = titleForm + "Cantidad: ";
+      }
+      titleForm = titleForm + cantidad;
+
       this.$router.push({
         name: "detallereporte",
         params: {
           title: titleForm,
           volverARuta: "reportecompras",
-          items: this.items_filtrados
+          items_f: this.items_filtrados
+        }
+      });
+    },
+
+    async showDetalle(capa, tipo, cantidad, esMontoHN) {
+      var prop = capa;
+      var titleForm = "Detalle de " + tipo + " - ";
+
+      if (esMontoHN) {
+        titleForm = titleForm + "Monto HN: $";
+      } else {
+        titleForm = titleForm + "Cantidad: ";
+      }
+      titleForm = titleForm + cantidad;
+
+      switch (this.pars.grid) {
+        case "MesActual":
+          await this.showDetalleAvanceMes(prop);
+          break;
+        case "Universo":
+          await this.showDetalleUniverso(prop);
+          break;
+      }
+
+      this.$router.push({
+        name: "detallereporte",
+        params: {
+          title: titleForm,
+          volverARuta: "reportecompras",
+          items_f: this.items_filtrados
         }
       });
     },
 
     ...mapActions({
-      showResumenPropios: "reporteacompras/showResumenPropios"
+      showResumenPropios: "reporteacompras/showResumenPropios",
+      showDetalleAvanceMes: "reporteacompras/showDetalleAvanceMes",
+      showDetalleUniverso: "reporteacompras/showDetalleUniverso"
     })
   }
 };

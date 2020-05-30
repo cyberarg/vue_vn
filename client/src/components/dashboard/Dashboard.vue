@@ -4,156 +4,157 @@
       <v-row>
         <v-col cols="12" sm="6" lg="4">
           <router-link to="oficiales">
-            <base-material-stats-card
-              color="#13599E"
-              icon="mdi-account-group"
-              title="Oficiales"
-              value
-              sub-icon
-              sub-text
-            />
+            <v-card hover elevation-2>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">Oficiales</v-list-item-title>
+                  <v-list-item-subtitle>Hay 27 oficiales activos.</v-list-item-subtitle>
+                </v-list-item-content>
+                <v-icon :size="sizeicon" color="blue-grey darken-1">mdi-account-group</v-icon>
+              </v-list-item>
+            </v-card>
           </router-link>
         </v-col>
-
         <v-col cols="12" sm="6" lg="4">
           <router-link to="estadogestion">
-            <base-material-stats-card
-              color="#13599E"
-              icon="mdi-file-table-outline"
-              title="Estado de la Gestión"
-              value
-              sub-icon
-              sub-text
-            />
+            <v-card hover elevation-2>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">Estado de la Gestión</v-list-item-title>
+                  <v-list-item-subtitle>Asignados: 35 | Sin Gestionar: 22</v-list-item-subtitle>
+                </v-list-item-content>
+                <v-icon :size="sizeicon" color="blue-grey darken-1">mdi-file-table-outline</v-icon>
+              </v-list-item>
+            </v-card>
           </router-link>
         </v-col>
-
         <v-col cols="12" sm="6" lg="4">
           <router-link to="gestiondatos">
-            <base-material-stats-card
-              color="#13599E"
-              icon="mdi-file-document-edit-outline"
-              title="Gestión de Datos"
-              value
-              sub-icon
-              sub-text
-            />
+            <v-card hover elevation-2>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">Gestión de Datos</v-list-item-title>
+                </v-list-item-content>
+
+                <v-icon :size="sizeicon" color="blue-grey darken-1">mdi-file-document-edit-outline</v-icon>
+              </v-list-item>
+            </v-card>
           </router-link>
         </v-col>
       </v-row>
+
       <v-row>
         <v-col cols="12" sm="6" lg="4">
           <router-link to="asignaciondatos">
-            <base-material-stats-card
-              color="#1667B8"
-              icon="mdi-clipboard-arrow-down-outline"
-              title="Asignación de Datos"
-              value
-              sub-icon
-              sub-text
-            />
+            <v-card hover elevation-2>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">Asignación de Datos</v-list-item-title>
+                  <v-list-item-subtitle>Le asignaron 23 datos nuevos.</v-list-item-subtitle>
+                </v-list-item-content>
+                <v-icon :size="sizeicon" color="blue-grey darken-2">mdi-clipboard-arrow-down-outline</v-icon>
+              </v-list-item>
+            </v-card>
           </router-link>
         </v-col>
-
         <v-col cols="12" sm="6" lg="4">
           <router-link to="importardatos">
-            <base-material-stats-card
-              color="#1667B8"
-              icon="mdi-application-import"
-              title="Importación de Datos"
-              value="importardatos"
-              sub-icon
-              sub-text
-            />
+            <v-card hover elevation-2>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">Importación de Datos</v-list-item-title>
+                  <v-list-item-subtitle>
+                    Fecha Último Proceso: 23/05/2020
+                    17:18
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+                <v-icon :size="sizeicon" color="blue-grey darken-2">mdi-application-import</v-icon>
+              </v-list-item>
+            </v-card>
           </router-link>
         </v-col>
         <v-col cols="12" sm="6" lg="4">
           <router-link to="importarhn">
-            <base-material-stats-card
-              color="#1667B8"
-              icon="mdi-file-import-outline"
-              title="Importación de HN"
-              value
-              sub-icon
-              sub-text
-            />
-          </router-link>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" sm="6" lg="6">
-          <router-link to="reportecompras">
-            <base-material-stats-card
-              color="#1976D2"
-              icon="mdi-file-chart"
-              title="Reporte de Compras"
-              value
-              sub-icon
-              sub-text
-            />
-          </router-link>
-        </v-col>
-        <v-col cols="12" sm="6" lg="6">
-          <router-link to="reporteasignaciones">
-            <base-material-stats-card
-              color="#1976D2"
-              icon="mdi-printer-check"
-              title="Reporte de Asignaciones por Período"
-              value
-              sub-icon
-              sub-text
-            />
-          </router-link>
-        </v-col>
-      </v-row>
-      <!--
-      
-      <dashboard-charts />
+            <v-card hover elevation-2>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">Importación de HN</v-list-item-title>
+                  <v-list-item-subtitle>
+                    Fecha Último Proceso: 23/05/2020
+                    17:32
+                  </v-list-item-subtitle>
+                </v-list-item-content>
 
-      -->
-      <router-link to="prueba">
-        <dashboard-info-block />
-      </router-link>
-      <!--    
-      <div class="row">
-        <div class="flex xs12">
-          <dashboard-table />
-        </div>
-      </div>
-    
-      <div class="row row-equal">
-        <div class="flex xs12 lg6">
-          <dashboard-tabs @submit="addAddressToMap" />
-        </div>
-        <div class="flex xs12 lg6">
-          <dashboard-map ref="dashboardMap" />
-        </div>
-      </div>
-      -->
+                <v-icon :size="sizeicon" color="blue-grey darken-2">mdi-file-import-outline</v-icon>
+              </v-list-item>
+            </v-card>
+          </router-link>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12" sm="6" lg="4">
+          <router-link to="reportecompras">
+            <v-card hover elevation-2>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">Reporte Cartera de Compra</v-list-item-title>
+                </v-list-item-content>
+                <v-icon :size="sizeicon" color="blue-grey darken-3">mdi-file-chart</v-icon>
+              </v-list-item>
+            </v-card>
+          </router-link>
+        </v-col>
+        <v-col cols="12" sm="6" lg="4">
+          <router-link to="reporteasignaciones">
+            <v-card hover elevation-2>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">Reporte de Asignaciones por Período</v-list-item-title>
+                  <v-list-item-subtitle></v-list-item-subtitle>
+                </v-list-item-content>
+                <v-icon :size="sizeicon" color="blue-grey darken-3">mdi-printer-check</v-icon>
+              </v-list-item>
+            </v-card>
+          </router-link>
+        </v-col>
+        <v-col cols="12" sm="6" lg="4">
+          <router-link to="haberesnetos">
+            <v-card hover elevation-2>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">Haberes Netos</v-list-item-title>
+                </v-list-item-content>
+
+                <v-icon :size="sizeicon" color="blue-grey darken-3">mdi-briefcase-check</v-icon>
+              </v-list-item>
+            </v-card>
+          </router-link>
+        </v-col>
+      </v-row>
     </div>
   </v-app>
 </template>
 
 <script>
-//import DashboardCharts from "./DashboardCharts";
-import DashboardInfoBlock from "./DashboardInfoBlock";
-//import DashboardTable from "./DashboardTable";
-//import DashboardTabs from "./DashboardTabs";
-//import DashboardMap from "./DashboardMap";
-
-import BaseMaterialStatsCard from "@/components/base/MaterialCard";
+//import BaseMaterialStatsCard from "@/components/base/MaterialCard";
+import { mapActions } from "vuex";
 
 export default {
   name: "dashboard",
+  data() {
+    return {
+      sizeicon: 64
+    };
+  },
   components: {
-    // DashboardCharts,
-    DashboardInfoBlock,
-    //DashboardTable,
-    //DashboardTabs,
-    //DashboardMap,
-    BaseMaterialStatsCard
+    //BaseMaterialStatsCard
+  },
+  created() {
+    this.getCotizacionesDolar();
   },
   methods: {
+    ...mapActions({ getCotizacionesDolar: "cotizaciondolar/getCotizaciones" })
     /*
     addAddressToMap({ city, country }) {
       this.$refs.dashboardMap.addAddress({ city: city.text, country });
@@ -166,11 +167,16 @@ export default {
 <style lang="scss">
 .contenedor {
   width: 100%;
+  background-color: #eeeeee;
 }
 
 .row-equal {
   margin-top: 10px;
   padding-bottom: 5px;
+}
+
+.rounded-card {
+  border-radius: 100px;
 }
 
 .row-equal .flex {
@@ -180,8 +186,7 @@ export default {
 }
 
 .dashboard {
-  .va-card {
-    margin-bottom: 0 !important;
-  }
+  background-color: #eeeeee;
+  margin: 50px 20px;
 }
 </style>

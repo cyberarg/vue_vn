@@ -22,6 +22,7 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function(){
     //Route::get('login', 'LoginController');
 });
 //Route::get('oficiales', 'OficialController');
+Route::resource('cotizaciondolar', 'CotizacionDolarController');
 Route::resource('oficiales', 'OficialController');
 Route::resource('supervisores', 'SupervisorController');
 Route::resource('estadogestion', 'EstadoGestionController');
@@ -36,7 +37,7 @@ Route::post('/procesardatos', 'ImportarDatosController@procesarRegistros');
 Route::post('/importarhn', 'ImportarHNController@importarDatosHN');
 Route::post('/procesarhn', 'ImportarHNController@procesarRegistrosHN');
 
-
+Route::get('/haberesnetos', 'HaberesNetosController@getDatosHaberesNetos');
 
 Route::resource('observaciones', 'ObservacionController');
 Route::resource('combobox', 'ComboboxController');

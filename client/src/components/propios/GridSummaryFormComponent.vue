@@ -2,7 +2,7 @@
   <v-app>
     <div>
       <h3></h3>
-      <v-card>
+      <v-card color="grey lighten-4">
         <v-card-title>
           {{ pars.titleform }}
           <v-divider class="mx-4" inset vertical></v-divider>
@@ -118,8 +118,10 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-
-          <v-btn color="blue darken-1" text @click="exportExcel">Excel</v-btn>
+          <v-btn cclass="ma-2" outlined text @click="exportExcel">
+            <v-icon left>mdi-file-excel-outline</v-icon>
+            Excel</v-btn
+          >
         </v-card-actions>
       </v-card>
     </div>

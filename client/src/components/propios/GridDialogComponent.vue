@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="contenedor">
     <v-data-table
       :headers="headers"
       :items="items"
@@ -10,7 +10,7 @@
       loading-text="Cargando Datos... Aguarde"
     >
       <template v-slot:top>
-        <v-toolbar flat color="white">
+        <v-toolbar flat color="grey lighten-4">
           <v-toolbar-title>Oficiales</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
@@ -24,7 +24,9 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="650px">
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo</v-btn>
+              <v-btn cclass="ma-2" outlined text v-on="on"
+                ><v-icon left>mdi-account-plus-outline</v-icon>Nuevo</v-btn
+              >
             </template>
             <v-card>
               <v-progress-linear
@@ -65,11 +67,13 @@
               </v-card-text>
 
               <v-card-actions v-if="!loading">
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close"
-                  >Cancelar</v-btn
+                <v-btn cclass="ma-2" outlined @click="save"
+                  ><v-icon left>mdi-content-save-outline</v-icon>Guardar</v-btn
                 >
-                <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn cclass="ma-2" outlined @click="close"
+                  ><v-icon left>mdi-cancel</v-icon>Cancelar</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -202,3 +206,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.contenedor {
+  width: 100%;
+  background-color: #eeeeee;
+}
+</style>

@@ -1,22 +1,21 @@
 <template>
-  <form @submit.prevent="onsubmit">
+  <form @submit.prevent="loggin">
     <va-input
       v-model="username"
       type="text"
       :label="$t('auth.username')"
-      :error="!!userErrors.length"
-      :error-messages="userErrors"
+      :error="!!emailErrors.length"
+      :error-messages="emailErrors"
     />
 
     <va-input
-      class="inputselec"
       v-model="password"
       type="password"
       :label="$t('auth.password')"
       :error="!!passwordErrors.length"
       :error-messages="passwordErrors"
     />
-    <!--
+
     <div
       class="auth-layout__options d-flex align--center justify--space-between"
     >
@@ -29,14 +28,9 @@
         $t("auth.recover_password")
       }}</router-link>
     </div>
--->
+
     <div class="d-flex justify--center mt-3">
-      <!--
       <va-button type="submit" class="my-0">{{ $t("auth.login") }}</va-button>
-        -->
-      <v-btn outlined color="indigo" @click="onsubmit">{{
-        $t("auth.login")
-      }}</v-btn>
     </div>
   </form>
 </template>
@@ -50,14 +44,13 @@ export default {
       username: "",
       password: "",
       keepLoggedIn: false,
-      userErrors: [],
+      emailErrors: [],
       passwordErrors: []
     };
   },
-
   computed: {
     formReady() {
-      return !this.userErrors.length && !this.passwordErrors.length;
+      return !this.emailErrors.length && !this.passwordErrors.length;
     }
   },
   methods: {
@@ -66,15 +59,12 @@ export default {
     }),
 
     onsubmit() {
-      this.userErrors = this.username ? [] : ["Usuario es un campo requerido"];
-      this.passwordErrors = this.password
-        ? []
-        : ["Contraseña es un campo requerido"];
+      this.emailErrors = this.username ? [] : ["Username is required"];
+      this.passwordErrors = this.password ? [] : ["Password is required"];
       if (!this.formReady) {
         return;
       }
-      this.loggin();
-      //this.$router.push({ name: "dashboard" });
+      this.$router.push({ name: "dashboard" });
     },
 
     loggin() {
@@ -85,21 +75,22 @@ export default {
         .then(() => this.$router.push({ name: "dashboard" }))
         .catch(err => {
           console.log(err);
-          this.userErrors = ["Usuario o Clave incorrecto."];
-          this.passwordErrors = ["Usuario o Clave incorrecto."];
+          this.emailErrors = ["Usuario o Clave incorrecto."];
           this.snackbar = true;
         });
+      /*
+      this.$store
+        .dispatch("signIn", { login, password })
+        .then(() => this.$router.push({ name: "dashboard" }))
+        .catch(err => {
+          console.log(err);
+          this.emailErrors = ["Usuario o Clave incorrecto."];
+          this.snackbar = true;
+        });
+        */
     }
   }
 };
 </script>
 
-<style>
-.contenedor {
-  height: 280px;
-}
-
-.va-input__container__label {
-  color: #7d8899;
-}
-</style>
+<style lang="scss"></style>

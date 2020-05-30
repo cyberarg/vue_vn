@@ -1,8 +1,8 @@
 <template>
   <v-app class="fullw">
-    <v-card class="padded">
+    <v-card class="padded" color="grey lighten-4">
       <v-card-title>
-        Reporte Compras Subite
+        Reporte Cartera de Compra
         <v-divider class="mx-4" inset vertical></v-divider>
       </v-card-title>
       <div class="card-body">
@@ -14,15 +14,26 @@
               item-text="Nombre"
               item-value="Codigo"
               label="Periodos"
-              v-model.Codigo="codperiodo"
+              v-model="codperiodo"
               @change="getReporte()"
             ></v-select>
           </v-col>
+          <v-col cols="6" md="6">
+            <v-btn
+              class="ma-2"
+              outlined
+              color="blue darken-1"
+              text
+              @click="getReporte()"
+              :disabled="disableButton"
+              ><v-icon left>mdi-refresh</v-icon>Actualizar</v-btn
+            >
+          </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-show="showTable">
           <v-col cols="6" md="6">
-            <GridFormComponent
+            <NewGridFormComponent
               :pars="{
                 grid: 'Resumen',
                 titleform: 'Resumen',
@@ -47,10 +58,10 @@
                 },
                 { text: '', value: 'Cantidad', align: 'center', width: '40%' }
               ]"
-            ></GridFormComponent>
+            ></NewGridFormComponent>
           </v-col>
           <v-col cols="6" md="6">
-            <GridFormComponent
+            <NewGridFormComponent
               :pars="{
                 grid: 'MesActual',
                 titleform: 'Nuevos Casos Mes Actual',
@@ -76,13 +87,13 @@
                 { text: 'Monto HN', value: 'MontoHN', align: 'center' },
                 { text: '%', value: 'PorcentajeHN', align: 'center' }
               ]"
-            ></GridFormComponent>
+            ></NewGridFormComponent>
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-show="showTable">
           <v-col cols="12" md="12">
-            <GridFormComponent
+            <NewGridFormComponent
               :pars="{
                 grid: 'Universo',
                 titleform: 'Universo Compra',
@@ -108,7 +119,7 @@
                 { text: 'Monto HN', value: 'MontoHN', align: 'center' },
                 { text: '%', value: 'Porcentaje', align: 'center' }
               ]"
-            ></GridFormComponent>
+            ></NewGridFormComponent>
           </v-col>
         </v-row>
       </div>
@@ -117,7 +128,7 @@
 </template>
 
 <script>
-import GridFormComponent from "@/components/propios/NewGridFormComponent.vue";
+import NewGridFormComponent from "@/components/propios/NewGridFormComponent.vue";
 //import GridFormCrud from "@/components/propios/GridFormCrud.vue";
 import GridFormDatosComponent from "@/components/propios/GridFormComponent.vue";
 import moment from "moment";
@@ -126,7 +137,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "reportecompras",
   components: {
-    GridFormComponent,
+    NewGridFormComponent,
     GridFormDatosComponent
     //GridFormCrud
   },
@@ -171,6 +182,10 @@ export default {
   },
 
   computed: {
+    disableButton() {
+      return this.codperiodo == "";
+    },
+
     ...mapState("reporteacompras", [
       "items_resumen",
       "items_casos_mes",
@@ -182,7 +197,7 @@ export default {
       "loadinguniv",
       "loadingtextuniv",
       "items_filtrados",
-      "mostrarInfo"
+      "showTable"
     ])
   },
 
