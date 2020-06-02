@@ -5,27 +5,12 @@
     :minimized.sync="minimized"
     :mobile-width="mobileWidth"
   >
-    <app-navbar
-      class="app-layout__navbar"
-      :is-top-bar.sync="isTopBar"
-      :minimized.sync="minimized"
-    />
+    <app-navbar class="app-layout__navbar" :is-top-bar.sync="isTopBar" :minimized.sync="minimized" />
     <app-topbar class="app-layout__topbar" v-if="isTopBar" />
     <div class="app-layout__container">
-      <app-sidebar
-        class="app-layout__sidebar"
-        v-if="!isTopBar"
-        :minimized="minimized"
-      />
-      <div
-        class="app-layout__main"
-        :class="{ 'app-layout__main--top': isTopBar }"
-      >
-        <main
-          class="app-layout__main-layout layout fluid gutter--xl"
-          slot="content"
-          role="main"
-        >
+      <app-sidebar class="app-layout__sidebar" v-if="!isTopBar" :minimized="minimized" />
+      <div class="app-layout__main" :class="{ 'app-layout__main--top': isTopBar }">
+        <main class="app-layout__main-layout layout fluid gutter--xl" slot="content" role="main">
           <router-view />
         </main>
       </div>
@@ -54,7 +39,7 @@ export default {
   },
   data() {
     return {
-      isTopBar: false,
+      isTopBar: true,
       minimized: false,
       mobileWidth: 767
     };
@@ -62,10 +47,13 @@ export default {
   inject: ["contextConfig"],
   mixins: [ColorThemeActionsMixin, ColorThemeMixin],
   created() {
+    /*
     if (this.$route.query && this.$route.query.theme === "corporate") {
       this.setTheme("corporate");
     }
     this.$root.$on("change-theme", this.setTheme);
+    */
+    this.setTheme("corporate");
   },
   beforeDestroy() {
     this.$root.$off("change-theme", this.setTheme);

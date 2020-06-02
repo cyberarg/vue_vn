@@ -110,7 +110,7 @@
             <v-card hover elevation-2>
               <v-list-item three-line>
                 <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Reporte de Asignaciones por Período</v-list-item-title>
+                  <v-list-item-title class="headline mb-1">Reporte Asig. por Período</v-list-item-title>
                   <v-list-item-subtitle></v-list-item-subtitle>
                 </v-list-item-content>
                 <v-icon :size="sizeicon" color="blue-grey darken-3">mdi-printer-check</v-icon>

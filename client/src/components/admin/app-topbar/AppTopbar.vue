@@ -1,8 +1,5 @@
 <template>
-  <aside
-    class="app-topbar"
-    :style="computedStyles"
-  >
+  <aside class="app-topbar" :style="computedStyles">
     <ul class="app-topbar__menu">
       <template v-for="(item, key) in items">
         <app-topbar-link-group
@@ -31,61 +28,57 @@
           :is-active="item.name === $route.name"
           :icon="[ 'sidebar-menu-item-icon vuestic-iconset', item.meta.iconClass ]"
           :to="{ name: item.name }"
-        >
-          {{ $t(item.displayName) }}
-        </app-topbar-link>
+        >{{ $t(item.displayName) }}</app-topbar-link>
       </template>
     </ul>
   </aside>
 </template>
 
 <script>
-import AppTopbarLink from './components/AppTopbarLink'
-import AppTopbarLinkGroup from './components/AppTopbarLinkGroup'
-import AppTopbarLinkGroupItem from './components/AppTopbarLinkGroupItem'
-import { navigationRoutes } from '../app-sidebar/NavigationRoutes'
-import { ColorThemeMixin } from '../../../services/vuestic-ui'
+import AppTopbarLink from "./components/AppTopbarLink";
+import AppTopbarLinkGroup from "./components/AppTopbarLinkGroup";
+import AppTopbarLinkGroupItem from "./components/AppTopbarLinkGroupItem";
+import { navigationRoutes } from "../app-sidebar/NavigationRoutes";
+import { ColorThemeMixin } from "../../../services/vuestic-ui";
 
 export default {
-  name: 'app-topbar',
+  name: "app-topbar",
   mixins: [ColorThemeMixin],
-  inject: ['contextConfig'],
+  inject: ["contextConfig"],
   components: {
     AppTopbarLink,
     AppTopbarLinkGroup,
-    AppTopbarLinkGroupItem,
+    AppTopbarLinkGroupItem
   },
-  props: {
-  },
+  props: {},
   computed: {
-    computedStyles () {
+    computedStyles() {
       if (this.contextConfig.invertedColor) {
         return {
-          backgroundColor: 'white',
-          boxShadow: '0 2px 3px 0 rgba(52, 56, 85, 0.25)',
-        }
+          backgroundColor: "white",
+          boxShadow: "0 2px 3px 0 rgba(52, 56, 85, 0.25)"
+        };
       }
 
       return {
-        backgroundColor: this.$themes.secondary,
-      }
-    },
-  },
-  data () {
-    return {
-      items: navigationRoutes.routes,
+        backgroundColor: this.$themes.secondary
+      };
     }
   },
-  methods: {
-    hasActiveByDefault (item) {
-      return item.children.some(child => child.name === this.$route.name)
-    },
+  data() {
+    return {
+      items: navigationRoutes.routes
+    };
   },
-}
+  methods: {
+    hasActiveByDefault(item) {
+      return item.children.some(child => child.name === this.$route.name);
+    }
+  }
+};
 </script>
 
 <style lang="scss">
-
 .app-topbar {
   transition: all 0.3s ease;
   width: 100%;
@@ -99,13 +92,13 @@ export default {
     flex-wrap: wrap;
     min-height: 4rem;
     margin: 0 auto;
-    max-width: 90%;
-    width: 100%;
 
     &-group {
       @include media-breakpoint-down(sm) {
         flex-grow: 1;
       }
+
+      padding-right: 10px;
     }
 
     &-group-item {
