@@ -38,6 +38,10 @@ Route::post('/importarhn', 'ImportarHNController@importarDatosHN');
 Route::post('/procesarhn', 'ImportarHNController@procesarRegistrosHN');
 
 Route::get('/haberesnetos', 'HaberesNetosController@getDatosHaberesNetos');
+Route::post('/calculadorahn', 'HaberesNetosController@getCalculoHN');
+Route::get('/getmodeloshn', 'HaberesNetosController@getModelosHN');
+Route::get('/getplaneshn', 'HaberesNetosController@getPlanesHN');
+
 
 Route::resource('observaciones', 'ObservacionController');
 Route::resource('combobox', 'ComboboxController');

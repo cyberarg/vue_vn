@@ -15,6 +15,7 @@ import ReporteComprasView from "@/views/ReporteComprasView.vue";
 import ReporteAsignacionView from "@/views/ReporteAsignacionesView.vue";
 import DetalleReporteView from "@/views/DetalleReporteView.vue";
 import HaberesNetosView from "@/views/HaberesNetosView.vue";
+import CalculadoraHNView from "@/views/CalculadoraHNView.vue";
 
 Vue.use(Router);
 
@@ -171,6 +172,12 @@ export default new Router({
           path: "haberesnetos",
           name: "haberesnetos",
           component: HaberesNetosView
+        },
+
+        {
+          path: "calculadora",
+          name: "calculadora",
+          component: CalculadoraHNView
         },
 
         {

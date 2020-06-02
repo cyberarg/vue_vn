@@ -17,7 +17,8 @@ class GestionDatosController extends Controller
     public function index(Request $request)
     {
         $db3= "CG";
-        $result = DB::select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
+        //$result = DB::select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
+        $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, NULL, 0);"); 
        // $result = DB::connection($db3)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
         $list = array();
   
@@ -31,7 +32,12 @@ class GestionDatosController extends Controller
             $fvc2 = strtotime($oDet->FechaVtoCuota2);
 
             if ($oDet->FechaVtoCuota2 === NULL){
-                $oDet->AvanceAutomatico = 0;
+                if ($oDet->Marca == 5){
+                    $oDet->AvanceAutomatico = $oDet->Avance;
+                }else{
+                    $oDet->AvanceAutomatico = 0;
+                }
+   
            }else{
                 $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fvc2);
                 $oDet->Avance = $oDet->AvanceAutomatico;
@@ -101,7 +107,8 @@ class GestionDatosController extends Controller
     public function show($id)
     {
         //return DB::select("CALL hnweb_subitegetdatos(".$id.", NULL, 0);");
-        return DB::connection($db3)->select("CALL hnweb_subitegetdatos(".$id.", NULL, 0);");
+        //return DB::connection($db3)->select("CALL hnweb_subitegetdatos(".$id.", NULL, 0);");
+        return DB::select("CALL hnweb_subitegetdatos_vw(".$id.", NULL, 0);");
     }
 
     /**

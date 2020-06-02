@@ -26,6 +26,35 @@ class HaberesNetosController extends Controller
 
     }
 
+    public function getCalculoHN(Request $request){
+        
+        $marca = $request->marca;
+        $plan = $request->plan;
+        $cpg = $request->cpagas;
+        $cad = $request->cadel;
+
+        /*
+        $marca = 5;
+        $plan = '1B';
+        $cpg = 60;
+        $cad = 0;
+        $hnFormula = 0;
+        $hnReal = 0;
+        */
+
+        DB::statement("CALL hnweb_calculo_hn(".$marca.", '".$plan."', ".$cpg.", ".$cad.", @hnFormula, @hnReal);");
+
+        $result = DB::select("SELECT @hnFormula AS HNFormula, @hnReal AS HNReal");
+        return $result;
+    }
+
+    public function getModelosHN(Request $request){
+        return DB::select('SELECT modelos.Codigo, modelos.Nombre FROM modelos WHERE modelos.marca = '.$request->marca.' ORDER BY modelos.Nombre ASC;');
+    }
+
+    public function getPlanesHN(Request $request){
+        return DB::select('SELECT hnweb_codigos_planes.Plan AS Codigo, hnweb_codigos_planes.Plan AS Nombre FROM hnweb_codigos_planes WHERE hnweb_codigos_planes.marca = '.$request->marca.' AND hnweb_codigos_planes.CodigoModelo = '.$request->modelo.' ORDER BY hnweb_codigos_planes.Plan ASC;');
+    }
 
     public function getHaberesNetosVigentes($codEmpresa){
        

@@ -56,6 +56,10 @@ export const navigationRoutes = {
       disabled: true,
       children: [
         {
+          name: "calculadora",
+          displayName: "Calculadora"
+        },
+        {
           name: "/",
           displayName: "HN Vigentes"
         },
