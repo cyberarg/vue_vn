@@ -49,7 +49,9 @@ class HaberesNetosController extends Controller
     }
 
     public function getModelosHN(Request $request){
-        return DB::select('SELECT modelos.Codigo, modelos.Nombre FROM modelos WHERE modelos.marca = '.$request->marca.' ORDER BY modelos.Nombre ASC;');
+        $res = DB::select('SELECT modelos.Codigo, modelos.Nombre FROM modelos WHERE modelos.marca = '.$request->marca.' ORDER BY modelos.Nombre ASC;');
+
+        return $res;
     }
 
     public function getPlanesHN(Request $request){
