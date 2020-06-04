@@ -14,13 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function(){
     Route::post('signin', 'SignInController');
     Route::post('signout', 'SignOutController');
 
     Route::get('me', 'MeController');
-    //Route::get('login', 'LoginController');
+
 });
+
+
+
 //Route::get('oficiales', 'OficialController');
 Route::resource('cotizaciondolar', 'CotizacionDolarController');
 Route::resource('oficiales', 'OficialController');
@@ -56,7 +60,6 @@ Route::resource('reportecomprasresumen', 'ReporteComprasResumenController');
 Route::resource('reportecomprasmesactual', 'ReporteComprasMesActualController', ['parameters' => [
     'index' => 'list'
 ]]);
-
 
 
 

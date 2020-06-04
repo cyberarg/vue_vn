@@ -7,7 +7,7 @@
         <v-spacer></v-spacer>
       </v-card-title>
       <v-container>
-        <v-form v-model="valid">
+        <v-form ref="form" v-model="valid">
           <v-row>
             <v-col cols="5" md="5">
               <v-container>
@@ -56,7 +56,7 @@
                       placeholder="Haber Neto"
                       :disabled="disabled"
                       :filled="filled"
-                      v-model="item.HaberNeto"
+                      v-model="valorHaberNetoFormat"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -124,12 +124,7 @@
                 </v-row>
                 <v-row>
                   <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      label="Email 1"
-                      placeholder="Email 1"
-                      v-model="item.Email1"
-                    ></v-text-field>
+                    <v-text-field dense label="Email 1" placeholder="Email 1" v-model="item.Email1"></v-text-field>
                   </v-col>
                   <v-col cols="6" md="6">
                     <v-text-field
@@ -194,7 +189,8 @@
                       item-text="Nombre"
                       item-value="Codigo"
                       label="Estado"
-                      v-model="item.CodEstado"
+                      :value="codEstado"
+                      @input="setEstado"
                     ></v-select>
                   </v-col>
                   <v-col cols="6" md="2">
@@ -209,7 +205,7 @@
                       placeholder="Fecha Compra"
                       :disabled="disabled"
                       :filled="filled"
-                      v-model="item.FechaCompra"
+                      v-model="fechaCompra"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="6" md="6">
@@ -219,7 +215,10 @@
                       item-text="Nombre"
                       item-value="Codigo"
                       label="Motivo"
-                      v-model="item.Motivo"
+                      :disabled="checkMotivo"
+                      :value="codMotivo"
+                      @input="setMotivo"
+                      :rules="rules"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -231,7 +230,7 @@
                       placeholder="Precio Máximo de Compra"
                       :disabled="disabled"
                       :filled="filled"
-                      v-model="item.PrecioMaximoCompra"
+                      v-model="valorPrecioMaxCompraFormat"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="6" md="6">
@@ -253,11 +252,7 @@
       <template>
         <v-dialog v-model="dialog" v-show="dialog" max-width="650px">
           <v-card>
-            <v-progress-linear
-              v-if="loading"
-              indeterminate
-              color="primary darken-1"
-            ></v-progress-linear>
+            <v-progress-linear v-if="loading" indeterminate color="primary darken-1"></v-progress-linear>
             <v-card-title>
               <span class="headline">Nueva Observación</span>
             </v-card-title>
@@ -277,13 +272,13 @@
             </v-card-text>
 
             <v-card-actions>
-              <v-btn cclass="ma-2" outlined @click="saveObs"
-                ><v-icon left>mdi-content-save-outline</v-icon>Guardar</v-btn
-              >
+              <v-btn cclass="ma-2" outlined @click="saveObs">
+                <v-icon left>mdi-content-save-outline</v-icon>Guardar
+              </v-btn>
               <v-spacer></v-spacer>
-              <v-btn cclass="ma-2" outlined @click="close"
-                ><v-icon left>mdi-cancel</v-icon>Cancelar</v-btn
-              >
+              <v-btn cclass="ma-2" outlined @click="close">
+                <v-icon left>mdi-cancel</v-icon>Cancelar
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -303,16 +298,9 @@
             <tr v-show="showAutObs" :class="typeObs(item.CambioReconocimiento)">
               <td>{{ item.login }}</td>
               <td>{{ timestamp(item.Fecha) }}</td>
+              <td>{{ item.Obs }}</td>
               <td>
-                {{ item.Obs }}
-              </td>
-              <td>
-                <v-badge
-                  color="green"
-                  content="AUT"
-                  v-if="item.Automatica == 1"
-                >
-                </v-badge>
+                <v-badge color="green" content="AUT" v-if="item.Automatica == 1"></v-badge>
               </td>
             </tr>
           </template>
@@ -320,9 +308,7 @@
             <tr v-show="item.Automatica != 1">
               <td>{{ item.login }}</td>
               <td>{{ timestamp(item.Fecha) }}</td>
-              <td>
-                {{ item.Obs }}
-              </td>
+              <td>{{ item.Obs }}</td>
               <td></td>
             </tr>
           </template>
@@ -331,29 +317,25 @@
           <v-toolbar flat>
             <v-toolbar-title>Observaciones</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-switch
-              v-model="showAutObs"
-              label="Incluir Observaciones Automáticas"
-              class="mt-2"
-            ></v-switch>
+            <v-switch v-model="showAutObs" label="Incluir Observaciones Automáticas" class="mt-2"></v-switch>
           </v-toolbar>
         </template>
       </v-data-table>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="ma-2" outlined text @click="nuevaObs"
-          ><v-icon left>mdi-comment-plus-outline</v-icon>Nueva</v-btn
-        >
+        <v-btn class="ma-2" outlined text @click="nuevaObs">
+          <v-icon left>mdi-comment-plus-outline</v-icon>Nueva
+        </v-btn>
       </v-card-actions>
 
       <v-card-actions>
-        <v-btn class="ma-2" outlined text @click="submit"
-          ><v-icon left>mdi-content-save-outline</v-icon>Aceptar</v-btn
-        >
+        <v-btn class="ma-2" :disabled="disabledAceptar" outlined text @click="submit">
+          <v-icon left>mdi-content-save-outline</v-icon>Aceptar
+        </v-btn>
         <v-spacer></v-spacer>
-        <v-btn class="ma-2" outlined text @click="volver"
-          ><v-icon left>mdi-arrow-left</v-icon>Volver</v-btn
-        >
+        <v-btn class="ma-2" outlined text @click="volver">
+          <v-icon left>mdi-arrow-left</v-icon>Volver
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-app>
@@ -370,6 +352,10 @@ export default {
 
   data() {
     return {
+      valid: true,
+      disabledAceptar: false,
+      estadoReact: null,
+      motivoErrors: [],
       showAutObs: true,
       color: "",
       mode: "",
@@ -400,23 +386,19 @@ export default {
         titleform: "Detalle Dato"
       },
 
-      valid: false,
       firstname: "",
       lastname: "",
       nameRules: [
         v => !!v || "Name is required",
         v => v.length <= 10 || "Name must be less than 10 characters"
       ],
-      email: "",
-      emailRules: [
-        v => !!v || "E-mail is required",
-        v => /.+@.+/.test(v) || "E-mail must be valid"
-      ]
+      email: ""
     };
   },
 
   created() {
     this.$store.dispatch("gestiondatos/mostrarDato", this.id);
+    //this.setEstado();
   },
 
   watch: {
@@ -433,6 +415,12 @@ export default {
     }),
 
     async submit() {
+      this.disabledAceptar = true;
+      if (!this.$refs.form.validate()) {
+        this.disabledAceptar = false;
+        return;
+      }
+
       await this.saveDato(this.item);
       await this.showSwal();
       this.volver();
@@ -467,6 +455,17 @@ export default {
     showSwal() {
       //this.$swal("Good job!", dataStatusMsg, dataStatus);
       this.$swal(this.dataStatusMsg, "", this.dataStatus);
+    },
+
+    setEstado(value) {
+      this.item.CodEstado = value;
+    },
+
+    setMotivo(value) {
+      console.log(value);
+      if (this.item.CodEstado == 4) {
+        this.item.Motivo = value;
+      }
     }
   },
 
@@ -476,12 +475,46 @@ export default {
       //return this.pars.routeapi;
     },
 
-    /*
-    ID() {
-      return 34994;
-      // return this.pars.id;
+    fechaCompra() {
+      return this.timestamp(this.item.FechaCompra);
     },
-    */
+
+    codEstado() {
+      return parseInt(this.item.CodEstado);
+    },
+
+    codMotivo() {
+      return parseInt(this.item.Motivo);
+    },
+
+    checkMotivo() {
+      if (this.item.CodEstado != 4) {
+        return true;
+      }
+    },
+
+    rules() {
+      const rules = [];
+
+      if (this.item.CodEstado == 4 && this.item.Motivo != 0) {
+        const rule = v => !!v || "Motivo es Requerido.";
+
+        rules.push(rule);
+      }
+
+      return rules;
+    },
+
+    valorHaberNetoFormat() {
+      return "$" + this.$options.filters.numFormat(this.item.HaberNeto);
+    },
+
+    valorPrecioMaxCompraFormat() {
+      return (
+        "$" + this.$options.filters.numFormat(this.item.PrecioMaximoCompra)
+      );
+    },
+
     module() {
       return "gestiondatos";
       //return this.pars.module;

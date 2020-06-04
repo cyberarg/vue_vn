@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-app>
     <h3></h3>
     <v-card color="grey lighten-4">
       <v-card-title>
@@ -34,19 +34,22 @@
               {{ item[column.value] }}
             </td>
               -->
-              <td align="center">{{ item.Grupo }}-{{ item.Orden }}</td>
-              <td width="1%" align="center">${{ Math.round(item.HaberNeto) | numFormat }}</td>
+              <td align="center" width="1%">{{ item.Grupo }}-{{ item.Orden }}</td>
+              <td align="center">${{ Math.round(item.HaberNeto) | numFormat }}</td>
               <td align="start">{{ item.ApeNom }}</td>
+              <!--
               <td width="1%" align="center">{{ item.CPG }}</td>
               <td width="1%" align="center">{{ item.CAD }}</td>
-              <td width="1%" align="center">{{ item.Avance }}</td>
+              -->
+              <td align="center">{{ item.Avance }}</td>
               <td align="left">{{ getTextEstado(item.NomEstado) }}</td>
-              <td width="1%" align="center">{{ formatFecha(item.FechaCompra) }}</td>
-              <td width="1%" align="center">${{ Math.round(item.PrecioCompra) | numFormat }}</td>
-              <td width="1%" align="center">${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</td>
               <td align="left">{{ getTextMotivo(item.Motivo) }}</td>
-              <td width="1%" align="center">{{ formatFecha(item.FechaUltObs) }}</td>
-              <td width="1%">
+              <td align="center">{{ formatFecha(item.FechaCompra) }}</td>
+              <td align="center">${{ Math.round(item.PrecioCompra) | numFormat }}</td>
+              <td align="center">${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</td>
+              <td align="center">{{ formatFecha(item.FechaUltimaAsignacion) }}</td>
+              <td align="center">{{ formatFecha(item.FechaUltObs) }}</td>
+              <td>
                 <v-btn text @click="getDato(item)">
                   <v-icon left>mdi-text-search</v-icon>Ver Dato
                 </v-btn>
@@ -88,7 +91,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-  </div>
+  </v-app>
 </template>
 <script>
 import { mapState, mapActions } from "vuex";

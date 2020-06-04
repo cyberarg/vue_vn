@@ -50,7 +50,8 @@ class ReporteAsignacionController extends Controller
 
         return $estados;
 */
-        $result = DB::connection($db3)->select("CALL hnweb_subitereporteasigperiodo(".$periodoMes.", ".$periodoAnio.");");
+        //$result = DB::connection($db3)->select("CALL hnweb_subitereporteasigperiodo(".$periodoMes.", ".$periodoAnio.");");
+        $result = DB::select("CALL hnweb_subitereporteasigperiodo(".$periodoMes.", ".$periodoAnio.");");
       
         $lst = array();
         $list = array();

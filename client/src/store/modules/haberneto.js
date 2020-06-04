@@ -127,7 +127,7 @@ export const actions = {
   getModelos({ commit }, marca) {
     commit("GET_MODELOS_STATUS");
     return axios
-      .get("/getmodeloshn/?marca=" + marca)
+      .get("/getmodeloshn?marca=" + marca)
       .then(response => {
         console.log(response.data);
         commit("MODELOS_SUCCESS", response.data);
@@ -142,7 +142,7 @@ export const actions = {
     commit("GET_PLANES_STATUS");
     console.log(p);
     return axios
-      .get("/getplaneshn/?marca=" + p.marca + "&modelo=" + p.modelo)
+      .get("/getplaneshn?marca=" + p.marca + "&modelo=" + p.modelo)
       .then(response => {
         console.log(response.data);
         commit("PLANES_SUCCESS", response.data);

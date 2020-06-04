@@ -43,10 +43,15 @@ class EstadoGestionController extends Controller
         $empresa['Items'] = $results1;
 
         $respuesta['Empresa'] = $empresa;
-*/
+
         $results1 = DB::connection($db1)->select("CALL hnweb_subitereporte();");
         $results2 = DB::connection($db2)->select("CALL hnweb_subitereporte();");
         $results3 =  DB::connection($db3)->select("CALL hnweb_subitereporte();");
+*/
+        $marca = 5;
+        $results1 = DB::select("CALL hnweb_subitereporte(".$marca.");");
+        $results2 = array();
+        $results3 = array();
 
 
        //$estados = array_merge($empresa1, $empresa2);

@@ -7,14 +7,13 @@
         <v-spacer></v-spacer>
       </v-card-title>
 
-      <v-container class="centered">
+      <v-container>
         <v-form v-model="valid">
-          <v-row>
-            <v-col cols="2" md="2"></v-col>
-            <v-col cols="8" md="8">
+          <v-row justify="center">
+            <v-col lg="6" md="6" sm="8" xs="12">
               <v-container>
                 <v-row>
-                  <v-col cols="4" md="4">
+                  <v-col lg="4" md="4" sm="4" xs="12">
                     <v-select
                       dense
                       :items="marcas"
@@ -25,7 +24,7 @@
                       disabled
                     ></v-select>
                   </v-col>
-                  <v-col cols="4" md="4">
+                  <v-col lg="4" md="4" sm="4" xs="12">
                     <v-select
                       dense
                       :items="items_modelos"
@@ -37,7 +36,7 @@
                       @change="loadPlanes"
                     ></v-select>
                   </v-col>
-                  <v-col cols="4" md="4">
+                  <v-col lg="4" md="4" sm="4" xs="12">
                     <v-select
                       dense
                       :items="items_planes"
@@ -50,7 +49,7 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="4" md="4">
+                  <v-col lg="4" md="4" sm="4" xs="12">
                     <v-text-field
                       dense
                       label="Cuotas Pagas"
@@ -59,7 +58,7 @@
                       @change="verificarCuotas('CPG')"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4" md="4">
+                  <v-col lg="4" md="4" sm="4" xs="12">
                     <v-text-field
                       dense
                       label="Cuotas Adelantadas"
@@ -68,25 +67,22 @@
                       @change="verificarCuotas('CAD')"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4" md="4">
-                    <v-btn cclass="ma-2" outlined @click="calcularHN">
+                  <v-col lg="4" md="4" sm="4" xs="12">
+                    <v-btn cclass="ma-2" small outlined @click="calcularHN">
                       <v-icon left>mdi-calculator</v-icon>Calcular
                     </v-btn>
                   </v-col>
                 </v-row>
 
-                <v-divider class="mx-1" inset horizontal></v-divider>
+                <v-divider horizontal></v-divider>
 
-                <v-row>
-                  <v-col cols="4" md="4"></v-col>
-                  <v-col cols="4" md="4">
+                <v-row justify="center">
+                  <v-col lg="12" md="12" sm="12" xs="12">
                     <p class="hn">{{netoCalculado}}</p>
                   </v-col>
-                  <v-col cols="4" md="4"></v-col>
                 </v-row>
               </v-container>
             </v-col>
-            <v-col cols="2" md="2"></v-col>
           </v-row>
         </v-form>
       </v-container>
@@ -221,7 +217,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style  scoped>
 .fullw {
   width: 100%;
 }
@@ -233,5 +229,6 @@ export default {
 .hn {
   font-size: 26px;
   font-weight: bolder;
+  text-align: center;
 }
 </style>

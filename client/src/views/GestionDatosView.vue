@@ -17,21 +17,21 @@
                 {
                   text: 'Grupo Orden',
                   value: 'GrupoOrden',
-                  align: 'center'
+                  align: 'center',
+                  width: '5%'
                 },
 
                 {
                   text: 'Haber Neto',
                   value: 'HaberNeto',
-                  align: 'center',
-                  width: '1%'
+                  align: 'center'
                 },
                 {
-                  text: 'Nombre y Apellido',
+                  text:  'Apellido y Nombre',
                   value: 'ApeNom',
                   align: 'left'
                 },
-
+                /*
                 {
                   text: 'Cuotas PG',
                   value: 'CPG',
@@ -44,11 +44,11 @@
                   align: 'center',
                   width: '1%'
                 },
+                */
                 {
                   text: 'Avance',
                   value: 'Avance',
-                  align: 'center',
-                  width: '1%'
+                  align: 'center'
                 },
                 {
                   text: 'Estado',
@@ -56,33 +56,34 @@
                   align: 'left'
                 },
                 {
-                  text: 'Fecha Compra',
-                  value: 'FechaCompra',
-                  align: 'center',
-                  width: '1%'
-                },
-                {
-                  text: 'Precio Compra',
-                  value: 'PrecioCompra',
-                  align: 'center',
-                  width: '1%'
-                },
-                {
-                  text: 'Precio Max Compra',
-                  value: 'PrecioMaximoCompra',
-                  align: 'center',
-                  width: '1%'
-                },
-                {
                   text: 'Motivo',
                   value: 'Motivo',
                   align: 'left'
                 },
                 {
+                  text: 'Fecha Compra',
+                  value: 'FechaCompra',
+                  align: 'center'
+                },
+                {
+                  text: 'Precio Compra',
+                  value: 'PrecioCompra',
+                  align: 'center'
+                },
+                {
+                  text: 'Precio Max Compra',
+                  value: 'PrecioMaximoCompra',
+                  align: 'center'
+                },
+                {
+                  text: 'Fecha Asignación',
+                  value: 'FechaUltimaAsignacion',
+                  align: 'center'
+                },
+                {
                   text: 'Fecha Ult. Obs',
                   value: 'FechaUltObs',
-                  align: 'center',
-                  width: '1%'
+                  align: 'center'
                 },
                 { text: '', value: 'VerDatos', align: 'center', width: '1%' }
               ]"

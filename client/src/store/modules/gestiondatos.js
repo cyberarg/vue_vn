@@ -188,10 +188,10 @@ export const actions = {
   },
 
   async loadCombosMotivoEstado({ commit }) {
-    const [estados, motivos] = await axios
-      .all([axios.get("/combobox/estados"), axios.get("/combobox/motivos")])
+    await axios
+      .all([axios.get(`/combobox/estados`), axios.get(`/combobox/motivos`)])
       .then(
-        axios.spread(function(estados, motivos) {
+        axios.spread((estados, motivos) => {
           commit("ESTADOS_SUCCESS", estados.data);
           commit("MOTIVOS_SUCCESS", motivos.data);
         })

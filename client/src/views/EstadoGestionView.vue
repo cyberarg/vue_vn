@@ -26,16 +26,16 @@
                 },
                 { text: 'Telefono Mal', value: 'TelefonoMal', align: 'center'},
                 { text: 'Deje Mensaje', value: 'DejeMensaje', align: 'center'},
+                { text: 'No le Interesa', value: 'NoCompra', align: 'center' },
+                { text: 'En Gestión', value: 'EnGestion', align: 'center' },
                 {
                   text: 'Entrevista Pendiente',
                   value: 'EntrevistaPendiente',
                   align: 'center'
                 },
-                { text: 'En Gestión', value: 'EnGestion', align: 'center' },
-                { text: 'No le Interesa', value: 'NoCompra', align: 'center' },
                 { text: 'Vende Plan', value: 'VendePlan', align: 'center'},
-                { text: 'Plan Subite', value: 'Compro', align: 'center' },
-                { text: 'Pasar a Venta', value: 'PasarAVenta', align: 'center'}
+                { text: 'Pasar a Venta', value: 'PasarAVenta', align: 'center'},
+                { text: 'Plan Subite', value: 'Compro', align: 'center' }
               ]"
             ></GridSummaryFormComponent>
           </div>
@@ -46,30 +46,6 @@
 </template>
 
 <script>
-/*
-
-
-:headers="[
-                {
-                  text: 'Oficial',
-                  align: 'start'
-                },
-                { text: 'Asignados' },
-                { text: 'Sin Gestionar'},
-                { text: 'Telefono Mal' },
-                { text: 'Deje Mensaje' },
-                { text: 'Entrevista Pendiente' },
-                { text: 'En Gestión'},
-                { text: 'No le Interesa' },
-                { text: 'Vende Plan'},
-                { text: 'Plan Subite'},
-                { text: 'Pasar a Venta'},
-              ]"
- 
-
-              */
-
-//import GridFormCrud from "@/components/propios/GridFormCrud.vue";
 import GridSummaryFormComponent from "@/components/propios/GridSummaryFormComponent.vue";
 
 export default {
