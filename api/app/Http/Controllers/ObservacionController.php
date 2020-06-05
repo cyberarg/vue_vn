@@ -42,7 +42,7 @@ class ObservacionController extends Controller
         $newObs = new Observacion();
         $newObs->ID_Datos = $request->id;
         $newObs->Obs =$request->Obs;
-        $newObs->login = "admin";
+        $newObs->login = $request->login;
         $newObs->Fecha = now();
         //$newObs->login = $user['login'];
         $newObs->Automatica =  $request->Automatica;

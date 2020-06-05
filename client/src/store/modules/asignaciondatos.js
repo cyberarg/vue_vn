@@ -95,11 +95,13 @@ export const actions = {
     console.log(params);
     //data = params.data;
     //oficial = params.oficial;
+
     return axios
       .post("/asignardatos", {
         data: params.data,
         oficial: params.oficial,
-        supervisor: params.supervisor
+        supervisor: params.supervisor,
+        login: params.login
       })
       .then(response => {
         console.log(response);

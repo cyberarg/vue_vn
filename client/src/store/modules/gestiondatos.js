@@ -6,6 +6,7 @@ export const state = {
   dataStatus: "",
   dataStatusMsg: "",
   items: [],
+  items_filtered: [],
   motivos: [],
   estados: [],
   item: {},
@@ -13,10 +14,24 @@ export const state = {
   observaciones: [],
   loading: true,
   loadingObs: true,
-  showMsg: false
+  showMsg: false,
+  showItemsFiltered: false
 };
 
 export const mutations = {
+  GET_FILTERED_DATA_STATUS(state) {
+    state.dataStatus = "loading";
+    state.showMsg = false;
+  },
+
+  FILTERED_SUCCESS(state, datos) {
+    state.items_filtered = datos;
+    state.showItemsFiltered = true;
+    state.loading = false;
+    state.dataStatus = "success";
+    state.showMsg = false;
+  },
+
   GET_DATA_STATUS(state) {
     state.dataStatus = "loading";
     state.showMsg = false;
@@ -31,6 +46,7 @@ export const mutations = {
 
   SET_DATA_STATUS(state, colection) {
     state.items = colection;
+    // console.log(colection);
     state.loading = false;
     state.dataStatus = "success";
     state.showMsg = false;
@@ -98,6 +114,13 @@ export const mutations = {
 export const getters = {
   getDatoById: state => ID => {
     return state.items.find(item => item.ID === ID);
+  },
+
+  filterItemsByConcesionario: state => {
+    console.log(state.items);
+    return state.items.filter(function(item) {
+      return item.Concesionario === 1;
+    });
   }
 };
 
@@ -116,10 +139,21 @@ export const actions = {
       });
   },
 
+  filterData({ commit, getters }, conc) {
+    commit("GET_FILTERED_DATA_STATUS");
+
+    var filtrado = getters.filterItemsByConcesionario;
+    console.log(filtrado);
+    commit("FILTERED_SUCCESS", filtrado);
+  },
+
   getData({ commit }, api) {
     commit("GET_DATA_STATUS");
+    var user = JSON.parse(localStorage.getItem("user"));
+    var oficial = user.CodigoOficialHN;
+    console.log(oficial);
     return axios
-      .get("/" + api)
+      .get("/" + api + "?oficial=" + oficial)
       .then(response => {
         //console.log(response.data);
         commit("DATOS_SUCCESS", response.data);

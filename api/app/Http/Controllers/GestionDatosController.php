@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\SubiteDatos;
 use App\User;
+use App\Observacion;
 use Illuminate\Http\Request;
 use DB;
 use App\Http\Controllers\UtilsController;
@@ -28,7 +29,11 @@ class GestionDatosController extends Controller
         //$result = DB::select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
         $marca = 5;
         $concesionario = 'NULL';
-        $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, NULL, 0, ".$marca.", ".$concesionario.");"); 
+
+        $oficial = $request->oficial;
+  
+
+        $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, 246, 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
        // $result = DB::connection($db3)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
         $list = array();
   
@@ -68,7 +73,10 @@ class GestionDatosController extends Controller
 
                 $oDet->Estado = $oEstado;
 
-                $oDet->PrecioMaximoCompra = $this->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
+                $util = new UtilsController;
+                $oDet->FechaCompra = $util->reversarFecha($oDet->FechaCompra, 'FE');
+
+                $oDet->PrecioMaximoCompra = $util->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
 
                 array_push($list, $oDet);
             }
@@ -78,30 +86,6 @@ class GestionDatosController extends Controller
 
         return $list;
                 
-    }
-
-    public function getPrecioMaximoCompra($avance, $haberNeto){
-        switch($avance){
-            case  (45 <= $avance) && ($avance <= 61):
-                return $haberNeto * 0.2;
-            break;
-            case (62 <= $avance) && ($avance <= 66):
-                return $haberNeto * 0.3;
-            break;
-            case (67 <= $avance) && ($avance <= 69):
-                return $haberNeto * 0.35;
-            break;
-            case (70 <= $avance) && ($avance <= 79):
-                return $haberNeto * 0.4;
-            break;
-            case (80 <= $avance) && ($avance <= 83):
-                return $haberNeto * 0.5;
-            break;
-            default:
-            return 0;
-        break;
-        }
-
     }
 
 
@@ -227,33 +211,85 @@ class GestionDatosController extends Controller
     {
 
         $dato = SubiteDatos::findOrFail($id);
-
+        $textObsAutom = "";
         $util = new UtilsController;
 
         $dato->Nombres = $request->Nombres;
         $dato->Apellido = $request->Apellido; 
-        $dato->Telefono1 =  $request->Telefono1; 
-        $dato->Telefono2 =  $request->Telefono2; 
-        $dato->Telefono3 =  $request->Telefono3; 
-        $dato->Telefono4 =  $request->Telefono4; 
-        $dato->Email1 =  $request->Email1;
-        $dato->Domicilio = $request->Domicilio;
-        //$dato->FechaCompra =  $util->reversarFecha($request->FechaCompra, 'DB');
-        $dato->FechaCompra =  str_replace("/", "", $request->FechaCompra);
+        //$dato->Telefono1 =  $request->Telefono1; 
+        if ($dato->Telefono1 != $request->Telefono1){
+            $textObsAutom .= ", Teléfono 1 a ".$request->Telefono1." (anterior ".$dato->Telefono1.")";
+            $dato->Telefono1 =  $request->Telefono1; 
+        }
+        
+        if ($dato->Telefono2 != $request->Telefono2){
+            $textObsAutom .= ", Teléfono 2 a ".$request->Telefono2." (anterior ".$dato->Telefono2.")";
+            $dato->Telefono2 =  $request->Telefono2; 
+        }
+
+        if ($dato->Telefono3 != $request->Telefono3){
+            $textObsAutom .= ", Teléfono 3 a ".$request->Telefono3." (anterior ".$dato->Telefono3.")";
+            $dato->Telefono3 =  $request->Telefono3; 
+        }
+
+        if ($dato->Telefono4 != $request->Telefono4){
+            $textObsAutom .= ", Teléfono 4 a ".$request->Telefono4." (anterior ".$dato->Telefono4.")";
+            $dato->Telefono4 =  $request->Telefono4; 
+        }
+
+        if ($dato->Email1 != $request->Email1){
+            $textObsAutom .= ", Email 1 a ".$request->Email1." (anterior ".$dato->Email1.")";
+            $dato->Email1 =  $request->Email1; 
+        }
+
+        if ($dato->Domicilio != $request->Domicilio){
+            $textObsAutom .= ", Domicilio a ".$request->Domicilio." (anterior ".$dato->Domicilio.")";
+            $dato->Domicilio = $request->Domicilio; 
+        }
+
+        $dato->FechaCompra =  $util->reversarFecha($request->FechaCompra, 'DB');
+        //$dato->FechaCompra =  str_replace("/", "", $request->FechaCompra);
+    
         $dato->PrecioCompra =  $request->PrecioCompra;
 
+
         if ($request->CodEstado){
-            $dato->CodEstado = $request->CodEstado;
+
+            if ($dato->CodEstado != $request->CodEstado){
+                $textObsAutom .= ", Estado a ".$util->getNombreEstado($request->CodEstado)." (anterior ".$util->getNombreEstado($dato->CodEstado).")";
+                $dato->CodEstado = $request->CodEstado;
+            }
             if ($request->CodEstado == 4){
-                $dato->Motivo =  $request->Motivo;
+                if ($dato->Motivo != $request->Motivo){
+                    $textObsAutom .= ", Motivo a ".$util->getNombreMotivo($request->Motivo)." (anterior ".$util->getNombreMotivo($dato->Motivo).")";
+                    $dato->Motivo =  $request->Motivo;
+                }
+                
+                
             }else{
                 $dato->Motivo = null;
             }
             //$dato->Motivo = $request->Motivo;
         }
         
-
+        
         $dato->save();
+
+        if ($textObsAutom != ""){
+
+            $textObsAutom = ltrim($textObsAutom, ", ");
+            $textobs = "Se modificaron los siguientes campos: ".$textObsAutom; 
+
+            $obs = new ObservacionController;
+            $reqObs = new Request;
+
+            $reqObs->id = $id;
+            $reqObs->Obs = $textobs;
+            $reqObs->login = 'hnweb';
+            $reqObs->Automatica = 1;
+            
+            $obs->store($reqObs);
+        }
 
         return $dato;
     }

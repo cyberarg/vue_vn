@@ -16,8 +16,8 @@ class AsignacionDatosController extends Controller
     public function index(Request $request)
     {
         $marca = 5;
-        $concesionario = 1;
-        return DB::select("CALL hnweb_subitegetdatos_vw(NULL, NULL, 0, ".$marca.", ".$concesionario.");"); 
+        $concesionario = "NULL";
+        return DB::select("CALL hnweb_subitegetdatos_vw(NULL, NULL, 0, ".$marca.", ".$concesionario.", NULL);"); 
         //return DB::select("CALL net_subitegetdatos(NULL, NULL, 0);");
         
     }
@@ -27,17 +27,21 @@ class AsignacionDatosController extends Controller
         $arrObj = $request->data;
         $oficial = json_decode(json_encode($request->oficial));
         $supervisor = json_decode(json_encode($request->supervisor));
+        $user = json_decode(json_encode($request->login));
 
-        $marca = 5;
+        //$marca = 5;
 
         if (isset($supervisor) && (is_object($supervisor))){
             $asignaOficial = 0;
             $codOficial = 0;
             $codSupervisor = $supervisor->Codigo;
+            $obsAut = "La operación fue asignada al Supervisor ".$supervisor->Nombre."  por el usuario ".$user.".";
+                    
         }else{
             $asignaOficial = 1;
             $codSupervisor = 0;
             $codOficial = $oficial->Codigo;
+            $obsAut =  "La operación fue asignada al Oficial ".$oficial->Nombre." por el usuario ".$user.".";
         }
         
 
@@ -47,8 +51,18 @@ class AsignacionDatosController extends Controller
 
 
             $str[] = "CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$codOficial.", ".$codSupervisor.");";
-            $res[] = DB::select("CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$marca.", ".$codOficial.", ".$codSupervisor.");");
+            $res[] = DB::select("CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$js->Marca.", ".$codOficial.", ".$codSupervisor.");");
         // DB::select("CALL hnweb_subiteasignacion(p_ASIGNAOFICIAL, P_GRUPO, P_ORDEN, p_MARCA, P_OFICIAL, P_SUPERVISOR);");
+
+            $obs = new ObservacionController;
+            $reqObs = new Request;
+
+            $reqObs->id = $js->ID;
+            $reqObs->Obs = $obsAut;
+            $reqObs->login = 'hnweb';
+            $reqObs->Automatica = 1;
+            
+            $obs->store($reqObs);
         }
         return $str;
 

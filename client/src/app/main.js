@@ -33,11 +33,10 @@ import axios from "axios";
 
 Vue.prototype.$http = axios;
 // Sets the default url used by all of this axios instance's requests
-axios.defaults.baseURL = "http://192.168.12.10:8080/api/";
 
-//axios.defaults.baseURL = "http://52.41.224.173/api/";
+//axios.defaults.baseURL = "http://192.168.12.10:8080/api/";
+axios.defaults.baseURL = "http://52.41.224.173/api/";
 
-//axios.defaults.baseURL = "http://52.41.224.173/";
 axios.defaults.headers.get["Accept"] = "application/json";
 
 const token = localStorage.getItem("token");
@@ -70,8 +69,21 @@ Vue.use(ColorThemePlugin, {
 });
 
 router.beforeEach((to, from, next) => {
-  store.commit("app/SET_LOADING", true);
-  next();
+  //if (to.name !== "login" && !isAuthenticated) next({ name: "login" });
+  if (to.name === "login") {
+    localStorage.clear();
+    store.commit("auth/LOGOUT");
+    store.userAuthenticated = false;
+    next();
+  }
+
+  if (to.name !== "login" && !store.userAuthenticated) {
+    next({ name: "login" });
+  } else {
+    next();
+  }
+  //store.commit("app/SET_LOADING", true);
+  //next();
 });
 
 router.afterEach((to, from) => {

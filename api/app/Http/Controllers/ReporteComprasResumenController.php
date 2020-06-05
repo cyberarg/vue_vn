@@ -122,8 +122,9 @@ class ReporteComprasResumenController extends Controller
         //$result = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
 
        // $result = DB::select("CALL hnweb_subitereportecompras('".$periodoAct."');");
-        $result = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+       // $result = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
 
+       $result = DB::select("CALL hnweb_subitereportecompras('".$periodoAct."');");
 //dd($result);
         $list = array();
         $listUniverso = array();

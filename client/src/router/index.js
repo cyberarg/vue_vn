@@ -99,13 +99,15 @@ export default new Router({
           name: "dashboard",
           path: "dashboard",
           component: () => import("../components/dashboard/Dashboard.vue"),
-          default: true
+          default: true,
+          meta: { requiresAuth: true }
         },
         {
           name: "detalledato",
           path: "detalledato",
           props: true,
-          component: DetalleDato
+          component: DetalleDato,
+          meta: { requiresAuth: true }
         },
 
         {

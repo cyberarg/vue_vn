@@ -182,7 +182,7 @@
                       v-model="item.NomOficial"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" md="4">
+                  <v-col cols="6" md="6">
                     <v-select
                       dense
                       :items="estados"
@@ -193,9 +193,11 @@
                       @input="setEstado"
                     ></v-select>
                   </v-col>
+                  <!--
                   <v-col cols="6" md="2">
                     <v-checkbox :label="`Vendido`" dense></v-checkbox>
                   </v-col>
+                  -->
                 </v-row>
                 <v-row>
                   <v-col cols="6" md="6">
@@ -203,10 +205,25 @@
                       dense
                       label="Fecha Compra"
                       placeholder="Fecha Compra"
-                      :disabled="disabled"
+                      :disabled="checkEstado"
                       :filled="filled"
-                      v-model="fechaCompra"
+                      v-model="item.FechaCompra"
                     ></v-text-field>
+                    <!--
+                    <v-menu
+                      v-model="menu2"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="290px"
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-text-field v-model="date" label="Fecha Compra" readonly v-on="on"></v-text-field>
+                      </template>
+                      <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
+                    </v-menu>
+                    -->
                   </v-col>
                   <v-col cols="6" md="6">
                     <v-select
@@ -238,7 +255,7 @@
                       dense
                       label="Precio Compra"
                       placeholder="Precio Compra"
-                      :disabled="disabled"
+                      :disabled="checkEstado"
                       :filled="filled"
                       v-model="item.PrecioCompra"
                     ></v-text-field>
@@ -352,6 +369,8 @@ export default {
 
   data() {
     return {
+      date: new Date().toISOString().substr(0, 10),
+      menu2: false,
       valid: true,
       disabledAceptar: false,
       estadoReact: null,
@@ -430,7 +449,8 @@ export default {
       this.newObs({
         id: this.id,
         Obs: this.observacion,
-        Automatica: this.obsAut
+        Automatica: this.obsAut,
+        login: this.login
       });
       this.dialog = false;
     },
@@ -466,6 +486,13 @@ export default {
       if (this.item.CodEstado == 4) {
         this.item.Motivo = value;
       }
+    },
+
+    setFecha(value) {
+      console.log(value);
+      if (this.item.CodEstado == 5) {
+        this.item.FechaCompra = value;
+      }
     }
   },
 
@@ -485,6 +512,12 @@ export default {
 
     codMotivo() {
       return parseInt(this.item.Motivo);
+    },
+
+    checkEstado() {
+      if (this.item.CodEstado != 5) {
+        return true;
+      }
     },
 
     checkMotivo() {
@@ -519,7 +552,7 @@ export default {
       return "gestiondatos";
       //return this.pars.module;
     },
-
+    ...mapState("auth", ["login", "user"]),
     ...mapState("gestiondatos", [
       "item",
       "observaciones",

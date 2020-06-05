@@ -6,6 +6,7 @@ export const state = {
   authStatus: "",
   token: localStorage.getItem("token") || "",
   user: {},
+  userAuthenticated: false,
   login: ""
 };
 
@@ -33,6 +34,10 @@ export const mutations = {
   LOGOUT(state) {
     state.authStatus = "";
     state.token = "";
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.clear();
+    state.userAuthenticated = false;
   }
 };
 
@@ -55,7 +60,7 @@ export const actions = {
           console.log(response);
           // storing jwt in localStorage. https cookie is safer place to store
           localStorage.setItem("token", token);
-          localStorage.setItem("user", user);
+          localStorage.setItem("user", JSON.stringify(user));
           localStorage.setItem("userName", user.Nombre);
           localStorage.setItem("login", userData.login);
           axios.defaults.headers.common["Authorization"] = "Bearer " + token;
@@ -63,6 +68,8 @@ export const actions = {
           commit("AUTH_SUCCESS", { token });
           commit("SET_USER", user);
           commit("SET_LOGIN", userData.login);
+
+          this.userAuthenticated = true;
 
           resolve(response);
         })
@@ -73,5 +80,14 @@ export const actions = {
           reject(err);
         });
     });
+  },
+
+  checkAuth() {
+    var jwt = localStorage.getItem("token");
+    if (jwt) {
+      this.userAuthenticated = true;
+    } else {
+      this.userAuthenticated = false;
+    }
   }
 };

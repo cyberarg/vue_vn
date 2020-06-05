@@ -30,7 +30,8 @@ Route::resource('cotizaciondolar', 'CotizacionDolarController');
 Route::resource('oficiales', 'OficialController');
 Route::resource('supervisores', 'SupervisorController');
 Route::resource('estadogestion', 'EstadoGestionController');
-Route::resource('gestiondatos', 'GestionDatosController');
+Route::resource('gestiondatos', 'GestionDatosController', ['parameters' => [
+    'index' => 'oficial']]);
 Route::resource('asignaciondatos', 'AsignacionDatosController');
 Route::post('/asignardatos', 'AsignacionDatosController@asginarDatos');
 Route::post('/pasarsingestion', 'AsignacionDatosController@pasarASinGestionar');

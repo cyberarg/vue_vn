@@ -11,13 +11,21 @@
                 itemkey: 'Codigo',
                 module: 'gestiondatos',
                 items: this.items,
-                origen: 'gestiondatos'
+                origen: 'gestiondatos',
+                showCombo: false
               }"
               :headers="[
                 {
                   text: 'Grupo Orden',
                   value: 'GrupoOrden',
                   align: 'center',
+                  width: '5%'
+                },
+
+                {
+                  text: 'Concesionario',
+                  value: 'Concesionario',
+                  align: 'left',
                   width: '5%'
                 },
 
@@ -105,6 +113,11 @@ export default {
     GridFormComponent
     //GridFormCrud
   },
+
+  data() {
+    return {};
+  },
+
   computed: {
     ...mapState("gestiondatos", ["items"])
   },

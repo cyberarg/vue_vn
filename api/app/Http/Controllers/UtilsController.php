@@ -7,6 +7,7 @@ Use DB;
 Use Session;
 Use Auth;
 Use Redirect;
+use App\Estado;
 
 class UtilsController extends Controller
 {
@@ -17,8 +18,58 @@ class UtilsController extends Controller
             case 'DB':
                 $date = implode("", array_reverse(explode("/", $fecha)));
             break;
+            case 'FE':
+                $date = implode("/", array_reverse(explode("/", $fecha)));
+            break;
         }
         return $date;
+    }
+
+    public function getNombreEstado($codEstado){
+        $nombre = Estado::where('Codigo', $codEstado)->pluck('Nombre');
+        return $nombre[0];
+    }
+
+    public function getNombreMotivo($codMotivo){
+        switch($codMotivo){
+            case 0:
+                $nombre = 'Espera el cobro';
+            break;
+            case 1:
+                $nombre = 'Conflicto';
+            break;
+            case 2:
+                $nombre = 'Llamar mas adelante';
+            break;
+            default:
+                $nombre = '';
+            break;
+        }
+        return $nombre;
+    }
+
+    public function getPrecioMaximoCompra($avance, $haberNeto){
+        switch($avance){
+            case  (45 <= $avance) && ($avance <= 61):
+                return $haberNeto * 0.2;
+            break;
+            case (62 <= $avance) && ($avance <= 66):
+                return $haberNeto * 0.3;
+            break;
+            case (67 <= $avance) && ($avance <= 69):
+                return $haberNeto * 0.35;
+            break;
+            case (70 <= $avance) && ($avance <= 79):
+                return $haberNeto * 0.4;
+            break;
+            case (80 <= $avance) && ($avance <= 83):
+                return $haberNeto * 0.5;
+            break;
+            default:
+            return 0;
+        break;
+        }
+
     }
 
     public function getAvanceAutomatico($FechaVtoCuota2){

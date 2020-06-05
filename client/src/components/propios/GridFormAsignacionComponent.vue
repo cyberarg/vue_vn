@@ -7,11 +7,7 @@
           {{ pars.titleform }}
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-switch
-            v-model="showOficiales"
-            label="Cbo Oficiales"
-            class="mt-2"
-          ></v-switch>
+          <v-switch v-model="showOficiales" label="Cbo Oficiales" class="mt-2"></v-switch>
           <v-spacer></v-spacer>
           <template>
             <v-combobox
@@ -37,17 +33,13 @@
             outlined
             text
             @click="pasarSinGestionar()"
-            ><v-icon left>mdi-undo-variant</v-icon>Pasar a Sin Gestionar</v-btn
           >
-          <v-btn
-            class="ma-2"
-            :disabled="disableAsignar"
-            outlined
-            text
-            @click="asignarOficial()"
-            ><v-icon left>{{ userIcon }}</v-icon
-            >Asignar {{ getTextAsignacion }}</v-btn
-          >
+            <v-icon left>mdi-undo-variant</v-icon>Pasar a Sin Gestionar
+          </v-btn>
+          <v-btn class="ma-2" :disabled="disableAsignar" outlined text @click="asignarOficial()">
+            <v-icon left>{{ userIcon }}</v-icon>
+            Asignar {{ getTextAsignacion }}
+          </v-btn>
         </v-card-title>
 
         <v-data-table
@@ -63,30 +55,20 @@
           v-model="selected"
           :single-select="singleSelect"
         >
-          <template v-slot:item.GrupoOrden="{ item }">
-            {{ item.Grupo }}-{{ item.Orden }}
-          </template>
+          <template v-slot:item.GrupoOrden="{ item }">{{ item.Grupo }}-{{ item.Orden }}</template>
 
-          <template v-slot:item.ApeNom="{ item }">
-            {{ item.Apellido }}, {{ item.Nombres }}
-          </template>
-          <template v-slot:item.HaberNeto="{ item }">
-            ${{ Math.round(item.HaberNeto) | numFormat }}
-          </template>
-          <template v-slot:item.PrecioMaximoCompra="{ item }">
-            ${{ Math.round(item.PrecioMaximoCompra) | numFormat }}
-          </template>
-          <template v-slot:item.FechaVtoCuota2="{ item }">
-            {{ formatFecha(item.FechaVtoCuota2) }}
-          </template>
+          <template v-slot:item.ApeNom="{ item }">{{ item.Apellido }}, {{ item.Nombres }}</template>
+          <template v-slot:item.HaberNeto="{ item }">${{ Math.round(item.HaberNeto) | numFormat }}</template>
+          <template
+            v-slot:item.PrecioMaximoCompra="{ item }"
+          >${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</template>
+          <template v-slot:item.FechaVtoCuota2="{ item }">{{ formatFecha(item.FechaVtoCuota2) }}</template>
 
-          <template v-slot:item.FechaUltObs="{ item }">
-            {{ formatFecha(item.FechaUltObs) }}
-          </template>
+          <template v-slot:item.FechaUltObs="{ item }">{{ formatFecha(item.FechaUltObs) }}</template>
           <template v-slot:item.VerDatos="{ item }">
-            <v-btn text @click="getDato(item)"
-              ><v-icon left>mdi-text-search</v-icon>Ver Dato</v-btn
-            >
+            <v-btn text @click="getDato(item)">
+              <v-icon left>mdi-text-search</v-icon>Ver Dato
+            </v-btn>
           </template>
 
           <template v-slot:body.append="{ headers }">
@@ -101,9 +83,8 @@
           <v-spacer></v-spacer>
 
           <v-btn cclass="ma-2" outlined text @click="exportExcel">
-            <v-icon left>mdi-file-excel-outline</v-icon>
-            Excel</v-btn
-          >
+            <v-icon left>mdi-file-excel-outline</v-icon>Excel
+          </v-btn>
         </v-card-actions>
       </v-card>
     </div>
@@ -207,6 +188,7 @@ export default {
       return this.headers.filter(header => header.text !== "ID");
     },
 
+    ...mapState("auth", ["login"]),
     ...mapState("asignaciondatos", [
       "items",
       "loading",
@@ -251,7 +233,8 @@ export default {
         var params = {
           data: this.selected,
           oficial: this.codOficialSelected,
-          supervisor: this.codSupervisorSelected
+          supervisor: this.codSupervisorSelected,
+          login: this.login
         };
         console.log(params);
         await this.asignarDatos(params);

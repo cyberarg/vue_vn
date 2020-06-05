@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="onsubmit">
+  <form @submit.prevent="onsubmit" v-on:keyup.enter="onsubmit">
     <va-input
       v-model="username"
       type="text"
@@ -29,14 +29,16 @@
         $t("auth.recover_password")
       }}</router-link>
     </div>
--->
+    -->
     <div class="d-flex justify--center mt-3">
       <!--
       <va-button type="submit" class="my-0">{{ $t("auth.login") }}</va-button>
-        -->
-      <v-btn outlined color="indigo" @click="onsubmit">{{
+      -->
+      <v-btn outlined color="indigo" :disabled="disableLogin" @click="onsubmit">
+        {{
         $t("auth.login")
-      }}</v-btn>
+        }}
+      </v-btn>
     </div>
   </form>
 </template>
@@ -50,6 +52,7 @@ export default {
       username: "",
       password: "",
       keepLoggedIn: false,
+      disableLogin: false,
       userErrors: [],
       passwordErrors: []
     };
@@ -66,11 +69,13 @@ export default {
     }),
 
     onsubmit() {
+      this.disableLogin = true;
       this.userErrors = this.username ? [] : ["Usuario es un campo requerido"];
       this.passwordErrors = this.password
         ? []
         : ["Contraseña es un campo requerido"];
       if (!this.formReady) {
+        this.disableLogin = false;
         return;
       }
       this.loggin();
@@ -87,6 +92,7 @@ export default {
           console.log(err);
           this.userErrors = ["Usuario o Clave incorrecto."];
           this.passwordErrors = ["Usuario o Clave incorrecto."];
+          this.disableLogin = false;
           this.snackbar = true;
         });
     }

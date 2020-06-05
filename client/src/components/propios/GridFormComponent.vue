@@ -5,6 +5,15 @@
       <v-card-title>
         {{ pars.titleform }}
         <v-divider class="mx-4" inset vertical></v-divider>
+        <v-combobox
+          v-show="mostrarCombo"
+          item-text="Nombre"
+          item-value="Codigo"
+          :items="listConcesionarios"
+          label="Concesionario"
+          :value="codConcesSelected"
+          @change="filterConcesionaria"
+        ></v-combobox>
         <v-spacer></v-spacer>
         <v-text-field
           v-show="mostrarbuscar"
@@ -22,6 +31,7 @@
         :items="myitems"
         :search="search"
         item-key="pars.itemkey"
+        :items-per-page="cantItems"
         class="elevation-1"
         :loading="loading"
         loading-text="Cargando Datos... Aguarde"
@@ -35,6 +45,7 @@
             </td>
               -->
               <td align="center" width="1%">{{ item.Grupo }}-{{ item.Orden }}</td>
+              <td align="center">{{ getTextConc(item.Concesionario) }}</td>
               <td align="center">${{ Math.round(item.HaberNeto) | numFormat }}</td>
               <td align="start">{{ item.ApeNom }}</td>
               <!--
@@ -44,7 +55,7 @@
               <td align="center">{{ item.Avance }}</td>
               <td align="left">{{ getTextEstado(item.NomEstado) }}</td>
               <td align="left">{{ getTextMotivo(item.Motivo) }}</td>
-              <td align="center">{{ formatFecha(item.FechaCompra) }}</td>
+              <td align="center">{{ item.FechaCompra }}</td>
               <td align="center">${{ Math.round(item.PrecioCompra) | numFormat }}</td>
               <td align="center">${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</td>
               <td align="center">{{ formatFecha(item.FechaUltimaAsignacion) }}</td>
@@ -113,7 +124,14 @@ export default {
   data() {
     return {
       search: "",
-      loading: true
+      cantItems: 15,
+      loading: true,
+      codConcesSelected: null,
+      listConcesionarios: [
+        { Codigo: 0, Nombre: "Todos" },
+        { Codigo: 1, Nombre: "Sauma" },
+        { Codigo: 2, Nombre: "Sapac" }
+      ]
     };
   },
 
@@ -128,8 +146,13 @@ export default {
     module() {
       return this.pars.module;
     },
-    grupoorden() {
-      return "32323466";
+
+    mostrarCombo() {
+      if (typeof this.pars.showCombo !== "undefined") {
+        return this.pars.showCombo;
+      } else {
+        return false;
+      }
     },
     mostrarbuscar() {
       if (typeof this.pars.mostrarbuscar !== "undefined") {
@@ -140,13 +163,21 @@ export default {
     },
 
     myitems() {
-      if (typeof this.pars.items !== "undefined") {
-        this.setData(this.pars.items);
-        return this.pars.items;
+      if (
+        typeof this.showItemsFiltered !== "undefined" &&
+        this.showItemsFiltered
+      ) {
+        this.loading = false;
+        return this.items_filtered;
+      } else {
+        if (typeof this.pars.items !== "undefined") {
+          this.setData(this.pars.items);
+          return this.pars.items;
+        }
+        this.setData(this.items);
+        this.loading = false;
+        return this.items;
       }
-      this.setData(this.items);
-      this.loading = false;
-      return this.items;
     },
 
     exportable() {
@@ -157,7 +188,11 @@ export default {
       }
     },
 
-    ...mapState("gestiondatos", ["items"])
+    ...mapState("gestiondatos", [
+      "items",
+      "items_filtered",
+      "showItemsFiltered"
+    ])
   },
 
   methods: {
@@ -167,6 +202,13 @@ export default {
       const filename = "archivoexcel";
       XLSX.utils.book_append_sheet(workbook, data, filename);
       XLSX.writeFile(workbook, `${filename}.xlsx`);
+    },
+
+    filterConcesionaria(value) {
+      if (value.Codigo == 0) {
+      } else {
+        this.filterData(value.Codigo);
+      }
     },
 
     setClass(item) {
@@ -189,6 +231,20 @@ export default {
         } else {
           return "";
         }
+      }
+    },
+
+    getTextConc(conc) {
+      switch (conc) {
+        case "1":
+          return "Sauma";
+          break;
+        case "2":
+          return "Sapac";
+          break;
+        default:
+          return "";
+          break;
       }
     },
 
@@ -233,7 +289,8 @@ export default {
 
     ...mapActions({
       mostrarDato: "gestiondatos/mostrarDato",
-      setData: "gestiondatos/setData"
+      setData: "gestiondatos/setData",
+      filterData: "gestiondatos/filterData"
     })
   }
 

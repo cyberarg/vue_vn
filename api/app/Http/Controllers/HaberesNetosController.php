@@ -35,8 +35,8 @@ class HaberesNetosController extends Controller
 
         /*
         $marca = 5;
-        $plan = '1B';
-        $cpg = 60;
+        $plan = '9B';
+        $cpg = 37;
         $cad = 0;
         $hnFormula = 0;
         $hnReal = 0;
@@ -49,7 +49,7 @@ class HaberesNetosController extends Controller
     }
 
     public function getModelosHN(Request $request){
-        $res = DB::select('SELECT modelos.Codigo, modelos.Nombre FROM modelos WHERE modelos.marca = '.$request->marca.' ORDER BY modelos.Nombre ASC;');
+        $res = DB::select('SELECT modelos.Codigo, modelos.Nombre FROM modelos WHERE  modelos.ParaCalcularHN = 1 AND modelos.marca = '.$request->marca.' ORDER BY modelos.Nombre ASC;');
 
         return $res;
     }
