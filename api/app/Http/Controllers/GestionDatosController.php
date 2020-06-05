@@ -248,7 +248,10 @@ class GestionDatosController extends Controller
             $dato->Domicilio = $request->Domicilio; 
         }
 
-        $dato->FechaCompra =  $util->reversarFecha($request->FechaCompra, 'DB');
+        if (isset($request->FechaCompra)){
+            $dato->FechaCompra =  $util->reversarFecha($request->FechaCompra, 'DB');
+        }
+        
         //$dato->FechaCompra =  str_replace("/", "", $request->FechaCompra);
     
         $dato->PrecioCompra =  $request->PrecioCompra;

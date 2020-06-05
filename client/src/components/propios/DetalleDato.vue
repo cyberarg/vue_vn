@@ -1,6 +1,6 @@
 <template>
   <v-app class="fullw">
-    <v-card color="grey lighten-4">
+    <v-card>
       <v-card-title>
         {{ pars.titleform }} - {{ item.Apellido }}, {{ item.Nombres }}
         <v-divider class="mx-4" inset vertical></v-divider>
@@ -139,6 +139,7 @@
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      class="fillable"
                       label="Teléfono 1"
                       placeholder="Teléfono 1"
                       v-model="item.Telefono1"
@@ -147,6 +148,7 @@
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      class="fillable"
                       label="Teléfono 2"
                       placeholder="Teléfono 2"
                       v-model="item.Telefono2"
@@ -157,6 +159,7 @@
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      class="fillable"
                       label="Teléfono 3"
                       placeholder="Teléfono 3"
                       v-model="item.Telefono3"
@@ -165,6 +168,7 @@
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      class="fillable"
                       label="Teléfono 4"
                       placeholder="Teléfono 4"
                       v-model="item.Telefono4"
@@ -185,6 +189,7 @@
                   <v-col cols="6" md="6">
                     <v-select
                       dense
+                      class="fillable"
                       :items="estados"
                       item-text="Nombre"
                       item-value="Codigo"
@@ -203,6 +208,7 @@
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      class="fillable"
                       label="Fecha Compra"
                       placeholder="Fecha Compra"
                       :disabled="checkEstado"
@@ -228,6 +234,7 @@
                   <v-col cols="6" md="6">
                     <v-select
                       dense
+                      class="fillable"
                       :items="motivos"
                       item-text="Nombre"
                       item-value="Codigo"
@@ -253,6 +260,7 @@
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      class="fillable"
                       label="Precio Compra"
                       placeholder="Precio Compra"
                       :disabled="checkEstado"
@@ -289,11 +297,11 @@
             </v-card-text>
 
             <v-card-actions>
-              <v-btn cclass="ma-2" outlined @click="saveObs">
+              <v-btn cclass="ma-2 primary" @click="saveObs">
                 <v-icon left>mdi-content-save-outline</v-icon>Guardar
               </v-btn>
               <v-spacer></v-spacer>
-              <v-btn cclass="ma-2" outlined @click="close">
+              <v-btn cclass="ma-2 danger" @click="close">
                 <v-icon left>mdi-cancel</v-icon>Cancelar
               </v-btn>
             </v-card-actions>
@@ -340,17 +348,17 @@
       </v-data-table>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="ma-2" outlined text @click="nuevaObs">
+        <v-btn class="ma-2 primary" @click="nuevaObs">
           <v-icon left>mdi-comment-plus-outline</v-icon>Nueva
         </v-btn>
       </v-card-actions>
 
       <v-card-actions>
-        <v-btn class="ma-2" :disabled="disabledAceptar" outlined text @click="submit">
+        <v-btn class="ma-2 primary" :disabled="disabledAceptar" @click="submit">
           <v-icon left>mdi-content-save-outline</v-icon>Aceptar
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn class="ma-2" outlined text @click="volver">
+        <v-btn class="ma-2 primary" @click="volver">
           <v-icon left>mdi-arrow-left</v-icon>Volver
         </v-btn>
       </v-card-actions>
@@ -615,5 +623,9 @@ export default {
 
 .cambioReconocimiento {
   background: #eb952d;
+}
+
+.fillable {
+  font-weight: bold;
 }
 </style>
