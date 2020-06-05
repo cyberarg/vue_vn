@@ -34,8 +34,8 @@ import axios from "axios";
 Vue.prototype.$http = axios;
 // Sets the default url used by all of this axios instance's requests
 
-//axios.defaults.baseURL = "http://192.168.12.10:8080/api/";
-axios.defaults.baseURL = "http://52.41.224.173/api/";
+axios.defaults.baseURL = "http://192.168.12.10:8080/api/";
+//axios.defaults.baseURL = "http://52.41.224.173/api/";
 
 axios.defaults.headers.get["Accept"] = "application/json";
 

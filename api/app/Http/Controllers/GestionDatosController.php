@@ -31,9 +31,10 @@ class GestionDatosController extends Controller
         $concesionario = 'NULL';
 
         $oficial = $request->oficial;
+        $supervisor = 60;
   
 
-        $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, 246, 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
+        $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, ".$supervisor.", 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
        // $result = DB::connection($db3)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
         $list = array();
   
