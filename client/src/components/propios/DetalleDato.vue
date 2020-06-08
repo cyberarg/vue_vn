@@ -124,11 +124,18 @@
                 </v-row>
                 <v-row>
                   <v-col cols="6" md="6">
-                    <v-text-field dense label="Email 1" placeholder="Email 1" v-model="item.Email1"></v-text-field>
+                    <v-text-field
+                      dense
+                      class="fillable"
+                      label="Email 1"
+                      placeholder="Email 1"
+                      v-model="item.Email1"
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      class="fillable"
                       label="Domicilio"
                       placeholder="Domicilio"
                       v-model="item.Domicilio"

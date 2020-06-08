@@ -6,6 +6,7 @@ export const state = {
   dataStatus: "",
   dataStatusMsg: "",
   items: [],
+  items_totales: [],
   listOficiales: [],
   listSupervisores: [],
   loading: true,
@@ -14,12 +15,25 @@ export const state = {
 };
 
 export const mutations = {
+  GET_FILTERED_DATA_STATUS(state) {
+    state.dataStatus = "loading";
+    state.showMsg = false;
+  },
+
+  FILTERED_SUCCESS(state, datos) {
+    state.items = datos;
+    state.loading = false;
+    state.dataStatus = "success";
+    state.showMsg = false;
+  },
+
   GET_DATA_STATUS(state) {
     state.dataStatus = "loading";
   },
 
   DATOS_SUCCESS(state, datos) {
     state.items = datos;
+    state.items_totales = datos;
     state.loading = false;
     state.dataStatus = "success";
   },
@@ -52,12 +66,22 @@ export const mutations = {
   SEND_SELECCION(state) {
     state.dataStatus = "loading";
     state.loading = true;
+  },
+  SET_TOTALES(state) {
+    state.items = state.items_totales;
   }
 };
 
 export const getters = {
   getDatoById: state => ID => {
     return state.items.find(item => item.ID === ID);
+  },
+
+  filterItemsByConcesionario: state => codConc => {
+    console.log(state.items_totales);
+    return state.items_totales.filter(function(item) {
+      return parseInt(item.Concesionario) === codConc;
+    });
   }
 };
 
@@ -75,6 +99,17 @@ export const actions = {
         //console.log("get datos error");
         commit("DATOS_ERROR");
       });
+  },
+
+  filterData({ commit, getters }, conc) {
+    commit("GET_FILTERED_DATA_STATUS");
+    if (conc === 0) {
+      commit("SET_TOTALES");
+    } else {
+      var filtrado = getters.filterItemsByConcesionario(conc);
+      console.log(filtrado);
+      commit("FILTERED_SUCCESS", filtrado);
+    }
   },
 
   reloadItems({ commit }) {

@@ -219,32 +219,32 @@ class GestionDatosController extends Controller
         $dato->Apellido = $request->Apellido; 
         //$dato->Telefono1 =  $request->Telefono1; 
         if ($dato->Telefono1 != $request->Telefono1){
-            $textObsAutom .= ", Teléfono 1 a ".$request->Telefono1." (anterior ".$dato->Telefono1.")";
+            $textObsAutom .= ", Teléfono 1 a ".$request->Telefono1.".";
             $dato->Telefono1 =  $request->Telefono1; 
         }
         
         if ($dato->Telefono2 != $request->Telefono2){
-            $textObsAutom .= ", Teléfono 2 a ".$request->Telefono2." (anterior ".$dato->Telefono2.")";
+            $textObsAutom .= ", Teléfono 2 a ".$request->Telefono2.".";
             $dato->Telefono2 =  $request->Telefono2; 
         }
 
         if ($dato->Telefono3 != $request->Telefono3){
-            $textObsAutom .= ", Teléfono 3 a ".$request->Telefono3." (anterior ".$dato->Telefono3.")";
+            $textObsAutom .= ", Teléfono 3 a ".$request->Telefono3.".";
             $dato->Telefono3 =  $request->Telefono3; 
         }
 
         if ($dato->Telefono4 != $request->Telefono4){
-            $textObsAutom .= ", Teléfono 4 a ".$request->Telefono4." (anterior ".$dato->Telefono4.")";
+            $textObsAutom .= ", Teléfono 4 a ".$request->Telefono4.".";
             $dato->Telefono4 =  $request->Telefono4; 
         }
 
         if ($dato->Email1 != $request->Email1){
-            $textObsAutom .= ", Email 1 a ".$request->Email1." (anterior ".$dato->Email1.")";
+            $textObsAutom .= ", Email 1 a ".$request->Email1.".";
             $dato->Email1 =  $request->Email1; 
         }
 
         if ($dato->Domicilio != $request->Domicilio){
-            $textObsAutom .= ", Domicilio a ".$request->Domicilio." (anterior ".$dato->Domicilio.")";
+            $textObsAutom .= ", Domicilio a ".$request->Domicilio.".";
             $dato->Domicilio = $request->Domicilio; 
         }
 
@@ -260,12 +260,12 @@ class GestionDatosController extends Controller
         if ($request->CodEstado){
 
             if ($dato->CodEstado != $request->CodEstado){
-                $textObsAutom .= ", Estado a ".$util->getNombreEstado($request->CodEstado)." (anterior ".$util->getNombreEstado($dato->CodEstado).")";
+                $textObsAutom .= ", Estado a ".$util->getNombreEstado($request->CodEstado).".";
                 $dato->CodEstado = $request->CodEstado;
             }
             if ($request->CodEstado == 4){
                 if ($dato->Motivo != $request->Motivo){
-                    $textObsAutom .= ", Motivo a ".$util->getNombreMotivo($request->Motivo)." (anterior ".$util->getNombreMotivo($dato->Motivo).")";
+                    $textObsAutom .= ", Motivo a ".$util->getNombreMotivo($request->Motivo).".";
                     $dato->Motivo =  $request->Motivo;
                 }
                 

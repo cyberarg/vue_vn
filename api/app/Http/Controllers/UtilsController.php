@@ -27,7 +27,7 @@ class UtilsController extends Controller
 
     public function getNombreEstado($codEstado){
         $nombre = Estado::where('Codigo', $codEstado)->pluck('Nombre');
-        return $nombre[0];
+        return $nombre;
     }
 
     public function getNombreMotivo($codMotivo){

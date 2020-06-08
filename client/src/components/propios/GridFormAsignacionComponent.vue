@@ -7,7 +7,15 @@
           {{ pars.titleform }}
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-switch v-model="showOficiales" label="Cbo Oficiales" class="mt-2"></v-switch>
+          <v-combobox
+            item-text="Nombre"
+            item-value="Codigo"
+            :items="listConcesionarios"
+            label="Concesionario"
+            :value="codConcesSelected"
+            @change="filterConcesionaria"
+          ></v-combobox>
+          <!--<v-switch v-model="showOficiales" label="Cbo Oficiales" class="mt-2"></v-switch>-->
           <v-spacer></v-spacer>
           <template>
             <v-combobox
@@ -61,7 +69,8 @@
           <template v-slot:item.HaberNeto="{ item }">${{ Math.round(item.HaberNeto) | numFormat }}</template>
           <template
             v-slot:item.PrecioMaximoCompra="{ item }"
-          >${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</template>
+          >{{ getPrecioMaxCompra(item.Avance, item.HaberNeto) }}</template>
+
           <template v-slot:item.FechaVtoCuota2="{ item }">{{ formatFecha(item.FechaVtoCuota2) }}</template>
 
           <template v-slot:item.FechaUltObs="{ item }">{{ formatFecha(item.FechaUltObs) }}</template>
@@ -116,7 +125,13 @@ export default {
       showOficiales: true,
       singleSelect: false,
       selected: [],
-      search: ""
+      search: "",
+      codConcesSelected: null,
+      listConcesionarios: [
+        { Codigo: 0, Nombre: "Todos" },
+        { Codigo: 1, Nombre: "Sauma" },
+        { Codigo: 2, Nombre: "Sapac" }
+      ]
     };
   },
 
@@ -191,6 +206,7 @@ export default {
     ...mapState("auth", ["login"]),
     ...mapState("asignaciondatos", [
       "items",
+      "items_totales",
       "loading",
       "listOficiales",
       "listSupervisores",
@@ -205,6 +221,42 @@ export default {
       const filename = "devschile-admins";
       XLSX.utils.book_append_sheet(workbook, data, filename);
       XLSX.writeFile(workbook, `${filename}.xlsx`);
+    },
+
+    getPrecioMaxCompra(avance, haberNeto) {
+      var av = parseInt(avance);
+      var hn = parseInt(haberNeto);
+      var pmax = 0;
+
+      switch (true) {
+        case av >= 45 && av <= 61:
+          pmax = hn * 0.2;
+          break;
+        case av >= 62 && av <= 66:
+          pmax = hn * 0.3;
+          break;
+        case av >= 67 && av <= 69:
+          pmax = hn * 0.35;
+          break;
+        case av >= 70 && av <= 79:
+          pmax = hn * 0.4;
+          break;
+        case av >= 80 && av <= 83:
+          pmax = hn * 0.5;
+          break;
+        default:
+          pmax = 0;
+          break;
+      }
+
+      if (pmax != 0) {
+        return "$" + this.$options.filters.numFormat(pmax);
+      }
+      return "-";
+    },
+
+    filterConcesionaria(value) {
+      this.filterData(value.Codigo);
     },
 
     async pasarSinGestionar() {
@@ -261,7 +313,8 @@ export default {
     ...mapActions({
       mostrarDato: "gestiondatos/mostrarDato",
       asignarDatos: "asignaciondatos/asignarDatos",
-      pasarASinGestionar: "asignaciondatos/pasarASinGestionar"
+      pasarASinGestionar: "asignaciondatos/pasarASinGestionar",
+      filterData: "asignaciondatos/filterData"
     })
   }
 
