@@ -130,7 +130,8 @@ export default {
       listConcesionarios: [
         { Codigo: 0, Nombre: "Todos" },
         { Codigo: 1, Nombre: "Sauma" },
-        { Codigo: 2, Nombre: "Sapac" }
+        { Codigo: 2, Nombre: "Sapac" },
+        { Codigo: 3, Nombre: "Amendola" }
       ]
     };
   },
@@ -241,6 +242,9 @@ export default {
           break;
         case "2":
           return "Sapac";
+          break;
+        case "3":
+          return "Amendola";
           break;
         default:
           return "";

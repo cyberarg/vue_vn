@@ -173,7 +173,7 @@ export const actions = {
     commit("RESET_ITEM");
     commit("RESET_OBS");
     var dato = getters.getDatoById(id);
-    //console.log(dato);
+    console.log(dato);
 
     if (dato) {
       commit("SET_DATO", dato);

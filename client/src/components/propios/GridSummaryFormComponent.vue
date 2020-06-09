@@ -34,66 +34,78 @@
               <tr>
                 <td>{{ item.NomOficial }}</td>
                 <td>
-                  <v-layout justify-center class="rowclass">{{
-                    item.Asignados
-                  }}</v-layout>
-                </td>
-                <td>
-                  <v-layout justify-center class="rowclass">{{
-                    item.SinGestionar
-                  }}</v-layout>
-                </td>
-                <td>
-                  <v-layout justify-center class="rowclass">{{
-                    item.TelefonoMal
-                  }}</v-layout>
-                </td>
-                <td>
-                  <v-layout justify-center class="rowclass">{{
-                    item.DejeMensaje
-                  }}</v-layout>
-                </td>
-                <td>
                   <v-layout justify-center class="rowclass">
-                    {{ item.EntrevistaPendiente }}
+                    {{
+                    item.Asignados
+                    }}
                   </v-layout>
                 </td>
                 <td>
-                  <v-layout justify-center class="rowclass">{{
-                    item.EnGestion
-                  }}</v-layout>
+                  <v-layout justify-center class="rowclass">
+                    {{
+                    item.SinGestionar
+                    }}
+                  </v-layout>
                 </td>
                 <td>
-                  <v-layout justify-center class="rowclass">{{
+                  <v-layout justify-center class="rowclass">
+                    {{
+                    item.TelefonoMal
+                    }}
+                  </v-layout>
+                </td>
+                <td>
+                  <v-layout justify-center class="rowclass">
+                    {{
+                    item.DejeMensaje
+                    }}
+                  </v-layout>
+                </td>
+                <td>
+                  <v-layout justify-center class="rowclass">
+                    {{
                     item.NoCompra
-                  }}</v-layout>
+                    }}
+                  </v-layout>
                 </td>
                 <td>
-                  <v-layout justify-center class="rowclass">{{
+                  <v-layout justify-center class="rowclass">
+                    {{
+                    item.EnGestion
+                    }}
+                  </v-layout>
+                </td>
+                <td>
+                  <v-layout justify-center class="rowclass">{{ item.EntrevistaPendiente }}</v-layout>
+                </td>
+
+                <td>
+                  <v-layout justify-center class="rowclass">
+                    {{
                     item.VendePlan
-                  }}</v-layout>
+                    }}
+                  </v-layout>
                 </td>
                 <td>
-                  <v-layout justify-center class="rowclass">{{
-                    item.Compro
-                  }}</v-layout>
-                </td>
-                <td>
-                  <v-layout justify-center class="rowclass">{{
+                  <v-layout justify-center class="rowclass">
+                    {{
                     item.PasarAVenta
-                  }}</v-layout>
+                    }}
+                  </v-layout>
+                </td>
+                <td>
+                  <v-layout justify-center class="rowclass">
+                    {{
+                    item.Compro
+                    }}
+                  </v-layout>
                 </td>
               </tr>
             </template>
             <template></template>
           </template>
           <template v-slot:group.header="{ items }">
-            <td
-              :colspan="headers.length"
-              default="true"
-              @click="expandRows"
-              class="rowclassGroup"
-            >
+            <td :colspan="headers.length" default="true" @click="expandRows" class="rowclassGroup">
               <strong>{{ items[0].NomOrigen }}</strong>
             </td>
           </template>
@@ -119,9 +131,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn cclass="ma-2" outlined text @click="exportExcel">
-            <v-icon left>mdi-file-excel-outline</v-icon>
-            Excel</v-btn
-          >
+            <v-icon left>mdi-file-excel-outline</v-icon>Excel
+          </v-btn>
         </v-card-actions>
       </v-card>
     </div>

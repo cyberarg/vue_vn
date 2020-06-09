@@ -99,7 +99,17 @@
             <v-col cols="7" md="7">
               <v-container>
                 <v-row>
-                  <v-col cols="12" md="12">
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Apellido"
+                      placeholder="Apellido"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.Apellido"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="6">
                     <v-text-field
                       dense
                       label="Nombres"
@@ -111,14 +121,14 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="12" md="12">
+                  <v-col cols="6" md="6">
                     <v-text-field
                       dense
-                      label="Apellido"
-                      placeholder="Apellido"
+                      label="Documento"
+                      placeholder="Documento"
                       :disabled="disabled"
                       :filled="filled"
-                      v-model="item.Apellido"
+                      v-model="item.NroDoc"
                     ></v-text-field>
                   </v-col>
                 </v-row>
