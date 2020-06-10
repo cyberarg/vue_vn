@@ -7,9 +7,29 @@
       </v-card-title>
       <div class="card-body">
         <v-row>
-          <v-col cols="6" md="6">
+          <v-col cols="3" md="3">
+            <v-combobox
+              item-text="Nombre"
+              item-value="Codigo"
+              :items="listMarcas"
+              label="Marca"
+              :value="codMarcaSelected"
+              @change="filterListConcesionaria"
+              class="pad"
+            ></v-combobox>
+          </v-col>
+          <v-col cols="3" md="3">
+            <v-combobox
+              item-text="Nombre"
+              item-value="Codigo"
+              :items="listC"
+              label="Concesionario"
+              v-model="codConcesSelected"
+              @change="filterConcesionaria"
+            ></v-combobox>
+          </v-col>
+          <v-col cols="3" md="3">
             <v-select
-              dense
               :items="itemsPeriodos"
               item-text="Nombre"
               item-value="Codigo"
@@ -18,7 +38,7 @@
               @change="getReporte()"
             ></v-select>
           </v-col>
-          <v-col cols="6" md="6">
+          <v-col cols="3" md="3">
             <v-btn
               class="ma-2"
               outlined
@@ -26,8 +46,9 @@
               text
               @click="getReporte()"
               :disabled="disableButton"
-              ><v-icon left>mdi-refresh</v-icon>Actualizar</v-btn
             >
+              <v-icon left>mdi-refresh</v-icon>Actualizar
+            </v-btn>
           </v-col>
         </v-row>
 
@@ -177,13 +198,33 @@ export default {
         { text: "%", value: "Porcentaje", align: "center" },
         { text: "Monto HN", value: "MontoHN", align: "center" },
         { text: "%", value: "Porcentaje", align: "center" }
+      ],
+      codMarcaSelected: null,
+      listMarcas: [
+        { Codigo: 2, Nombre: "Fiat" },
+        { Codigo: 5, Nombre: "Volkswagen" }
+      ],
+      codConcesSelected: null,
+      listC: [],
+      listConcesionarios: [
+        { Codigo: 0, Nombre: "Todos" },
+        { Codigo: 1, Nombre: "Sauma", Marca: 5 },
+        { Codigo: 2, Nombre: "Sapac", Marca: 5 },
+        { Codigo: 3, Nombre: "Amendola", Marca: 5 },
+        { Codigo: 4, Nombre: "AutoCervo", Marca: 2 },
+        { Codigo: 5, Nombre: "AutoNet", Marca: 2 },
+        { Codigo: 6, Nombre: "Car Group", Marca: 2 }
       ]
     };
   },
 
   computed: {
     disableButton() {
-      return this.codperiodo == "";
+      return (
+        this.codperiodo == "" ||
+        this.codConcesSelected == null ||
+        this.codMarcaSelected == null
+      );
     },
 
     ...mapState("reporteacompras", [
@@ -210,9 +251,43 @@ export default {
       getResumen: "reporteacompras/getResumen"
     }),
 
+    filterListConcesionaria(value) {
+      //console.log(value);
+      this.codMarcaSelected = value;
+      this.codConcesSelected = null;
+      this.listC = [];
+      var todos = {
+        Codigo: 0,
+        Nombre: "Todos",
+        Marca: this.codMarcaSelected.Codigo
+      };
+      this.listC = this.listConcesionarios.filter(function(item) {
+        return item.Marca === value.Codigo;
+      });
+      this.listC.unshift(todos);
+    },
+
+    filterConcesionaria(value) {
+      //console.log(value);
+      this.codConcesSelected = value;
+    },
+
     getReporte() {
       //console.log(this.codperiodo);
-      this.getResumen(this.codperiodo);
+
+      if (
+        typeof this.codperiodo != "undefined" &&
+        typeof this.codMarcaSelected.Codigo != "undefined" &&
+        typeof this.codConcesSelected.Codigo != "undefined"
+      ) {
+        var params = {
+          periodo: this.codperiodo,
+          marca: this.codMarcaSelected.Codigo,
+          concesionario: this.codConcesSelected.Codigo
+        };
+        //console.log(params);
+        this.getResumen(params);
+      }
     },
 
     getPeriodos() {
@@ -246,6 +321,11 @@ export default {
 <style scoped>
 .contenedor {
   width: 100%;
+}
+
+.pad {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .padded {

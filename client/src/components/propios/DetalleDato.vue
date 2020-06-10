@@ -49,7 +49,7 @@
                 <v-divider class="mx-1" inset horizontal></v-divider>
 
                 <v-row>
-                  <v-col cols="12" md="12">
+                  <v-col cols="6" md="6">
                     <v-text-field
                       dense
                       label="Haber Neto"
@@ -57,6 +57,16 @@
                       :disabled="disabled"
                       :filled="filled"
                       v-model="valorHaberNetoFormat"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Plan"
+                      placeholder="Plan"
+                      :disabled="disabled"
+                      :filled="filled"
+                      v-model="item.Plan"
                     ></v-text-field>
                   </v-col>
                 </v-row>

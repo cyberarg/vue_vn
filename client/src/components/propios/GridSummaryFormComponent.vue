@@ -18,6 +18,8 @@
 
         <v-data-table
           dense
+          fixed-header
+          height="500"
           locale="es"
           :headers="headers"
           :items="items"
@@ -158,12 +160,22 @@ export default {
     return {
       search: "",
       expanded: true,
-      totalSub: 0
+      totalSub: 0,
+      window: {
+        width: 0,
+        height: 0
+      }
     };
   },
 
   created() {
     this.$store.dispatch(this.module + "/getData", this.api);
+    window.addEventListener("resize", this.handleResize);
+    this.handleResize();
+  },
+
+  destroyed() {
+    window.removeEventListener("resize", this.handleResize);
   },
 
   computed: {
@@ -189,6 +201,11 @@ export default {
     },
     expandRows() {
       this.expanded = !this.expanded;
+    },
+
+    handleResize() {
+      this.window.width = window.innerWidth;
+      this.window.height = window.innerHeight - 50;
     },
 
     subTotalAsig(column) {

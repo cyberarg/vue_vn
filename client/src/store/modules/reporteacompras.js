@@ -100,11 +100,11 @@ export const mutations = {
 };
 
 export const actions = {
-  getResumen({ commit }, periodo) {
-    // console.log(periodo);
+  getResumen({ commit }, params) {
+    console.log(params);
     commit("GET_RESUMEN_STATUS");
     return axios
-      .get("/reportecomprasresumen?periodo=" + periodo)
+      .post("/reportecomprasresumen", params)
       .then(response => {
         console.log(response.data.Debbug);
         commit("DATOS_SUCCESS", response.data.Datos);

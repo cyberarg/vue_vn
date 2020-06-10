@@ -5,6 +5,7 @@
       <v-card-title>
         {{ pars.titleform }}
         <v-divider class="mx-4" inset vertical></v-divider>
+        <!--
         <v-combobox
           v-show="mostrarCombo"
           item-text="Nombre"
@@ -14,19 +15,49 @@
           :value="codConcesSelected"
           @change="filterConcesionaria"
         ></v-combobox>
+        -->
         <v-spacer></v-spacer>
-        <v-text-field
-          v-show="mostrarbuscar"
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Buscar"
-          single-line
-          hide-details
-        ></v-text-field>
+        <v-row class="padded">
+          <v-col cols="4">
+            <v-combobox
+              v-show="mostrarCombo"
+              item-text="Nombre"
+              item-value="Codigo"
+              :items="listMarcas"
+              label="Marca"
+              :value="codMarcaSelected"
+              @change="filterListConcesionaria"
+              class="padded"
+            ></v-combobox>
+          </v-col>
+          <v-col cols="4">
+            <v-combobox
+              v-show="mostrarCombo"
+              item-text="Nombre"
+              item-value="Codigo"
+              :items="listC"
+              label="Concesionario"
+              v-model="codConcesSelected"
+              @change="filterConcesionaria"
+            ></v-combobox>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-show="mostrarbuscar"
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Buscar"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-col>
+        </v-row>
       </v-card-title>
 
       <v-data-table
         dense
+        fixed-header
+        height="550"
         :headers="headers"
         :items="myitems"
         :search="search"
@@ -126,12 +157,21 @@ export default {
       search: "",
       cantItems: 15,
       loading: true,
+      codMarcaSelected: null,
+      listMarcas: [
+        { Codigo: 2, Nombre: "Fiat" },
+        { Codigo: 5, Nombre: "Volkswagen" }
+      ],
       codConcesSelected: null,
+      listC: [],
       listConcesionarios: [
         { Codigo: 0, Nombre: "Todos" },
-        { Codigo: 1, Nombre: "Sauma" },
-        { Codigo: 2, Nombre: "Sapac" },
-        { Codigo: 3, Nombre: "Amendola" }
+        { Codigo: 1, Nombre: "Sauma", Marca: 5 },
+        { Codigo: 2, Nombre: "Sapac", Marca: 5 },
+        { Codigo: 3, Nombre: "Amendola", Marca: 5 },
+        { Codigo: 4, Nombre: "AutoCervo", Marca: 2 },
+        { Codigo: 5, Nombre: "AutoNet", Marca: 2 },
+        { Codigo: 6, Nombre: "Car Group", Marca: 2 }
       ]
     };
   },
@@ -164,21 +204,13 @@ export default {
     },
 
     myitems() {
-      if (
-        typeof this.showItemsFiltered !== "undefined" &&
-        this.showItemsFiltered
-      ) {
-        this.loading = false;
-        return this.items_filtered;
-      } else {
-        if (typeof this.pars.items !== "undefined") {
-          this.setData(this.pars.items);
-          return this.pars.items;
-        }
-        this.setData(this.items);
-        this.loading = false;
-        return this.items;
+      if (typeof this.pars.items !== "undefined") {
+        this.setData(this.pars.items);
+        return this.pars.items;
       }
+      this.setData(this.items);
+      this.loading = false;
+      return this.items;
     },
 
     exportable() {
@@ -205,7 +237,17 @@ export default {
       XLSX.writeFile(workbook, `${filename}.xlsx`);
     },
 
+    filterListConcesionaria(value) {
+      console.log(value);
+      this.codConcesSelected = null;
+      this.listC = [];
+      this.listC = this.listConcesionarios.filter(function(item) {
+        return item.Marca === value.Codigo;
+      });
+    },
+
     filterConcesionaria(value) {
+      console.log(value);
       if (value.Codigo == 0) {
       } else {
         this.filterData(value.Codigo);
@@ -341,5 +383,10 @@ const workbook = XLSX.utils.book_new()
 
 .classDatoEntreLimites {
   background: #bae5ca;
+}
+
+.padded {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

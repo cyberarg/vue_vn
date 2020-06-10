@@ -5,6 +5,7 @@ export const namespaced = true;
 export const state = {
   dataStatus: "",
   dataStatusMsg: "",
+  items_totales: [],
   items: [],
   items_filtered: [],
   motivos: [],
@@ -25,7 +26,8 @@ export const mutations = {
   },
 
   FILTERED_SUCCESS(state, datos) {
-    state.items_filtered = datos;
+    console.log(datos);
+    state.items = datos;
     state.showItemsFiltered = true;
     state.loading = false;
     state.dataStatus = "success";
@@ -38,6 +40,7 @@ export const mutations = {
   },
 
   DATOS_SUCCESS(state, datos) {
+    state.items_totales = datos;
     state.items = datos;
     state.loading = false;
     state.dataStatus = "success";
@@ -46,6 +49,7 @@ export const mutations = {
 
   SET_DATA_STATUS(state, colection) {
     state.items = colection;
+    //state.items_totales = colection;
     // console.log(colection);
     state.loading = false;
     state.dataStatus = "success";
@@ -116,10 +120,9 @@ export const getters = {
     return state.items.find(item => item.ID === ID);
   },
 
-  filterItemsByConcesionario: state => {
-    console.log(state.items);
-    return state.items.filter(function(item) {
-      return item.Concesionario === 1;
+  filterItemsByConcesionario: state => codConc => {
+    return state.items_totales.filter(function(item) {
+      return parseInt(item.Concesionario) === codConc;
     });
   }
 };
@@ -141,9 +144,9 @@ export const actions = {
 
   filterData({ commit, getters }, conc) {
     commit("GET_FILTERED_DATA_STATUS");
-
-    var filtrado = getters.filterItemsByConcesionario;
-    console.log(filtrado);
+    console.log(conc);
+    var filtrado = getters.filterItemsByConcesionario(conc);
+    //console.log(filtrado);
     commit("FILTERED_SUCCESS", filtrado);
   },
 

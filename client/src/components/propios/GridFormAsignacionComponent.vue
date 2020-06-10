@@ -10,47 +10,84 @@
           <v-combobox
             item-text="Nombre"
             item-value="Codigo"
-            :items="listConcesionarios"
-            label="Concesionario"
-            :value="codConcesSelected"
-            @change="filterConcesionaria"
+            :items="listMarcas"
+            label="Marca"
+            :value="codMarcaSelected"
+            @change="filterListConcesionaria"
+            class="padded"
           ></v-combobox>
+
+          <v-combobox
+            item-text="Nombre"
+            item-value="Codigo"
+            :items="listC"
+            label="Concesionario"
+            v-model="codConcesSelected"
+            @change="setSelected"
+          ></v-combobox>
+
+          <v-btn class="ma-2" outlined text @click="filterConcesionaria()">
+            <v-icon left>mdi-refresh</v-icon>Actualizar
+          </v-btn>
           <!--<v-switch v-model="showOficiales" label="Cbo Oficiales" class="mt-2"></v-switch>-->
-          <v-spacer></v-spacer>
-          <template>
-            <v-combobox
-              v-if="showOficiales"
-              v-model="codOficialSelected"
-              item-text="Nombre"
-              item-value="Codigo"
-              :items="listOficiales"
-              label="Oficial"
-            ></v-combobox>
-            <v-combobox
-              v-else
-              v-model="codSupervisorSelected"
-              item-text="Nombre"
-              item-value="Codigo"
-              :items="listSupervisores"
-              label="Supervisor"
-            ></v-combobox>
-          </template>
-          <v-btn
-            class="ma-2"
-            :disabled="disablePasarSinGestion"
-            outlined
-            text
-            @click="pasarSinGestionar()"
-          >
-            <v-icon left>mdi-undo-variant</v-icon>Pasar a Sin Gestionar
-          </v-btn>
-          <v-btn class="ma-2" :disabled="disableAsignar" outlined text @click="asignarOficial()">
-            <v-icon left>{{ userIcon }}</v-icon>
-            Asignar {{ getTextAsignacion }}
-          </v-btn>
         </v-card-title>
+        <v-row class="padded">
+          <v-col cols="4">
+            <template>
+              <v-combobox
+                v-if="showOficiales"
+                v-model="codOficialSelected"
+                item-text="Nombre"
+                item-value="Codigo"
+                :items="listOficiales"
+                label="Oficial"
+              ></v-combobox>
+              <v-combobox
+                v-else
+                v-model="codSupervisorSelected"
+                item-text="Nombre"
+                item-value="Codigo"
+                :items="listSupervisores"
+                label="Supervisor"
+              ></v-combobox>
+            </template>
+          </v-col>
+          <v-col cols="4">
+            <v-btn
+              class="ma-2"
+              small
+              :disabled="disablePasarSinGestion"
+              outlined
+              text
+              @click="pasarSinGestionar()"
+            >
+              <v-icon left>mdi-undo-variant</v-icon>Pasar a Sin Gestionar
+            </v-btn>
+            <v-btn
+              class="ma-2"
+              small
+              :disabled="disableAsignar"
+              outlined
+              text
+              @click="asignarOficial()"
+            >
+              <v-icon left>{{ userIcon }}</v-icon>
+              Asignar {{ getTextAsignacion }}
+            </v-btn>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Buscar"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-col>
+        </v-row>
 
         <v-data-table
+          ref="datatab"
           dense
           :headers="computedHeaders"
           :items="items"
@@ -126,12 +163,21 @@ export default {
       singleSelect: false,
       selected: [],
       search: "",
+      codMarcaSelected: null,
+      listMarcas: [
+        { Codigo: 2, Nombre: "Fiat" },
+        { Codigo: 5, Nombre: "Volkswagen" }
+      ],
       codConcesSelected: null,
+      listC: [],
       listConcesionarios: [
         { Codigo: 0, Nombre: "Todos" },
-        { Codigo: 1, Nombre: "Sauma" },
-        { Codigo: 2, Nombre: "Sapac" },
-        { Codigo: 3, Nombre: "Amendola" }
+        { Codigo: 1, Nombre: "Sauma", Marca: 5 },
+        { Codigo: 2, Nombre: "Sapac", Marca: 5 },
+        { Codigo: 3, Nombre: "Amendola", Marca: 5 },
+        { Codigo: 4, Nombre: "AutoCervo", Marca: 2 },
+        { Codigo: 5, Nombre: "AutoNet", Marca: 2 },
+        { Codigo: 6, Nombre: "Car Group", Marca: 2 }
       ]
     };
   },
@@ -224,6 +270,18 @@ export default {
       XLSX.writeFile(workbook, `${filename}.xlsx`);
     },
 
+    filterListConcesionaria(value) {
+      this.codConcesSelected = null;
+      this.listC = [];
+      this.listC = this.listConcesionarios.filter(function(item) {
+        return item.Marca === value.Codigo;
+      });
+    },
+
+    setSelected(value) {
+      console.log(this.codConcesSelected);
+    },
+
     getPrecioMaxCompra(avance, haberNeto) {
       var av = parseInt(avance);
       var hn = parseInt(haberNeto);
@@ -256,8 +314,15 @@ export default {
       return "-";
     },
 
+    /*
     filterConcesionaria(value) {
       this.filterData(value.Codigo);
+    },
+*/
+
+    filterConcesionaria() {
+      //console.log(this.codConcesSelected.Codigo);
+      this.filterData(this.codConcesSelected.Codigo);
     },
 
     async pasarSinGestionar() {
@@ -346,6 +411,11 @@ const workbook = XLSX.utils.book_new()
 
 .fullw {
   width: 100%;
+}
+
+.padded {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .v-data-table td {

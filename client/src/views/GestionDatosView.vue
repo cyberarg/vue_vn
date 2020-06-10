@@ -12,7 +12,7 @@
                 module: 'gestiondatos',
                 items: this.items,
                 origen: 'gestiondatos',
-                showCombo: false
+                showCombo: true
               }"
               :headers="[
                 {
