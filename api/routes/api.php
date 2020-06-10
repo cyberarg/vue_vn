@@ -57,7 +57,10 @@ Route::resource('reporteasignacion', 'ReporteAsignacionController', ['parameters
     'index' => 'periodo'
 ]]);
 
-Route::resource('reportecomprasresumen', 'ReporteComprasResumenController');
+//Route::resource('reportecomprasresumen', 'ReporteComprasResumenController');
+
+Route::post('/reportecomprasresumen', 'ReporteComprasResumenController@getReporte');
+
 Route::resource('reportecomprasmesactual', 'ReporteComprasMesActualController', ['parameters' => [
     'index' => 'list'
 ]]);

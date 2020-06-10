@@ -76,8 +76,13 @@ class ReporteComprasResumenController extends Controller
     }
 
 
-    public function index(Request $request)
+    public function getReporte(Request $request)
     {
+
+        $periodo = $request->periodo;
+        $concesionario = $request->concesionario;
+        $marca = $request->marca;
+
         $emp1 = "AutoCervo";
         $db1= "AC";
         $emp2 = "AutoNet";
@@ -94,37 +99,65 @@ class ReporteComprasResumenController extends Controller
         $est1 = array();
        $est2 = array();
 
-        //$results1 = DB::connection($db1)->select("CALL hnweb_subitereportecompras();");
-       // $results2 = DB::connection($db2)->select("CALL hnweb_subitereportecompras();");
-        //$results3 =  DB::connection($db3)->select("CALL hnweb_subitereportecompras('2020-05-13');");
+       $fiatTotal = false;
+       switch ($marca){
+           case 2:
+                $nombreOrigen = "SGA";
+                switch ($concesionario){
+                    case 0:
+                        $fiatTotal = true;
+                    case 4:
+                    //AutoCervo
+                    $db = "AC";
+                    break;
+                    case 5:
+                        //AutoNet
+                        $db = "AN";
+                    break;
+                    case 6:
+                        //Car Group
+                        $db = "CG";
+                    break;
+                }
+           break;
+           case 5:
+            $nombreOrigen = "Base Total Volkswagen";
+            //Busco en la DB de Gestion Financiera pa7_gf
+            $db = "GF";
+           break;
+           default:
+           $nombreOrigen = "Casos Importados";
+           //Busco en la DB de Gestion Financiera pa7_gf
+           $db = "GF";
+        break;
+       }
 
 
-       //$estados = array_merge($empresa1, $empresa2);
-        //$estados = array_merge($results1, $results2, $results3);
-
-       // dd($estados);
-        //return $estados;
-        //return response()->json(compact('respuesta'));
-
-        $periodoAct = $this->getUltimoDiaPeriodo($request->periodo);
-        $periodoActPrimerDia = $this->getPrimerDiaPeriodo($request->periodo);
-        $periodoAnt = $this->getUltimoDiaPeriodoAnterior($request->periodo);
+        $periodoAct = $this->getUltimoDiaPeriodo($periodo);
+        $periodoActPrimerDia = $this->getPrimerDiaPeriodo($periodo);
+        $periodoAnt = $this->getUltimoDiaPeriodoAnterior($periodo);
 
         $periodoActual = strtotime($periodoAct);
         $periodoAnterior = strtotime($periodoAnt);
 
-       // return $periodoAnt;
+        if ($concesionario == 0){
+            $concesionario = 'NULL';
+        }
 
-     //   $periodoActual = strtotime("2020-01-31");
-     //   $periodoAnterior = strtotime("2020-02-29");
+       if ($fiatTotal){
+            $res_ac = DB::connection($db1)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+            $res_aut = DB::connection($db2)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+            $res_cg = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
 
-
-        //$result = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
-
-       // $result = DB::select("CALL hnweb_subitereportecompras('".$periodoAct."');");
-       // $result = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
-
-       $result = DB::select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+            $result = array_merge($res_ac, $res_aut, $res_cg);
+       }else{
+           if ($marca == 2){
+                $result = DB::connection($db)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+           }else{
+                $result = DB::connection($db)->select("CALL hnweb_subitereportecompras_vw('".$periodoAct."', ".$concesionario.");");
+           } 
+       }
+       
 //dd($result);
         $list = array();
         $listUniverso = array();
@@ -136,7 +169,8 @@ class ReporteComprasResumenController extends Controller
 
         $lstDeb = array();
 
-        $list[0]['Nombre'] = 'SGA';
+        
+        $list[0]['Nombre'] = $nombreOrigen;
         $list[0]['Cantidad'] = 0;
         $list[1]['Nombre'] = 'Propios y Otras Sociedades';
         $list[1]['Cantidad'] = 0; 
@@ -220,7 +254,12 @@ class ReporteComprasResumenController extends Controller
 
            // dd($oDet->FechaCompra);
            if ($oDet->FechaVtoCuota2 === NULL){
-                $oDet->AvanceAutomatico = 0;
+               if ($marca == 2){
+                    $oDet->AvanceAutomatico = 0;
+               }else{
+                    $oDet->AvanceAutomatico = $r->Avance;
+               }
+                
            }else{
                 $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fcav, $fvc2);
            }
@@ -582,7 +621,8 @@ class ReporteComprasResumenController extends Controller
         $nomLow = strtolower($nombre);
 
         if (
-
+            (strpos($apeLow,"volkswagen argentina sa") !== false) ||
+            (strpos($apeLow,"volkswagen argentina s.a.") !== false) ||
             (strpos($apeLow,"autokar") !== false) ||
             (strpos($apeLow,"autofinancia") !== false) ||
             (strpos($apeLow,"auto financia") !== false) ||    
@@ -604,7 +644,6 @@ class ReporteComprasResumenController extends Controller
         $nomLow = strtolower($nombre);
 
         if (
-
             (strpos($apeLow,"car group") !== false) ||
             (strpos($apeLow,"car gruop") !== false) ||
             (strpos($apeLow,"autonet") !== false) ||
