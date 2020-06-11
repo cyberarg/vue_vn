@@ -8,7 +8,7 @@
           {{ pars.titleform }}
           <v-divider class="mx-4" inset vertical></v-divider>
         </v-card-title>
--->
+        -->
         <v-data-table
           dense
           :headers="headers"
@@ -26,164 +26,181 @@
             <template v-if="expanded">
               <tr class="itemclass">
                 <td>{{ item.NomOficial }}</td>
-                <td @click="handleClick(item, 'Asignados', item.Asignados)">
+                <td @click="handleClick(item, 'Asignados', item.Asignados, '-1')">
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-layout justify-center v-on="on" class="rowclass bold">{{ item.Asignados }}</v-layout>
+                    </template>
+                    <span>
+                      {{
+                      getTooltipData("Asignados", item.Asignados)
+                      }}
+                    </span>
+                  </v-tooltip>
+                </td>
+                <td @click="handleClick(item, 'Sin Gestionar', item.SinGestionar, '0')">
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-layout justify-center v-on="on" class="rowclass">
+                        {{
+                        item.SinGestionar
+                        }}
+                      </v-layout>
+                    </template>
+                    <span>
+                      {{
+                      getTooltipData("Sin Gestionar", item.SinGestionar)
+                      }}
+                    </span>
+                  </v-tooltip>
+                </td>
+                <td @click="handleClick(item, 'Telefono Mal', item.TelefonoMal, '1')">
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-layout justify-center v-on="on" class="rowclass">
+                        {{
+                        item.TelefonoMal
+                        }}
+                      </v-layout>
+                    </template>
+                    <span>
+                      {{
+                      getTooltipData("Telefono Mal", item.TelefonoMal)
+                      }}
+                    </span>
+                  </v-tooltip>
+                </td>
+                <td @click="handleClick(item, 'Deje Mensaje', item.DejeMensaje, '2')">
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-layout justify-center v-on="on" class="rowclass">
+                        {{
+                        item.DejeMensaje
+                        }}
+                      </v-layout>
+                    </template>
+                    <span>
+                      {{
+                      getTooltipData("Deje Mensaje", item.DejeMensaje)
+                      }}
+                    </span>
+                  </v-tooltip>
+                </td>
+                <td
+                  @click="handleClick(item, 'Entrevista Pendiente', item.EntrevistaPendiente, '3')"
+                >
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
                       <v-layout
                         justify-center
                         v-on="on"
-                        class="rowclass bold"
-                        >{{ item.Asignados }}</v-layout
-                      >
+                        class="rowclass"
+                      >{{ item.EntrevistaPendiente }}</v-layout>
                     </template>
-                    <span>{{
-                      getTooltipData("Asignados", item.Asignados)
-                    }}</span>
-                  </v-tooltip>
-                </td>
-                <td
-                  @click="handleClick(item, 'Sin Gestionar', item.SinGestionar)"
-                >
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                      <v-layout justify-center v-on="on" class="rowclass">{{
-                        item.SinGestionar
-                      }}</v-layout>
-                    </template>
-                    <span>{{
-                      getTooltipData("Sin Gestionar", item.SinGestionar)
-                    }}</span>
-                  </v-tooltip>
-                </td>
-                <td
-                  @click="handleClick(item, 'Telefono Mal', item.TelefonoMal)"
-                >
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                      <v-layout justify-center v-on="on" class="rowclass">{{
-                        item.TelefonoMal
-                      }}</v-layout>
-                    </template>
-                    <span>{{
-                      getTooltipData("Telefono Mal", item.TelefonoMal)
-                    }}</span>
-                  </v-tooltip>
-                </td>
-                <td
-                  @click="handleClick(item, 'Deje Mensaje', item.DejeMensaje)"
-                >
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                      <v-layout justify-center v-on="on" class="rowclass">{{
-                        item.DejeMensaje
-                      }}</v-layout>
-                    </template>
-                    <span>{{
-                      getTooltipData("Deje Mensaje", item.DejeMensaje)
-                    }}</span>
-                  </v-tooltip>
-                </td>
-                <td
-                  @click="
-                    handleClick(
-                      item,
-                      'Entrevista Pendiente',
+                    <span>
+                      {{
+                      getTooltipData(
+                      "Entrevista Pendiente",
                       item.EntrevistaPendiente
-                    )
-                  "
-                >
+                      )
+                      }}
+                    </span>
+                  </v-tooltip>
+                </td>
+                <td @click="handleClick(item, 'En Gestion', item.EnGestion, '7')">
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
                       <v-layout justify-center v-on="on" class="rowclass">
-                        {{ item.EntrevistaPendiente }}
+                        {{
+                        item.EnGestion
+                        }}
                       </v-layout>
                     </template>
-                    <span>{{
-                      getTooltipData(
-                        "Entrevista Pendiente",
-                        item.EntrevistaPendiente
-                      )
-                    }}</span>
-                  </v-tooltip>
-                </td>
-                <td @click="handleClick(item, 'En Gestion', item.EnGestion)">
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                      <v-layout justify-center v-on="on" class="rowclass">{{
-                        item.EnGestion
-                      }}</v-layout>
-                    </template>
-                    <span>{{
+                    <span>
+                      {{
                       getTooltipData("En Gestion", item.EnGestion)
-                    }}</span>
+                      }}
+                    </span>
                   </v-tooltip>
                 </td>
-                <td
-                  @click="
-                    handleClick(item, 'No Le Interesa', item.NoLeInteresa)
-                  "
-                >
+                <td @click="handleClick(item, 'No Le Interesa', item.NoLeInteresa, '4')">
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-layout justify-center v-on="on" class="rowclass">{{
+                      <v-layout justify-center v-on="on" class="rowclass">
+                        {{
                         item.NoLeInteresa
-                      }}</v-layout>
+                        }}
+                      </v-layout>
                     </template>
-                    <span>{{
+                    <span>
+                      {{
                       getTooltipData("No Le Interesa", item.NoLeInteresa)
-                    }}</span>
+                      }}
+                    </span>
                   </v-tooltip>
                 </td>
-                <td @click="handleClick(item, 'Vende Plan', item.VendePlan)">
+                <td @click="handleClick(item, 'Vende Plan', item.VendePlan, '5')">
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-layout justify-center v-on="on" class="rowclass">{{
+                      <v-layout justify-center v-on="on" class="rowclass">
+                        {{
                         item.VendePlan
-                      }}</v-layout>
+                        }}
+                      </v-layout>
                     </template>
-                    <span>{{
+                    <span>
+                      {{
                       getTooltipData("Vende Plan", item.VendePlan)
-                    }}</span>
+                      }}
+                    </span>
                   </v-tooltip>
                 </td>
-                <td @click="handleClick(item, 'Plan Subite', item.PlanSubite)">
+                <td @click="handleClick(item, 'Plan Subite', item.PlanSubite, '6')">
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-layout justify-center v-on="on" class="rowclass">{{
+                      <v-layout justify-center v-on="on" class="rowclass">
+                        {{
                         item.PlanSubite
-                      }}</v-layout>
+                        }}
+                      </v-layout>
                     </template>
-                    <span>{{
+                    <span>
+                      {{
                       getTooltipData("Plan Subite", item.PlanSubite)
-                    }}</span>
+                      }}
+                    </span>
                   </v-tooltip>
                 </td>
-                <td @click="handleClick(item, 'PasarAVenta', item.PasarAVenta)">
+                <td @click="handleClick(item, 'PasarAVenta', item.PasarAVenta, '8')">
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-layout justify-center v-on="on" class="rowclass">{{
+                      <v-layout justify-center v-on="on" class="rowclass">
+                        {{
                         item.PasarAVenta
-                      }}</v-layout>
+                        }}
+                      </v-layout>
                     </template>
-                    <span>{{
+                    <span>
+                      {{
                       getTooltipData("Pasar A Venta", item.PasarAVenta)
-                    }}</span>
+                      }}
+                    </span>
                   </v-tooltip>
                 </td>
-                <td
-                  @click="
-                    handleClick(item, 'En Otro Oficial', item.EnOtroOficial)
-                  "
-                >
+                <td @click="handleClick(item, 'En Otro Oficial', item.EnOtroOficial, '-2')">
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-layout justify-center v-on="on" class="rowclass">{{
+                      <v-layout justify-center v-on="on" class="rowclass">
+                        {{
                         item.EnOtroOficial
-                      }}</v-layout>
+                        }}
+                      </v-layout>
                     </template>
-                    <span>{{
+                    <span>
+                      {{
                       getTooltipData("En Otro Oficial", item.EnOtroOficial)
-                    }}</span>
+                      }}
+                    </span>
                   </v-tooltip>
                 </td>
               </tr>
@@ -192,12 +209,7 @@
           </template>
 
           <template v-slot:group.header="{ items }">
-            <td
-              :colspan="headers.length"
-              default="true"
-              @click="expandRows"
-              class="rowclassGroup"
-            >
+            <td :colspan="headers.length" default="true" @click="expandRows" class="rowclassGroup">
               <strong>{{ items[0].NomOrigen }}</strong>
             </td>
           </template>
@@ -223,9 +235,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn cclass="ma-2" outlined text @click="exportExcel">
-            <v-icon left>mdi-file-excel-outline</v-icon>
-            Excel</v-btn
-          >
+            <v-icon left>mdi-file-excel-outline</v-icon>Excel
+          </v-btn>
         </v-card-actions>
       </v-card>
     </div>
@@ -270,7 +281,13 @@ export default {
     grupoorden() {
       return "32323466";
     },
-    ...mapState("reporteasignacion", ["items", "loading", "datos", "empresa"])
+    ...mapState("reporteasignacion", [
+      "items",
+      "loading",
+      "datos",
+      "empresa",
+      "items_filtrados"
+    ])
     // ...mapState("estadogestion", ["items", "loading", "datos", "empresa"])
   },
 
@@ -309,11 +326,28 @@ export default {
       );
     },
 
-    async handleClick(item, nombre, cantidad) {
+    async handleClick(item, nombre, cantidad, estado) {
       console.log(item);
+
+      var codEstado = "";
+      switch (estado) {
+        case "-1":
+          codEstado = "-1";
+          break;
+        case "-2":
+          codEstado = "9";
+          break;
+        case "0":
+          codEstado = null;
+          break;
+        default:
+          codEstado = estado;
+          break;
+      }
+
       var pars = {};
       pars.codOficial = item.CodOficial;
-      pars.codEstado = 7;
+      pars.codEstado = estado;
       console.log(pars);
       await this.showFiltrados(pars);
       var titleForm =
@@ -329,6 +363,7 @@ export default {
         name: "detallereporte",
         params: {
           title: titleForm,
+          items_f: this.items_filtrados,
           volverARuta: "reporteasignaciones",
           module: "reporteasignacion"
         }

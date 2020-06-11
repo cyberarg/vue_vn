@@ -208,7 +208,7 @@ class ReporteAsignacionController extends Controller
                     }  
                 }
 
-                $obj->CodEstado = $oEstado;
+                //$obj->CodEstado = $oEstado;
 
                 //array_push($list, $obj);
                 $obj->Asignados = $obj->SinGestionar + $obj->TelefonoMal + $obj->DejeMensaje + $obj->EntrevistaPendiente + $obj->NoLeInteresa + $obj->VendePlan + $obj->PlanSubite + $obj->EnGestion + $obj->PasarAVenta;

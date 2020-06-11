@@ -45,14 +45,21 @@ export const mutations = {
 
 export const getters = {
   getFiltrados: state => (codOficial, codEstado) => {
-    return state.datos.filter(item => item.CodOficial === codOficial);
-    // (item => item.CodEstado === codEstado)
+    if (codEstado == "-1") {
+      return state.datos.filter(function(item) {
+        return item.CodOficial === codOficial;
+      });
+    } else {
+      return state.datos.filter(function(item) {
+        return item.CodOficial === codOficial && item.CodEstado === codEstado;
+      });
+    }
   }
 };
 
 export const actions = {
   getData({ commit }, pars) {
-    console.log(pars.periodo);
+    //console.log(pars.periodo);
     commit("GET_DATA_STATUS");
     return axios
       .get("/reporteasignacion?periodo=" + pars.periodo)
@@ -67,11 +74,14 @@ export const actions = {
   },
 
   showFiltrados({ commit, getters }, parametros) {
+    //console.log(parametros);
     commit("GETTING_FILTRO");
     var datos = getters.getFiltrados(
       parametros.codOficial,
       parametros.codEstado
     );
+
+    console.log(datos);
 
     commit("DATA_FILTERED", datos);
   }
