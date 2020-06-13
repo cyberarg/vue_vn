@@ -5,6 +5,7 @@ export const namespaced = true;
 export const state = {
   dataStatus: "",
   items: [],
+  items_filtrados: [],
   datos: [],
   empresa: {},
   loading: true,
@@ -26,11 +27,30 @@ export const mutations = {
 
   DATOS_ERROR(state) {
     state.dataStatus = "Error";
+  },
+
+  GETTING_FILTRO(state) {
+    state.dataStatus = "loading";
+  },
+
+  DATA_FILTERED(state, datos) {
+    state.items_filtrados = datos;
   }
 };
 
 export const getters = {
-  //
+  getFiltrados: state => (codOficial, codEstado) => {
+    console.log(state.datos);
+    if (codEstado == "-1") {
+      return state.datos.filter(function(item) {
+        return item.CodOficial === codOficial;
+      });
+    } else {
+      return state.datos.filter(function(item) {
+        return item.CodOficial === codOficial && item.CodEstado === codEstado;
+      });
+    }
+  }
 };
 
 export const actions = {
@@ -46,5 +66,18 @@ export const actions = {
         //console.log("get datos error");
         commit("DATOS_ERROR");
       });
+  },
+
+  showFiltrados({ commit, getters }, parametros) {
+    //console.log(parametros);
+    commit("GETTING_FILTRO");
+    var datos = getters.getFiltrados(
+      parametros.codOficial,
+      parametros.codEstado
+    );
+
+    console.log(datos);
+
+    commit("DATA_FILTERED", datos);
   }
 };

@@ -56,6 +56,10 @@ export const navigationRoutes = {
       disabled: true,
       children: [
         {
+          name: "modelo",
+          displayName: "Modelo"
+        },
+        {
           name: "calculadora",
           displayName: "Calculadora"
         },

@@ -49,7 +49,7 @@
                     }}
                   </v-layout>
                 </td>
-                <td>
+                <td @click="handleClick(item, 'Telefono Mal', item.TelefonoMal, '1')">
                   <v-layout justify-center class="rowclass">
                     {{
                     item.TelefonoMal
@@ -141,7 +141,7 @@
   </v-app>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import XLSX from "xlsx";
 
 export default {
@@ -188,10 +188,20 @@ export default {
     grupoorden() {
       return "32323466";
     },
-    ...mapState("estadogestion", ["items", "loading", "datos", "empresa"])
+    ...mapState("estadogestion", [
+      "items",
+      "loading",
+      "datos",
+      "empresa",
+      "items_filtrados"
+    ])
   },
 
   methods: {
+    ...mapActions({
+      showFiltrados: "estadogestion/showFiltrados"
+    }),
+
     exportExcel: function() {
       let data = XLSX.utils.json_to_sheet(this.items);
       const workbook = XLSX.utils.book_new();
@@ -206,6 +216,50 @@ export default {
     handleResize() {
       this.window.width = window.innerWidth;
       this.window.height = window.innerHeight - 50;
+    },
+
+    async handleClick(item, nombre, cantidad, estado) {
+      console.log(item);
+
+      var codEstado = "";
+      switch (estado) {
+        case "-1":
+          codEstado = "-1";
+          break;
+        case "-2":
+          codEstado = "9";
+          break;
+        case "0":
+          codEstado = null;
+          break;
+        default:
+          codEstado = estado;
+          break;
+      }
+
+      var pars = {};
+      pars.codOficial = item.CodOficial;
+      pars.codEstado = estado;
+      console.log(pars);
+      await this.showFiltrados(pars);
+      var titleForm =
+        "Oficial: " +
+        item.NomOficial +
+        " - Estado: " +
+        nombre +
+        " " +
+        cantidad +
+        " Operaciones";
+
+      this.$router.push({
+        name: "detallereporte",
+        params: {
+          title: titleForm,
+          items_f: this.items_filtrados,
+          volverARuta: "reporteasignaciones",
+          module: "reporteasignacion"
+        }
+      });
     },
 
     subTotalAsig(column) {

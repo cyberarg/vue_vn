@@ -53,12 +53,18 @@ class EstadoGestionController extends Controller
         $results2 = array();
         $results3 = array();
 
+        $datos = array();
+       
 
        //$estados = array_merge($empresa1, $empresa2);
         $estados = array_merge($results1, $results2, $results3);
-
+        $datos = $estados;
        // dd($estados);
-return $estados;
+
+        //$lst['Reporte'] = $estados;
+        //$lst['Datos'] = $datos;
+
+        return $estados;
         //return response()->json(compact('respuesta'));
 
     }

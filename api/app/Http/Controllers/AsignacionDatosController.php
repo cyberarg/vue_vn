@@ -22,8 +22,8 @@ class AsignacionDatosController extends Controller
 
         $resultvw = DB::select("CALL hnweb_subitegetdatos_vw(NULL, NULL, 0, ".$marca.", ".$concesionario.", NULL);"); 
         
-        //$resultcg = DB::connection($db3)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0, NULL);");
-        $resultcg = array();
+        $resultcg = DB::connection($db3)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0, NULL);");
+        //$resultcg = array();
 
         $arr = array_merge($resultvw, $resultcg);
 
