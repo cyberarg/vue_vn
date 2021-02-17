@@ -75,9 +75,11 @@ export const mutations = {
     state.datosHNCobradosGiama = [];
     state.datosHNCobradosCE = [];
 
+    /*
     state.datos = datos.ListHN;
     state.datosGiama = datos.ListHN_ComproGiama;
     state.datosCE = datos.ListHN_CE;
+    */
   },
 
   GET_HNV_STATUS(state) {
