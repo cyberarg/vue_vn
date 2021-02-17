@@ -26,6 +26,15 @@ export const state = {
 };
 
 export const mutations = {
+  CLEAR_STATE(state) {
+    state.items = [];
+    state.items_totales = [];
+    state.items_resumen = [];
+    state.items_casos_mes = [];
+    state.items_universo = [];
+    state.items_filtrados = [];
+  },
+
   GET_RESUMEN_STATUS(state) {
     state.dataStatus = "loading";
     state.items_resumen = [];
@@ -38,6 +47,7 @@ export const mutations = {
   },
 
   DATOS_SUCCESS(state, datos) {
+    console.log(datos);
     state.items_totales = datos;
   },
 
@@ -54,6 +64,7 @@ export const mutations = {
   },
 
   MESACTUAL_SUCCESS(state, datos) {
+    console.log(datos);
     state.items_casos_mes = datos;
     state.loadingmes = false;
     state.dataMesStatus = "success";
@@ -103,8 +114,14 @@ export const actions = {
   getResumen({ commit }, params) {
     console.log(params);
     commit("GET_RESUMEN_STATUS");
+
+    var endPoint = "/reportecomprasceresumen";
+    if (params.marca == 2) {
+      endPoint = "/reportecomprasresumen";
+    }
+
     return axios
-      .post("/reportecomprasresumen", params)
+      .post(endPoint, params)
       .then(response => {
         console.log(response.data.Debbug);
         commit("DATOS_SUCCESS", response.data.Datos);
@@ -260,11 +277,11 @@ export const getters = {
         });
 
         break;
-      case 80:
+      case 77:
         return state.items_totales.filter(function(item) {
           return (
             item.AvanceAutomatico >= 71 &&
-            item.AvanceAutomatico <= 80 &&
+            item.AvanceAutomatico <= 77 &&
             item.EsUniverso === 1
           );
         });
@@ -273,7 +290,7 @@ export const getters = {
       case 83:
         return state.items_totales.filter(function(item) {
           return (
-            item.AvanceAutomatico >= 81 &&
+            item.AvanceAutomatico >= 78 &&
             item.AvanceAutomatico <= 83 &&
             item.EsUniverso === 1
           );
@@ -336,11 +353,11 @@ export const getters = {
         });
 
         break;
-      case 80:
+      case 77:
         return state.items_totales.filter(function(item) {
           return (
             item.AvanceAutomatico >= 71 &&
-            item.AvanceAutomatico <= 80 &&
+            item.AvanceAutomatico <= 77 &&
             item.EsUniverso === 1 &&
             item.EsMesActual === 1
           );
@@ -350,7 +367,7 @@ export const getters = {
       case 83:
         return state.items_totales.filter(function(item) {
           return (
-            item.AvanceAutomatico >= 81 &&
+            item.AvanceAutomatico >= 78 &&
             item.AvanceAutomatico <= 83 &&
             item.EsUniverso === 1 &&
             item.EsMesActual === 1

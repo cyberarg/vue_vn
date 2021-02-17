@@ -7,7 +7,7 @@
         <v-spacer></v-spacer>
       </v-card-title>
       <v-container>
-        <v-form ref="form" v-model="valid">
+        <v-form ref="form" v-model="validForm">
           <v-row>
             <v-col cols="5" md="5">
               <v-container>
@@ -15,9 +15,10 @@
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      :readonly="disabled"
+                      class="resaltarDisabled"
                       label="Grupo"
                       placeholder="Grupo"
-                      :disabled="disabled"
                       :filled="filled"
                       v-model="item.Grupo"
                     ></v-text-field>
@@ -25,9 +26,10 @@
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      :readonly="disabled"
+                      class="resaltarDisabled"
                       label="Orden"
                       placeholder="Orden"
-                      :disabled="disabled"
                       :filled="filled"
                       v-model="item.Orden"
                     ></v-text-field>
@@ -38,8 +40,9 @@
                     <v-text-field
                       dense
                       label="Solicitud"
+                      :readonly="disabled"
+                      class="resaltarDisabled"
                       placeholder="Solicitud"
-                      :disabled="disabled"
                       :filled="filled"
                       v-model="item.Solicitud"
                     ></v-text-field>
@@ -54,7 +57,8 @@
                       dense
                       label="Haber Neto"
                       placeholder="Haber Neto"
-                      :disabled="disabled"
+                      :readonly="disabled"
+                      class="importantDisabled"
                       :filled="filled"
                       v-model="valorHaberNetoFormat"
                     ></v-text-field>
@@ -64,21 +68,34 @@
                       dense
                       label="Plan"
                       placeholder="Plan"
-                      :disabled="disabled"
+                      :readonly="disabled"
+                      class="importantDisabled"
                       :filled="filled"
                       v-model="item.Plan"
                     ></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="12" md="12">
+                  <v-col cols="12" md="6">
                     <v-text-field
                       dense
                       label="Avance"
                       placeholder="Avance"
-                      :disabled="disabled"
+                      :readonly="disabled"
+                      class="importantDisabled"
                       :filled="filled"
                       v-model="item.Avance"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      dense
+                      label="Avance Calculado"
+                      placeholder="Avance Calculado"
+                      :readonly="disabled"
+                      class="importantDisabled"
+                      :filled="filled"
+                      v-model="item.AvanceCalculado"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -88,7 +105,8 @@
                       dense
                       label="Cuotas Pagas"
                       placeholder="Cuotas Pagas"
-                      :disabled="disabled"
+                      :readonly="disabled"
+                      class="importantDisabled"
                       :filled="filled"
                       v-model="item.CPG"
                     ></v-text-field>
@@ -98,7 +116,8 @@
                       dense
                       label="Cuotas Adelantadas"
                       placeholder="Cuotas Adelantadas"
-                      :disabled="disabled"
+                      :readonly="disabled"
+                      class="importantDisabled"
                       :filled="filled"
                       v-model="item.CAD"
                     ></v-text-field>
@@ -114,7 +133,8 @@
                       dense
                       label="Apellido"
                       placeholder="Apellido"
-                      :disabled="disabled"
+                      :readonly="disabled"
+                      class="resaltarDisabled"
                       :filled="filled"
                       v-model="item.Apellido"
                     ></v-text-field>
@@ -124,7 +144,8 @@
                       dense
                       label="Nombres"
                       placeholder="Nombres"
-                      :disabled="disabled"
+                      :readonly="disabled"
+                      class="resaltarDisabled"
                       :filled="filled"
                       v-model="item.Nombres"
                     ></v-text-field>
@@ -134,9 +155,10 @@
                   <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      :readonly="disabled"
+                      class="resaltarDisabled"
                       label="Documento"
                       placeholder="Documento"
-                      :disabled="disabled"
                       :filled="filled"
                       v-model="item.NroDoc"
                     ></v-text-field>
@@ -208,22 +230,55 @@
                       dense
                       label="Oficial"
                       placeholder="Oficial"
-                      :disabled="disabled"
+                      :readonly="disabled"
                       :filled="filled"
                       v-model="item.NomOficial"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="6" md="6">
-                    <v-select
-                      dense
-                      class="fillable"
-                      :items="estados"
-                      item-text="Nombre"
-                      item-value="Codigo"
-                      label="Estado"
-                      :value="codEstado"
-                      @input="setEstado"
-                    ></v-select>
+                    <template v-if="userCanChangeVenta">
+                      <v-select
+                        dense
+                        class="fillable"
+                        :items="estados"
+                        item-text="Nombre"
+                        item-value="Codigo"
+                        label="Estado"
+                        :value="codEstado"
+                        @input="setEstado"
+                        @change="changeEstado"
+                      ></v-select>
+                    </template>
+                    <template v-else>
+                      <template v-if="ocultarDatePicker">
+                        <v-select
+                          dense
+                          class="fillable"
+                          :items="estados"
+                          item-text="Nombre"
+                          item-value="Codigo"
+                          label="Estado"
+                          :disabled="disabledCboEstado"
+                          :value="codEstado"
+                          @input="setEstado"
+                          @change="changeEstado"
+                        ></v-select>
+                      </template>
+                      <template v-else>
+                        <v-select
+                          dense
+                          class="fillable"
+                          :items="estados"
+                          item-text="Nombre"
+                          item-value="Codigo"
+                          label="Estado"
+                          :disabled="disabledCboEstado"
+                          :value="codEstado"
+                          @input="setEstado"
+                          @change="changeEstado"
+                        ></v-select>
+                      </template>
+                    </template>
                   </v-col>
                   <!--
                   <v-col cols="6" md="2">
@@ -233,6 +288,51 @@
                 </v-row>
                 <v-row>
                   <v-col cols="6" md="6">
+                    <template v-if="userCanChangeVenta">
+                      <v-text-field
+                        dense
+                        class="fillable"
+                        label="Fecha Compra"
+                        placeholder="Fecha Compra"
+                        :filled="filled"
+                        v-model="item.FechaCompra"
+                        @change="setVentaCaida()"
+                        :rules="ruleVendePlan"
+                        :required="validarRuleVendePlan"
+                      ></v-text-field>
+                    </template>
+                    <template v-else>
+                      <template v-if="ocultarDatePicker">
+                        <v-text-field
+                          dense
+                          class="fillable"
+                          label="Fecha Compra"
+                          placeholder="Fecha Compra"
+                          :disabled="true"
+                          :filled="filled"
+                          v-model="item.FechaCompra"
+                          :rules="ruleVendePlan"
+                          :required="validarRuleVendePlan"
+                        ></v-text-field>
+                      </template>
+                      <template v-else>
+                        <v-text-field
+                          type="date"
+                          dense
+                          class="fillable"
+                          :filled="filled"
+                          :min="getMin"
+                          :max="getToday"
+                          label="Fecha Compra"
+                          placeholder="Fecha Compra"
+                          v-model="item.FechaCompra"
+                          :disabled="checkEstado"
+                          :rules="ruleVendePlan"
+                          :required="validarRuleVendePlan"
+                        ></v-text-field>
+                      </template>
+                    </template>
+                    <!--
                     <v-text-field
                       dense
                       class="fillable"
@@ -241,7 +341,10 @@
                       :disabled="checkEstado"
                       :filled="filled"
                       v-model="item.FechaCompra"
-                    ></v-text-field>
+                      :rules="ruleVendePlan"
+                      :required="validarRuleVendePlan"
+                    ></v-text-field>-->
+
                     <!--
                     <v-menu
                       v-model="menu2"
@@ -269,7 +372,8 @@
                       :disabled="checkMotivo"
                       :value="codMotivo"
                       @input="setMotivo"
-                      :rules="rules"
+                      :rules="ruleNoLeInteresa"
+                      :required="validarRuleNoLeInteresa"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -279,22 +383,92 @@
                       dense
                       label="Precio Máximo de Compra"
                       placeholder="Precio Máximo de Compra"
-                      :disabled="disabled"
+                      :readonly="disabled"
+                      class="resaltarDisabled"
                       :filled="filled"
                       v-model="valorPrecioMaxCompraFormat"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      class="fillable"
-                      label="Precio Compra"
-                      placeholder="Precio Compra"
-                      :disabled="checkEstado"
-                      :filled="filled"
-                      v-model="item.PrecioCompra"
-                    ></v-text-field>
+                    <template v-if="userCanChangeVenta">
+                      <v-text-field
+                        dense
+                        type="number"
+                        class="fillable"
+                        label="Precio Compra"
+                        placeholder="Precio Compra"
+                        :filled="filled"
+                        v-model="item.PrecioCompra"
+                        :rules="ruleVendePlan"
+                        :required="validarRuleVendePlan"
+                      ></v-text-field>
+                    </template>
+                    <template v-else>
+                      <template v-if="ocultarDatePicker">
+                        <v-text-field
+                          dense
+                          type="number"
+                          class="fillable"
+                          label="Precio Compra"
+                          placeholder="Precio Compra"
+                          :disabled="true"
+                          :filled="filled"
+                          v-model="item.PrecioCompra"
+                          :rules="ruleVendePlan"
+                          :required="validarRuleVendePlan"
+                        ></v-text-field>
+                      </template>
+                      <template v-else>
+                        <v-text-field
+                          dense
+                          type="number"
+                          class="fillable"
+                          label="Precio Compra"
+                          placeholder="Precio Compra"
+                          :disabled="checkEstado"
+                          :filled="filled"
+                          v-model="item.PrecioCompra"
+                          :rules="ruleVendePlan"
+                          :required="validarRuleVendePlan"
+                        ></v-text-field>
+                      </template>
+                    </template>
                   </v-col>
+                </v-row>
+                <v-row>
+                  <template v-if="esCaida">
+                    <v-col cols="6" md="6">
+                      <v-select
+                        dense
+                        class="fillable"
+                        :items="motivosCaida"
+                        item-text="Nombre"
+                        item-value="Codigo"
+                        label="Motivo Caida"
+                        :disabled="checkMotivoCaida"
+                        :value="codMotivoCaida"
+                        @input="setMotivoCaida"
+                        :rules="ruleVentaCaida"
+                        :required="validarRuleVentaCaida" 
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="6" md="6">
+                      <v-text-field
+                          type="date"
+                          dense
+                          class="fillable"
+                          :filled="filled"
+                          :min="getMin"
+                          :max="getToday"
+                          label="Fecha Caida"
+                          placeholder="Fecha Caida"
+                          v-model="item.FechaCaida"
+                          :disabled="checkMotivoCaida"
+                          :rules="ruleVentaCaida"
+                          :required="validarRuleVentaCaida"
+                        ></v-text-field>
+                    </v-col>
+                  </template>
                 </v-row>
               </v-container>
             </v-col>
@@ -344,6 +518,7 @@
         class="elevation-1"
         :loading="loadingObs"
         loading-text="Cargando Observaciones... Aguarde"
+        no-data-text="No hay observaciones ingresadas."
       >
         <template v-slot:item="{ item }">
           <template v-if="item.Automatica == 1 && showAutObs">
@@ -373,7 +548,7 @@
           </v-toolbar>
         </template>
       </v-data-table>
-      <v-card-actions>
+      <v-card-actions v-show="showBotones">
         <v-spacer></v-spacer>
         <v-btn class="ma-2 primary" @click="nuevaObs">
           <v-icon left>mdi-comment-plus-outline</v-icon>Nueva
@@ -381,7 +556,7 @@
       </v-card-actions>
 
       <v-card-actions>
-        <v-btn class="ma-2 primary" :disabled="disabledAceptar" @click="submit">
+        <v-btn class="ma-2 primary" :disabled="!validForm" @click="submit" v-show="showBotones">
           <v-icon left>mdi-content-save-outline</v-icon>Aceptar
         </v-btn>
         <v-spacer></v-spacer>
@@ -390,6 +565,10 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+
+    <v-dialog v-model="loadingDatos" persistent max-width="350px">
+      <v-progress-linear indeterminate height="10" color="primary darken-1"></v-progress-linear>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -400,16 +579,23 @@ import moment from "moment";
 export default {
   name: "detalledato",
 
-  props: ["id"],
+  props: ["id", "Marca", "Concesionario", "modulo"],
 
   data() {
     return {
       date: new Date().toISOString().substr(0, 10),
       menu2: false,
-      valid: true,
+      validForm: true,
+      esCaida: false,
+      validarRuleNoLeInteresa: false,
+      validarRuleVentaCaida:false,
+      validarRuleVendePlan: false,
       disabledAceptar: false,
+      disabledCboEstado: false,
       estadoReact: null,
       motivoErrors: [],
+      precioCompraErrors: [],
+      fechaCompraErrors: [],
       showAutObs: true,
       color: "",
       mode: "",
@@ -424,11 +610,11 @@ export default {
         {
           text: "Usuario",
           align: "start",
-          value: "login"
+          value: "login",
         },
         { text: "Fecha", value: "Fecha" },
         { text: "Observacion", value: "Obs" },
-        { text: "", value: "Automatica" }
+        { text: "", value: "Automatica" },
       ],
 
       disabled: true,
@@ -437,44 +623,65 @@ export default {
         routeapi: "",
         id: 0,
         module: "",
-        titleform: "Detalle Dato"
+        titleform: "Detalle Dato",
       },
-
-      firstname: "",
-      lastname: "",
-      nameRules: [
-        v => !!v || "Name is required",
-        v => v.length <= 10 || "Name must be less than 10 characters"
-      ],
-      email: ""
+      ocultarDatePicker: false,
+      disableFechaCompra: false,
+      fechaCompraFormated: "",
+      showBotones: null,
+      userCanChangeVenta: false,
+      requiereObsCaida: false,
     };
   },
 
-  created() {
-    this.$store.dispatch("gestiondatos/mostrarDato", this.id);
+  async created() {
+    var params = {
+      id: this.id,
+      marca: this.Marca,
+      concesionario: this.Concesionario,
+    };
+    console.log(params);
+    await this.$store.dispatch(this.modulo + "/mostrarDato", params);
+
+    this.checkRulesEstado(this.item.CodEstado);
+    this.mostrarFechaCompraGrabada();
+    this.mostrarFechaCaidaGrabada();
     //this.setEstado();
   },
 
   watch: {
     dialog(val) {
       val || this.close();
-    }
+    },
+  },
+
+  mounted() {
+    this.checkEsConcesionario();
+    this.checkEsVinculo();
   },
 
   methods: {
     ...mapActions({
       updateDato: "gestiondatos/updateDato",
       newObs: "gestiondatos/newObs",
-      saveDato: "gestiondatos/saveDato"
+      saveDato: "gestiondatos/saveDato",
     }),
+
+    setVentaCaida() {
+      this.requiereObsCaida = true;
+      this.esCaida = true;
+      //this.dialog = true;
+    },
 
     async submit() {
       this.disabledAceptar = true;
+
       if (!this.$refs.form.validate()) {
         this.disabledAceptar = false;
         return;
       }
 
+      console.log(this.item);
       await this.saveDato(this.item);
       await this.showSwal();
       this.volver();
@@ -483,15 +690,19 @@ export default {
     saveObs() {
       this.newObs({
         id: this.id,
+        marca: this.Marca,
+        concesionario: this.Concesionario,
         Obs: this.observacion,
         Automatica: this.obsAut,
-        login: this.login
+        login: this.login,
       });
       this.dialog = false;
     },
 
     volver() {
+      this.$refs.form.resetValidation();
       this.$router.go(-1);
+      this.ocultarDatePicker = false;
     },
     nuevaObs() {
       this.dialog = true;
@@ -514,6 +725,37 @@ export default {
 
     setEstado(value) {
       this.item.CodEstado = value;
+
+      this.checkRulesEstado(value);
+    },
+
+
+    checkRulesEstado(codEstado) {
+      console.log(codEstado);
+      this.validarRuleNoLeInteresa = false;
+      this.validarRuleVendePlan = false;
+      this.validarRuleVentaCaida = false;
+
+      switch (parseInt(codEstado)) {
+        case 4:
+          console.log("Es No le interesa");
+          this.validarRuleNoLeInteresa = true;
+          break;
+        case 5:
+          console.log("Es Vende Plan");
+          //this.getFechaCompra();
+
+          this.validarRuleVendePlan = true;
+          break;
+        case 9:
+          console.log("Es Venta Caida");
+          this.validarRuleVentaCaida = true;
+          this.esCaida = true;
+          break;
+        default:
+          console.log("Paso por el default");
+          break;
+      }
     },
 
     setMotivo(value) {
@@ -523,18 +765,152 @@ export default {
       }
     },
 
+    setMotivoCaida(value) {
+      console.log(value);
+      if (this.item.CodEstado == 9) {
+        this.item.MotivoCaida = value;
+      }
+    },
+
     setFecha(value) {
       console.log(value);
       if (this.item.CodEstado == 5) {
         this.item.FechaCompra = value;
       }
-    }
+    },
+
+    setFechaCaida(value) {
+      console.log(value);
+      if (this.item.CodEstado == 9) {
+        this.item.FechaCaida = value;
+      }
+    },
+
+    
+
+    getFechaCompra() {
+      console.log(moment(this.item.FechaCompra).format("DD/MM/YYYY"));
+      this.fechaCompraFormated = moment(this.item.FechaCompra).format(
+        "DD/MM/YYYY"
+      );
+    },
+
+    getFechaCaida() {
+      console.log(moment(this.item.FechaCaida).format("DD/MM/YYYY"));
+      this.fechaCaidaFormated = moment(this.item.FechaCaida).format(
+        "DD/MM/YYYY"
+      );
+    },
+
+    getPrecioMaximoCompra(avance, haberNeto) {
+      console.log(avance);
+      console.log(haberNeto);
+      if (45 <= avance && avance <= 61) {
+        return haberNeto * 0.2;
+      }
+
+      if (62 <= avance && avance <= 66) {
+        return haberNeto * 0.3;
+      }
+
+      if (67 <= avance && avance <= 69) {
+        return haberNeto * 0.35;
+      }
+      if (70 <= avance && avance <= 79) {
+        return haberNeto * 0.4;
+      }
+
+      if (80 <= avance && avance <= 83) {
+        return haberNeto * 0.5;
+      }
+
+      return 0;
+    },
+
+    checkEsConcesionario() {
+      if (this.esConcesionario) {
+        var codC = parseInt(this.codigoConcesionario);
+        console.log(codC);
+        var itemC = {};
+
+        this.showBotones = false;
+      } else {
+        if (this.esVinculo) {
+          this.showBotones = false;
+        } else {
+          this.showBotones = true;
+        }
+      }
+    },
+
+    mostrarFechaCompraGrabada() {
+      if (this.codEstado == 5 && this.item.FechaCompra != null) {
+        this.ocultarDatePicker = true;
+        this.disabledCboEstado = true;
+      } else {
+        this.ocultarDatePicker = false;
+        this.disabledCboEstado = false;
+      }
+      if (this.user.HN_PuedeCambiarVendePlan == 1) {
+        this.userCanChangeVenta = true;
+      }
+    },
+
+    mostrarFechaCaidaGrabada() {
+      if (this.codEstado == 9 && this.item.FechaCaida != null) {
+        this.ocultarDatePicker = true;
+        this.disabledCboEstado = true;
+      } else {
+        this.ocultarDatePicker = false;
+        this.disabledCboEstado = false;
+      }
+      if (this.user.HN_PuedeCambiarVendePlan == 1) {
+        this.userCanChangeVenta = true;
+      }
+    },
+
+    changeEstado(value) {
+
+      switch(value){
+        case 5: // VendePlan
+          this.ocultarDatePicker = false;
+           this.esCaida = false;
+        break;
+        case 9: //Venta Caida
+          this.esCaida = true;
+          this.ocultarDatePicker = false;
+          this.disableFechaCompra = false;
+        break;
+        default:
+          this.esCaida = false;
+          this.ocultarDatePicker = true;
+          this.disableFechaCompra = true;
+        break;
+
+      }
+      /*
+      if (value == 5) {
+        this.ocultarDatePicker = false;
+      } else {
+        this.ocultarDatePicker = true;
+        this.disableFechaCompra = true;
+      }
+      */
+    },
   },
 
   computed: {
     api() {
       return "gestiondatos";
       //return this.pars.routeapi;
+    },
+
+    getToday() {
+      return moment().format("DD/MM/YYYY");
+    },
+
+    getMin() {
+      return moment().subtract(1, "months").format("DD/MM/YYYY");
     },
 
     fechaCompra() {
@@ -549,6 +925,11 @@ export default {
       return parseInt(this.item.Motivo);
     },
 
+    codMotivoCaida(){
+      return parseInt(this.item.MotivoCaida);
+    },
+    
+
     checkEstado() {
       if (this.item.CodEstado != 5) {
         return true;
@@ -561,16 +942,33 @@ export default {
       }
     },
 
-    rules() {
-      const rules = [];
-
-      if (this.item.CodEstado == 4 && this.item.Motivo != 0) {
-        const rule = v => !!v || "Motivo es Requerido.";
-
-        rules.push(rule);
+    checkMotivoCaida() {
+      if (this.item.CodEstado != 9) {
+        return true;
       }
+    },
+    
 
-      return rules;
+    ruleVendePlan() {
+      if (this.validarRuleVendePlan) {
+        return [(v) => !!v || "Campo Requerido para Vende Plan."];
+      }
+    },
+
+    ruleNoLeInteresa() {
+      if (this.validarRuleNoLeInteresa) {
+        if (this.item.Motivo == null) {
+          return [(v) => !!v || "Campo Requerido para No Le Interesa."];
+        }
+      }
+    },
+
+    ruleVentaCaida() {
+      if (this.validarRuleVentaCaida) {
+        if (this.item.MotivoCaida == null) {
+          return [(v) => !!v || "Campo Requerido para Venta Caida."];
+        }
+      }
     },
 
     valorHaberNetoFormat() {
@@ -578,28 +976,65 @@ export default {
     },
 
     valorPrecioMaxCompraFormat() {
-      return (
-        "$" + this.$options.filters.numFormat(this.item.PrecioMaximoCompra)
+      return this.$options.filters.numFormat(
+        this.getPrecioMaximoCompra(
+          parseInt(this.item.Avance),
+          parseInt(this.item.HaberNeto)
+        ),
+        "$0,0"
       );
+      /*
+      if (typeof this.item.PrecioMaximoCompra !== "undefined") {
+        if (this.item.PrecioMaximoCompra !== null) {
+          return (
+            "$" + this.$options.filters.numFormat(this.item.PrecioMaximoCompra)
+          );
+        } else {
+          return this.$options.filters.numFormat(
+            this.getPrecioMaximoCompra(
+              parseInt(this.item.Avance),
+              parseInt(this.item.HaberNeto)
+            ),
+            "$0,0"
+          );
+        }
+      } else {
+        return this.$options.filters.numFormat(
+          this.getPrecioMaximoCompra(
+            parseInt(this.item.Avance),
+            parseInt(this.item.HaberNeto)
+          ),
+          "$0,0"
+        );
+        */
     },
 
     module() {
       return "gestiondatos";
       //return this.pars.module;
     },
-    ...mapState("auth", ["login", "user"]),
+    ...mapState("auth", [
+      "login",
+      "user",
+      "esConcesionario",
+      "esVinculo",
+      "codigoConcesionario",
+    ]),
+
     ...mapState("gestiondatos", [
       "item",
       "observaciones",
       "loading",
+      "loadingDatos",
       "loadingObs",
       "dataStatus",
       "dataStatusMsg",
       "showMsg",
       "estados",
-      "motivos"
-    ])
-  }
+      "motivos",
+      "motivosCaida"
+    ]),
+  },
 };
 </script>
 
@@ -640,19 +1075,23 @@ export default {
   font-size: 14px;
 }
 
-.v-text-field .disabled {
-  height: 10px;
-}
-
-.v-text-field .filled {
-  height: 10px;
-}
-
 .cambioReconocimiento {
   background: #eb952d;
 }
 
 .fillable {
+  font-weight: bold;
+}
+
+.resaltarDisabled {
+  font-size: 16px;
+  background: #fbff00;
+  padding-bottom: 25px;
+  font-weight: bold;
+}
+
+.importantDisabled {
+  font-size: 16px;
   font-weight: bold;
 }
 </style>

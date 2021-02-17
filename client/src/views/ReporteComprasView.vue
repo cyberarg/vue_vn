@@ -1,56 +1,85 @@
 <template>
   <v-app class="fullw">
-    <v-card class="padded" color="grey lighten-4">
+    <v-card class="paddedb" color="grey lighten-4">
       <v-card-title>
-        Reporte Cartera de Compra
+        Reporte Cartera
         <v-divider class="mx-4" inset vertical></v-divider>
       </v-card-title>
-      <div class="card-body">
-        <v-row>
-          <v-col cols="3" md="3">
-            <v-combobox
-              item-text="Nombre"
-              item-value="Codigo"
-              :items="listMarcas"
-              label="Marca"
-              :value="codMarcaSelected"
-              @change="filterListConcesionaria"
-              class="pad"
-            ></v-combobox>
-          </v-col>
-          <v-col cols="3" md="3">
-            <v-combobox
-              item-text="Nombre"
-              item-value="Codigo"
-              :items="listC"
-              label="Concesionario"
-              v-model="codConcesSelected"
-              @change="filterConcesionaria"
-            ></v-combobox>
-          </v-col>
-          <v-col cols="3" md="3">
-            <v-select
-              :items="itemsPeriodos"
-              item-text="Nombre"
-              item-value="Codigo"
-              label="Periodos"
-              v-model="codperiodo"
-              @change="getReporte()"
-            ></v-select>
-          </v-col>
-          <v-col cols="3" md="3">
-            <v-btn
-              class="ma-2"
-              outlined
-              color="blue darken-1"
-              text
-              @click="getReporte()"
-              :disabled="disableButton"
-            >
-              <v-icon left>mdi-refresh</v-icon>Actualizar
-            </v-btn>
-          </v-col>
-        </v-row>
+      <div>
+        <template v-if="!esConcesionario">
+          <v-row justify="end">
+            <v-col cols="3" md="3">
+              <v-combobox
+                item-text="Nombre"
+                item-value="Codigo"
+                :items="listMarcas"
+                label="Marca"
+                :value="codMarcaSelected"
+                @change="filterListConcesionaria"
+                class="pad"
+              ></v-combobox>
+            </v-col>
+            <v-col cols="3" md="3">
+              <v-combobox
+                item-text="Nombre"
+                item-value="Codigo"
+                :items="listC"
+                label="Concesionario"
+                v-model="codConcesSelected"
+                @change="filterConcesionaria"
+              ></v-combobox>
+            </v-col>
+
+            <v-col cols="3" md="3">
+              <v-select
+                :items="itemsPeriodos"
+                item-text="Nombre"
+                item-value="Codigo"
+                label="Periodos"
+                v-model="codperiodo"
+                @change="getReporte()"
+              ></v-select>
+            </v-col>
+            <v-col cols="3" md="3">
+              <v-btn
+                class="ma-2"
+                outlined
+                color="blue darken-1"
+                text
+                @click="getReporte()"
+                :disabled="disableButton"
+              >
+                <v-icon left>mdi-refresh</v-icon>Actualizar
+              </v-btn>
+            </v-col>
+          </v-row>
+        </template>
+        <template v-else>
+          <v-row justify="center">
+            <v-col cols="4" md="4">
+              <v-select
+                :items="itemsPeriodos"
+                item-text="Nombre"
+                item-value="Codigo"
+                label="Periodos"
+                v-model="codperiodo"
+                @change="getReporte()"
+              ></v-select>
+            </v-col>
+            <v-col cols="3" md="3">
+              <v-btn
+                class="ma-2"
+                outlined
+                color="blue darken-1"
+                text
+                @click="getReporte()"
+                :disabled="disableButton"
+              >
+                <v-icon left>mdi-refresh</v-icon>Actualizar
+              </v-btn>
+            </v-col>
+          </v-row>
+        </template>
 
         <v-row v-show="showTable">
           <v-col cols="6" md="6">
@@ -68,16 +97,16 @@
                 disabledsort: true,
                 hideheaders: false,
                 loading: this.loading,
-                loadingtext: this.loadingtextresumen
+                loadingtext: this.loadingtextresumen,
               }"
               :headers="[
                 {
                   text: '',
                   align: 'start',
                   value: 'Nombre',
-                  width: '60%'
+                  width: '60%',
                 },
-                { text: '', value: 'Cantidad', align: 'center', width: '40%' }
+                { text: '', value: 'Cantidad', align: 'center', width: '40%' },
               ]"
             ></NewGridFormComponent>
           </v-col>
@@ -95,18 +124,18 @@
                 disablepagination: true,
                 disabledsort: true,
                 loading: this.loadingmes,
-                loadingtext: this.loadingtextmes
+                loadingtext: this.loadingtextmes,
               }"
               :headers="[
                 {
                   text: '',
                   align: 'center',
-                  value: 'Tipo'
+                  value: 'Tipo',
                 },
                 { text: 'Casos', value: 'Casos', align: 'center' },
                 { text: '%', value: 'Porcentaje', align: 'center' },
                 { text: 'Monto HN', value: 'MontoHN', align: 'center' },
-                { text: '%', value: 'PorcentajeHN', align: 'center' }
+                { text: '%', value: 'PorcentajeHN', align: 'center' },
               ]"
             ></NewGridFormComponent>
           </v-col>
@@ -127,18 +156,18 @@
                 disablepagination: true,
                 disabledsort: true,
                 loading: this.loadinguniv,
-                loadingtext: this.loadingtextuniv
+                loadingtext: this.loadingtextuniv,
               }"
               :headers="[
                 {
                   text: '',
                   align: 'center',
-                  value: 'Tipo'
+                  value: 'Tipo',
                 },
                 { text: 'Casos', value: 'Casos', align: 'center' },
                 { text: '%', value: 'Porcentaje', align: 'center' },
                 { text: 'Monto HN', value: 'MontoHN', align: 'center' },
-                { text: '%', value: 'Porcentaje', align: 'center' }
+                { text: '%', value: 'Porcentaje', align: 'center' },
               ]"
             ></NewGridFormComponent>
           </v-col>
@@ -150,8 +179,7 @@
 
 <script>
 import NewGridFormComponent from "@/components/propios/NewGridFormComponent.vue";
-//import GridFormCrud from "@/components/propios/GridFormCrud.vue";
-import GridFormDatosComponent from "@/components/propios/GridFormComponent.vue";
+
 import moment from "moment";
 import { mapState, mapActions } from "vuex";
 
@@ -159,8 +187,6 @@ export default {
   name: "reportecompras",
   components: {
     NewGridFormComponent,
-    GridFormDatosComponent
-    //GridFormCrud
   },
   data() {
     return {
@@ -178,43 +204,48 @@ export default {
         "Septiembre",
         "Octubre",
         "Noviembre",
-        "Diciembre"
+        "Diciembre",
       ],
       headers: [
         {
           text: "Tipo",
           align: "center",
-          value: "Nombre"
+          value: "Nombre",
         },
-        { text: "Cantidad", value: "Cantidad", align: "center" }
+        { text: "Cantidad", value: "Cantidad", align: "center" },
       ],
       headers23: [
         {
           text: "Tipo",
           align: "center",
-          value: "Tipo"
+          value: "Tipo",
         },
         { text: "Casos", value: "Casos", align: "center" },
         { text: "%", value: "Porcentaje", align: "center" },
         { text: "Monto HN", value: "MontoHN", align: "center" },
-        { text: "%", value: "Porcentaje", align: "center" }
+        { text: "%", value: "Porcentaje", align: "center" },
       ],
       codMarcaSelected: null,
       listMarcas: [
         { Codigo: 2, Nombre: "Fiat" },
-        { Codigo: 5, Nombre: "Volkswagen" }
+        { Codigo: 5, Nombre: "Volkswagen" },
+        { Codigo: 9, Nombre: "Ford" },
+        { Codigo: 3, Nombre: "Peugeot" },
       ],
       codConcesSelected: null,
       listC: [],
       listConcesionarios: [
         { Codigo: 0, Nombre: "Todos" },
         { Codigo: 1, Nombre: "Sauma", Marca: 5 },
-        { Codigo: 2, Nombre: "Sapac", Marca: 5 },
+        { Codigo: 2, Nombre: "Iruña", Marca: 5 },
         { Codigo: 3, Nombre: "Amendola", Marca: 5 },
+        { Codigo: 7, Nombre: "Luxcar", Marca: 5 },
         { Codigo: 4, Nombre: "AutoCervo", Marca: 2 },
         { Codigo: 5, Nombre: "AutoNet", Marca: 2 },
-        { Codigo: 6, Nombre: "Car Group", Marca: 2 }
-      ]
+        { Codigo: 6, Nombre: "Car Group", Marca: 2 },
+        { Codigo: 9, Nombre: "Sapac", Marca: 9 },
+        { Codigo: 10, Nombre: "Alizze", Marca: 3 },
+      ],
     };
   },
 
@@ -238,17 +269,29 @@ export default {
       "loadinguniv",
       "loadingtextuniv",
       "items_filtrados",
-      "showTable"
-    ])
+      "showTable",
+    ]),
+
+    ...mapState("auth", [
+      "login",
+      "user",
+      "esConcesionario",
+      "esVinculo",
+      "codigoConcesionario",
+    ]),
   },
 
   created() {
     this.getPeriodos();
   },
 
+  mounted() {
+    this.checkEsConcesionario();
+  },
+
   methods: {
     ...mapActions({
-      getResumen: "reporteacompras/getResumen"
+      getResumen: "reporteacompras/getResumen",
     }),
 
     filterListConcesionaria(value) {
@@ -259,9 +302,9 @@ export default {
       var todos = {
         Codigo: 0,
         Nombre: "Todos",
-        Marca: this.codMarcaSelected.Codigo
+        Marca: this.codMarcaSelected.Codigo,
       };
-      this.listC = this.listConcesionarios.filter(function(item) {
+      this.listC = this.listConcesionarios.filter(function (item) {
         return item.Marca === value.Codigo;
       });
       this.listC.unshift(todos);
@@ -272,21 +315,53 @@ export default {
       this.codConcesSelected = value;
     },
 
+    checkEsConcesionario() {
+      if (this.esConcesionario) {
+        var codC = parseInt(this.codigoConcesionario);
+        console.log(codC);
+        var itemC = {};
+        itemC = this.listConcesionarios.find(function (item) {
+          return item.Codigo === codC;
+        });
+        this.codConcesSelected = itemC;
+        this.codMarcaSelected = itemC.Marca;
+      }
+      if (this.esVinculo) {
+        this.listMarcas.splice(0, 1);
+      }
+    },
+
     getReporte() {
       //console.log(this.codperiodo);
 
-      if (
-        typeof this.codperiodo != "undefined" &&
-        typeof this.codMarcaSelected.Codigo != "undefined" &&
-        typeof this.codConcesSelected.Codigo != "undefined"
-      ) {
-        var params = {
-          periodo: this.codperiodo,
-          marca: this.codMarcaSelected.Codigo,
-          concesionario: this.codConcesSelected.Codigo
-        };
-        //console.log(params);
-        this.getResumen(params);
+      if (this.esConcesionario) {
+        if (
+          typeof this.codperiodo != "undefined" &&
+          typeof this.codConcesSelected.Marca != "undefined" &&
+          typeof this.codConcesSelected.Codigo != "undefined"
+        ) {
+          var params = {
+            periodo: this.codperiodo,
+            marca: this.codConcesSelected.Marca,
+            concesionario: this.codConcesSelected.Codigo,
+          };
+          console.log(params);
+          this.getResumen(params);
+        }
+      } else {
+        if (
+          typeof this.codperiodo != "undefined" &&
+          typeof this.codMarcaSelected.Codigo != "undefined" &&
+          typeof this.codConcesSelected.Codigo != "undefined"
+        ) {
+          var params = {
+            periodo: this.codperiodo,
+            marca: this.codMarcaSelected.Codigo,
+            concesionario: this.codConcesSelected.Codigo,
+          };
+          console.log(params);
+          this.getResumen(params);
+        }
       }
     },
 
@@ -306,15 +381,17 @@ export default {
 
         period[i] = {
           Codigo: `${moment(fecha).year() + "" + (moment(fecha).month() + 1)}`,
-          Nombre: `${this.monthNames[parseInt(moment(fecha).month())] +
+          Nombre: `${
+            this.monthNames[parseInt(moment(fecha).month())] +
             " " +
-            moment(fecha).year()}`
+            moment(fecha).year()
+          }`,
         };
       }
       //console.log(period);
       this.itemsPeriodos = period.reverse();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -334,7 +411,12 @@ export default {
   height: 100%;
 }
 
+.paddedb {
+  padding-bottom: 20px;
+}
+
 .fullw {
   width: 100%;
+  height: 100vh;
 }
 </style>

@@ -14,7 +14,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class HaberNeto extends Model
 {
+    //protected $table = 'haberesnetosok';
+
     protected $table = 'haberesnetosok';
+    //protected $table = 'haberesnetosok_BACKUP_20200916';
     /**
      * The primary key for the model.
      * 
@@ -29,7 +32,9 @@ class HaberNeto extends Model
     'Titular', 'TipoCompra', 'Grupo_TomaPlan', 'Orden_TomaPlan', 'Rescindido', 
     'MontoCompra', 'MontoCobro', 'MontoCobroReal', 'FechaCobroReal', 'EnvioMailReclamoTerminal',
     'HaberNetoSubite', 'HaberNetoOriginal', 'SeDesrescindio', 'Transferencia', 
-    'ConcesionarioPropio', 'FechaAltaRegistro', 'UsuarioAltaRegistro'
+    'ConcesionarioPropio', 'FechaAltaRegistro', 'UsuarioAltaRegistro',
+    'MontoCompraDolares', 'HaberNetoSubiteUSD', 'UtilidadActual', 'ValorAutoHoy', 'DurationActual', 'DurationCompra',
+    'TIRActual', 'FechaCuota84', 'ComproGiama', 'OficialCompra', 'ComisionALiquidar'
     ];
 
     /**

@@ -1,5 +1,5 @@
 <template>
-  <v-app class="contenedor">
+  <div>
     <v-data-table
       :headers="headers"
       :items="items"
@@ -24,16 +24,12 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="650px">
             <template v-slot:activator="{ on }">
-              <v-btn cclass="ma-2" outlined text v-on="on"
-                ><v-icon left>mdi-account-plus-outline</v-icon>Nuevo</v-btn
-              >
+              <v-btn cclass="ma-2" outlined text v-on="on">
+                <v-icon left>mdi-account-plus-outline</v-icon>Nuevo
+              </v-btn>
             </template>
             <v-card>
-              <v-progress-linear
-                v-if="loading"
-                indeterminate
-                color="primary darken-1"
-              ></v-progress-linear>
+              <v-progress-linear v-if="loading" indeterminate color="primary darken-1"></v-progress-linear>
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
@@ -42,16 +38,10 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.Nombre"
-                        label="Nombre"
-                      ></v-text-field>
+                      <v-text-field v-model="editedItem.Nombre" label="Nombre"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.login"
-                        label="Usuario"
-                      ></v-text-field>
+                      <v-text-field v-model="editedItem.login" label="Usuario"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-combobox
@@ -67,31 +57,27 @@
               </v-card-text>
 
               <v-card-actions v-if="!loading">
-                <v-btn cclass="ma-2" outlined @click="save"
-                  ><v-icon left>mdi-content-save-outline</v-icon>Guardar</v-btn
-                >
+                <v-btn cclass="ma-2" outlined @click="save">
+                  <v-icon left>mdi-content-save-outline</v-icon>Guardar
+                </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn cclass="ma-2" outlined @click="close"
-                  ><v-icon left>mdi-cancel</v-icon>Cancelar</v-btn
-                >
+                <v-btn cclass="ma-2" outlined @click="close">
+                  <v-icon left>mdi-cancel</v-icon>Cancelar
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)">
-          mdi-pencil
-        </v-icon>
-        <v-icon small @click="deleteItem(item)">
-          mdi-delete
-        </v-icon>
+        <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+        <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
       </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize">Resetear</v-btn>
       </template>
     </v-data-table>
-  </v-app>
+  </div>
 </template>
 
 <script>

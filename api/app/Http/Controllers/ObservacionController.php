@@ -5,6 +5,7 @@ use App\Observacion;
 use Illuminate\Http\Request;
 use DB;
 use App\User;
+use App\SubiteDatos;
 use Session;
 
 class ObservacionController extends Controller
@@ -17,7 +18,8 @@ class ObservacionController extends Controller
 
     public function index(Request $request)
     {
-       return Observacion::all(); 
+        return Observacion::all(); 
+       
     }
 
     /**
@@ -38,8 +40,28 @@ class ObservacionController extends Controller
      */
     public function store(Request $request)
     {
+
+        switch($request->marca){
+            case 2:
+                switch($request->concesionario){
+                    case 4:
+                        $db = 'AC';
+                    break;
+                    case 5:
+                        $db = 'AN';
+                    break;
+                    case 6:
+                        $db = 'CG';
+                    break;
+                }
+            break;
+            default:
+                $db = 'GF';
+            break;
+        }
        
         $newObs = new Observacion();
+        $newObs->setConnection($db);
         $newObs->ID_Datos = $request->id;
         $newObs->Obs =$request->Obs;
         $newObs->login = $request->login;
@@ -48,6 +70,10 @@ class ObservacionController extends Controller
         $newObs->Automatica =  $request->Automatica;
 
         $newObs->save();
+
+        $dato = SubiteDatos::on($db)->findOrFail($request->id);
+        $dato->EsDatoNuevo =  0;
+        $dato->save();
 
         return $newObs;
        
@@ -62,6 +88,33 @@ class ObservacionController extends Controller
     public function show($id)
     {
         return Observacion::where('ID_Datos',$id)->get();
+
+    }
+
+    public function getObservacion(Request $request)
+    {
+        switch($request->marca){
+            case 2:
+                switch($request->concesionario){
+                    case 4:
+                        $db = 'AC';
+                    break;
+                    case 5:
+                        $db = 'AN';
+                    break;
+                    case 6:
+                        $db = 'CG';
+                    break;
+                }
+            break;
+            default:
+                $db = 'GF';
+            break;
+        }
+        $observaciones = Observacion::on($db)->where('ID_Datos',$request->id)->get(); // static method
+
+        return $observaciones;
+
     }
 
     /**

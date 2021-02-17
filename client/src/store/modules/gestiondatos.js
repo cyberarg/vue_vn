@@ -9,65 +9,88 @@ export const state = {
   items: [],
   items_filtered: [],
   motivos: [],
+  motivosCaida: [],
   estados: [],
   item: {},
   obsStatus: "",
   observaciones: [],
-  loading: true,
+  loadingDatos: false,
   loadingObs: true,
   showMsg: false,
+  askData: false,
   showItemsFiltered: false
 };
 
 export const mutations = {
+  CLEAR_STATE(state) {
+    state.dataStatus = "";
+    state.dataStatusMsg = "";
+    state.items_totales = [];
+    state.items = [];
+    state.items_filtered = [];
+    state.observaciones = [];
+  },
+
   GET_FILTERED_DATA_STATUS(state) {
     state.dataStatus = "loading";
     state.showMsg = false;
+    state.loadingDatos = true;
   },
 
   FILTERED_SUCCESS(state, datos) {
     console.log(datos);
     state.items = datos;
     state.showItemsFiltered = true;
-    state.loading = false;
     state.dataStatus = "success";
+    state.loadingDatos = false;
     state.showMsg = false;
   },
 
   GET_DATA_STATUS(state) {
     state.dataStatus = "loading";
+    state.items_totales = [];
+    state.items = [];
+    state.askData = true;
+    state.loadingDatos = true;
     state.showMsg = false;
   },
 
   DATOS_SUCCESS(state, datos) {
+    console.log(datos);
     state.items_totales = datos;
     state.items = datos;
-    state.loading = false;
+    state.loadingDatos = false;
     state.dataStatus = "success";
+
     state.showMsg = false;
   },
 
   SET_DATA_STATUS(state, colection) {
+    state.loadingDatos = true;
     state.items = colection;
     //state.items_totales = colection;
     // console.log(colection);
-    state.loading = false;
     state.dataStatus = "success";
     state.showMsg = false;
   },
 
+  SET_LOADING_STATUS(state) {
+    state.loadingDatos = false;
+  },
+
   SAVING_DATA(state) {
-    state.loading = true;
+    state.loadingDatos = true;
     state.dataStatus = "loading";
     state.showMsg = false;
   },
 
   SAVE_SUCCESS(state, dato) {
+    console.log(dato);
     state.item = dato;
     state.dataStatus = "success";
     state.dataStatusMsg = "Los datos se grabaron correctamente.";
     state.showMsg = true;
-    state.loading = false;
+    state.loadingDatos = false;
   },
 
   OBS_SUCCESS(state, datos) {
@@ -92,22 +115,39 @@ export const mutations = {
     state.loadingObs = true;
   },
   RESET_ITEM(state) {
-    state.item = {};
+    //state.item = {};
+    state.item = [];
+  },
+
+  SET_COLECTION_ASIG(items) {
+    state.items = items;
   },
 
   DATOS_ERROR(state) {
     state.dataStatus = "error";
     state.dataStatusMsg = "Ocurrió un error al intentar guardar los datos.";
     state.showMsg = true;
+    state.loadingDatos = false;
   },
 
   SET_DATO(state, dato) {
     state.item = dato;
     state.showMsg = false;
+    state.loadingDatos = false;
+  },
+
+  SET_DATO_ARR(state, dato) {
+    state.item = dato[0];
+    state.showMsg = false;
   },
 
   MOTIVOS_SUCCESS(state, respuesta) {
     state.motivos = respuesta;
+  },
+
+  MOTIVOS_CAIDA_SUCCESS(state, respuesta) {
+    console.log(respuesta);
+    state.motivosCaida = respuesta;
   },
 
   ESTADOS_SUCCESS(state, respuesta) {
@@ -132,7 +172,7 @@ export const actions = {
     console.log(req);
     commit("SAVING_DATA");
     return axios
-      .put("/gestiondatos/" + req.ID, req)
+      .post("/updatedato", req)
       .then(response => {
         commit("SAVE_SUCCESS", response.data);
       })
@@ -140,6 +180,11 @@ export const actions = {
         //console.log("get datos error");
         commit("DATOS_ERROR");
       });
+  },
+
+  setColection({ commit }, items) {
+    console.log(items);
+    commit("SET_COLECTION_ASIG", items);
   },
 
   filterData({ commit, getters }, conc) {
@@ -150,15 +195,21 @@ export const actions = {
     commit("FILTERED_SUCCESS", filtrado);
   },
 
-  getData({ commit }, api) {
+  getData({ commit }, pars) {
     commit("GET_DATA_STATUS");
     var user = JSON.parse(localStorage.getItem("user"));
-    var oficial = user.CodigoOficialHN;
-    console.log(oficial);
+    var oficial = 29; // 29 Es el codigo de oficial Gral para la base GF
+
+    if (user.HNConcesionario == null && user.HN_PerfilUsuario !== "2") {
+      oficial = user.CodigoOficialHN;
+    }
+    //console.log(user);
+    pars.oficial = oficial;
+    //console.log(oficial);
+    console.log(pars);
     return axios
-      .get("/" + api + "?oficial=" + oficial)
+      .post("/getdatos", pars)
       .then(response => {
-        //console.log(response.data);
         commit("DATOS_SUCCESS", response.data);
       })
       .catch(err => {
@@ -171,24 +222,28 @@ export const actions = {
     commit("SET_DATA_STATUS", coleccion);
   },
 
-  mostrarDato({ commit, dispatch, getters }, id) {
+  setLoader({ commit }) {
+    commit("SET_LOADING_STATUS");
+  },
+
+  mostrarDato({ commit, dispatch, getters }, params) {
     //console.log(id);
     commit("RESET_ITEM");
     commit("RESET_OBS");
-    var dato = getters.getDatoById(id);
+    var dato = getters.getDatoById(params.id);
     console.log(dato);
 
     if (dato) {
       commit("SET_DATO", dato);
-      dispatch("getObservaciones", id);
+      dispatch("getObservacionesDato", params);
       dispatch("loadCombosMotivoEstado");
     } else {
       return axios
-        .get("/gestiondatos/" + id)
+        .post("/showdato", params)
         .then(response => {
           //console.log(response.data);
-          commit("SET_DATO", response.data);
-          dispatch("getObservaciones", id);
+          commit("SET_DATO", response.data[0]);
+          dispatch("getObservacionesDato", params);
           dispatch("loadCombosMotivoEstado");
         })
         .catch(err => {
@@ -211,6 +266,20 @@ export const actions = {
       });
   },
 
+  getObservacionesDato({ commit }, params) {
+    console.log(params);
+    return axios
+      .post("/getobservaciones", params)
+      .then(response => {
+        console.log(response.data);
+        commit("OBS_SUCCESS", response.data);
+      })
+      .catch(err => {
+        console.log("get datos error");
+        commit("OBS_ERROR");
+      });
+  },
+
   newObs({ commit }, params) {
     console.log(params);
     return axios
@@ -226,11 +295,14 @@ export const actions = {
 
   async loadCombosMotivoEstado({ commit }) {
     await axios
-      .all([axios.get(`/combobox/estados`), axios.get(`/combobox/motivos`)])
+      .all([axios.get(`/combobox/estados`), 
+      axios.get(`/combobox/motivos`),
+      axios.get(`/combobox/motivos_caida`)])
       .then(
-        axios.spread((estados, motivos) => {
+        axios.spread((estados, motivos, motivos_caida) => {
           commit("ESTADOS_SUCCESS", estados.data);
           commit("MOTIVOS_SUCCESS", motivos.data);
+          commit("MOTIVOS_CAIDA_SUCCESS", motivos_caida.data);
         })
       )
       .catch(err => {

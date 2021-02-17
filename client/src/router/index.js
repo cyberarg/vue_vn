@@ -2,7 +2,6 @@ import Vue from "vue";
 import Router from "vue-router";
 import AuthLayout from "../components/auth/AuthLayout";
 import AppLayout from "../components/admin/AppLayout";
-import OficialesBAKV from "@/views/OficialesBAK.vue";
 import OficialesView from "@/views/OficialesView.vue";
 import EstadoGestionView from "@/views/EstadoGestionView.vue";
 import GestionDatosView from "@/views/GestionDatosView.vue";
@@ -17,6 +16,13 @@ import DetalleReporteView from "@/views/DetalleReporteView.vue";
 import HaberesNetosView from "@/views/HaberesNetosView.vue";
 import CalculadoraHNView from "@/views/CalculadoraHNView.vue";
 import ModeloHNView from "@/views/ModeloHNView.vue";
+import CompraHNView from "@/views/CompraHNView.vue";
+import GestionComprasView from "@/views/GestionComprasView.vue";
+import ReporteObservacionesView from "@/views/ReporteObservacionesView.vue";
+import ReporteComprasObjetivosView from "@/views/ReporteComprasObjetivosView.vue";
+import ReporteCaidasView from "@/views/ReporteCaidasRBView.vue";
+import ReporteComisionesView from "@/views/ReporteComisionesView.vue";
+import ReporteFacturacionView from "@/views/ReporteFacturacionView.vue";
 
 Vue.use(Router);
 
@@ -34,11 +40,21 @@ export default new Router({
       path: "*",
       redirect: { name: "dashboard" }
     },
-
+    {
+      name: "changepass",
+      path: "changepass",
+      component: () =>
+        import("../components/auth/change-password/ChangePassword.vue")
+    },
     {
       path: "/auth",
       component: AuthLayout,
       children: [
+        {
+          name: "logout",
+          path: "logout",
+          component: () => import("../components/auth/login/Login.vue")
+        },
         {
           name: "login",
           path: "login",
@@ -49,6 +65,7 @@ export default new Router({
           path: "signup",
           component: () => import("../components/auth/signup/Signup.vue")
         },
+
         {
           name: "recover-password",
           path: "recover-password",
@@ -103,6 +120,7 @@ export default new Router({
           default: true,
           meta: { requiresAuth: true }
         },
+
         {
           name: "detalledato",
           path: "detalledato",
@@ -111,11 +129,6 @@ export default new Router({
           meta: { requiresAuth: true }
         },
 
-        {
-          name: "oficialesbak",
-          path: "oficialesbak",
-          component: OficialesBAKV
-        },
         {
           name: "oficiales",
           path: "oficiales",
@@ -172,9 +185,49 @@ export default new Router({
         },
 
         {
+          path: "reporteaobservaciones",
+          name: "reporteaobservaciones",
+          component: ReporteObservacionesView
+        },
+
+        {
+          path: "reportecomprasobjetivos",
+          name: "reportecomprasobjetivos",
+          component: ReporteComprasObjetivosView
+        },
+        {
+          path: "reportecaidas",
+          name: "reportecaidas",
+          component: ReporteCaidasView
+        },
+        
+        {
+          path: "reportecomisiones",
+          name: "reportecomisiones",
+          component: ReporteComisionesView
+        },
+        {
+          path: "reportefacturacion",
+          name: "reportefacturacion",
+          component: ReporteFacturacionView
+        },
+        
+        {
+          path: "gestioncompras",
+          name: "gestioncompras",
+          component: GestionComprasView
+        },
+
+        {
           path: "haberesnetos",
           name: "haberesnetos",
           component: HaberesNetosView
+        },
+
+        {
+          path: "comprahn",
+          name: "comprahn",
+          component: CompraHNView
         },
 
         {

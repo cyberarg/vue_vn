@@ -6,28 +6,15 @@ export const navigationRoutes = {
 
   routes: [
     {
-      name: "dashboard",
-      displayName: "CRM",
+      name: "parameters",
+      displayName: "Parámetros",
       meta: {
-        iconClass: "vuestic-iconset vuestic-iconset-dashboard"
+        iconClass: "vuestic-iconset vuestic-iconset-settings"
       },
-      disabled: true,
       children: [
         {
           name: "oficiales",
           displayName: "Oficiales"
-        },
-        {
-          name: "estadogestion",
-          displayName: "Estado de la Gestión"
-        },
-        {
-          name: "gestiondatos",
-          displayName: "Gestión de Datos"
-        },
-        {
-          name: "asignaciondatos",
-          displayName: "Asignación de Datos"
         },
         {
           name: "importardatos",
@@ -36,7 +23,46 @@ export const navigationRoutes = {
         {
           name: "importarhn",
           displayName: "Importación de HN"
+        }
+      ]
+    },
+    {
+      name: "dashboard",
+      displayName: "CRM",
+      meta: {
+        iconClass: "vuestic-iconset vuestic-iconset-dashboard"
+      },
+      disabled: true,
+      children: [
+        /*
+        {
+          name: "oficiales",
+          displayName: "Oficiales"
         },
+        */
+        {
+          name: "gestiondatos",
+          displayName: "Gestión de Datos"
+        },
+        {
+          name: "estadogestion",
+          displayName: "Estado de la Gestión"
+        },
+        {
+          name: "asignaciondatos",
+          displayName: "Asignación de Datos"
+        },
+        /*
+        {
+          name: "importardatos",
+          displayName: "Importación de Datos"
+        },
+        
+        {
+          name: "importarhn",
+          displayName: "Importación de HN"
+        },
+        */
         {
           name: "reportecompras",
           displayName: "Reporte de Compras"
@@ -64,9 +90,14 @@ export const navigationRoutes = {
           displayName: "Calculadora"
         },
         {
-          name: "/",
-          displayName: "HN Vigentes"
+          name: "comprahn",
+          displayName: "Compra HN"
         },
+        {
+          name: "haberesnetos",
+          displayName: "HN Vigentes"
+        }
+        /*
         {
           name: "/",
           displayName: "HN Cobrados"
@@ -83,6 +114,7 @@ export const navigationRoutes = {
           name: "/",
           displayName: "Proyectado"
         }
+        */
       ]
     }
   ]

@@ -40,11 +40,11 @@ export default {
 @import "../sass/main.scss";
 
 body {
-  //height: 100%;
-  background-color: #eeeeee;
+  height: 100%;
+  //background-color: #eeeeee;
 
   #app {
-    //height: 100%;
+    max-height: 100vh;
     background-color: #eeeeee;
   }
 }

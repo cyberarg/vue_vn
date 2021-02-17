@@ -17,41 +17,68 @@ class ReporteAsignacionController extends Controller
      */
 
     //public function index(Request $request)
-    public function index(Request $request)
+    public function getDatos(Request $request)
     {
         //dd($request->periodo);
        $periodo = $request->periodo;
+       $marca =  $request->Marca;
+       $concesionario =  $request->Concesionario;
 
         $periodoMes = substr($periodo, 4, strlen($periodo));
         $periodoAnio = substr($periodo, 0, 4);
 
-        $emp1 = "AutoCervo";
-        $db1= "AC";
-        $emp2 = "AutoNet";
-        $db2= "AN";
-        $emp3 = "CarGroupFusion";
-        $db3= "CG";
+        $fiatTotal = false;
+        switch ($marca){
+            case 2:
+                 switch ($concesionario){
+                     case 0:
+                         $fiatTotal = true;
+                     case 4:
+                     //AutoCervo
+                     $db = "AC";
+                     $emp = "AutoCervo";
+                     break;
+                     case 5:
+                         //AutoNet
+                         $db = "AN";
+                         $emp = "AutoNet";
+                     break;
+                     case 6:
+                         //Car Group
+                         $db = "CG";
+                         $emp = "Car Group";
+                     break;
+                 }
+            break;
+            case 5:
+                //Busco en la DB de Gestion Financiera pa7_gf
+                $db = "GF";
+                $emp = "Volkswagen";
+                switch ($concesionario){
+                    case 1:
+                        $emp .= " - SAUMA";
+                    case 2:
+                        $emp .= " - IRUÑA";
+                    break;
+                    case 3:
+                        $emp .= " - AMENDOLA";
+                    break;
+                    case 7:
+                        $emp .= " - LUXCAR";
+                    break;
+                }
+            break;
+         break;
+        }
 
-        $estadoGestion = [];
-
-        $estados = array();
-        $empresa1= array();
-        $empresa2= array();
-        $empresa3= array();
-        $est1 = array();
-       $est2 = array();
-
-       /*
-        $results1 = DB::connection($db1)->select("CALL net_subitereporteasigperiodo(".$periodoMes.", ".$periodoAnio.");");
-        $results2 = DB::connection($db2)->select("CALL net_subitereporteasigperiodo(".$periodoMes.", ".$periodoAnio.");");
-        $results3 =  DB::connection($db3)->select("CALL net_subitereporteasigperiodo(".$periodoMes.", ".$periodoAnio.");");
-
-        $estados = array_merge($results1, $results2, $results3);
-
-        return $estados;
-*/
-        //$result = DB::connection($db3)->select("CALL hnweb_subitereporteasigperiodo(".$periodoMes.", ".$periodoAnio.");");
-        $result = DB::select("CALL hnweb_subitereporteasigperiodo(".$periodoMes.", ".$periodoAnio.");");
+        if ($marca == 2){
+            $result = DB::connection($db)->select("CALL hnweb_subitereporteasigperiodo(".$periodoMes.", ".$periodoAnio.");");
+        }else{
+            $result = DB::connection($db)->select("CALL hnweb_subitereporteasigperiodo(".$concesionario.", ".$periodoMes.", ".$periodoAnio.");");
+            //$totaldatos = DB::select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", ".$concesionario.");");
+        }
+        
+        //dd($result);
       
         $lst = array();
         $list = array();
@@ -119,16 +146,16 @@ class ReporteAsignacionController extends Controller
                 $obj->NomOficial = $r->NomOficialOrigen;
              }
 
-             $obj->Empresa = $emp3;
+             $obj->Empresa = $emp;
 
              $encontro = false;
 
              foreach ($list as $o) {
                  if ($o->CodOficial == $obj->CodOficial){
 
-                    if ($obj->CodOficial != $CodOficialActual){
+                    if (($obj->CodOficial != $CodOficialActual) && ($obj->CodOficial != 0)){
                         //$o->EnOtroOficial += 1;
-                         $o->EnOtroOficial += 1;
+                        $o->EnOtroOficial += 1;
                         $oEstado = 9;
                     }else{
                         switch($oEstado){
@@ -172,7 +199,8 @@ class ReporteAsignacionController extends Controller
              }
 
              if ($encontro == false){
-                if ($obj->CodOficial != $CodOficialActual){
+                if (($obj->CodOficial != $CodOficialActual) && ($obj->CodOficial != 0)){
+                //if ($obj->CodOficial != $CodOficialActual){
                     //$obj->EnOtroOficial += 1;
                     $obj->EnOtroOficial += 1;
                     $oEstado = 9;
@@ -219,7 +247,8 @@ class ReporteAsignacionController extends Controller
         }
         $lst['Reporte'] = $list;
         $lst['Datos'] = $datos;
-    
+
+
         return $lst;
     }
 

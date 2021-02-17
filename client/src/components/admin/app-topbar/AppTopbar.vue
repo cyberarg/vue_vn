@@ -7,13 +7,19 @@
           v-if="item.children"
           :key="key"
           :is-active="hasActiveByDefault(item)"
-          :icon="[ 'sidebar-menu-item-icon vuestic-iconset', item.meta.iconClass ]"
+          :icon="[
+            'sidebar-menu-item-icon vuestic-iconset',
+            item.meta.iconClass,
+          ]"
           :title="$t(item.displayName)"
           :is-multi-row="item.children.length > 10"
         >
           <app-topbar-link-group-item
             class="app-topbar__menu-group-item"
-            :class="{'app-topbar__menu-group-item--multi-row': item.children.length > 10 }"
+            :class="{
+              'app-topbar__menu-group-item--multi-row':
+                item.children.length > 10,
+            }"
             v-for="(subMenuItem, key) in item.children"
             :key="key"
             :to="{ name: subMenuItem.name }"
@@ -26,9 +32,13 @@
           v-else
           :key="key"
           :is-active="item.name === $route.name"
-          :icon="[ 'sidebar-menu-item-icon vuestic-iconset', item.meta.iconClass ]"
+          :icon="[
+            'sidebar-menu-item-icon vuestic-iconset',
+            item.meta.iconClass,
+          ]"
           :to="{ name: item.name }"
-        >{{ $t(item.displayName) }}</app-topbar-link>
+          >{{ $t(item.displayName) }}</app-topbar-link
+        >
       </template>
     </ul>
   </aside>
@@ -39,7 +49,15 @@ import AppTopbarLink from "./components/AppTopbarLink";
 import AppTopbarLinkGroup from "./components/AppTopbarLinkGroup";
 import AppTopbarLinkGroupItem from "./components/AppTopbarLinkGroupItem";
 import { navigationRoutes } from "../app-sidebar/NavigationRoutes";
+import { navigationRoutesAdmin } from "../app-sidebar/NavigationRoutesAdmin";
+import { navigationRoutesFull } from "../app-sidebar/NavigationRoutesFull";
+import { navigationRoutesSupervisor } from "../app-sidebar/NavigationRoutesSupervisor";
+import { navigationRoutesOficial } from "../app-sidebar/NavigationRoutesOficial";
+import { navigationRoutesConcesionario } from "../app-sidebar/NavigationRoutesConcesionario";
+import { navigationRoutesConcesionarioCalculadora } from "../app-sidebar/NavigationRoutesConcesionarioCalculadora";
+import { navigationRoutesCobradoresHN } from "../app-sidebar/NavigationRoutesCobradoresHN";
 import { ColorThemeMixin } from "../../../services/vuestic-ui";
+import { mapState } from "vuex";
 
 export default {
   name: "app-topbar",
@@ -48,33 +66,93 @@ export default {
   components: {
     AppTopbarLink,
     AppTopbarLinkGroup,
-    AppTopbarLinkGroupItem
+    AppTopbarLinkGroupItem,
   },
   props: {},
   computed: {
+    ...mapState("auth", [
+      "login",
+      "user",
+      "esConcesionario",
+      "esVinculo",
+      "codigoConcesionario",
+      "perfilUsuario",
+      "verCalculadora",
+    ]),
+
     computedStyles() {
       if (this.contextConfig.invertedColor) {
         return {
           backgroundColor: "white",
-          boxShadow: "0 2px 3px 0 rgba(52, 56, 85, 0.25)"
+          boxShadow: "0 2px 3px 0 rgba(52, 56, 85, 0.25)",
         };
       }
 
       return {
-        backgroundColor: this.$themes.secondary
+        backgroundColor: this.$themes.secondary,
       };
-    }
+    },
   },
+
+  mounted() {
+    this.setNavigationRoutes();
+  },
+
   data() {
+    /*
     return {
       items: navigationRoutes.routes
     };
+    */
+    return {
+      items: [],
+      itemsAdmin: navigationRoutesAdmin.routes,
+      itemsSupervisor: navigationRoutesSupervisor.routes,
+      itemsFull: navigationRoutesFull.routes,
+      itemsOficial: navigationRoutesOficial.routes,
+      itemsCE: navigationRoutesConcesionario.routes,
+      itemsCECalculadora: navigationRoutesConcesionarioCalculadora.routes,
+      itemsCobradores: navigationRoutesCobradoresHN.routes,
+    };
   },
   methods: {
+    setNavigationRoutes() {
+      if (
+        (this.esConcesionario || this.esVinculo) &&
+        this.perfilUsuario != "7"
+      ) {
+        if (this.verCalculadora) {
+          this.items = this.itemsCECalculadora;
+        } else {
+          this.items = this.itemsCE;
+        }
+      } else {
+        var perfil;
+        perfil = parseInt(this.perfilUsuario);
+        switch (perfil) {
+          case 3:
+            this.items = this.itemsOficial;
+            break;
+          case 4:
+            this.items = this.itemsSupervisor;
+            break;
+          case 5:
+            this.items = this.itemsAdmin;
+            break;
+          case 6:
+            this.items = this.itemsFull;
+            break;
+          case 7:
+            this.items = this.itemsCobradores;
+            break;
+        }
+      }
+    },
+
     hasActiveByDefault(item) {
-      return item.children.some(child => child.name === this.$route.name);
-    }
-  }
+      return item.children.some((child) => child.name === this.$route.name);
+    },
+  },
 };
 </script>
 

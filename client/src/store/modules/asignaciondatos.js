@@ -9,9 +9,11 @@ export const state = {
   items_totales: [],
   listOficiales: [],
   listSupervisores: [],
-  loading: true,
+  loading: false,
   unselect: false,
-  repuesta: []
+  repuesta: [],
+  marcaSelected: null,
+  concesSelected: null
 };
 
 export const mutations = {
@@ -27,8 +29,21 @@ export const mutations = {
     state.showMsg = false;
   },
 
+  FILTERED_FIX_SUCCESS(state) {
+    state.items = state.items_totales;
+    state.loading = false;
+    state.dataStatus = "success";
+    state.showMsg = false;
+  },
+
   GET_DATA_STATUS(state) {
+    state.loading = true;
     state.dataStatus = "loading";
+  },
+
+  SET_FILTER_DATOS(state, pars) {
+    state.marcaSelected = pars.Marca;
+    state.concesSelected = pars.Concesionario;
   },
 
   DATOS_SUCCESS(state, datos) {
@@ -69,6 +84,11 @@ export const mutations = {
   },
   SET_TOTALES(state) {
     state.items = state.items_totales;
+  },
+
+  SET_DATO(state, dato) {
+    state.item = dato;
+    state.showMsg = false;
   }
 };
 
@@ -81,6 +101,13 @@ export const getters = {
     console.log(state.items_totales);
     return state.items_totales.filter(function(item) {
       return parseInt(item.Concesionario) === codConc;
+    });
+  },
+
+  filterItemsBySinAsignar: state => {
+    console.log(state.items_totales);
+    return state.items_totales.filter(function(item) {
+      return item.CodOficial === null;
     });
   }
 };
@@ -101,8 +128,30 @@ export const actions = {
       });
   },
 
+  loadCombos({ dispatch }) {
+    dispatch("loadComboOficiales");
+    dispatch("loadComboSupervisores");
+  },
+
+  getDatos({ commit }, pars) {
+    commit("GET_DATA_STATUS");
+    commit("SET_FILTER_DATOS", pars);
+    return axios
+      .post("/getdatosasignacion", pars)
+      .then(response => {
+        console.log(response.data);
+        commit("DATOS_SUCCESS", response.data);
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("DATOS_ERROR");
+      });
+  },
+
   filterData({ commit, getters }, conc) {
     commit("GET_FILTERED_DATA_STATUS");
+    commit("FILTERED_FIX_SUCCESS");
+    /*
     if (conc === 0) {
       commit("SET_TOTALES");
     } else {
@@ -110,12 +159,27 @@ export const actions = {
       console.log(filtrado);
       commit("FILTERED_SUCCESS", filtrado);
     }
+    */
+  },
+
+  filterSinAsignar({ commit, getters }, filtrar) {
+    if (!filtrar) {
+      commit("SET_TOTALES");
+    } else {
+      var filtrado = getters.filterItemsBySinAsignar;
+      console.log(filtrado);
+      commit("FILTERED_SUCCESS", filtrado);
+    }
   },
 
   reloadItems({ commit }) {
     commit("GET_DATA_STATUS");
+    var pars = {
+      Marca: state.marcaSelected,
+      Concesionario: state.concesSelected
+    };
     return axios
-      .get("/asignaciondatos")
+      .post("/getdatosasignacion", pars)
       .then(response => {
         commit("DATOS_SUCCESS", response.data);
       })
@@ -135,8 +199,29 @@ export const actions = {
       .post("/asignardatos", {
         data: params.data,
         oficial: params.oficial,
+        concesionario: params.concesionario,
+        marca: params.marca,
         supervisor: params.supervisor,
         login: params.login
+      })
+      .then(response => {
+        console.log(response);
+        commit("OK_RESPONSE", response);
+        dispatch("reloadItems");
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("DATOS_ERROR");
+      });
+  },
+
+  recycleDato({ commit, dispatch }, params) {
+    commit("SEND_SELECCION");
+    console.log(params);
+
+    return axios
+      .post("/reciclardato", {
+        data: params.data
       })
       .then(response => {
         console.log(response);

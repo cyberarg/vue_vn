@@ -7,19 +7,32 @@ export const state = {
   items: [],
   items_filtrados: [],
   datos: [],
+  datos_totales: [],
   empresa: {},
-  loading: true,
+  loading: false,
   okResponse: false
 };
 
 export const mutations = {
+  CLEAR_STATE(state) {
+    state.dataStatus = "";
+    state.items = [];
+    state.items_filtrados = [];
+    state.datos = [];
+  },
+
   GET_DATA_STATUS(state) {
     state.dataStatus = "loading";
+    state.loading = true;
+    state.datos = [];
+    state.items = [];
   },
 
   DATOS_SUCCESS(state, datos) {
-    state.items = datos;
-    state.datos = datos;
+    console.log(datos["TotalDatos"]);
+    state.items = datos["Estados"];
+    state.datos = datos["Estados"];
+    state.datos_totales = datos["TotalDatos"];
     state.empresa = datos.Empresa;
     state.loading = false;
     state.dataStatus = "success";
@@ -39,27 +52,46 @@ export const mutations = {
 };
 
 export const getters = {
-  getFiltrados: state => (codOficial, codEstado) => {
-    console.log(state.datos);
-    if (codEstado == "-1") {
-      return state.datos.filter(function(item) {
-        return item.CodOficial === codOficial;
-      });
-    } else {
-      return state.datos.filter(function(item) {
-        return item.CodOficial === codOficial && item.CodEstado === codEstado;
-      });
+  getFiltrados: state => (codOficial, codEstado, codConces) => {
+    //console.log(state.datos_totales);
+
+    switch (codEstado) {
+      case "0":
+        return state.datos_totales.filter(function(item) {
+          return (
+            item.CodOficial === codOficial &&
+            item.Concesionario == codConces &&
+            item.CodEstado == null
+          );
+        });
+        break;
+      case "-1":
+        return state.datos_totales.filter(function(item) {
+          return (
+            item.CodOficial === codOficial && item.Concesionario == codConces
+          );
+        });
+        break;
+      default:
+        return state.datos_totales.filter(function(item) {
+          return (
+            item.CodOficial === codOficial &&
+            item.CodEstado === codEstado &&
+            item.Concesionario == codConces
+          );
+        });
+        break;
     }
   }
 };
 
 export const actions = {
-  getData({ commit }, api) {
+  getData({ commit }, pars) {
     commit("GET_DATA_STATUS");
     return axios
-      .get("/" + api)
+      .post("/estadogestion", pars)
       .then(response => {
-        //console.log(response.data);
+        console.log(response.data);
         commit("DATOS_SUCCESS", response.data);
       })
       .catch(err => {
@@ -73,7 +105,8 @@ export const actions = {
     commit("GETTING_FILTRO");
     var datos = getters.getFiltrados(
       parametros.codOficial,
-      parametros.codEstado
+      parametros.codEstado,
+      parametros.Concesionario
     );
 
     console.log(datos);

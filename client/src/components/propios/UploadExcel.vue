@@ -1,6 +1,5 @@
 <template>
-  <v-app>
-    <h3></h3>
+  <div>
     <v-card color="grey lighten-4">
       <v-card-title>
         Importar Datos
@@ -67,7 +66,7 @@
 
       </v-data-table>
     </v-card>
-  </v-app>
+  </div>
 </template>
 
 <script>

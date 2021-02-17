@@ -20,7 +20,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'login', 'Nombre', 'password', 'HNConcesionario'
+        'login', 'Nombre', 'password', 'HNConcesionario', 'changepassword'
     ];
 
     /**
@@ -55,6 +55,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public $timestamps = false;
 
     
 }

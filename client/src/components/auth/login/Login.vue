@@ -63,9 +63,15 @@ export default {
       return !this.userErrors.length && !this.passwordErrors.length;
     }
   },
+
+  mounted() {
+    this.logOut();
+  },
+
   methods: {
     ...mapActions({
-      signIn: "auth/signIn"
+      signIn: "auth/signIn",
+      logOut: "auth/logOut"
     }),
 
     onsubmit() {

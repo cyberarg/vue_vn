@@ -12,11 +12,11 @@ class MeController extends Controller
     public function __construct(){
        //$this->middleware(['auth:api']);
     }
-    
+
 
     public function __invoke(Request $request){
 
-           dd($request); 
+           //dd($request); 
 //$user = User::where('login' = 'admin');
        // $user = $request->user();
         //dd($request);

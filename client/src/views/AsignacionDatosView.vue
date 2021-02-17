@@ -1,5 +1,5 @@
 <template>
-  <div class="contenedor">
+  <v-app class="contenedor">
     <div class="row justify-content-center">
       <div class="col-md-12">
         <div class="card">
@@ -9,67 +9,97 @@
                 titleform: 'Asignación de Datos',
                 routeapi: 'asignaciondatos',
                 itemkey: 'ID',
-                module: 'asignaciondatos'
+                module: 'asignaciondatos',
               }"
               :headers="[
-                { text: 'Supervisor', value: 'NomSup', align: 'left' },
+                {
+                  text: 'Supervisor',
+                  value: 'NomSup',
+                  align: 'left',
+                  filterable: false,
+                },
                 {
                   text: 'Grupo Orden',
                   value: 'GrupoOrden',
-                  align: 'center'
+                  align: 'center',
+                  filterable: true,
                 },
                 {
                   text: 'Solicitud',
                   value: 'Solicitud',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Haber Neto',
                   value: 'HaberNeto',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Nombre y Apellido',
                   value: 'ApeNom',
-                  align: 'left'
+                  align: 'left',
+                  filterable: false,
                 },
                 { text: 'ID', value: 'ID', width: '1%' },
 
                 {
                   text: 'Fecha Vto Cuota 2',
                   value: 'FechaVtoCuota2',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
                 },
                 {
                   text: 'Avance',
                   value: 'Avance',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
-                { text: 'Oficial', value: 'NomOficial', align: 'center' },
-                { text: 'Estado', value: 'NomEstado', align: 'left' },
+                {
+                  text: 'Avance Calculado',
+                  value: 'AvanceCalculado',
+                  align: 'center',
+                  width: '1%',
+                  filterable: false,
+                },
+                {
+                  text: 'Oficial',
+                  value: 'NomOficial',
+                  align: 'center',
+                  filterable: true,
+                },
+                {
+                  text: 'Estado',
+                  value: 'NomEstado',
+                  align: 'left',
+                  filterable: false,
+                },
                 {
                   text: 'Precio Max Compra',
                   value: 'PrecioMaximoCompra',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Fecha Ult. Obs',
                   value: 'FechaUltObs',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
-                { text: '', value: 'VerDatos', align: 'center', width: '1%' }
+                { text: '', value: 'VerDatos', align: 'center', width: '1%' },
               ]"
             ></GridFormAsignacionComponent>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -78,9 +108,9 @@ import GridFormAsignacionComponent from "@/components/propios/GridFormAsignacion
 export default {
   name: "asignaciondatos",
   components: {
-    GridFormAsignacionComponent
+    GridFormAsignacionComponent,
     //GridFormCrud
-  }
+  },
 };
 </script>
 <style scoped>

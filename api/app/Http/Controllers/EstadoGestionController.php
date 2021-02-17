@@ -13,125 +13,100 @@ class EstadoGestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function getDatos(Request $request)
     {
-        $emp1 = "AutoCervo";
-        $db1= "AC";
-        $emp2 = "AutoNet";
-        $db2= "AN";
-        $emp3 = "CarGroupFusion";
-        $db3= "CG";
 
-        $estadoGestion = [];
+        $marca = $request->Marca;
+        $concesionario =  $request->Concesionario;
+        $esVinculo = $request->EsVinculo;
+
+        $db1= "AC"; //AutoCervo
+        $db2= "AN"; //AutoNet
+        $db3= "CG"; //CarGroupFusion
+
+        $result = array();
 
         $estados = array();
-        $empresa1= array();
-        $empresa2= array();
-        $empresa3= array();
-        $est1 = array();
-       $est2 = array();
 
-       /*
-       $respuesta = array();
-       //$empre1 = new \stdClass;
-       $empre1 = array();
+        //TODAS LAS MARCAS - TODOS LOS CONCESIONARIOS
+        if ($marca == 0){
+
+            $results1 = array();
+            $results2 = array();
+            $results3 = array(); 
+            $total1 = array();
+            $total2 = array();
+            $total3 = array();    
+
+            if (!$esVinculo){
+                $results1 = DB::connection($db1)->select("CALL hnweb_subitereporte();");
+                $results2 = DB::connection($db2)->select("CALL hnweb_subitereporte();");
+                $results3 =  DB::connection($db3)->select("CALL hnweb_subitereporte();");
+
+                $total1 = DB::connection($db1)->select("CALL hnweb_subitereporte_totales_marca_conc(2, NULL);");
+                $total2 = DB::connection($db2)->select("CALL hnweb_subitereporte_totales_marca_conc(2, NULL);");
+                $total3 =  DB::connection($db3)->select("CALL hnweb_subitereporte_totales_marca_conc(2, NULL);");
+            }
+            $results6 = DB::select("CALL hnweb_subitereporte_marca_conc(6, NULL);");
+            $total6 = DB::select("CALL hnweb_subitereporte_totales_marca_conc(6, NULL);");
+
+            $results0 = DB::select("CALL hnweb_subitereporte_marca_conc(5, NULL);");
+            $total0 = DB::select("CALL hnweb_subitereporte_totales_marca_conc(5, NULL);");
+
+            $estados = array_merge($results0, $results6, $results1, $results2, $results3);
+            $totaldatos =  array_merge($total0, $total6, $total1, $total2, $total3);
+        }else {
+            switch ($marca) {
+                case 2:
+                    switch ($concesionario) {
+                        case 4:
+                            $estados = DB::connection($db1)->select("CALL hnweb_subitereporte();");
+                            $totaldatos = DB::connection($db1)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
+                        break;
+                        case 5:
+                            $estados = DB::connection($db2)->select("CALL hnweb_subitereporte();");
+                            $totaldatos = DB::connection($db2)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
+                        break;
+                        case 6:
+                            $estados = DB::connection($db3)->select("CALL hnweb_subitereporte();");
+                            $totaldatos = DB::connection($db3)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
+                        break;
+                        default:
+                            $results1 = DB::connection($db1)->select("CALL hnweb_subitereporte();");
+                            $results2 = DB::connection($db2)->select("CALL hnweb_subitereporte();");
+                            $results3 =  DB::connection($db3)->select("CALL hnweb_subitereporte();");
+
+                            $total1 = DB::connection($db1)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
+                            $total2 = DB::connection($db2)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
+                            $total3 =  DB::connection($db3)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
+
+                            $estados = array_merge($results1, $results2, $results3);
+                            $totaldatos =  array_merge($total1, $total2, $total3);
+                        break;
+                    }
+                   
+                break;
+                
+                default:
+                    switch ($concesionario) {
+                        case 0:
+                            $estados = DB::select("CALL hnweb_subitereporte_marca_conc(".$marca.", NULL);");
+                            $totaldatos = DB::select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
+                        break;
+                        default:
+                            $estados = DB::select("CALL hnweb_subitereporte_marca_conc(".$marca.", ".$concesionario.");");
+                            $totaldatos = DB::select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", ".$concesionario.");");
+                        break;
+                    }
+                break;
+            }
+        }
         
-       $empresa = array();
-   results1 = DB::connection($db1)->select("CALL net_subitereporte();");
+        $result['Estados'] = $estados;
+        $result['TotalDatos'] = $totaldatos;
 
-        $empresa['Nombre'] = $emp1;
-        $empresa['Items'] = $results1;
-
-        $respuesta['Empresa'] = $empresa;
-
-        $results1 = DB::connection($db1)->select("CALL hnweb_subitereporte();");
-        $results2 = DB::connection($db2)->select("CALL hnweb_subitereporte();");
-        $results3 =  DB::connection($db3)->select("CALL hnweb_subitereporte();");
-*/
-        $marca = 5;
-        $results1 = DB::select("CALL hnweb_subitereporte(".$marca.");");
-        $results2 = array();
-        $results3 = array();
-
-        $datos = array();
-       
-
-       //$estados = array_merge($empresa1, $empresa2);
-        $estados = array_merge($results1, $results2, $results3);
-        $datos = $estados;
-       // dd($estados);
-
-        //$lst['Reporte'] = $estados;
-        //$lst['Datos'] = $datos;
-
-        return $estados;
-        //return response()->json(compact('respuesta'));
+        return $result;
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

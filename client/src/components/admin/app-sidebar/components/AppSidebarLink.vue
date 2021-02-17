@@ -1,8 +1,5 @@
 <template>
-  <li
-    class="app-sidebar-link"
-    :class="computedLinkClass"
-  >
+  <li class="app-sidebar-link" :class="computedLinkClass">
     <router-link
       class="app-sidebar-link__item"
       @mouseenter.native="updateHoverState(true)"
@@ -18,9 +15,7 @@
         :name="icon"
       />
       <div class="app-sidebar-link__item-title" v-if="title">
-        <slot>
-          {{title}}
-        </slot>
+        <slot>{{title}}</slot>
       </div>
 
       <va-icon
@@ -28,131 +23,137 @@
         class="app-sidebar-link__item-icon-right"
         :style="computedIconStyles"
         :name="iconRight"
-      >{{iconRightContent}}
-      </va-icon>
+      >{{iconRightContent}}</va-icon>
     </router-link>
   </li>
 </template>
 
 <script>
-import { colorShiftHsl, ColorThemeMixin } from '../../../../services/vuestic-ui'
+import {
+  colorShiftHsl,
+  ColorThemeMixin
+} from "../../../../services/vuestic-ui";
 
 export default {
-  name: 'app-sidebar-link',
-  inject: ['contextConfig'],
+  name: "app-sidebar-link",
+  inject: ["contextConfig"],
   mixins: [ColorThemeMixin],
   props: {
     to: {
       type: [Object, String],
-      default: '',
+      default: ""
     },
     target: {
       type: String,
-      default: '_self',
+      default: "_self"
     },
     icon: {
-      type: [String, Array],
+      type: [String, Array]
     },
     iconRight: {
-      type: [String, Array],
+      type: [String, Array]
     },
     iconRightContent: {
-      type: String,
+      type: String
     },
     title: {
-      type: String,
+      type: String
     },
     activeByDefault: {
-      type: Boolean,
+      type: Boolean
     },
     minimized: {
-      type: Boolean,
-    },
-  },
-  data () {
-    return {
-      isHovered: false,
-      isActive: this.activeByDefault,
+      type: Boolean
     }
   },
+  data() {
+    return {
+      isHovered: false,
+      isActive: this.activeByDefault
+    };
+  },
   watch: {
-    $route () {
-      this.updateActiveState()
-    },
+    $route() {
+      this.updateActiveState();
+    }
   },
   computed: {
-    computedLinkClass () {
+    computedLinkClass() {
       return {
-        'app-sidebar-link--minimized': this.minimized,
-      }
+        "app-sidebar-link--minimized": this.minimized
+      };
     },
-    computedLinkStyles () {
-      const style = {}
+    computedLinkStyles() {
+      const style = {};
 
       if (this.contextConfig.invertedColor) {
         if (this.isHovered || this.isActive) {
-          style.color = 'white'
+          style.color = "white";
         } else {
-          style.color = this.$themes.gray
+          style.color = this.$themes.gray;
         }
       } else {
-        style.color = this.$themes.primary
+        style.color = this.$themes.primary;
       }
 
       if (this.isHovered || this.isActive) {
-        style.backgroundColor = this.contextConfig.gradient ? colorShiftHsl(this.$themes.secondary, {
-          s: -13,
-          l: 15,
-        }).css : this.$themes.primary
+        style.backgroundColor = this.contextConfig.gradient
+          ? colorShiftHsl(this.$themes.secondary, {
+              s: -13,
+              l: 15
+            }).css
+          : this.$themes.primary;
 
         if (this.contextConfig.gradient) {
-          style.borderColor = this.isActive ? this.$themes.primary : 'transparent'
+          style.borderColor = this.isActive
+            ? this.$themes.primary
+            : "transparent";
         } else {
           style.borderColor = colorShiftHsl(this.$themes.primary, {
             s: 13,
-            l: -15,
-          }).css
+            l: -15
+          }).css;
         }
       }
 
-      return style
+      return style;
     },
-    computedIconStyles () {
+    computedIconStyles() {
       if (this.contextConfig.invertedColor) {
         if (this.isHovered || this.isActive) {
           return {
-            color: 'white',
-          }
+            color: "white"
+          };
         }
 
         return {
-          color: this.$themes.gray,
-        }
+          color: this.$themes.gray
+        };
       }
 
       if (this.isHovered || this.isActive) {
         return {
-          color: this.$themes.primary,
-        }
+          color: this.$themes.primary
+        };
       }
 
       return {
-        color: 'white',
-      }
-    },
+        color: "white"
+      };
+    }
   },
   methods: {
-    updateHoverState (isHovered) {
-      this.isHovered = isHovered
+    updateHoverState(isHovered) {
+      this.isHovered = isHovered;
     },
-    updateActiveState () {
-      this.isActive = (this.$route.name === this.to.name) || this.activeByDefault
-    },
+    updateActiveState() {
+      this.isActive = this.$route.name === this.to.name || this.activeByDefault;
+    }
   },
-  mounted () {
-    this.updateActiveState()
-  },
-}
+  mounted() {
+    this.updateActiveState();
+  }
+};
 </script>
 
 <style lang="scss">

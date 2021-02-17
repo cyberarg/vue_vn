@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Motivo;
+use App\MotivoCaida;
 use App\Estado;
 use Illuminate\Http\Request;
 use DB;
@@ -60,6 +61,9 @@ class ComboboxController extends Controller
         switch($id){
             case 'motivos':
                 return Motivo::all();
+            break;
+            case 'motivos_caida':
+                return MotivoCaida::all();
             break;
             case 'estados':
                 return Estado::all();

@@ -1,5 +1,5 @@
 <template>
-  <div class="contenedor">
+  <v-app class="contenedor">
     <div class="row justify-content-center">
       <div class="col-md-12">
         <div class="card">
@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script>

@@ -1,56 +1,13 @@
 <template>
+  <!--
   <nav class="app-navbar" :style="navbarStyle">
     <div class="app-navbar__content row">
       <div class="app-navbar__menu-container">
-        <va-icon-menu
-          class="app-navbar__menu"
-          v-if="!minimized && !isTopBar"
-          @click.native="$emit('update:minimized', !minimized)"
-          :color="contextConfig.invertedColor ? $themes.gray : 'white'"
-        />
-
-        <va-icon-menu-collapsed
-          class="app-navbar__menu"
-          v-if="minimized && !isTopBar"
-          @click.native="$emit('update:minimized', !minimized)"
-          :color="contextConfig.invertedColor ? $themes.gray : 'white'"
-        />
-        <!--
-        <router-link class="app-navbar__logo mr-3" to="/">
-          <va-icon-vuestic />
-        </router-link>
-        -->
-        <router-link to="/">
+        <router-link class="app-navbar__logo" to="/">
           <h1>Haberes Netos Web</h1>
         </router-link>
       </div>
-      <!--
-      <div class="app-navbar__center lg5 md4">
-        <span
-          class="app-navbar__text"
-          :style="{color: this.$themes.gray}"
-        >
-          {{$t('navbar.messageUs')}}&nbsp;
-          <a
-            href="mailto:hello@epicmax.co"
-            target="_blank"
-            class="app-navbar__mailto-link"
-            :style="{color: this.$themes.primary}"
-          >
-            hello@epicmax.co
-          </a>
-        </span>
-        <va-button
-          href="https://github.com/epicmaxco/vuestic-admin"
-          color="#000000"
-          class="app-navbar__button"
-          icon="fa fa-github"
-          target="_blank"
-        >
-          {{$t('navbar.repository')}}
-        </va-button>
-      </div>
-      -->
+
       <app-navbar-actions
         class="app-navbar__actions md5 lg4"
         :user-name="userName"
@@ -59,6 +16,7 @@
     </div>
     <div class="app-navbar__shape" :style="shapeStyle"></div>
   </nav>
+  -->
 </template>
 
 <script>
@@ -67,6 +25,7 @@ import VaIconMenu from "../../../iconset/VaIconMenu";
 import VaIconMenuCollapsed from "../../../iconset/VaIconMenuCollapsed";
 import AppNavbarActions from "./components/AppNavbarActions";
 import { colorShiftHsl, ColorThemeMixin } from "../../../services/vuestic-ui";
+import AppSidebar from "@/components/admin/app-sidebar/AppSidebar";
 import { mapState } from "vuex";
 
 export default {
@@ -77,7 +36,8 @@ export default {
     VaIconVuestic,
     VaIconMenu,
     VaIconMenuCollapsed,
-    AppNavbarActions
+    AppNavbarActions,
+    AppSidebar
   },
   props: {
     isTopBar: {

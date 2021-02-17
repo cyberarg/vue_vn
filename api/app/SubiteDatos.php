@@ -31,7 +31,10 @@ class SubiteDatos extends Model
     'CodOficial', 'CodSup', 'CodEstado', 'FechaCompra', 'PrecioCompra',
     'FechaAltaRegistro', 'Domicilio','Origen', 'PrecioMaximoCompra', 
     'FechaUltimaAsignacion', 'Retrabajar', 'fecha_proceso_retrabajar', 
-    'Vendido', 'Motivo', 'EsDatoNuevo', 'FechaOcultarDato'
+    'Vendido', 'Motivo', 'EsDatoNuevo', 'FechaOcultarDato', 
+    'FechaFirmaCliente',  'TitularCompra', 'ComproGiama', 'FechaFirmaNvoTitular', 'FechaEnviadaTerminal', 'FechaOk', 'FechaCBUCargado', 'FechaEnvioMail',
+    'ImporteATransferir', 'TitularCuenta', 'CUIT', 'NroCuenta', 'AliasCBU', 'CBU', 'NombreBanco', 'FechaVenta', 'FechaVentaCaida', 'MontoHNCompra', 'MontoCompraDato',
+    'ComisionALiquidar'
     ];
 
     /**

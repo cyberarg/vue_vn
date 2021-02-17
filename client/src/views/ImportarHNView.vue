@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <v-app class="contenedor">
     <div class="row justify-content-center">
       <div class="col-md-12">
         <div class="card">
@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -23,4 +23,8 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped></style>
+<style scoped>
+.contenedor {
+  width: 100%;
+}
+</style>

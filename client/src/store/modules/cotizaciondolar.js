@@ -5,6 +5,7 @@ export const namespaced = true;
 export const state = {
   dataStatus: "",
   cotizaciones: [],
+  cotizacionesLocal: [],
   cotizaciones_filtradas: [],
   loading: true
 };
@@ -20,6 +21,12 @@ export const mutations = {
   COTIZACION_SUCCESS(state, datos) {
     state.cotizaciones = datos;
     localStorage.setItem("cotizacionDolar", JSON.stringify(datos));
+    state.loading = false;
+    state.dataStatus = "success";
+  },
+
+  SEND_COTIZACIONES(state, datos) {
+    state.cotizacionesLocal = datos;
     state.loading = false;
     state.dataStatus = "success";
   },
@@ -41,7 +48,7 @@ export const mutations = {
 };
 
 export const getters = {
-  //
+   //
 };
 
 export const actions = {
@@ -59,13 +66,15 @@ export const actions = {
       });
   },
 
-  getCotizacion() {
+  getCotizacionesLocal({ commit }) {
     var cotizaciones = JSON.parse(localStorage.getItem("cotizacionDolar"));
+    //console.log(cotizaciones);
+    /*
     var fecha = "2010-02-09";
     if (cotizaciones) {
       console.log(cotizaciones.filter(item => item.Fecha === fecha));
     }
-
-    return 0;
+    */
+    commit("SEND_COTIZACIONES", cotizaciones);
   }
 };

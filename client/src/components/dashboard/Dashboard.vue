@@ -1,173 +1,87 @@
 <template>
   <v-app class="contenedor">
     <div class="dashboard">
-      <v-row>
-        <v-col cols="12" sm="6" lg="4">
-          <router-link to="oficiales">
-            <v-card hover elevation-2>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Oficiales</v-list-item-title>
-                  <v-list-item-subtitle>Hay 27 oficiales activos.</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-icon :size="sizeicon" color="blue-grey darken-1">mdi-account-group</v-icon>
-              </v-list-item>
-            </v-card>
-          </router-link>
-        </v-col>
-        <v-col cols="12" sm="6" lg="4">
-          <router-link to="estadogestion">
-            <v-card hover elevation-2>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Estado de la Gestión</v-list-item-title>
-                  <v-list-item-subtitle>Asignados: 35 | Sin Gestionar: 22</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-icon :size="sizeicon" color="blue-grey darken-1">mdi-file-table-outline</v-icon>
-              </v-list-item>
-            </v-card>
-          </router-link>
-        </v-col>
-        <v-col cols="12" sm="6" lg="4">
-          <router-link to="gestiondatos">
-            <v-card hover elevation-2>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Gestión de Datos</v-list-item-title>
-                </v-list-item-content>
-
-                <v-icon :size="sizeicon" color="blue-grey darken-1">mdi-file-document-edit-outline</v-icon>
-              </v-list-item>
-            </v-card>
-          </router-link>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="12" sm="6" lg="4">
-          <router-link to="asignaciondatos">
-            <v-card hover elevation-2>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Asignación de Datos</v-list-item-title>
-                  <v-list-item-subtitle>Le asignaron 23 datos nuevos.</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-icon :size="sizeicon" color="blue-grey darken-2">mdi-clipboard-arrow-down-outline</v-icon>
-              </v-list-item>
-            </v-card>
-          </router-link>
-        </v-col>
-        <v-col cols="12" sm="6" lg="4">
-          <router-link to="importardatos">
-            <v-card hover elevation-2>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Importación de Datos</v-list-item-title>
-                  <v-list-item-subtitle>
-                    Fecha Último Proceso: 23/05/2020
-                    17:18
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-                <v-icon :size="sizeicon" color="blue-grey darken-2">mdi-application-import</v-icon>
-              </v-list-item>
-            </v-card>
-          </router-link>
-        </v-col>
-        <v-col cols="12" sm="6" lg="4">
-          <router-link to="importarhn">
-            <v-card hover elevation-2>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Importación de HN</v-list-item-title>
-                  <v-list-item-subtitle>
-                    Fecha Último Proceso: 23/05/2020
-                    17:32
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-
-                <v-icon :size="sizeicon" color="blue-grey darken-2">mdi-file-import-outline</v-icon>
-              </v-list-item>
-            </v-card>
-          </router-link>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="12" sm="6" lg="4">
-          <router-link to="reportecompras">
-            <v-card hover elevation-2>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Reporte Cartera de Compra</v-list-item-title>
-                </v-list-item-content>
-                <v-icon :size="sizeicon" color="blue-grey darken-3">mdi-file-chart</v-icon>
-              </v-list-item>
-            </v-card>
-          </router-link>
-        </v-col>
-        <v-col cols="12" sm="6" lg="4">
-          <router-link to="reporteasignaciones">
-            <v-card hover elevation-2>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Reporte Asig. por Período</v-list-item-title>
-                  <v-list-item-subtitle></v-list-item-subtitle>
-                </v-list-item-content>
-                <v-icon :size="sizeicon" color="blue-grey darken-3">mdi-printer-check</v-icon>
-              </v-list-item>
-            </v-card>
-          </router-link>
-        </v-col>
-        <v-col cols="12" sm="6" lg="4">
-          <router-link to="haberesnetos">
-            <v-card hover elevation-2>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">Haberes Netos</v-list-item-title>
-                </v-list-item-content>
-
-                <v-icon :size="sizeicon" color="blue-grey darken-3">mdi-briefcase-check</v-icon>
-              </v-list-item>
-            </v-card>
-          </router-link>
-        </v-col>
-      </v-row>
+      <template v-if="!esConcesionario && !esVinculo">
+        <template v-if="perfilUsuario == 3">
+          <DashboardOficiales></DashboardOficiales>
+        </template>
+        <template v-else-if="perfilUsuario == 4">
+          <DashboardSupervisor></DashboardSupervisor>
+        </template>
+        <template v-else-if="perfilUsuario == 5">
+          <DashboardAdmin></DashboardAdmin>
+        </template>
+        <template v-else>
+          <DashboardFull></DashboardFull>
+        </template>
+      </template>
+      <template v-else>
+        <template v-if="perfilUsuario == 7">
+          <GridComponentHNCobradores></GridComponentHNCobradores>
+        </template>
+        <template v-else>
+          <DashboardConcesionario></DashboardConcesionario>
+        </template>
+      </template>
     </div>
   </v-app>
 </template>
 
 <script>
-//import BaseMaterialStatsCard from "@/components/base/MaterialCard";
-import { mapActions } from "vuex";
+import DashboardAdmin from "@/components/propios/DashboardAdmin";
+import DashboardFull from "@/components/propios/DashboardFull";
+import DashboardSupervisor from "@/components/propios/DashboardSupervisor";
+import DashboardOficiales from "@/components/propios/DashboardOficiales";
+import DashboardConcesionario from "@/components/propios/DashboardConcesionario";
+import GridComponentHNCobradores from "@/views/GridComponentHNCobradores";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "dashboard",
   data() {
     return {
-      sizeicon: 64
+      sizeicon: 64,
     };
   },
   components: {
-    //BaseMaterialStatsCard
+    DashboardAdmin,
+    DashboardFull,
+    DashboardSupervisor,
+    DashboardOficiales,
+    DashboardConcesionario,
+    GridComponentHNCobradores,
   },
   created() {
-    this.getCotizacionesDolar();
+    //this.getCotizacionesDolar();
   },
+
+  computed: {
+    ...mapState("auth", [
+      "login",
+      "user",
+      "esConcesionario",
+      "esVinculo",
+      "codigoConcesionario",
+      "perfilUsuario",
+    ]),
+  },
+
   methods: {
-    ...mapActions({ getCotizacionesDolar: "cotizaciondolar/getCotizaciones" })
     /*
+    ...mapActions({ getCotizacionesDolar: "cotizaciondolar/getCotizaciones" }),
+    
     addAddressToMap({ city, country }) {
       this.$refs.dashboardMap.addAddress({ city: city.text, country });
     }
     */
-  }
+  },
 };
 </script>
 
 <style lang="scss">
 .contenedor {
   width: 100%;
-  background-color: #eeeeee;
+  //background-color: #eeeeee;
 }
 
 .row-equal {
@@ -186,7 +100,7 @@ export default {
 }
 
 .dashboard {
-  background-color: #eeeeee;
+  //background-color: #eeeeee;
   margin: 50px 20px;
 }
 </style>

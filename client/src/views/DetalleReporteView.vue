@@ -11,40 +11,47 @@
                 items: this.items_f,
                 itemkey: 'Codigo',
                 module: 'gestiondatos',
-                origen: 'detalle'
+                origen: 'detalle',
               }"
               :headers="[
                 {
                   text: 'ID',
                   align: 'center',
                   value: 'ID',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Grupo Orden',
                   value: 'GrupoOrden',
-                  align: 'center'
+                  align: 'center',
+                  filterable: true,
                 },
                 {
                   text: 'Solicitud',
                   value: 'Solicitud',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Haber Neto',
                   value: 'HaberNeto',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
                 },
                 {
                   text: 'Nombre y Apellido',
                   value: 'ApeNom',
-                  align: 'start'
+                  align: 'start',
+                  filterable: true,
                 },
+
                 {
                   text: 'Supervisor',
                   value: 'NomSup',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
                 },
                 /*
                 {
@@ -76,56 +83,65 @@
                   text: 'Cuotas PG',
                   value: 'CPG',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Cutas AD',
                   value: 'CAD',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Avance',
                   value: 'Avance',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Estado',
                   value: 'NomEstado',
-                  align: 'center'
+                  align: 'start',
+                  filterable: false,
                 },
                 {
                   text: 'Fecha Compra',
                   value: 'FechaCompra',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Precio Compra',
                   value: 'PrecioCompra',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Precio Max Compra',
                   value: 'PrecioMaximoCompra',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Motivo',
                   value: 'Motivo',
-                  align: 'center',
-                  width: '1%'
+                  align: 'start',
+                  width: '1%',
+                  filterable: false,
                 },
                 {
                   text: 'Fecha Ult. Obs',
                   value: 'FechaUltObs',
                   align: 'center',
-                  width: '1%'
+                  width: '1%',
+                  filterable: false,
                 },
-                { text: '', value: 'VerDatos', align: 'center', width: '1%' }
+                { text: '', value: 'VerDatos', align: 'center', width: '1%' },
               ]"
             ></GridFormComponentDetalle>
           </div>
@@ -144,13 +160,13 @@ import closeMixin from "@/assets/js/close.js";
 export default {
   name: "detallereporte",
   components: {
-    GridFormComponentDetalle
+    GridFormComponentDetalle,
     //GridFormCrud
   },
 
   data() {
     return {
-      items: []
+      items: [],
     };
   },
 
@@ -164,7 +180,7 @@ export default {
   },
 
   computed: {
-    ...mapState("reporteasignacion", ["items_filtrados"])
+    ...mapState("reporteasignacion", ["items_filtrados"]),
   },
   methods: {
     goBack() {
@@ -173,8 +189,8 @@ export default {
         this.$router.push(this.volverARuta);
       }
       this.volverARuta = undefined;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

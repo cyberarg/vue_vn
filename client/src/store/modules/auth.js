@@ -4,10 +4,17 @@ export const namespaced = true;
 
 export const state = {
   authStatus: "",
+  authStatusMsg: "",
   token: localStorage.getItem("token") || "",
   user: {},
   userAuthenticated: false,
-  login: ""
+  login: "",
+  esConcesionario: null,
+  esVinculo: null,
+  codigoConcesionario: null,
+  loading: false,
+  perfilUsuario: null,
+  verCalculadora: null
 };
 
 export const mutations = {
@@ -18,10 +25,33 @@ export const mutations = {
   AUTH_SUCCESS(state, { token }) {
     state.authStatus = "success";
     state.token = token;
+    state.userAuthenticated = true;
   },
 
   SET_USER(state, user) {
     state.user = user;
+
+    if (user.HNConcesionario !== null) {
+      state.esConcesionario = true;
+      state.codigoConcesionario = user.HNConcesionario;
+    } else {
+      state.esConcesionario = false;
+      state.codigoConcesionario = null;
+    }
+
+    if (user.HN_VerCalculadora == 1) {
+      state.verCalculadora = true;
+    } else {
+      state.verCalculadora = false;
+    }
+
+    state.perfilUsuario = user.HN_PerfilUsuario;
+
+    if (user.HN_PerfilUsuario == 2) {
+      state.esVinculo = true;
+    } else {
+      state.esVinculo = false;
+    }
   },
 
   SET_LOGIN(state, login) {
@@ -38,12 +68,45 @@ export const mutations = {
     localStorage.removeItem("user");
     localStorage.clear();
     state.userAuthenticated = false;
+  },
+  SET_CHANGE_PASS(state) {
+    state.authStatus = "loading";
+    state.loading = true;
+  },
+
+  CHANGE_PASS_SUCCESS(state, data) {
+    state.authStatus = data["Status"];
+    state.authStatusMsg = data["Msg"];
+    state.loading = false;
+  },
+
+  CHANGE_PASS_ERROR(state, data) {
+    state.authStatus = "error";
+    state.authStatusMsg = data["Msg"];
+    state.loading = false;
   }
 };
 
 export const actions = {
   async attempt(_, token) {
     console.log(token);
+  },
+
+  changePassword({ commit }, pars) {
+    commit("SET_CHANGE_PASS");
+
+    return axios
+      .post("/changepassword", pars)
+      .then(response => {
+        commit("CHANGE_PASS_SUCCESS", response.data);
+      })
+      .catch(err => {
+        commit("CHANGE_PASS_ERROR", response.data);
+      });
+  },
+
+  logOut({ commit }) {
+    commit("LOGOUT");
   },
 
   async signIn({ commit }, userData) {
@@ -57,13 +120,31 @@ export const actions = {
         .then(response => {
           const token = response.data.access_token;
           const user = response.data.user;
-          console.log(response);
+          //console.log(response);
           // storing jwt in localStorage. https cookie is safer place to store
+
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(user));
           localStorage.setItem("userName", user.Nombre);
           localStorage.setItem("login", userData.login);
-          axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+
+          if (user.HNConcesionario !== null) {
+            localStorage.setItem("esConcesionario", true);
+            localStorage.setItem("codigoConcesionario", user.HNConcesionario);
+            localStorage.setItem("perfilUsuario", user.HN_PerfilUsuario);
+          } else {
+            localStorage.setItem("esConcesionario", false);
+          }
+
+          if (user.HN_PerfilUsuario === 2) {
+            localStorage.setItem("esVinculo", true);
+          } else {
+            localStorage.setItem("esVinculo", false);
+          }
+
+          //console.log(localStorage.getItem("esConcesionario"));
+
+          //axios.defaults.headers.common["Authorization"] = "Bearer " + token;
           // mutation to change state properties to the values passed along
           commit("AUTH_SUCCESS", { token });
           commit("SET_USER", user);

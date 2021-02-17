@@ -6,13 +6,13 @@
         <va-icon-vuestic />
       </router-link>
     </div>
--->
+    -->
     <div class="flex xs12 pa-3">
       <div class="d-flex justify--center">
         <va-card class="auth-layout__card">
           <va-tabs v-model="tabIndex" center>
             <va-tab>Inicio de Sesión</va-tab>
-            <!--<va-tab>{{ $t("auth.createNewAccount") }}</va-tab>-->
+            <!--<va-tab>Cambio de Contraseña</va-tab>-->
           </va-tabs>
 
           <va-separator />
@@ -41,7 +41,7 @@ export default {
     return {
       selectedTabIndex: 0,
       tabTitles: ["login"]
-      //tabTitles: ["login", "createNewAccount"]
+      //tabTitles: ["login", "changepass"]
     };
   },
   computed: {

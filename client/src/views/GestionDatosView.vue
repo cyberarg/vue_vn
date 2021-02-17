@@ -1,5 +1,5 @@
 <template>
-  <div class="contenedor">
+  <v-app class="contenedor">
     <div class="row justify-content-center">
       <div class="col-md-12">
         <div class="card">
@@ -10,34 +10,45 @@
                 routeapi: 'gestiondatos',
                 itemkey: 'Codigo',
                 module: 'gestiondatos',
-                items: this.items,
+                //items: this.items,
                 origen: 'gestiondatos',
-                showCombo: true
+                showCombo: true,
+                loading: 'loadingDatos',
               }"
               :headers="[
                 {
-                  text: 'Grupo Orden',
-                  value: 'GrupoOrden',
+                  text: '',
+                  value: 'Star',
                   align: 'center',
-                  width: '5%'
+                  sorteable: true,
+                },
+                {
+                  text: 'Grupo Orden',
+                  value: 'Grupo',
+                  align: 'center',
+                  sorteable: true,
+                  filterable: true,
                 },
 
                 {
                   text: 'Concesionario',
                   value: 'Concesionario',
-                  align: 'left',
-                  width: '5%'
+                  align: 'center',
+                  filterable: false,
                 },
 
                 {
                   text: 'Haber Neto',
                   value: 'HaberNeto',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
                 },
                 {
-                  text:  'Apellido y Nombre',
+                  text: 'Apellido y Nombre',
                   value: 'ApeNom',
-                  align: 'left'
+                  align: 'left',
+                  sorteable: true,
+                  filterable: true,
                 },
                 /*
                 {
@@ -56,51 +67,65 @@
                 {
                   text: 'Avance',
                   value: 'Avance',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
+                },
+                {
+                  text: 'Avance Calculado',
+                  value: 'AvanceCalculado',
+                  align: 'center',
+                  filterable: false,
                 },
                 {
                   text: 'Estado',
                   value: 'NomEstado',
-                  align: 'left'
+                  align: 'left',
+                  filterable: false,
                 },
                 {
                   text: 'Motivo',
                   value: 'Motivo',
-                  align: 'left'
+                  align: 'left',
+                  filterable: false,
                 },
                 {
                   text: 'Fecha Compra',
                   value: 'FechaCompra',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
                 },
                 {
                   text: 'Precio Compra',
                   value: 'PrecioCompra',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
                 },
                 {
                   text: 'Precio Max Compra',
                   value: 'PrecioMaximoCompra',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
                 },
                 {
                   text: 'Fecha Asignación',
                   value: 'FechaUltimaAsignacion',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
                 },
                 {
                   text: 'Fecha Ult. Obs',
                   value: 'FechaUltObs',
-                  align: 'center'
+                  align: 'center',
+                  filterable: false,
                 },
-                { text: '', value: 'VerDatos', align: 'center', width: '1%' }
+                { text: '', value: 'VerDatos', align: 'center', width: '1%' },
               ]"
             ></GridFormComponent>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -110,7 +135,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "gestiondatos",
   components: {
-    GridFormComponent
+    GridFormComponent,
     //GridFormCrud
   },
 
@@ -119,11 +144,11 @@ export default {
   },
 
   computed: {
-    ...mapState("gestiondatos", ["items"])
+    ...mapState("gestiondatos", ["items"]),
   },
 
   created() {
-    this.getData("gestiondatos");
+    //this.getData("gestiondatos");
   },
 
   methods: {
@@ -135,9 +160,9 @@ export default {
       this.volverARuta = undefined;
     },
     ...mapActions({
-      getData: "gestiondatos/getData"
-    })
-  }
+      getData: "gestiondatos/getData",
+    }),
+  },
 };
 </script>
 <style scoped>

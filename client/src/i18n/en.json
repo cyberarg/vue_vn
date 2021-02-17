@@ -453,7 +453,8 @@
   "user": {
     "language": "Change Language",
     "logout": "Logout",
-    "profile": "My Profile"
+    "profile": "My Profile",
+    "changePassword": "Change Password"
   },
   "treeView": {
     "basic": "Basic",

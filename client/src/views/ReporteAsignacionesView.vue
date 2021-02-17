@@ -4,24 +4,45 @@
       <v-card-title>
         Asignaciones por Período
         <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <v-combobox
+          item-text="Nombre"
+          item-value="Codigo"
+          :items="listMarcas"
+          label="Marca"
+          :value="codMarcaSelected"
+          @change="filterListConcesionaria"
+          class="padded"
+        ></v-combobox>
+
+        <v-combobox
+          item-text="Nombre"
+          item-value="Codigo"
+          :items="listC"
+          label="Concesionario"
+          v-model="codConcesSelected"
+          @change="setSelected"
+        ></v-combobox>
+        <v-spacer></v-spacer>
+        <v-combobox
+          item-text="Nombre"
+          item-value="Codigo"
+          :items="itemsPeriodos"
+          label="Periodos"
+          v-model="codperiodo"
+          @change="getAsignaciones()"
+        ></v-combobox>
+        <v-btn
+          class="ma-2"
+          outlined
+          color="blue darken-1"
+          text
+          @click="getAsignaciones()"
+        >
+          <v-icon left>mdi-refresh</v-icon>Actualizar
+        </v-btn>
       </v-card-title>
       <div class="card-body">
-        <v-row>
-          <v-col cols="6" md="6">
-            <v-select
-              dense
-              :items="itemsPeriodos"
-              item-text="Nombre"
-              item-value="Codigo"
-              label="Periodos"
-              v-model="codperiodo"
-              @change="getAsignaciones()"
-            ></v-select>
-          </v-col>
-          <!--
-          <v-col cols="4" md="4">{{ codperiodo }}</v-col>
-          -->
-        </v-row>
         <v-row v-show="showTable">
           <v-col cols="12" md="12">
             <GridSummaryFormAsignacionesComponent
@@ -29,7 +50,7 @@
                 titleform: 'Reporte Asignaciones por Período',
                 routeapi: 'reporteasignacion',
                 itemkey: 'Codigo',
-                module: 'reporteasignacion'
+                module: 'reporteasignacion',
               }"
               :headers="this.headers"
             ></GridSummaryFormAsignacionesComponent>
@@ -48,7 +69,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "reporteasignaciones",
   components: {
-    GridSummaryFormAsignacionesComponent
+    GridSummaryFormAsignacionesComponent,
     //GridFormCrud
   },
   data() {
@@ -77,67 +98,88 @@ export default {
         "Septiembre",
         "Octubre",
         "Noviembre",
-        "Diciembre"
+        "Diciembre",
+      ],
+      codMarcaSelected: null,
+      listMarcas: [
+        { Codigo: 2, Nombre: "Fiat" },
+        { Codigo: 5, Nombre: "Volkswagen" },
+        { Codigo: 9, Nombre: "Ford" },
+        { Codigo: 3, Nombre: "Peugeot" },
+      ],
+      codConcesSelected: null,
+      listC: [],
+      listConcesionarios: [
+        { Codigo: 0, Nombre: "Todos" },
+        { Codigo: 1, Nombre: "Sauma", Marca: 5 },
+        { Codigo: 2, Nombre: "Iruña", Marca: 5 },
+        { Codigo: 3, Nombre: "Amendola", Marca: 5 },
+        { Codigo: 7, Nombre: "Luxcar", Marca: 5 },
+        { Codigo: 4, Nombre: "AutoCervo", Marca: 2 },
+        { Codigo: 5, Nombre: "AutoNet", Marca: 2 },
+        { Codigo: 6, Nombre: "Car Group", Marca: 2 },
+        { Codigo: 9, Nombre: "Sapac", Marca: 9 },
+        { Codigo: 10, Nombre: "Alizze", Marca: 3 },
       ],
       headers: [
         {
           text: "Oficial",
           align: "center",
           value: "NomOficial",
-          width: "25%"
+          width: "25%",
         },
         { text: "Asignados", value: "Asignados", align: "center" },
         {
           text: "Sin Gestionar",
           value: "SinGestionar",
-          align: "center"
+          align: "center",
         },
         {
           text: "Telefono Mal",
           value: "TelefonoMal",
-          align: "center"
+          align: "center",
         },
         {
           text: "Deje Mensaje",
           value: "DejeMensaje",
-          align: "center"
+          align: "center",
         },
         {
           text: "Entrevista Pendiente",
           value: "EntrevistaPendiente",
-          align: "center"
+          align: "center",
         },
         {
           text: "En Gestión",
           value: "EnGestion",
-          align: "center"
+          align: "center",
         },
         {
           text: "No le Interesa",
           value: "NoLeInteresa",
-          align: "center"
+          align: "center",
         },
         {
           text: "Vende Plan",
           value: "VendePlan",
-          align: "center"
+          align: "center",
         },
         {
           text: "Plan Subite",
           value: "PlanSubite",
-          align: "center"
+          align: "center",
         },
         {
           text: "Pasar a Venta",
           value: "PasarAVenta",
-          align: "center"
+          align: "center",
         },
         {
           text: "En Otro Oficial",
           value: "EnOtroOficial",
-          align: "center"
-        }
-      ]
+          align: "center",
+        },
+      ],
     };
   },
 
@@ -151,22 +193,42 @@ export default {
       "loading",
       "datos",
       "empresa",
-      "showTable"
-    ])
+      "showTable",
+    ]),
   },
 
   methods: {
     ...mapActions({
-      getData: "reporteasignacion/getData"
+      getData: "reporteasignacion/getData",
     }),
+
+    filterListConcesionaria(value) {
+      this.codConcesSelected = null;
+      this.listC = [];
+      this.listC = this.listConcesionarios.filter(function (item) {
+        return item.Marca === value.Codigo;
+      });
+    },
+
+    setSelected(value) {
+      console.log(this.codConcesSelected);
+    },
 
     getAsignaciones() {
       //console.log(this.codperiodo);
-      this.getData({ api: "reporteasignacion", periodo: this.codperiodo });
+      var pars = {
+        Marca: this.codConcesSelected.Marca,
+        Concesionario: this.codConcesSelected.Codigo,
+        periodo: this.codperiodo.Codigo,
+        api: "reporteasignacion",
+      };
+
+      this.getData(pars);
+      //this.getData({ api: "reporteasignacion", periodo: this.codperiodo });
     },
 
     totalS(column, valor) {
-      return valor.reduce(function(total, item) {
+      return valor.reduce(function (total, item) {
         // console.log(item);
         if (isNaN(item[column.value])) {
           return "";
@@ -176,7 +238,7 @@ export default {
     },
 
     totalItem(valor) {
-      return valor.reduce(function(total, item) {
+      return valor.reduce(function (total, item) {
         // console.log(item);
         if (isNaN(item[column.value])) {
           return "";
@@ -190,7 +252,7 @@ export default {
       var initialDate = new Date(2017, 0, 1);
 
       var monthDif = moment(initialDate).diff(moment(), "month") * -1;
-      monthDif += 2;
+      monthDif += 1;
       var i;
       var period = [];
       var fecha = new Date();
@@ -201,15 +263,17 @@ export default {
 
         period[i] = {
           Codigo: `${moment(fecha).year() + "" + (moment(fecha).month() + 1)}`,
-          Nombre: `${this.monthNames[parseInt(moment(fecha).month())] +
+          Nombre: `${
+            this.monthNames[parseInt(moment(fecha).month())] +
             " " +
-            moment(fecha).year()}`
+            moment(fecha).year()
+          }`,
         };
       }
       //console.log(period);
       this.itemsPeriodos = period.reverse();
-    }
-  }
+    },
+  },
 };
 </script>
 

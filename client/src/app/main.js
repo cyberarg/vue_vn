@@ -13,9 +13,15 @@ import "../i18n/index";
 import moment from "moment";
 import VueSwal from "vue-swal";
 import numFormat from "vue-filter-number-format";
+//import Chart from "v-chart-plugin";
+import VueApexCharts from "vue-apexcharts";
+Vue.use(VueApexCharts);
+
+Vue.component("apexchart", VueApexCharts);
 
 Vue.filter("numFormat", numFormat);
 
+//Vue.use(Chart);
 Vue.use(moment);
 Vue.use(VueSwal);
 
@@ -34,14 +40,19 @@ import axios from "axios";
 Vue.prototype.$http = axios;
 // Sets the default url used by all of this axios instance's requests
 
-//axios.defaults.baseURL = "http://192.168.12.10:8080/api/";
-axios.defaults.baseURL = "http://52.41.224.173/api/";
+//axios.defaults.baseURL = "http://192.168.14.10:8080/api/";
+
+//axios.defaults.baseURL = "http://testvue.test/api/";
+
+axios.defaults.baseURL = "http://api.giama.com.ar/api/";
+
+//axios.defaults.baseURL = "http://52.41.224.173/api/";
 
 axios.defaults.headers.get["Accept"] = "application/json";
 
 const token = localStorage.getItem("token");
 if (token) {
-  axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+  //axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 }
 
 if (process.env.VUE_APP_BUILD_VERSION) {
@@ -70,24 +81,37 @@ Vue.use(ColorThemePlugin, {
 
 router.beforeEach((to, from, next) => {
   //if (to.name !== "login" && !isAuthenticated) next({ name: "login" });
+  
   if (to.name === "login") {
     localStorage.clear();
     store.commit("auth/LOGOUT");
+    store.commit("gestiondatos/CLEAR_STATE");
+    store.commit("estadogestion/CLEAR_STATE");
+    store.commit("reporteacompras/CLEAR_STATE");
+    store.commit("haberneto/CLEAR_GRIDS_HN");
+    store.commit("proyectadohn/CLEAR_PROOYECTADO_HN");
     store.userAuthenticated = false;
     next();
   }
 
   if (to.name !== "login" && !store.userAuthenticated) {
+    store.commit("auth/LOGOUT");
+    store.commit("gestiondatos/CLEAR_STATE");
+    store.commit("estadogestion/CLEAR_STATE");
+    store.commit("reporteacompras/CLEAR_STATE");
+    store.commit("haberneto/CLEAR_GRIDS_HN");
+    store.commit("proyectadohn/CLEAR_PROOYECTADO_HN");
     next({ name: "login" });
   } else {
     next();
   }
+  
   //store.commit("app/SET_LOADING", true);
   //next();
 });
 
 router.afterEach((to, from) => {
-  store.commit("app/SET_LOADING", false);
+  //store.commit("app/SET_LOADING", false);
 });
 
 Vue.filter("formatDate", function(value) {

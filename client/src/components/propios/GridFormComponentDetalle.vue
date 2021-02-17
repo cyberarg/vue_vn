@@ -18,58 +18,75 @@
 
       <v-data-table
         dense
+        fixed-header
+        height="58vh"
         :headers="headers"
         :items="myitems"
+        :item-class="setClass"
         :search="search"
         item-key="pars.itemkey"
         class="elevation-1"
         :loading="loading"
+        :items-per-page="-1"
         loading-text="Cargando Datos... Aguarde"
+        no-data-text="No hay datos disponibles"
       >
-        <template v-slot:item.ApeNom="{ item }">
-          {{ item.Apellido }}, {{ item.Nombres }}
-        </template>
+        <template v-slot:item.ApeNom="{ item }"
+          >{{ item.Apellido }}, {{ item.Nombres }}</template
+        >
 
-        <template v-slot:item.HaberNeto="{ item }">
-          ${{ Math.round(item.HaberNeto) | numFormat }}
-        </template>
+        <template v-slot:item.HaberNeto="{ item }"
+          >${{ Math.round(item.HaberNeto) | numFormat }}</template
+        >
 
-        <template v-slot:item.PrecioMaximoCompra="{ item }">
-          ${{ Math.round(item.PrecioMaximoCompra) | numFormat }}
-        </template>
+        <template v-slot:item.PrecioMaximoCompra="{ item }"
+          >${{
+            Math.round(getPrecioMaximoCompra(item.Avance, item.HaberNeto))
+              | numFormat
+          }}</template
+        >
+        <template v-slot:item.NomEstado="{ item }">{{
+          getTextEstado(item.NomEstado)
+        }}</template>
 
-        <template v-slot:item.PrecioCompra="{ item }">
-          ${{ Math.round(item.PrecioCompra) | numFormat }}
-        </template>
+        <template v-slot:item.PrecioCompra="{ item }"
+          >${{ Math.round(item.PrecioCompra) | numFormat }}</template
+        >
 
-        <template v-slot:item.GrupoOrden="{ item }">
-          {{ item.Grupo }}/{{ item.Orden }}
-        </template>
+        <template v-slot:item.GrupoOrden="{ item }"
+          >{{ item.Grupo }}/{{ item.Orden }}</template
+        >
 
-        <template v-slot:item.FechaCompra="{ item }">
-          {{ formatFecha(item.FechaCompra) }}
-        </template>
+        <template v-slot:item.FechaCompra="{ item }">{{
+          formatFecha(item.FechaCompra)
+        }}</template>
 
-        <template v-slot:item.Motivo="{ item }">
-          {{ getTextMotivo(item.Motivo) }}
-        </template>
+        <template v-slot:item.Motivo="{ item }">{{
+          getTextMotivo(item.Motivo)
+        }}</template>
 
-        <template v-slot:item.FechaUltObs="{ item }">
-          {{ formatFecha(item.FechaUltObs) }}
-        </template>
+        <template v-slot:item.FechaUltObs="{ item }">{{
+          formatFecha(item.FechaUltObs)
+        }}</template>
         <template v-slot:item.VerDatos="{ item }">
-          <v-btn text @click="getDato(item)"
-            ><v-icon left>mdi-text-search</v-icon>Ver Dato</v-btn
-          >
+          <v-btn text @click="getDato(item)">
+            <v-icon left>mdi-text-search</v-icon>Ver Dato
+          </v-btn>
         </template>
       </v-data-table>
 
       <v-card-actions v-show="exportable">
         <v-spacer></v-spacer>
-        <v-btn cclass="ma-2" outlined text @click="exportExcel">
-          <v-icon left>mdi-file-excel-outline</v-icon>
-          Excel</v-btn
+        <v-btn
+          cclass="ma-2"
+          color="success"
+          outlined
+          text
+          @click="exportExcel"
+          v-show="showBotones"
         >
+          <v-icon left>mdi-file-excel-outline</v-icon>Excel
+        </v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -83,22 +100,27 @@ export default {
   props: {
     pars: {
       type: Object,
-      required: true
+      required: true,
     },
     headers: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
 
   data() {
     return {
-      search: ""
+      search: "",
+      showBotones: null,
     };
   },
 
   created() {
     //this.$store.dispatch(this.module + "/getData", this.api);
+  },
+
+  mounted() {
+    this.checkEsConcesionario();
   },
 
   computed: {
@@ -136,16 +158,47 @@ export default {
       }
     },
 
-    ...mapState("gestiondatos", ["items", "loading"])
+    ...mapState("gestiondatos", ["items", "loading"]),
+
+    ...mapState("auth", [
+      "login",
+      "user",
+      "esConcesionario",
+      "esVinculo",
+      "codigoConcesionario",
+    ]),
   },
 
   methods: {
-    exportExcel: function() {
+    exportExcel: function () {
       let data = XLSX.utils.json_to_sheet(this.items);
       const workbook = XLSX.utils.book_new();
-      const filename = "devschile-admins";
+      const filename = "detalle-datos";
       XLSX.utils.book_append_sheet(workbook, data, filename);
       XLSX.writeFile(workbook, `${filename}.xlsx`);
+    },
+
+    getPrecioMaximoCompra(avance, haberNeto) {
+      if (45 <= avance && avance <= 61) {
+        return haberNeto * 0.2;
+      }
+
+      if (62 <= avance && avance <= 66) {
+        return haberNeto * 0.3;
+      }
+
+      if (67 <= avance && avance <= 69) {
+        return haberNeto * 0.35;
+      }
+      if (70 <= avance && avance <= 79) {
+        return haberNeto * 0.4;
+      }
+
+      if (80 <= avance && avance <= 83) {
+        return haberNeto * 0.5;
+      }
+
+      return 0;
     },
 
     setClass(item) {
@@ -198,9 +251,39 @@ export default {
 
     getDato(item) {
       console.log(item);
-      console.log(item.ID);
+      //console.log(item.ID);
       //this.mostrarDato(item.ID);
-      this.$router.push({ name: "detalledato", params: { id: item.ID } });
+      this.$router.push({
+        name: "detalledato",
+        params: {
+          id: item.ID,
+          Marca: item.Marca,
+          Concesionario: item.Concesionario,
+          modulo: "gestiondatos",
+        },
+      });
+    },
+
+    setClass(item) {
+      //console.log(item);
+
+      if (item.EsDatoNuevo == "1") {
+        return "classDatoNuevo"; //NARANJA
+      } else {
+        if (
+          (item.CodEstado == "0" || item.CodEstado == null) &&
+          parseInt(item.AvanceAutomatico) >= 75 &&
+          parseInt(item.AvanceAutomatico) <= 83
+        ) {
+          if (parseInt(item.AvanceAutomatico) == 83) {
+            return "classDatoLimite"; //VERDE OSCURO
+          } else {
+            return "classDatoEntreLimites"; //VERDE CLARO
+          }
+        } else {
+          return "";
+        }
+      }
     },
 
     formatFecha(fecha) {
@@ -210,11 +293,23 @@ export default {
       }
     },
 
+    checkEsConcesionario() {
+      if (this.esConcesionario) {
+        this.showBotones = false;
+      } else {
+        if (this.esVinculo) {
+          this.showBotones = false;
+        } else {
+          this.showBotones = true;
+        }
+      }
+    },
+
     ...mapActions({
       mostrarDato: "gestiondatos/mostrarDato",
-      setData: "gestiondatos/setData"
-    })
-  }
+      setData: "gestiondatos/setData",
+    }),
+  },
 
   /*
 
@@ -234,30 +329,24 @@ const workbook = XLSX.utils.book_new()
 */
 };
 </script>
-<style lang="scss" scoped>
-.table-header {
-  thead {
-    background-color: black;
-  }
-}
-
+<style scoped>
 .fullw {
   width: 100%;
 }
 
-.v-data-table td {
-  font-size: 12px;
+.v-data-table >>> td {
+  white-space: nowrap;
 }
 
-.classDatoNuevo {
+.v-data-table >>> .classDatoNuevo {
   background: #f3be69;
 }
 
-.classDatoLimite {
+.v-data-table >>> .classDatoLimite {
   background: #57b479;
 }
 
-.classDatoEntreLimites {
+.v-data-table >>> .classDatoEntreLimites {
   background: #bae5ca;
 }
 </style>

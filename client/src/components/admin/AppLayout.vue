@@ -96,6 +96,8 @@ export default {
     max-height: 100%;
     min-height: 100%;
     background-color: #eeeeee;
+    padding-left: 5px;
+    padding-right: 5px;
 
     &--top {
     }
@@ -112,6 +114,21 @@ export default {
       margin: 0;
       background-color: #eeeeee;
     }
+
+    &gutter--xl {
+      padding-top: 0.5rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      padding-bottom: 1rem;
+    }
   }
 }
 </style>
+
+<!--
+
+.layout.gutter--xl {
+    padding: 0.5rem;
+}
+
+-->

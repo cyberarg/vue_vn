@@ -253,6 +253,7 @@
   "user": {
     "language": "Cambiar Idioma",
     "profile": "Mi Perfil",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "changePassword": "Cambiar Contraseña"
   }
 }

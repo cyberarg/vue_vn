@@ -22,6 +22,7 @@ export const mutations = {
   },
 
   DATOS_SUCCESS(state, datos) {
+    console.log(datos);
     state.items = datos.Reporte;
     state.datos = datos.Datos;
     //state.empresa = datos.Empresa;
@@ -45,14 +46,22 @@ export const mutations = {
 
 export const getters = {
   getFiltrados: state => (codOficial, codEstado) => {
-    if (codEstado == "-1") {
-      return state.datos.filter(function(item) {
-        return item.CodOficial === codOficial;
-      });
-    } else {
-      return state.datos.filter(function(item) {
-        return item.CodOficial === codOficial && item.CodEstado === codEstado;
-      });
+    switch (codEstado) {
+      case "-1":
+        return state.datos.filter(function(item) {
+          return item.CodOficial === codOficial;
+        });
+        break;
+      case "0":
+        return state.datos.filter(function(item) {
+          return item.CodOficial === codOficial && item.CodEstado === null;
+        });
+        break;
+      default:
+        return state.datos.filter(function(item) {
+          return item.CodOficial === codOficial && item.CodEstado === codEstado;
+        });
+        break;
     }
   }
 };
@@ -62,7 +71,7 @@ export const actions = {
     //console.log(pars.periodo);
     commit("GET_DATA_STATUS");
     return axios
-      .get("/reporteasignacion?periodo=" + pars.periodo)
+      .post("/reporteasignacion", pars)
       .then(response => {
         console.log(response.data);
         commit("DATOS_SUCCESS", response.data);

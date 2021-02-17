@@ -137,6 +137,8 @@ class ReporteComprasResumenController extends Controller
         $periodoActPrimerDia = $this->getPrimerDiaPeriodo($periodo);
         $periodoAnt = $this->getUltimoDiaPeriodoAnterior($periodo);
 
+       //dd($periodoAct);
+
         $periodoActual = strtotime($periodoAct);
         $periodoAnterior = strtotime($periodoAnt);
 
@@ -214,11 +216,19 @@ class ReporteComprasResumenController extends Controller
 
             $oDet->ID = $r->ID;
             $oDet->Marca = $oMarca; 
+            $oDet->Concesionario = $r->Concesionario; 
             $oDet->Grupo = $r->Grupo;
             $oDet->Orden = $r->Orden;
             $oDet->Solicitud = $r->Solicitud;
             $oDet->Apellido = $r->Apellido;
             $oDet->Nombres = $r->Nombres;
+            
+            if (isset($r->NroDoc)){
+                $oDet->NroDoc = $r->NroDoc;
+            }else{
+                $oDet->NroDoc = '';
+            }
+            
             $oDet->Telefono1 = $r->Telefono1;
             $oDet->Telefono2 = $r->Telefono2;
             $oDet->Telefono3 = $r->Telefono3;
@@ -234,8 +244,13 @@ class ReporteComprasResumenController extends Controller
             $oDet->NomEstado = $oNomEstado;
             $oDet->CPG = $r->CPG;
             $oDet->CAD = $r->CAD;
+            if ($r->Marca != 2){
+                $oDet->Plan = $r->Plan;
+            }
+            
             $oDet->Empresa = $emp3;
             $oDet->FechaCompra = $r->FechaCompra;
+            $oDet->FechaAltaRegistro = $r->FechaAltaRegistro;
             $oDet->PrecioCompra = $r->PrecioCompra;
             $oDet->Domicilio = $r->Domicilio;
             $oDet->CodOrigen = $oCodOrigen;
@@ -248,9 +263,11 @@ class ReporteComprasResumenController extends Controller
             $oDet->Motivo = $r->Motivo;
             $oDet->FechaCalculoAvance = $FechaCalculoAvance;
 
+            //dd($oDet->FechaCompra);
+
             $fcav = strtotime($oDet->FechaCalculoAvance);
             $fvc2 = strtotime($oDet->FechaVtoCuota2);
-            $fcomp = strtotime($oDet->FechaCompra);
+            $fcomp = strtotime($oDet->FechaAltaRegistro);
 
            // dd($oDet->FechaCompra);
            if ($oDet->FechaVtoCuota2 === NULL){
@@ -262,6 +279,7 @@ class ReporteComprasResumenController extends Controller
                 
            }else{
                 $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fcav, $fvc2);
+                $oDet->Avance = $oDet->AvanceAutomatico;
            }
            
             /*
@@ -272,7 +290,7 @@ class ReporteComprasResumenController extends Controller
             array_push($lstDeb, $debbug);
             */
 
-            if ($oDet->AvanceAutomatico < 84){
+            if ($oDet->AvanceAutomatico < 84 && $oDet->HaberNeto > 14999){
                 $cant += 1;
                 $list[0]['Cantidad'] += 1;
 
@@ -326,6 +344,8 @@ class ReporteComprasResumenController extends Controller
             
             
         } //foreach
+
+       // dd($listMesActual);
 
         foreach ($listMesActual as $new) {
             if(!($this->esPropio($new->Nombres, $new->Apellido)) && !($this->enOtraSociedad($new->Nombres, $new->Apellido))){
@@ -402,15 +422,15 @@ class ReporteComprasResumenController extends Controller
         $listMes[3]['TotalCasos'] = 0;
         $listMes[3]['TotalMontoHN'] = 0;
        
-        $listMes[4]['Capa'] = 80; 
-        $listMes[4]['Tipo'] = '71 a 80';
+        $listMes[4]['Capa'] = 77; 
+        $listMes[4]['Tipo'] = '71 a 77';
         $listMes[4]['Casos'] = 0; 
         $listMes[4]['MontoHN'] = 0;
         $listMes[4]['TotalCasos'] = 0;
         $listMes[4]['TotalMontoHN'] = 0;
        
         $listMes[5]['Capa'] = 83; 
-        $listMes[5]['Tipo'] = '81 a 83';
+        $listMes[5]['Tipo'] = '78 a 83';
         $listMes[5]['Casos'] = 0; 
         $listMes[5]['MontoHN'] = 0;
         $listMes[5]['TotalCasos'] = 0;
@@ -445,11 +465,11 @@ class ReporteComprasResumenController extends Controller
                     $listMes[3]['Casos'] += 1; 
                     $listMes[3]['MontoHN'] += $r->HaberNeto;
                 break;
-                case (71 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  80):
+                case (71 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  77):
                     $listMes[4]['Casos'] += 1; 
                     $listMes[4]['MontoHN'] += $r->HaberNeto;
                 break;
-                case (81 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  83):
+                case (78 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  83):
                     $listMes[5]['Casos'] += 1; 
                     $listMes[5]['MontoHN'] += $r->HaberNeto;
                 break;
@@ -528,15 +548,15 @@ class ReporteComprasResumenController extends Controller
         $arrSegmentos[$p]['Hasta'] = 70;
 
         $p ++; //7
-        $arrSegmentos[$p]['Capa'] = 80;
-        $arrSegmentos[$p]['Nombre'] = '71 a 80';
+        $arrSegmentos[$p]['Capa'] = 77;
+        $arrSegmentos[$p]['Nombre'] = '71 a 77';
         $arrSegmentos[$p]['Desde'] = 71;
-        $arrSegmentos[$p]['Hasta'] = 80;
+        $arrSegmentos[$p]['Hasta'] = 77;
     
         $p ++; //8
         $arrSegmentos[$p]['Capa'] = 83;
-        $arrSegmentos[$p]['Nombre'] =  '81 a 83';
-        $arrSegmentos[$p]['Desde'] = 81;
+        $arrSegmentos[$p]['Nombre'] =  '78 a 83';
+        $arrSegmentos[$p]['Desde'] = 78;
         $arrSegmentos[$p]['Hasta'] = 83;
     
         for ($i=0; $i <= $p; $i++) { 
@@ -580,11 +600,11 @@ class ReporteComprasResumenController extends Controller
                     $listUniv[6]['Casos'] += 1; 
                     $listUniv[6]['MontoHN'] += round($r->HaberNeto);
                 break;
-                case (71 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  80):
+                case (71 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  77):
                     $listUniv[7]['Casos'] += 1; 
                     $listUniv[7]['MontoHN'] += round($r->HaberNeto);
                 break;
-                case (81 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  83):
+                case (78 <= $r->AvanceAutomatico) && ( $r->AvanceAutomatico <=  83):
                     $listUniv[8]['Casos'] += 1; 
                     $listUniv[8]['MontoHN'] += round($r->HaberNeto);
                 break;
@@ -624,9 +644,11 @@ class ReporteComprasResumenController extends Controller
             (strpos($apeLow,"volkswagen argentina sa") !== false) ||
             (strpos($apeLow,"volkswagen argentina s.a.") !== false) ||
             (strpos($apeLow,"autokar") !== false) ||
+            (strpos($apeLow,"autotag") !== false) ||
             (strpos($apeLow,"autofinancia") !== false) ||
             (strpos($apeLow,"auto financia") !== false) ||    
             (strpos($nomLow ,"autokar") !== false )||
+            (strpos($nomLow,"autotag") !== false) ||
             (strpos($nomLow ,"autofinancia") !== false) ||
             (strpos($nomLow ,"auto financia") !== false) 
         ){
@@ -644,6 +666,9 @@ class ReporteComprasResumenController extends Controller
         $nomLow = strtolower($nombre);
 
         if (
+            (strpos($apeLow,"iruna") !== false) ||
+            (strpos($apeLow,"mirage") !== false) ||
+            (strpos($apeLow,"luxcar") !== false) ||
             (strpos($apeLow,"car group") !== false) ||
             (strpos($apeLow,"car gruop") !== false) ||
             (strpos($apeLow,"autonet") !== false) ||
@@ -651,6 +676,9 @@ class ReporteComprasResumenController extends Controller
             (strpos($apeLow, "gestion financiera") !== false) ||
             (strpos($apeLow,"margian") !== false) ||
             (strpos($apeLow,"ricardo bevacqua") !== false) ||
+            (strpos($nomLow,"luxcar") !== false) ||
+            (strpos($nomLow,"iruna") !== false) ||
+            (strpos($nomLow,"mirage") !== false) ||
             (strpos($nomLow ,"car group") !== false) ||
             (strpos($nomLow ,"car gruop") !== false )||
             (strpos($nomLow ,"autonet") !== false) ||
@@ -686,8 +714,9 @@ class ReporteComprasResumenController extends Controller
     
             if (checkdate(date('m', $FechaVtoCuota2), date('d', $FechaVtoCuota2), date('Y', $FechaVtoCuota2))){
                 $diff = date_diff($fvtoc2 , $ff);
-                $avance = ($diff->format('%y') * 12 + $diff->format('%m')) + 2;
-    
+                //$avance = ($diff->format('%y') * 12 + $diff->format('%m')) + 2;
+                $avance = (($diff->format('%a') / 365) * 12) + 2;
+                $avance = round($avance, 0);
                //dd($avance);
                     /*
                 if (isset($FechaCalculoAvance)){

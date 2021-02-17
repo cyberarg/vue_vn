@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="padded">
     <v-data-table
       dense
       :headers="headers"
@@ -29,9 +29,7 @@
                   v-on="on"
                   class="center"
                   @click="showResumen(item.Nombre, item.Cantidad)"
-                >
-                  {{ formatItem(item) }}
-                </td>
+                >{{ formatItem(item) }}</td>
               </template>
               <span>{{ getTooltipData(item) }}</span>
             </v-tooltip>
@@ -46,9 +44,7 @@
                   v-on="on"
                   class="center"
                   @click="showDetalle(item.Capa, item.Tipo, item.Casos, 0)"
-                >
-                  {{ item.Casos }}
-                </td>
+                >{{ item.Casos }}</td>
               </template>
 
               <span>{{ getTooltipData(item.Casos) }}</span>
@@ -60,9 +56,7 @@
                   v-on="on"
                   class="center"
                   @click="showDetalle(item.Capa, item.Tipo, item.MontoHN, 1)"
-                >
-                  ${{ item.MontoHN | numFormat }}
-                </td>
+                >${{ item.MontoHN | numFormat }}</td>
               </template>
               <span>{{ getTooltipDataHN(item.MontoHN) }}</span>
             </v-tooltip>
@@ -72,9 +66,7 @@
       </template>
 
       <template v-slot:item.VerDatos="{ item }">
-        <v-btn color="blue darken-1" text @click="getDato(item)"
-          >Ver Dato</v-btn
-        >
+        <v-btn color="blue darken-1" text @click="getDato(item)">Ver Dato</v-btn>
       </template>
     </v-data-table>
   </div>

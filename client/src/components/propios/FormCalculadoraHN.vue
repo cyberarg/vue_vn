@@ -1,19 +1,19 @@
 <template>
-  <v-app class="fullw">
+  <div class="fullw">
     <v-card color="grey lighten-4">
       <v-card-title>
-        {{pars.titleform}}
+        {{ pars.titleform }}
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
       </v-card-title>
 
-      <v-container>
+
         <v-form v-model="valid">
           <v-row justify="center">
             <v-col lg="6" md="6" sm="8" xs="12">
               <v-container>
                 <v-row>
-                  <v-col lg="4" md="4" sm="4" xs="12">
+                   <v-col lg="3" md="3" sm="12" xs="12">
                     <v-select
                       dense
                       :items="marcas"
@@ -21,10 +21,10 @@
                       item-value="Codigo"
                       label="Marca"
                       v-model="marcaSelect"
-                      disabled
+                      @change="loadModelos()"
                     ></v-select>
                   </v-col>
-                  <v-col lg="4" md="4" sm="4" xs="12">
+                   <v-col lg="3" md="3" sm="12" xs="12">
                     <v-select
                       dense
                       :items="items_modelos"
@@ -36,7 +36,7 @@
                       @change="loadPlanes"
                     ></v-select>
                   </v-col>
-                  <v-col lg="4" md="4" sm="4" xs="12">
+                   <v-col lg="2" md="2" sm="12" xs="12">
                     <v-select
                       dense
                       :items="items_planes"
@@ -45,11 +45,32 @@
                       label="Plan"
                       :disabled="loadingPlanes"
                       v-model="planSelect"
+                      @change="loadListas()"
                     ></v-select>
+                  </v-col>
+                   <v-col lg="2" md="2" sm="12" xs="12">
+                      <v-combobox
+                      dense
+                      item-text="Nombre"
+                      item-value="Codigo"
+                      :items="items_listas"
+                      label="Lista Precios"
+                      v-model="listaSelect"
+                      @change="setPrecio()"
+                    
+                    ></v-combobox>
+                  </v-col>
+                  <v-col lg="2" md="2" sm="12" xs="12">
+                    <v-text-field
+                      dense
+                      label="Valor"
+                      placeholder="Valor"
+                      v-model="valormovilsel"
+                    ></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col lg="4" md="4" sm="4" xs="12">
+                  <v-col lg="3" md="3" sm="12" xs="12">
                     <v-text-field
                       dense
                       label="Cuotas Pagas"
@@ -58,7 +79,7 @@
                       @change="verificarCuotas('CPG')"
                     ></v-text-field>
                   </v-col>
-                  <v-col lg="4" md="4" sm="4" xs="12">
+                  <v-col lg="3" md="3" sm="12" xs="12">
                     <v-text-field
                       dense
                       label="Cuotas Adelantadas"
@@ -67,8 +88,25 @@
                       @change="verificarCuotas('CAD')"
                     ></v-text-field>
                   </v-col>
-                  <v-col lg="4" md="4" sm="4" xs="12">
-                    <v-btn cclass="ma-2" small outlined @click="calcularHN">
+                  <v-col lg="2" md="2" sm="12" xs="12">
+                    <v-text-field
+                      dense
+                      label="Descuento"
+                      placeholder="Descuento"
+                      v-model="descuento"
+                  
+                    ></v-text-field>
+                  </v-col>
+                  
+                   <v-col lg="3" md="3" sm="12" xs="12">
+                     <v-spacer></v-spacer>
+                    <v-btn
+                      cclass="ma-2"
+                      small
+                      outlined
+                      @click="calcularHN"
+                      :disabled="esperandoCalculo"
+                    >
                       <v-icon left>mdi-calculator</v-icon>Calcular
                     </v-btn>
                   </v-col>
@@ -78,16 +116,16 @@
 
                 <v-row justify="center">
                   <v-col lg="12" md="12" sm="12" xs="12">
-                    <p class="hn">{{netoCalculado}}</p>
+                    <p class="hn">{{ netoCalculado }}</p>
                   </v-col>
                 </v-row>
               </v-container>
             </v-col>
           </v-row>
         </v-form>
-      </v-container>
+
     </v-card>
-  </v-app>
+  </div>
 </template>
 
 <script>
@@ -96,22 +134,29 @@ export default {
   props: {
     pars: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
+      valid:true,
       filled: true,
       cpg: 0,
       cad: 0,
-      marcaSelect: 5,
+      valormovilsel:0,
+      descuento:0,
+      marcaSelect: null,
       modeloSelect: null,
       planSelect: null,
+      listaSelect:null,
       esperandoCalculo: false,
+      disabledCalcular: false,
       marcas: [
-        { Codigo: 2, Nombre: "Fiat" },
-        { Codigo: 5, Nombre: "Volkswagen" }
-      ]
+        // { Codigo: 2, Nombre: "Fiat" },
+        { Codigo: 5, Nombre: "Volkswagen" },
+        // { Codigo: 9, Nombre: "Ford" },
+        // { Codigo: 3, Nombre: "Peugeot" },
+      ],
       /*
       modelos: [
         { Codigo: 1, Nombre: "Gol" },
@@ -128,7 +173,7 @@ export default {
   },
 
   created() {
-    this.loadModelos();
+    //this.loadModelos();
   },
 
   methods: {
@@ -136,7 +181,10 @@ export default {
       getMarcas: "haberneto/getMarcas",
       getModelos: "haberneto/getModelos",
       getPlanes: "haberneto/getPlanes",
-      getCalculoHN: "haberneto/getCalculoHN"
+      getListas: "haberneto/getListas",
+      //getCalculoHN: "haberneto/getCalculoHN",
+      getCalculoHN: "haberneto/getCalculoHNGuido",
+      
     }),
 
     async loadModelos() {
@@ -149,11 +197,23 @@ export default {
       this.esperandoCalculo = false;
       var p = {
         marca: this.marcaSelect,
-        modelo: this.modeloSelect
+        modelo: this.modeloSelect,
       };
 
       await this.getPlanes(p);
     },
+
+    async loadListas() {
+      this.esperandoCalculo = false;
+      var p = {
+        marca: this.marcaSelect,
+        modelo: this.modeloSelect,
+      };
+
+      await this.getListas(p);
+    },
+
+
 
     verificarCuotas(tipo) {
       this.esperandoCalculo = false;
@@ -172,31 +232,51 @@ export default {
       }
     },
 
+    setPrecio(){
+      if (typeof this.listaSelect !== "undefined"){
+        console.log(this.listaSelect);
+        this.valormovilsel = this.listaSelect.Precio;
+      }
+     
+    },
+
     calcularHN() {
       this.esperandoCalculo = true;
       var params = {
         marca: this.marcaSelect,
         plan: this.planSelect,
         cpagas: this.cpg,
-        cadel: this.cad
+        cadel: this.cad,
+        valormovil: this.valormovilsel,
+        descuento: this.descuento
       };
 
       //console.log(params);
       this.getCalculoHN(params);
-    }
+    },
   },
 
   computed: {
     ...mapState("haberneto", [
-      "marcas",
+      //"marcas",
       "items_modelos",
       "items_planes",
+      "items_listas",
+      "valormovil",
       "hnreal",
       "hnformula",
       "loading",
       "loadingModelos",
-      "loadingPlanes"
+      "loadingPlanes",
+      "loadingListas",
+      "loadingCalculadora",
     ]),
+
+    setValorMovil(){
+        //
+    },
+
+    
 
     netoCalculado() {
       if (!this.esperandoCalculo) {
@@ -205,6 +285,7 @@ export default {
         if (this.loadingCalculadora) {
           return "Obteniendo Haber Neto...";
         } else {
+          this.esperandoCalculo = false;
           if (this.hnreal > 0) {
             return (
               "Haber Neto: $" + this.$options.filters.numFormat(this.hnreal)
@@ -212,18 +293,18 @@ export default {
           }
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style  scoped>
+<style scoped>
 .fullw {
   width: 100%;
 }
 
 .centered {
-  margin: 50px 20px;
+  margin: 50px 10px;
 }
 
 .hn {

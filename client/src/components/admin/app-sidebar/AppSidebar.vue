@@ -33,53 +33,112 @@
 </template>
 
 <script>
-import { navigationRoutes } from "./NavigationRoutes";
+import { navigationRoutesAdmin } from "./NavigationRoutesAdmin";
+import { navigationRoutesSupervisor } from "./NavigationRoutesSupervisor";
+import { navigationRoutesFull } from "./NavigationRoutesFull";
+import { navigationRoutesOficial } from "./NavigationRoutesOficial";
+import { navigationRoutesConcesionario } from "./NavigationRoutesConcesionario";
+import { navigationRoutesConcesionarioCalculadora } from "./NavigationRoutesConcesionarioCalculadora";
+import { navigationRoutesCobradoresHN } from "./NavigationRoutesCobradoresHN";
 import AppSidebarLink from "./components/AppSidebarLink";
 import AppSidebarLinkGroup from "./components/AppSidebarLinkGroup";
 import { ColorThemeMixin } from "../../../services/vuestic-ui";
+import { mapState } from "vuex";
 
 export default {
   name: "app-sidebar",
   inject: ["contextConfig"],
   components: {
     AppSidebarLink,
-    AppSidebarLinkGroup
+    AppSidebarLinkGroup,
   },
   mixins: [ColorThemeMixin],
   props: {
     minimized: {
       type: Boolean,
-      required: true
+      required: true,
     },
     color: {
       type: String,
-      default: "secondary"
-    }
+      default: "secondary",
+    },
   },
   data() {
     return {
-      items: navigationRoutes.routes
+      items: [],
+      itemsAdmin: navigationRoutesAdmin.routes,
+      itemsFull: navigationRoutesFull.routes,
+      itemsSupervisor: navigationRoutesSupervisor.routes,
+      itemsOficial: navigationRoutesOficial.routes,
+      itemsCE: navigationRoutesConcesionario.routes,
+      itemsCECalculadora: navigationRoutesConcesionarioCalculadora.routes,
+      itemsCobradores: navigationRoutesCobradoresHN.routes,
     };
   },
+
+  mounted() {
+    this.setNavigationRoutes();
+  },
   computed: {
+    ...mapState("auth", [
+      "login",
+      "user",
+      "esConcesionario",
+      "esVinculo",
+      "codigoConcesionario",
+      "perfilUsuario",
+      "verCalculadora",
+    ]),
+
+    setNavigationRoutes() {
+      if (
+        (this.esConcesionario || this.esVinculo) &&
+        this.perfilUsuario != "7"
+      ) {
+        if (this.verCalculadora) {
+          this.items = this.itemsCECalculadora;
+        } else {
+          this.items = this.itemsCE;
+        }
+      } else {
+        switch (this.perfilUsuario) {
+          case 3:
+            this.items = this.itemsOficial;
+            break;
+          case 4:
+            this.items = this.itemsSupervisor;
+            break;
+          case 5:
+            this.items = this.itemsAdmin;
+            break;
+          case 6:
+            this.items = this.itemsFull;
+            break;
+          case 7:
+            this.items = this.itemsCobradores;
+            break;
+        }
+      }
+    },
+
     computedClass() {
       return {
-        "app-sidebar--minimized": this.minimized
+        "app-sidebar--minimized": this.minimized,
       };
     },
     computedStyle() {
       return {
         backgroundColor: this.contextConfig.invertedColor
           ? "white"
-          : this.colorComputed
+          : this.colorComputed,
       };
-    }
+    },
   },
   methods: {
     hasActiveByDefault(item) {
-      return item.children.some(child => child.name === this.$route.name);
-    }
-  }
+      return item.children.some((child) => child.name === this.$route.name);
+    },
+  },
 };
 </script>
 

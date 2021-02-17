@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <div>
       <h3></h3>
       <v-card color="grey lighten-4">
@@ -7,19 +7,58 @@
           {{ pars.titleform }}
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Buscar"
-            single-line
-            hide-details
-          ></v-text-field>
+          <template v-if="!esConcesionario">
+            <v-row class="padded">
+              <v-col cols="3">
+                <v-combobox
+                  item-text="Nombre"
+                  item-value="Codigo"
+                  :items="listMarcas"
+                  label="Marca"
+                  :value="codMarcaSelected"
+                  @change="filterListConcesionaria"
+                  class="padded"
+                ></v-combobox>
+              </v-col>
+              <v-col cols="3">
+                <v-combobox
+                  item-text="Nombre"
+                  item-value="Codigo"
+                  :items="listC"
+                  label="Concesionario"
+                  v-model="codConcesSelected"
+                  @change="filterConcesionaria"
+                ></v-combobox>
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Buscar"
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </template>
+          <template v-else>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Buscar"
+              single-line
+              hide-details
+            ></v-text-field>
+          </template>
+          <v-btn class="ma-2" color="primary" outlined text @click="getDatos">
+            <v-icon left>mdi-refresh</v-icon>Actualizar
+          </v-btn>
         </v-card-title>
 
         <v-data-table
           dense
           fixed-header
-          height="500"
+          height="58vh"
           locale="es"
           :headers="headers"
           :items="items"
@@ -30,76 +69,96 @@
           :loading="loading"
           group-by="NomOrigen"
           loading-text="Cargando Datos... Aguarde"
+          no-data-text="No hay datos disponibles."
         >
           <template v-slot:item="{ item }">
             <template v-if="expanded">
               <tr>
                 <td>{{ item.NomOficial }}</td>
-                <td>
+                <td
+                  @click="handleClick(item, 'Asignados', item.Asignados, '-1')"
+                >
                   <v-layout justify-center class="rowclass">
-                    {{
-                    item.Asignados
-                    }}
+                    {{ item.Asignados }}
                   </v-layout>
                 </td>
-                <td>
+                <td
+                  @click="
+                    handleClick(item, 'Sin Gestionar', item.SinGestionar, '0')
+                  "
+                >
                   <v-layout justify-center class="rowclass">
-                    {{
-                    item.SinGestionar
-                    }}
+                    {{ item.SinGestionar }}
                   </v-layout>
                 </td>
-                <td @click="handleClick(item, 'Telefono Mal', item.TelefonoMal, '1')">
+                <td
+                  @click="
+                    handleClick(item, 'Telefono Mal', item.TelefonoMal, '1')
+                  "
+                >
                   <v-layout justify-center class="rowclass">
-                    {{
-                    item.TelefonoMal
-                    }}
+                    {{ item.TelefonoMal }}
                   </v-layout>
                 </td>
-                <td>
+                <td
+                  @click="
+                    handleClick(item, 'Deje Mensaje', item.DejeMensaje, '2')
+                  "
+                >
                   <v-layout justify-center class="rowclass">
-                    {{
-                    item.DejeMensaje
-                    }}
+                    {{ item.DejeMensaje }}
                   </v-layout>
                 </td>
-                <td>
+                <td
+                  @click="
+                    handleClick(item, 'No le interesa', item.NoCompra, '4')
+                  "
+                >
                   <v-layout justify-center class="rowclass">
-                    {{
-                    item.NoCompra
-                    }}
+                    {{ item.NoCompra }}
                   </v-layout>
                 </td>
-                <td>
+                <td
+                  @click="handleClick(item, 'En Gestiòn', item.EnGestion, '7')"
+                >
                   <v-layout justify-center class="rowclass">
-                    {{
-                    item.EnGestion
-                    }}
+                    {{ item.EnGestion }}
                   </v-layout>
                 </td>
-                <td>
-                  <v-layout justify-center class="rowclass">{{ item.EntrevistaPendiente }}</v-layout>
+                <td
+                  @click="
+                    handleClick(
+                      item,
+                      'Entrevista Pendiente',
+                      item.EntrevistaPendiente,
+                      '3'
+                    )
+                  "
+                >
+                  <v-layout justify-center class="rowclass">{{
+                    item.EntrevistaPendiente
+                  }}</v-layout>
                 </td>
 
-                <td>
+                <td
+                  @click="handleClick(item, 'Vende Plan', item.VendePlan, '5')"
+                >
                   <v-layout justify-center class="rowclass">
-                    {{
-                    item.VendePlan
-                    }}
+                    {{ item.VendePlan }}
                   </v-layout>
                 </td>
-                <td>
+                <td
+                  @click="
+                    handleClick(item, 'Pasar a Venta', item.PasarAVenta, '8')
+                  "
+                >
                   <v-layout justify-center class="rowclass">
-                    {{
-                    item.PasarAVenta
-                    }}
+                    {{ item.PasarAVenta }}
                   </v-layout>
                 </td>
-                <td>
+                <td @click="handleClick(item, 'Compro', item.Compro, '6')">
                   <v-layout justify-center class="rowclass">
-                    {{
-                    item.Compro
-                    }}
+                    {{ item.Compro }}
                   </v-layout>
                 </td>
               </tr>
@@ -107,7 +166,12 @@
             <template></template>
           </template>
           <template v-slot:group.header="{ items }">
-            <td :colspan="headers.length" default="true" @click="expandRows" class="rowclassGroup">
+            <td
+              :colspan="headers.length"
+              default="true"
+              @click="expandRows"
+              class="rowclassGroup"
+            >
               <strong>{{ items[0].NomOrigen }}</strong>
             </td>
           </template>
@@ -132,13 +196,20 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn cclass="ma-2" outlined text @click="exportExcel">
+          <v-btn
+            cclass="ma-2"
+            color="success"
+            outlined
+            text
+            @click="exportExcel"
+            v-show="showBotones"
+          >
             <v-icon left>mdi-file-excel-outline</v-icon>Excel
           </v-btn>
         </v-card-actions>
       </v-card>
     </div>
-  </v-app>
+  </div>
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
@@ -148,30 +219,57 @@ export default {
   props: {
     pars: {
       type: Object,
-      required: true
+      required: true,
     },
     headers: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
 
   data() {
     return {
       search: "",
+      showBotones: null,
       expanded: true,
       totalSub: 0,
       window: {
         width: 0,
-        height: 0
-      }
+        height: 0,
+      },
+      codMarcaSelected: null,
+      listMarcas: [
+        { Codigo: 0, Nombre: "Todas" },
+        { Codigo: 2, Nombre: "Fiat" },
+        { Codigo: 5, Nombre: "Volkswagen" },
+        { Codigo: 9, Nombre: "Ford" },
+        { Codigo: 3, Nombre: "Peugeot" },
+      ],
+      codConcesSelected: null,
+      listC: [],
+      listConcesionarios: [
+        { Codigo: 0, Nombre: "Todos" },
+        { Codigo: 1, Nombre: "Sauma", Marca: 5 },
+        { Codigo: 2, Nombre: "Iruña", Marca: 5 },
+        { Codigo: 3, Nombre: "Amendola", Marca: 5 },
+        { Codigo: 7, Nombre: "Luxcar", Marca: 5 },
+        { Codigo: 4, Nombre: "AutoCervo", Marca: 2 },
+        { Codigo: 5, Nombre: "AutoNet", Marca: 2 },
+        { Codigo: 6, Nombre: "Car Group", Marca: 2 },
+        { Codigo: 9, Nombre: "Sapac", Marca: 9 },
+        { Codigo: 10, Nombre: "Alizze", Marca: 3 },
+      ],
     };
   },
 
   created() {
-    this.$store.dispatch(this.module + "/getData", this.api);
+    //this.$store.dispatch(this.module + "/getData", this.api);
     window.addEventListener("resize", this.handleResize);
     this.handleResize();
+  },
+
+  mounted() {
+    this.checkEsConcesionario();
   },
 
   destroyed() {
@@ -193,16 +291,77 @@ export default {
       "loading",
       "datos",
       "empresa",
-      "items_filtrados"
-    ])
+      "items_filtrados",
+    ]),
+
+    ...mapState("auth", [
+      "login",
+      "user",
+      "esConcesionario",
+      "esVinculo",
+      "codigoConcesionario",
+    ]),
   },
 
   methods: {
     ...mapActions({
-      showFiltrados: "estadogestion/showFiltrados"
+      showFiltrados: "estadogestion/showFiltrados",
+      getData: "estadogestion/getData",
     }),
 
-    exportExcel: function() {
+    getDatos() {
+      var pars = {
+        api: this.api,
+        Marca: this.codConcesSelected.Marca,
+        Concesionario: this.codConcesSelected.Codigo,
+        EsVinculo: this.esVinculo,
+      };
+      this.getData(pars);
+      //this.$store.dispatch(this.module + "/getData", pars);
+    },
+
+    filterConcesionaria(value) {
+      console.log(value);
+    },
+
+    filterListConcesionaria(value) {
+      console.log(value);
+      this.codConcesSelected = null;
+      this.listC = [];
+      if (value.Codigo == 0) {
+        this.listC = this.listConcesionarios.find(function (item) {
+          return item.Codigo === 0;
+        });
+        this.codConcesSelected = this.listC;
+      } else {
+        this.listC = this.listConcesionarios.filter(function (item) {
+          return item.Marca === value.Codigo;
+        });
+      }
+    },
+
+    checkEsConcesionario() {
+      if (this.esConcesionario) {
+        var codC = parseInt(this.codigoConcesionario);
+        console.log(codC);
+        var itemC = {};
+        itemC = this.listConcesionarios.find(function (item) {
+          return item.Codigo === codC;
+        });
+        this.codConcesSelected = itemC;
+        this.codMarcaSelected = itemC.Marca;
+        this.showBotones = false;
+      } else {
+        if (this.esVinculo) {
+          this.listMarcas.splice(1, 1);
+          this.showBotones = false;
+        } else {
+          this.showBotones = true;
+        }
+      }
+    },
+
+    exportExcel: function () {
       let data = XLSX.utils.json_to_sheet(this.items);
       const workbook = XLSX.utils.book_new();
       const filename = "devschile-admins";
@@ -240,6 +399,7 @@ export default {
       var pars = {};
       pars.codOficial = item.CodOficial;
       pars.codEstado = estado;
+      pars.Concesionario = item.Concesionario;
       console.log(pars);
       await this.showFiltrados(pars);
       var titleForm =
@@ -257,14 +417,14 @@ export default {
           title: titleForm,
           items_f: this.items_filtrados,
           volverARuta: "reporteasignaciones",
-          module: "reporteasignacion"
-        }
+          module: "reporteasignacion",
+        },
       });
     },
 
     subTotalAsig(column) {
       return (
-        function(subTotalAsig) {
+        function (subTotalAsig) {
           //var itemName = column.value;
           //console.log(column.Asignados);
           if (!isNaN(column.Asignados)) {
@@ -278,7 +438,7 @@ export default {
     },
 
     totalS(column, valor) {
-      return valor.reduce(function(total, item) {
+      return valor.reduce(function (total, item) {
         // console.log(item);
         if (isNaN(item[column.value])) {
           return "";
@@ -288,7 +448,7 @@ export default {
     },
 
     total(column) {
-      return this.items.reduce(function(total, item) {
+      return this.items.reduce(function (total, item) {
         //var itemName = column.value;
         //console.log(itemName);
         if (isNaN(item[column.value])) {
@@ -296,8 +456,8 @@ export default {
         }
         return total + parseInt(item[column.value]);
       }, 0);
-    }
-  }
+    },
+  },
 
   /*
 
@@ -339,5 +499,10 @@ const workbook = XLSX.utils.book_new()
 
 .rowclassGroup {
   font-weight: bold;
+}
+
+.padded {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

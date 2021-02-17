@@ -1,14 +1,10 @@
 <template>
-  <v-app>
-    <h3></h3>
+  <div>
     <v-card color="grey lighten-4">
       <v-card-title>
         Importación de Haber Neto
         <v-spacer></v-spacer>
-        <UploadExcelComponent
-          :on-success="handleSuccess"
-          :before-upload="beforeUpload"
-        />
+        <UploadExcelComponent :on-success="handleSuccess" :before-upload="beforeUpload" />
 
         <v-btn
           class="ma-2"
@@ -17,8 +13,9 @@
           text
           @click="procesarRegistrosHN()"
           :disabled="disableButton"
-          ><v-icon left>mdi-cog-outline</v-icon>Procesar</v-btn
         >
+          <v-icon left>mdi-cog-outline</v-icon>Procesar
+        </v-btn>
       </v-card-title>
 
       <v-data-table
@@ -33,15 +30,13 @@
         v-model="selected"
         :single-select="singleSelect"
       >
-        <template v-slot:item.ImporteHN="{ item }">
-          ${{ Math.round(item.ImporteHN) | numFormat }}
-        </template>
-        <template v-slot:item.PrecioMaximoCompra="{ item }">
-          ${{ Math.round(item.PrecioMaximoCompra) | numFormat }}
-        </template>
+        <template v-slot:item.ImporteHN="{ item }">${{ Math.round(item.ImporteHN) | numFormat }}</template>
+        <template
+          v-slot:item.PrecioMaximoCompra="{ item }"
+        >${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</template>
       </v-data-table>
     </v-card>
-  </v-app>
+  </div>
 </template>
 
 <script>
