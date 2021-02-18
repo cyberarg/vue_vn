@@ -93,39 +93,25 @@
             </thead>
           </template>
           <template v-slot:item.Mes_1="{ item }" >
-            <div class="small titulo">
-             {{ setSymbol(item.Mes_1, items.Fila) }} 
-            </div>
+             {{ setSymbol(item.Mes_1, item.Fila) }} 
           </template>
           <template v-slot:item.Mes_2="{ item }" >
-            <div class="small titulo">
-             {{ setSymbol(item.Mes_2, items.Fila) }} 
-            </div>
+             {{ setSymbol(item.Mes_2, item.Fila) }} 
           </template>
           <template v-slot:item.Mes_3="{ item }" >
-            <div class="small titulo">
-             {{ setSymbol(item.Mes_3, items.Fila) }} 
-            </div>
+             {{ setSymbol(item.Mes_3, item.Fila) }} 
           </template>
           <template v-slot:item.Mes_4="{ item }" >
-            <div class="small titulo">
-             {{ setSymbol(item.Mes_4, items.Fila) }} 
-            </div>
+             {{ setSymbol(item.Mes_4, item.Fila) }} 
           </template>
           <template v-slot:item.Mes_5="{ item }" >
-            <div class="small titulo">
-             {{ setSymbol(item.Mes_5, items.Fila) }} 
-            </div>
+             {{ setSymbol(item.Mes_5, item.Fila) }} 
           </template>
           <template v-slot:item.Mes_6="{ item }" >
-            <div class="small titulo">
-             {{ setSymbol(item.Mes_6, items.Fila) }} 
-            </div>
+             {{ setSymbol(item.Mes_6, item.Fila) }} 
           </template>
           <template v-slot:item.Total="{ item }" >
-            <div class="small titulo">
-             {{ setSymbol(item.Total, items.Fila) }} 
-            </div>
+             {{ setSymbol(item.Total, item.Fila) }} 
           </template>
         </v-data-table>
         
@@ -306,29 +292,26 @@ export default {
           return "-"
         }
         if (fila == 5){
-            return "%";
+            return this.$options.filters.numFormat(valor, "%0,0");
         }else{
           if (this.mostar_valores){
             return this.$options.filters.numFormat(valor, "$0,0");
           }
           return this.$options.filters.numFormat(valor, "0,0");
         }
-        
-        
-        
     },
 
     setSelectedsCE(value){
-      console.log(value);
+      //console.log(value);
       this.getReport('C', value);
     },
 
     setSelectedsOf(value){
-      console.log(value);
+      //console.log(value);
       this.getReport('O', value);
     },
 
-    getReport(tipo, seleccion) {
+    async getReport(tipo, seleccion) {
       let conces = 0;
       let oficiales = 0;
       this.mesSelected = this.codperiodo.Mes;
@@ -351,9 +334,10 @@ export default {
         SelectedsCE: conces,
         SelectedsOf: oficiales
       };
-      console.log(pars);
+      //console.log(pars);
 
-      this.getReporte(pars);
+     await this.getReporte(pars);
+     this.setDefaultDataSource(this.mostar_valores);
     },
 
     getPeriodos() {
@@ -401,7 +385,7 @@ export default {
           month = month - 12;
         }
       }
-      console.log(month);
+      //console.log(month);
       return this.getMonthName(month);
     },
 
@@ -448,7 +432,7 @@ export default {
     },
 
     createPDF (headers, items, titulo) {
-      console.log('Llego');
+      //console.log('Llego');
       var source1 = items;
       let rows1 = [];
 
@@ -473,13 +457,13 @@ export default {
       source1.forEach(element => {
           var temp = [
               element.Tipo,
-              element.Mes_1,
-              element.Mes_2,
-              element.Mes_3,
-              element.Mes_4,
-              element.Mes_5,
-              element.Mes_6,
-              element.Total,
+              this.setSymbol(element.Mes_1, element.Fila),
+              this.setSymbol(element.Mes_2, element.Fila),
+              this.setSymbol(element.Mes_3, element.Fila),
+              this.setSymbol(element.Mes_4, element.Fila),
+              this.setSymbol(element.Mes_5, element.Fila),
+              this.setSymbol(element.Mes_6, element.Fila),
+              this.setSymbol(element.Total, element.Fila),
 
           ];
           rows1.push(temp);
