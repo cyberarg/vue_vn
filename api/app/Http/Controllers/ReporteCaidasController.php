@@ -32,7 +32,7 @@ class ReporteCaidasController extends Controller
                 if ($pasada == 1){
                     $strCE = $selected['Codigo'];
                 }else{
-                    $strCE = $strCE.', '.$selected['Codigo'];
+                    $strCE = $strCE.','.$selected['Codigo'];
                 }
                 $pasada ++;
             }
@@ -46,7 +46,7 @@ class ReporteCaidasController extends Controller
                 if ($pasada == 1){
                     $strOf = $selected['Codigo'];
                 }else{
-                    $strOf = $strOf.', '.$selected['Codigo'];
+                    $strOf = $strOf.','.$selected['Codigo'];
                 }
                 $pasada ++;
             }
@@ -58,20 +58,23 @@ class ReporteCaidasController extends Controller
         $periodoMes = substr($periodo, 4, strlen($periodo));
         $periodoAnio = substr($periodo, 0, 4);
         */
-
+       
         $periodoMes = date("m");
         $periodoAnio = date("Y");
 
         $queryStrReport = "CALL hnweb_reporte_ventas_caidas_RB(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."');"; 
-
+        $queryStrReport_Valores = "CALL hnweb_reporte_ventas_caidas_RB_Valores(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."');"; 
+        //return $queryStrReport;
         $db = "GF";
         
         $reporte = DB::connection($db)->select($queryStrReport);
+        $reporteValores = DB::connection($db)->select($queryStrReport_Valores); 
         $datos =  SubiteDatos::on($db)->whereYear('fechaventacaida', '=', $periodoAnio)->whereMonth('fechaventacaida', '=', $periodoMes)->get();
 
         $lst = array();
         
         $lst['Reporte'] = $reporte;
+        $lst['ReporteValores'] = $reporteValores;
         $lst['Datos'] = $datos;
 
 

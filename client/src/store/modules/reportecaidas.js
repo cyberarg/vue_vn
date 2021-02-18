@@ -5,6 +5,7 @@ export const namespaced = true;
 export const state = {
   dataStatus: "",
   items: [],
+  items_valores: [],
   datos: [],
   items_filtrados: [],
   loading: false
@@ -14,12 +15,14 @@ export const mutations = {
   GET_DATA_STATUS(state) {
     state.dataStatus = "loading";
     state.items = [];
+    state.items_valores = [];
     state.loading = true;
   },
 
   DATOS_SUCCESS(state, datos) {
     //console.log(datos);
     state.items = datos.Reporte;
+    state.items_valores = datos.ReporteValores;
     state.datos = datos.Datos;
     state.loading = false;
     state.dataStatus = "success";

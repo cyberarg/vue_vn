@@ -41,7 +41,7 @@
           fixed-header
           locale="es"
           :headers="headers"
-          :items="items"
+          :items="itemsGrid"
           :items-per-page="-1"
           :hide-default-footer="true"
           :hide-default-header="true"
@@ -51,6 +51,18 @@
           loading-text="Cargando Datos... Aguarde"
           no-data-text="No hay datos disponibles."
         >
+
+          <template v-slot:top>
+            <v-toolbar flat>
+              <v-toolbar-title></v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-switch
+                v-model="mostar_valores"
+                inset
+                label="Mostrar en $"
+              ></v-switch>
+            </v-toolbar>
+          </template>
 
           <template v-slot:header="{ props }">
             <thead class="v-data-table-header">
@@ -80,18 +92,48 @@
               </tr>
             </thead>
           </template>
+          <template v-slot:item.Mes_1="{ item }" >
+            <div class="small titulo">
+             {{ setSymbol(item.Mes_1, items.Fila) }} 
+            </div>
+          </template>
+          <template v-slot:item.Mes_2="{ item }" >
+            <div class="small titulo">
+             {{ setSymbol(item.Mes_2, items.Fila) }} 
+            </div>
+          </template>
+          <template v-slot:item.Mes_3="{ item }" >
+            <div class="small titulo">
+             {{ setSymbol(item.Mes_3, items.Fila) }} 
+            </div>
+          </template>
+          <template v-slot:item.Mes_4="{ item }" >
+            <div class="small titulo">
+             {{ setSymbol(item.Mes_4, items.Fila) }} 
+            </div>
+          </template>
+          <template v-slot:item.Mes_5="{ item }" >
+            <div class="small titulo">
+             {{ setSymbol(item.Mes_5, items.Fila) }} 
+            </div>
+          </template>
+          <template v-slot:item.Mes_6="{ item }" >
+            <div class="small titulo">
+             {{ setSymbol(item.Mes_6, items.Fila) }} 
+            </div>
+          </template>
+          <template v-slot:item.Total="{ item }" >
+            <div class="small titulo">
+             {{ setSymbol(item.Total, items.Fila) }} 
+            </div>
+          </template>
         </v-data-table>
-        <!--
-        <GridSummaryReporteCaidas
-          :headers="this.headers"
-          :mesBase="this.mesSelected"
-        ></GridSummaryReporteCaidas>
-        -->
+        
         <v-btn class="ma-2" 
               color="primary"
               outlined
               text 
-              @click="createPDF(headers, items, 'Caídas')" >
+              @click="createPDF(headers, itemsGrid, 'Caídas')" >
           <v-icon left>mdi-printer</v-icon>Imprimir
         </v-btn>
       </div>
@@ -119,7 +161,8 @@ export default {
   },
   data() {
     return {
-
+      itemsGrid:[],
+      mostar_valores:false,
       radios: null,
       codperiodo: "",
       detalleFiltro:'',
@@ -129,13 +172,12 @@ export default {
         { Codigo: 2, Nombre: "Iruña", Marca: 5, MostrarSwitch: true },
         { Codigo: 3, Nombre: "Amendola", Marca: 5, MostrarSwitch: true },
         { Codigo: 7, Nombre: "Luxcar", Marca: 5, MostrarSwitch: true },
-        //{ Codigo: 4, Nombre: "AutoCervo", Marca: 2 },
-        { Codigo: 8, Nombre: "RB", Marca: 2, MostrarSwitch: false },
+        { Codigo: 4, Nombre: "AutoCervo", Marca: 2 },
+        //{ Codigo: 8, Nombre: "RB", Marca: 2, MostrarSwitch: false },
         { Codigo: 5, Nombre: "AutoNet", Marca: 2, MostrarSwitch: false },
         { Codigo: 6, Nombre: "Car Group", Marca: 2, MostrarSwitch: false },
         { Codigo: 9, Nombre: "Sapac", Marca: 9, MostrarSwitch: true },
         { Codigo: 10, Nombre: "Alizze", Marca: 3, MostrarSwitch: true },
-        { Codigo: 99, Nombre: "RB - AutoNet - CarGroup - Volkswagen", Marca: 99, MostrarSwitch: false },
       ],
       itemsPeriodos: [],
       mesSelected: 0,
@@ -205,6 +247,14 @@ export default {
   created() {
     this.getPeriodos();
     this.getDatosComboOficiales();
+    this.setDefaultDataSource(this.mostar_valores);
+  },
+
+
+  watch: {
+    mostar_valores(newValue) {
+      this.setDefaultDataSource(newValue);
+    },
   },
 
   computed: {
@@ -219,6 +269,7 @@ export default {
     ...mapState("reportecaidas", [
       "dataStatus",
       "items",
+      "items_valores",
       "loading",
       "datos",
       "empresa",
@@ -241,6 +292,31 @@ export default {
     ...mapActions({
         getDatosComboOficiales: "parametros/getOficiales",
     }),
+
+    setDefaultDataSource(value){
+      if (value){
+        this.itemsGrid = this.items_valores;
+      }else{
+        this.itemsGrid = this.items;
+      }
+    },
+
+    setSymbol(valor, fila){
+        if (valor == 0){
+          return "-"
+        }
+        if (fila == 5){
+            return "%";
+        }else{
+          if (this.mostar_valores){
+            return this.$options.filters.numFormat(valor, "$0,0");
+          }
+          return this.$options.filters.numFormat(valor, "0,0");
+        }
+        
+        
+        
+    },
 
     setSelectedsCE(value){
       console.log(value);
@@ -275,6 +351,7 @@ export default {
         SelectedsCE: conces,
         SelectedsOf: oficiales
       };
+      console.log(pars);
 
       this.getReporte(pars);
     },
