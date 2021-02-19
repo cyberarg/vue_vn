@@ -25,7 +25,10 @@ class ReporteCaidasController extends Controller
 
         $strCE = '';
         $strOf = '';
-
+        $strOf_CG = '';
+        $strOf_AN = '';
+        $strOf_AC = '';
+        
         $pasada = 1;
         if ($selectedsCE != 0){
             foreach ($selectedsCE as $selected) {
@@ -45,15 +48,41 @@ class ReporteCaidasController extends Controller
             foreach ($selectedsOf as $selected) {
                 if ($pasada == 1){
                     $strOf = $selected['Codigo'];
+                    if ($selected['CodigoAutoCervo'] != null){
+                        $strOf_AC = $selected['CodigoAutoCervo'];
+                    }
+                    if ($selected['CodigoAutoNet'] != null){
+                        $strOf_AN = $selected['CodigoAutoNet'];
+                    }
+                    if ($selected['CodigoCarGroup'] != null){
+                        $strOf_CG = $selected['CodigoCarGroup'];
+                    }
                 }else{
                     $strOf = $strOf.','.$selected['Codigo'];
+                    if ($selected['CodigoAutoCervo'] != null){
+                        $strOf_AC = $strOf_AC.','.$selected['CodigoAutoCervo'];
+                    }
+                    if ($selected['CodigoAutoNet'] != null){
+                        $strOf_AN = $strOf_AN.','.$selected['CodigoAutoNet'];
+                    }
+                    if ($selected['CodigoCarGroup'] != null){
+                        $strOf_CG = $strOf_CG.','.$selected['CodigoCarGroup'];
+                    }
                 }
                 $pasada ++;
             }
         }else{
             $strOf = 'NULL';
+            $strOf_CG = 'NULL';
+            $strOf_AN = 'NULL';
+            $strOf_AC = 'NULL';
+
         }
-       
+
+        
+        //return 'GF: '.$strOf.' CG: '.$strOf_CG.' AN: '.$strOf_AN.' AC:'.$strOf_AC;
+    
+    
         /*
         $periodoMes = substr($periodo, 4, strlen($periodo));
         $periodoAnio = substr($periodo, 0, 4);
@@ -62,8 +91,8 @@ class ReporteCaidasController extends Controller
         $periodoMes = date("m");
         $periodoAnio = date("Y");
 
-        $queryStrReport = "CALL hnweb_reporte_ventas_caidas_RB(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', NULL, NULL, NULL);"; 
-        $queryStrReport_Valores = "CALL hnweb_reporte_ventas_caidas_RB_Valores(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', NULL, NULL, NULL);"; 
+        $queryStrReport = "CALL hnweb_reporte_ventas_caidas_RB(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', '".$strOf_CG."', '".$strOf_AN."', '".$strOf_AC."');"; 
+        $queryStrReport_Valores = "CALL hnweb_reporte_ventas_caidas_RB_Valores(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', '".$strOf_CG."', '".$strOf_AN."', '".$strOf_AC."');"; 
         //return $queryStrReport;
         $db = "GF";
         
