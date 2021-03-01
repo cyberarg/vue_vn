@@ -74,7 +74,7 @@ export default {
           text: "Oficial",
           align: "start",
           value: "NomOficial",
-          width: "25%",
+          width: "1%",
           class: "fixed",
         },
 

@@ -519,19 +519,16 @@ export default {
     },
 
     getPeriodoName(periodo) {
-      //console.log(periodo);
       var month;
       var baseMonth;
       if (this.mesBase == 0) {
-        baseMonth = moment().month() + 2;
+        baseMonth = moment().month() + 1;
       } else {
-        baseMonth = this.mesBase * 3;
+        baseMonth = this.mesBase;
       }
-
-      if (baseMonth > 5) {
-        month = baseMonth - periodo;
-      }
-
+        month = baseMonth * 3  - periodo;
+     
+      //console.log(month);
       return this.getMonthName(month);
     },
 

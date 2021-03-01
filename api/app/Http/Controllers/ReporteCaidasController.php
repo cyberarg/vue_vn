@@ -91,7 +91,8 @@ class ReporteCaidasController extends Controller
         $periodoMes = date("m");
         $periodoAnio = date("Y");
 
-        $queryStrReport = "CALL hnweb_reporte_ventas_caidas_RB(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', '".$strOf_CG."', '".$strOf_AN."', '".$strOf_AC."');"; 
+        //$queryStrReport = "CALL hnweb_reporte_ventas_caidas_RB_New(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', '".$strOf_CG."', '".$strOf_AN."', '".$strOf_AC."');"; 
+        $queryStrReport = "CALL hnweb_reporte_ventas_caidas_RB_New(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."');"; 
         $queryStrReport_Valores = "CALL hnweb_reporte_ventas_caidas_RB_Valores(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', '".$strOf_CG."', '".$strOf_AN."', '".$strOf_AC."');"; 
         //return $queryStrReport;
         $db = "GF";

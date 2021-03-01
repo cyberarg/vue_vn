@@ -376,6 +376,11 @@ export default {
 
       if (baseMonth > 5) {
         month = baseMonth - periodo;
+      }else{
+        month = 12 - periodo + baseMonth;
+        if (month > 12){
+          month = month - 12;
+        }
       }
 
       return this.getMonthName(month);

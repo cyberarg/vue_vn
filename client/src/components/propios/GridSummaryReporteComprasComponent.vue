@@ -7,13 +7,13 @@
           fixed-header
           height="58vh"
           locale="es"
+          class="elevation-1 small cell-height"
           :headers="headers"
           :items="items"
           :items-per-page="-1"
           :hide-default-footer="true"
           :hide-default-header="true"
           item-key="pars.itemkey"
-          class="elevation-1"
           :loading="loading"
           loading-text="Cargando Datos... Aguarde"
           no-data-text="No hay datos disponibles."
@@ -46,27 +46,27 @@
 
                 <th class="text-center lineH2">Objetivo</th>
                 <th class="text-center lineH2">Compras</th>
-                <th class="text-center lineH2">% Cumplimiento</th>
+                <th class="text-center lineH2">% Cump.</th>
 
                 <th class="text-center lineH2">Objetivo</th>
                 <th class="text-center lineH2">Compras</th>
-                <th class="text-center lineH2">% Cumplimiento</th>
+                <th class="text-center lineH2">% Cump.</th>
 
                 <th class="text-center lineH2">Objetivo</th>
                 <th class="text-center lineH2">Compras</th>
-                <th class="text-center lineH2">% Cumplimiento</th>
+                <th class="text-center lineH2">% Cump.</th>
 
                 <th class="text-center lineH2">Objetivo</th>
                 <th class="text-center lineH2">Compras</th>
-                <th class="text-center lineH2">% Cumplimiento</th>
+                <th class="text-center lineH2">% Cump.</th>
 
                 <th class="text-center lineH2">Objetivo</th>
                 <th class="text-center lineH2">Compras</th>
-                <th class="text-center lineH2">% Cumplimiento</th>
+                <th class="text-center lineH2">% Cump.</th>
 
                 <th class="text-center lineH2">Objetivo</th>
                 <th class="text-center lineH2">Compras</th>
-                <th class="text-center lineH2L">% Cumplimiento</th>
+                <th class="text-center lineH2L">% Cump.</th>
               </tr>
             </thead>
           </template>
@@ -340,7 +340,7 @@ export default {
     },
 
     getPeriodoName(periodo) {
-      //console.log(periodo);
+      console.log(periodo);
       var month;
       var baseMonth;
       if (this.mesBase == 0) {
@@ -351,6 +351,11 @@ export default {
 
       if (baseMonth > 5) {
         month = baseMonth - periodo;
+      }else{
+        month = 12 - periodo + baseMonth;
+        if (month > 12){
+          month = month - 12;
+        }
       }
 
       return this.getMonthName(month);
@@ -429,12 +434,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-.table-header {
-  thead {
-    background-color: black;
-  }
-}
+<style scoped >
 
 .fixed {
   position: sticky;
@@ -447,20 +447,27 @@ export default {
   font-weight: bold;
   border-left: 1px solid #000000;
   border-right: 1px solid #000000;
+  font-size: 0.5rem;
+  width: 50px;
 }
 
 .lineH1L {
   font-weight: bold;
   border-left: 1px solid #000000;
+  font-size: 0.5rem;
+  width: 50px;
 }
 
 .lineH2 {
   border-left: 1px solid #000000;
   border-right: 1px solid #000000;
+  font-size: 0.5rem;
+  width: 50px;
 }
 
 .lineH2L {
   border-left: 1px solid #000000;
+  font-size: 0.5rem;
 }
 
 .lineL {
@@ -471,25 +478,42 @@ export default {
   border-right: 1px solid #000000;
 }
 
-.itemclass td {
-  font-size: 14px;
+.text-center {
+  font-size: 8px;
+}
+
+.v-data-table thead th {
+  font-size: 12px !important;
+  padding-right: 5px !important;
+  padding-left: 5px !important;
+}
+
+.v-data-table tbody td {
+  height: 5px !important;
+  font-size: 12px !important;
+  padding-right: 2px !important;
+  padding-left: 2px !important;
 }
 
 .rowclass {
   padding: 0;
+  font-size: 13px;
 }
 
 .rowclassSub {
   padding: 0;
   font-weight: bold;
+  font-size: 12px;
 }
 
 .rowclassGroup {
   font-weight: bold;
+  font-size: 12px;
 }
 
 .padded {
   padding-left: 10px;
   padding-right: 10px;
 }
+
 </style>
