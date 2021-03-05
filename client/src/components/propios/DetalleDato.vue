@@ -287,6 +287,103 @@
                   -->
                 </v-row>
                 <v-row>
+                  
+                  <v-col cols="6" md="6">
+                    <v-text-field
+                      dense
+                      label="Precio Máximo de Compra"
+                      placeholder="Precio Máximo de Compra"
+                      :readonly="disabled"
+                      class="resaltarDisabled"
+                      :filled="filled"
+                      v-model="valorPrecioMaxCompraFormat"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" md="6">
+                    <v-select
+                      dense
+                      class="fillable"
+                      :items="motivos"
+                      item-text="Nombre"
+                      item-value="Codigo"
+                      label="Motivo"
+                      :disabled="checkMotivo"
+                      :value="codMotivo"
+                      @input="setMotivo"
+                      :rules="ruleNoLeInteresa"
+                      :required="validarRuleNoLeInteresa"
+                    ></v-select>
+                  </v-col>
+                </v-row>
+                <!--
+                <v-row>
+                    <template v-if="userCanChangeVenta">
+                      <v-col cols="6" md="6">
+                          <v-text-field
+                            dense
+                            class="fillable"
+                            label="Fecha Compra"
+                            placeholder="Fecha Compra"
+                            :filled="filled"
+                            v-model="item.FechaCompra"
+                            @change="setVentaCaida()"
+                            :rules="ruleVendePlan"
+                            :required="validarRuleVendePlan"
+                          ></v-text-field>
+                      </v-col>
+                      <v-col cols="6" md="6">
+
+                      </v-col>
+                    </template>
+                    <template v-else>
+                      <v-col cols="6" md="6">
+                          <template v-if="ocultarDatePicker">
+                            <v-text-field
+                              dense
+                              class="fillable"
+                              label="Fecha Compra"
+                              placeholder="Fecha Compra"
+                              :disabled="true"
+                              :filled="filled"
+                              v-model="item.FechaCompra"
+                              :rules="ruleVendePlan"
+                              :required="validarRuleVendePlan"
+                            ></v-text-field>
+                          </template>
+                          <template v-else>
+                            <v-text-field
+                              type="date"
+                              dense
+                              class="fillable"
+                              :filled="filled"
+                              :min="getMin"
+                              :max="getToday"
+                              label="Fecha Compra"
+                              placeholder="Fecha Compra"
+                              v-model="item.FechaCompra"
+                              :disabled="checkEstado"
+                              :rules="ruleVendePlan"
+                              :required="validarRuleVendePlan"
+                            ></v-text-field>
+                          </template>
+                      </v-col>
+                      <v-col cols="6" md="6">
+                          <v-text-field
+                            dense
+                            type="number"
+                            class="fillable"
+                            label="Precio Compra"
+                            placeholder="Precio Compra"
+                            :filled="filled"
+                            v-model="item.PrecioCompra"
+                            :rules="ruleVendePlan"
+                            :required="validarRuleVendePlan"
+                          ></v-text-field>
+                      </v-col>
+                    </template>
+                </v-row>
+                -->
+                <v-row>  
                   <v-col cols="6" md="6">
                     <template v-if="userCanChangeVenta">
                       <v-text-field
@@ -308,7 +405,7 @@
                           class="fillable"
                           label="Fecha Compra"
                           placeholder="Fecha Compra"
-                          :disabled="true"
+                          disabled 
                           :filled="filled"
                           v-model="item.FechaCompra"
                           :rules="ruleVendePlan"
@@ -360,34 +457,6 @@
                       <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
                     </v-menu>
                     -->
-                  </v-col>
-                  <v-col cols="6" md="6">
-                    <v-select
-                      dense
-                      class="fillable"
-                      :items="motivos"
-                      item-text="Nombre"
-                      item-value="Codigo"
-                      label="Motivo"
-                      :disabled="checkMotivo"
-                      :value="codMotivo"
-                      @input="setMotivo"
-                      :rules="ruleNoLeInteresa"
-                      :required="validarRuleNoLeInteresa"
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      label="Precio Máximo de Compra"
-                      placeholder="Precio Máximo de Compra"
-                      :readonly="disabled"
-                      class="resaltarDisabled"
-                      :filled="filled"
-                      v-model="valorPrecioMaxCompraFormat"
-                    ></v-text-field>
                   </v-col>
                   <v-col cols="6" md="6">
                     <template v-if="userCanChangeVenta">
@@ -844,6 +913,8 @@ export default {
     },
 
     mostrarFechaCompraGrabada() {
+      console.log('FechaCompra');
+      console.log(this.item.FechaCompra);
       if (this.codEstado == 5 && this.item.FechaCompra != null) {
         this.ocultarDatePicker = true;
         this.disabledCboEstado = true;
@@ -853,7 +924,11 @@ export default {
       }
       if (this.user.HN_PuedeCambiarVendePlan == 1) {
         this.userCanChangeVenta = true;
+      }else{
+        this.userCanChangeVenta = false;
       }
+      console.log('PuedeCambiarVenta');
+      console.log(this.userCanChangeVenta);
     },
 
     mostrarFechaCaidaGrabada() {
@@ -866,6 +941,8 @@ export default {
       }
       if (this.user.HN_PuedeCambiarVendePlan == 1) {
         this.userCanChangeVenta = true;
+      }else{
+        this.userCanChangeVenta = false;
       }
     },
 

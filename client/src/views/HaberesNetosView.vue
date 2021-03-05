@@ -425,7 +425,7 @@ export default {
         { Codigo: 6, Nombre: "Car Group", Marca: 2, MostrarSwitch: false },
         { Codigo: 9, Nombre: "Sapac", Marca: 9, MostrarSwitch: true },
         { Codigo: 10, Nombre: "Alizze", Marca: 3, MostrarSwitch: true },
-        //{ Codigo: 99, Nombre: "RB - AutoNet - CarGroup - Volkswagen", Marca: 99, MostrarSwitch: false },
+        { Codigo: 99, Nombre: "RB - AutoNet - CarGroup - Volkswagen", Marca: 99, MostrarSwitch: false },
       ],
 
 

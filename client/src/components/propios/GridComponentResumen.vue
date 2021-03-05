@@ -228,6 +228,7 @@ export default {
           break;
         case 2:
         case 7:
+        case 11:
           return "USD " + this.$options.filters.numFormat(valor, "0,0");
           break;
         case 3:
@@ -238,6 +239,9 @@ export default {
           break;
         case 6:
         case 9:
+        case 10:
+        case 12:
+        case 13:
           return this.$options.filters.numFormat(valor, "0,0") + "%";
           break;
         case 8:

@@ -95,7 +95,7 @@ class AsignacionDatosController extends Controller
                 //Pedido Dani Fernandez 01/10/2020 SACAR los casos cuota 84
                 //Pedido Guido 12/11/2020 SACAR los casos Cuotas Pagas < 10
                 //if(!($this->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->HaberNeto > 29999 && $oDet->CodEstado <> 5){
-                if(!($this->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->CodEstado <> 5){
+                if((!($this->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->CodEstado <> 5) || ($oDet->Marca == 3 && $oDet->CodEstado <> 5)){
 
                     if ($oDet->Avance == 84 && $oDet->CodOficial == null){
                         continue;

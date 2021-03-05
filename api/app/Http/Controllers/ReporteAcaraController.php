@@ -124,6 +124,7 @@ class ReporteAcaraController extends Controller
         $s2Acum = 0;
         $primeDato = 0;
         $pasada = 1;
+        $s2Min = 0;
         foreach ($seriesAcara as $datoAcara) {
         
             if ($pasada == 1){

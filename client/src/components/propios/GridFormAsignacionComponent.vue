@@ -187,7 +187,7 @@
                           v-model="sliderAvance"
                           thumb-label="always"
                           max="83"
-                          min="45"
+                          :min="minByBrand"
                         ></v-slider>
                       </v-row>
                     </v-col>
@@ -261,6 +261,7 @@ export default {
       oficialFilterValue: "",
       stateFilterValue: null,
       sliderAvance: 45,
+      minByBrand:45,
       sliderHaberNeto: 15000,
       solodatonuevo:false,
       showSinOficial: false,
@@ -321,6 +322,15 @@ export default {
   },
 */
   computed: {
+
+    getMinByBrand(){
+      if (this.codMarcaSelected == 3){
+        return 1
+      }else{
+        return 45
+      }
+    },
+
     disableAsignar() {
       if (this.showOficiales) {
         if (this.codOficialSelected != null && this.selected.length > 0) {
@@ -597,6 +607,15 @@ export default {
       this.listC = this.listConcesionarios.filter(function (item) {
         return item.Marca === value.Codigo;
       });
+      
+      if (value.Codigo == 3){
+        this.sliderAvance = 1
+        this.minByBrand = 1
+      }else{
+        this.sliderAvance = 45
+        this.minByBrand = 45
+      }
+
     },
 
     getDatos() {

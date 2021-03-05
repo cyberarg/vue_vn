@@ -236,7 +236,8 @@ export default {
       console.log(this.pars);
 
       var params = {
-        Marca: this.codMarca,
+        //Marca: this.codMarca,
+        Marca: 99,
         Concesionario: this.codConcesionario,
         Anio: this.selectAnio
       };
