@@ -14,6 +14,7 @@
       :loading-text="loadingText"
       no-data-text="No hay datos disponibles."
       hide-default-footer
+      :items-per-page="-1"
       :header-props="{ sortIcon: null }"
       ref="myTable"
     >
@@ -166,6 +167,27 @@
         <div class="small">
         {{
         setValorAnios('TIR', item.Valores.TIR)
+        }}
+        </div>
+      </template>
+      <template v-slot:item.Valores.RentUSD_Spot="{ item }">
+        <div class="small">
+        {{
+        setValorAnios('RentUSD', item.Valores.RentUSD_Spot)
+        }}
+        </div>
+      </template>
+      <template v-slot:item.Valores.RentUSD_Spot_Porc="{ item }">
+        <div class="small">
+        {{
+        setValorAnios('RentUSD_Porc', item.Valores.RentUSD_Spot_Porc)
+        }}
+        </div>
+      </template>
+      <template v-slot:item.Valores.TIR_Spot="{ item }">
+        <div class="small">
+        {{
+        setValorAnios('TIR', item.Valores.TIR_Spot)
         }}
         </div>
       </template>

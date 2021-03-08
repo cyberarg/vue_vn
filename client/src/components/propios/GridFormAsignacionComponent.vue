@@ -635,8 +635,14 @@ export default {
       var av = parseInt(avance);
       var hn = parseInt(haberNeto);
       var pmax = 0;
+      let marca = 3;
 
       switch (true) {
+        case av < 45:
+          if (marca == 3){
+            pmax = hn * 0.2;
+          }  
+        break;
         case av >= 45 && av <= 61:
           pmax = hn * 0.2;
           break;
@@ -653,7 +659,7 @@ export default {
           pmax = hn * 0.5;
           break;
         default:
-          pmax = 0;
+            pmax = 0;
           break;
       }
 

@@ -201,7 +201,7 @@ export default {
     return {
       tab: null,
       headersReportResumen: ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre', 'Total'],
-      headersResumen: ['', 'HN Comprados $', 'Rent. $', 'Rent. $ (%)', 'Rent. USD', 'Remt. USD (%)', 'Duration', 'TIR'],
+      headersResumen: ['', 'HN Comprados $', 'Rent. $', 'Rent. $ (%)', 'Rent. USD', 'Remt. USD (%)', 'Duration', 'TIR', 'Rent. USD Spot', 'Remt. USD Spot (%)', 'TIR Spot'],
      datosDetalleGrid1_Compras: [],
       datosDetalleGrid2_Compras: [],
       datosDetalleGrid1_Cobros: [],
@@ -244,12 +244,20 @@ export default {
         { text: "Rent. $ (%)", value: "Valores.RentARS_Porc", align: "center" },
         { text: "Rent. USD", value: "Valores.RentUSD", align: "center" },
         {
-          text: "Remt. USD (%)",
+          text: "Rent. USD (%)",
           value: "Valores.RentUSD_Porc",
           align: "center",
         },
         { text: "Duration", value: "Valores.Duration", align: "center" },
         { text: "TIR", value: "Valores.TIR", align: "center" },
+
+        { text: "Rent. USD Spot", value: "Valores.RentUSD_Spot", align: "center" },
+        {
+          text: "Rent. USD Spot (%)",
+          value: "Valores.RentUSD_Spot_Porc",
+          align: "center",
+        },
+         { text: "TIR Spot", value: "Valores.TIR_Spot", align: "center" },
       ],
 
       header2cobro: [
@@ -257,9 +265,9 @@ export default {
         { text: "HN Cobrados $", value: "Valores.HN", align: "center" },
         { text: "Rent. $", value: "Valores.RentARS", align: "center" },
         { text: "Rent. $ (%)", value: "Valores.RentARS_Porc", align: "center" },
-        { text: "Remt. USD", value: "Valores.RentUSD", align: "center" },
+        { text: "Rent. USD", value: "Valores.RentUSD", align: "center" },
         {
-          text: "Remt. USD (%)",
+          text: "Rent. USD (%)",
           value: "Valores.RentUSD_Porc",
           align: "center",
         },
