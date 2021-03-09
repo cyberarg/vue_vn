@@ -96,7 +96,10 @@ class HNResumenCompradosController extends Controller
             $lstHN_RB = array();
             $lstHN_GF = array();
 
-            $lstHN_RB = DB::connection('RB')->select("SELECT *  FROM haberesnetosok WHERE Concesionario = ".$concesionario);
+            if ($soloCE_Giama_Todos != 2){
+                $lstHN_RB = DB::connection('RB')->select("SELECT *  FROM haberesnetosok WHERE Concesionario = ".$concesionario);
+            }
+            
 
             //$lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE ComproGiama = 1");
 
@@ -863,8 +866,14 @@ class HNResumenCompradosController extends Controller
 
             $lstCompradosRentUSDPorc_Spot_Anio['Total'] = round((($lstCobradosUSD_Spot_Anio['Total'] /  $lstCompradosUSD_Anio['Total']) - 1) * 100);
 
-            $lstPonderaciones_TIR_MesesAnio['Total'] = $lstCompradosRentUSDPorc_Anio['Total'] / $lstPonderacionesMesesAnio['Total'];
-            $lstPonderaciones_TIRSpot_MesesAnio['Total'] = $lstCompradosRentUSDPorc_Spot_Anio['Total'] / $lstPonderacionesMesesAnio['Total'];
+            if ($lstPonderacionesMesesAnio['Total'] > 0){
+                $lstPonderaciones_TIR_MesesAnio['Total'] = $lstCompradosRentUSDPorc_Anio['Total'] / $lstPonderacionesMesesAnio['Total'];
+                $lstPonderaciones_TIRSpot_MesesAnio['Total'] = $lstCompradosRentUSDPorc_Spot_Anio['Total'] / $lstPonderacionesMesesAnio['Total'];
+            }else{
+                $lstPonderaciones_TIR_MesesAnio['Total'] = 0;
+                $lstPonderaciones_TIRSpot_MesesAnio['Total'] = 0;
+            }
+            
 
         }else{
             $lstCompradosRentUSDPorc_Anio['Total'] = 0;
