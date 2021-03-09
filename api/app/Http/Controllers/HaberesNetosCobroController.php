@@ -37,9 +37,9 @@ class HaberesNetosCobroController extends Controller
         $db = $uC->getDabaseName($request->Marca, $request->Concesionario);
 
         if ($db == 'GF'){
-            $nuevo_cobro = DB::connection($db)->select("CALL hnweb_grabar_nuevo_cobro_hn(".$request->ID.", ".$request->ID_Dato.", ".$request->MontoCobrado.", '".$request->FechaCobrado."', '".$request->UsuarioAlta."');");   
+            $nuevo_cobro = DB::connection($db)->select("CALL hnweb_grabar_nuevo_cobro_hn(".$request->ID_HN.", ".$request->ID_Dato.", ".$request->MontoCobrado.", '".$request->FechaCobrado."', '".$request->UsuarioAlta."');");   
         }else{
-            $nuevo_cobro = DB::connection($db)->select("CALL hnweb_grabar_nuevo_cobro_hn(".$request->ID.", ".$request->MontoCobrado.", '".$request->FechaCobrado."', '".$request->UsuarioAlta."');");      
+            $nuevo_cobro = DB::connection($db)->select("CALL hnweb_grabar_nuevo_cobro_hn(".$request->ID_HN.", ".$request->MontoCobrado.", '".$request->FechaCobrado."', '".$request->UsuarioAlta."');");      
         }
 
         return $nuevo_cobro;

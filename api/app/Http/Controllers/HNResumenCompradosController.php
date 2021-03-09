@@ -602,6 +602,10 @@ class HNResumenCompradosController extends Controller
             $lstCompradosRentUSD_Spot_Anio['Total'] += $lstCompradosRentUSD_Spot_Anio['M'.$i];
             $lstCobradosUSD_Spot_Anio['Total'] += $lstCobradosUSD_Spot_Anio['M'.$i];
 
+            $lstCobradosUSD_Spot_Anio1['Total'] += $lstCobradosUSD_Spot_Anio1['M'.$i];
+            $lstCobradosUSD_Spot_Anio0['Total'] += $lstCobradosUSD_Spot_Anio0['M'.$i];
+
+
             $lstCobradosUSD_Anio['Total'] += $lstCobradosUSD_Anio['M'.$i];
             
 /*
@@ -643,8 +647,10 @@ class HNResumenCompradosController extends Controller
             }
             if ($lstCompradosUSD_Anio1['M'.$i] > 0){
                 $lstCompradosRentUSDPorc_Anio1['M'.$i] = round((($lstCobradosUSD_Anio1['M'.$i] /  $lstCompradosUSD_Anio1['M'.$i]) - 1) * 100);
+                $lstCompradosRentUSDPorc_Spot_Anio1['M'.$i] = round((($lstCobradosUSD_Spot_Anio1['M'.$i] /  $lstCompradosUSD_Anio1['M'.$i]) - 1) * 100);
             }else{
                 $lstCompradosRentUSDPorc_Anio1['M'.$i] = 0;
+                $lstCompradosRentUSDPorc_Spot_Anio1['M'.$i] = 0;
             }
 
             if ($lstCompradosARS_Anio0['M'.$i] > 0){
@@ -654,8 +660,10 @@ class HNResumenCompradosController extends Controller
             }
             if ($lstCompradosUSD_Anio0['M'.$i] > 0){
                 $lstCompradosRentUSDPorc_Anio0['M'.$i] = round((($lstCobradosUSD_Anio0['M'.$i] /  $lstCompradosUSD_Anio0['M'.$i]) - 1) * 100);
+                $lstCompradosRentUSDPorc_Spot_Anio0['M'.$i] = round((($lstCobradosUSD_Spot_Anio0['M'.$i] /  $lstCompradosUSD_Anio0['M'.$i]) - 1) * 100);
             }else{
                 $lstCompradosRentUSDPorc_Anio0['M'.$i] = 0;
+                $lstCompradosRentUSDPorc_Spot_Anio0['M'.$i] = 0;
             }
     
 

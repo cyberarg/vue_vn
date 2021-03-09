@@ -416,6 +416,14 @@ export default {
       "loadingGridCobrosHN"
       
     ]),
+
+     ...mapState("auth", [
+      "login",
+      "user",
+      "esConcesionario",
+      "esVinculo",
+      "codigoConcesionario",
+    ]),
     
     /*
     ...mapState("haberneto", [
@@ -594,19 +602,21 @@ export default {
 
     async saveNuevoCobro(){
         var pars = {
-        Index: this.editedItemNuevoCobro.Index,
-        Marca: this.editedItemNuevoCobro.Marca,
-        Concesionario: this.editedItemNuevoCobro.Concesionario,
-        ID_HN: this.editedItemNuevoCobro.ID,
-        ID_Dato: this.editedItemNuevoCobro.ID_Dato,
+        Index: this.editedItem.Index,
+        Marca: this.editedItem.Marca,
+        Concesionario: this.editedItem.Concesionario,
+        ID_HN: this.editedItem.ID,
+        ID_Dato: this.editedItem.ID_Dato,
         MontoCobrado: this.editedItemNuevoCobro.MontoCobrado,
         FechaCobrado: moment(this.editedItemNuevoCobro.FechaCobrado).format("YYYY-MM-DD"),
-        UsuarioAlta: ''
+        UsuarioAlta: this.login
       };
+
+      console.log(pars);
 
       await this.nuevoCobroHaberNeto(pars);
       if (this.dataStatusNuevoCobro == "success") {
-           this.getHistorialCobros(this.editedItemNuevoCobro.Marca, this.editedItemNuevoCobro.Concesionario, this.editedItemNuevoCobro.ID);
+           this.getHistorialCobros(this.editedItem.Marca, this.editedItem.Concesionario, this.editedItem.ID);
       }
       await this.showSwal();
       this.close();
@@ -626,6 +636,7 @@ export default {
     },
 
     async saveCobro() {
+      console.log(this.editedItem)
       var pars = {
         Index: this.editedItem.Index,
         Marca: this.editedItem.Marca,
@@ -646,11 +657,12 @@ export default {
     },
 
     refreshHNCobrados() {
+      var today = moment();
       var pars = {
         Marca: this.editedItem.Marca,
         Concesionario: this.editedItem.Concesionario,
         Empresa: 0,
-        Anio: 2020,
+        Anio: today.year(),
         Filtros: "",
       };
       this.getHNCobrados(pars);
@@ -682,7 +694,7 @@ export default {
 
    async accionesCobrados(item){
         this.editedIndex = this.datos_items.indexOf(item);
-   
+        console.log(item);
         var editIt = {
           Index: this.editedIndex,
           ID: item.Id,
@@ -693,9 +705,13 @@ export default {
           Fecha: null,
         };
 
+        console.log(editIt);
+        this.editedItem = editIt;
+        console.log(this.editedItem)
+
         await this.getHistorialCobros(item.Operacion.Marca, item.Operacion.Concesionario, item.Id);
         this.editedItem = editIt;
-        //console.log();
+        console.log(this.editedItem);
         this.dialogcobros = true;
         //console.log(item);
     },
