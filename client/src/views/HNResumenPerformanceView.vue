@@ -241,7 +241,8 @@ export default {
         Concesionario: this.codConcesionario,
         Anio: this.selectAnio
       };
-      this.setDefaultHeaders(this.codMarca);
+      //this.setDefaultHeaders(this.codMarca);
+      this.setDefaultHeaders(params.Marca);
       this.getHNResumenPerformance(params);
     },
 

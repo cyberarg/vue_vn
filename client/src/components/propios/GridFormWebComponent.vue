@@ -16,6 +16,7 @@
         ></v-combobox>
         -->
         <v-spacer></v-spacer>
+        <!--
         <template v-if="!esConcesionario">
           <v-row class="padded">
             <v-col cols="3">
@@ -41,6 +42,7 @@
                 @change="filterConcesionaria"
               ></v-combobox>
             </v-col>
+            -->
             <v-col cols="3">
               <v-text-field
                 v-show="mostrarbuscar"
@@ -229,7 +231,7 @@
                           v-model="sliderAvance"
                           thumb-label="always"
                           max="83"
-                          :min="minByBrand"
+                          min="45"
                         ></v-slider>
                       </v-row>
                     </v-col>
@@ -292,7 +294,6 @@ export default {
       oficialFilterValue: "",
       stateFilterValue: null,
       sliderAvance: 45,
-      minByBrand:45,
       sliderHaberNeto: 15000,
 
       statesList: [
@@ -358,14 +359,6 @@ export default {
       "esVinculo",
       "codigoConcesionario",
     ]),
-
-    getMinByBrand(){
-      if (this.codMarcaSelected == 3){
-        return 1
-      }else{
-        return 45
-      }
-    },
 
     headers_2() {
       return [
@@ -569,15 +562,6 @@ export default {
       this.listC = this.listConcesionarios.filter(function (item) {
         return item.Marca === value.Codigo;
       });
-
-      if (value.Codigo == 3){
-        this.sliderAvance = 1
-        this.minByBrand = 1
-      }else{
-        this.sliderAvance = 45
-        this.minByBrand = 45
-      }
-      
     },
 
     filterConcesionaria(value) {
@@ -586,9 +570,6 @@ export default {
       } else {
         //this.filterData(value.Codigo);
       }
-
-      
-
     },
 
     checkEsConcesionario() {
@@ -726,11 +707,10 @@ export default {
     },
 
     ...mapActions({
-      mostrarDato: "gestiondatos/mostrarDato",
-      getData: "gestiondatos/getData",
-      setData: "gestiondatos/setData",
-      setLoader: "gestiondatos/setLoader",
-      filterData: "gestiondatos/filterData",
+      mostrarDato: "gestiondatosweb/mostrarDato",
+      getData: "gestiondatosweb/getData",
+      setData: "gestiondatosweb/setData",
+      filterData: "gestiondatosweb/filterData",
     }),
   },
 

@@ -140,8 +140,8 @@ class GestionDatosController extends Controller
 
                     $oDet->PrecioMaximoCompra = $util->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
                     
-                    //Cambio minimo HN a Mostrar $30000 WA Dani 3/12/20
-                    if ($oDet->Avance < 84 && $oDet->Avance > 44){
+                    //Cambio minimo HN a Mostrar $30000 WA Dani 3/12/20 para Peugeot dejo pasar avances menores a 45 WA Dani 12/3/21
+                    if ($oDet->Avance < 84 && ($oDet->Marca == 3 || $oDet->Avance > 44)){
 
                         //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
                         if ($oDet->Marca == 2 || $oDet->Marca == 3 || ($oDet->Marca != 2 && $totPagas > 9 && $oDet->HaberNeto > 29999)){

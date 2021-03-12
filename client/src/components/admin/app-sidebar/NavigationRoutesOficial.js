@@ -29,7 +29,11 @@ export const navigationRoutesOficial = {
         {
           name: "estadogestion",
           displayName: "Estado de la Gestión"
-        }
+        }, 
+        {
+          name: "datosweb",
+          displayName: "Datos Web"
+        },
       ]
     },
     {

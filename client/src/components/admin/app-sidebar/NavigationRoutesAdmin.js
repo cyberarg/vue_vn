@@ -53,7 +53,11 @@ export const navigationRoutesAdmin = {
         {
           name: "asignaciondatos",
           displayName: "Asignación de Datos"
-        }
+        }, 
+        {
+          name: "datosweb",
+          displayName: "Datos Web"
+        },
       ]
     },
     {

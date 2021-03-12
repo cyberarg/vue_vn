@@ -453,6 +453,8 @@ export default {
         { Codigo: 4, Concesionario: 4, ComproGiama: 0, Nombre: "AutoCervo" },
         { Codigo: 5, Concesionario: 5, ComproGiama: 0, Nombre: "AutoNet" },
         { Codigo: 6, Concesionario: 6, ComproGiama: 0, Nombre: "Car Group" },
+        { Codigo: 7, Concesionario: 7, ComproGiama: 0, Nombre: "LuxCar" },
+        { Codigo: 8, Concesionario: 10, ComproGiama: 0, Nombre: "Alizze" },
       ],
     };
   },
@@ -702,6 +704,13 @@ export default {
         case "7":
           arrTitulares = [
             { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 7, Concesionario: 7, ComproGiama: 1, Nombre: "LuxCar" },
+          ];
+          break;
+        case "10":
+          arrTitulares = [
+            { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 8, Concesionario: 10, ComproGiama: 1, Nombre: "Alizze" },
           ];
           break;
       }

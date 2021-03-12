@@ -44,6 +44,10 @@ Route::post('/getdatos', 'GestionDatosController@getDatos');
 Route::post('/showdato', 'GestionDatosController@showDato');
 Route::post('/updatedato', 'GestionDatosController@updateDato');
 
+Route::post('/getdatosweb', 'GestionDatosWebController@getDatos');
+Route::post('/showdatoweb', 'GestionDatosWebController@showDato');
+Route::post('/updatedatoweb', 'GestionDatosWebController@updateDato');
+
 Route::resource('asignaciondatos', 'AsignacionDatosController');
 Route::post('/getdatosasignacion', 'AsignacionDatosController@getDatosAsignar');
 
