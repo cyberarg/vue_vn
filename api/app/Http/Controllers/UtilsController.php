@@ -195,7 +195,7 @@ class UtilsController extends Controller
     public function getPrecioMaximoCompra($avance, $haberNeto){
         switch($avance){
 
-            case  (12 <= $avance) && ($avance <= 44):
+            case  ($avance <= 44):
                 return $haberNeto * 0.2;
             break;
             case  (45 <= $avance) && ($avance <= 61):
