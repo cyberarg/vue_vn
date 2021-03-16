@@ -6,6 +6,7 @@ import * as auth from "./modules/auth.js";
 import * as oficiales from "./modules/oficiales.js";
 import * as estadogestion from "./modules/estadogestion.js";
 import * as gestiondatos from "./modules/gestiondatos.js";
+import * as gestiondatosweb from "./modules/gestiondatosweb.js";
 import * as asignaciondatos from "./modules/asignaciondatos.js";
 import * as importardatos from "./modules/importardatos.js";
 import * as importarhn from "./modules/importarhn.js";
@@ -42,6 +43,7 @@ const store = new Vuex.Store({
     oficiales,
     estadogestion,
     gestiondatos,
+    gestiondatosweb,
     asignaciondatos,
     importardatos,
     importarhn,

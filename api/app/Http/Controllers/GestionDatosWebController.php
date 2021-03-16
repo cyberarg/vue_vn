@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\UtilsController;
 use DateTime;
 
-class GestionDatosController extends Controller
+class GestionDatosWebController extends Controller
 {
 
     public function __construct(){
@@ -23,7 +23,7 @@ class GestionDatosController extends Controller
 
     public function getDatos(Request $request)
     {
-        return DatoWeb::on($db)->whereNull('PasarDato')->get();
+        return DatoWeb::whereNull('PasarDato')->get();
     }
 
 
@@ -101,23 +101,70 @@ class GestionDatosController extends Controller
         $textObsAutom = "";
         $util = new UtilsController;
 
-        $dato->Nombres = $request->Nombres;
-        $dato->Apellido = $request->Apellido; 
+        $dato->FullName = $request->FullName;
 
         if ($dato->NroDoc != $request->NroDoc){
             $dato->NroDoc =  $request->NroDoc; 
         }
         
-        if ($dato->Telefono1 != $request->Telefono1){
-            $dato->Telefono1 =  $request->Telefono1; 
+        if ($dato->Telefono != $request->Telefono){
+            $dato->Telefono =  $request->Telefono; 
         }
    
-        if ($dato->Email1 != $request->Email1){
-            $dato->Email1 =  $request->Email1; 
+        if ($dato->Email != $request->Email){
+            $dato->Email =  $request->Email; 
+        }
+
+        if ($dato->Telefono2 != $request->Telefono2){
+            $dato->Telefono2 =  $request->Telefono2; 
+        }
+   
+        if ($dato->Email2 != $request->Email2){
+            $dato->Email2 =  $request->Email2; 
         }
 
         if ($dato->Domicilio != $request->Domicilio){
             $dato->Domicilio = $request->Domicilio; 
+        }
+
+        if ($dato->PasarDato != $request->PasarDato){
+            $dato->PasarDato = $request->PasarDato; 
+        }
+
+        if ($dato->Marca != $request->Marca){
+            $dato->Marca = $request->Marca; 
+        }
+
+        if ($dato->Grupo != $request->Grupo){
+            $dato->Grupo = $request->Grupo; 
+        }
+
+        if ($dato->Orden != $request->Orden){
+            $dato->Orden = $request->Orden; 
+        }
+
+        if ($dato->HaberNeto != $request->HaberNeto){
+            $dato->HaberNeto = $request->HaberNeto; 
+        }
+
+        if ($dato->CPG != $request->CPG){
+            $dato->CPG = $request->CPG; 
+        }
+
+        if ($dato->CAD != $request->CAD){
+            $dato->CAD = $request->CAD; 
+        }
+
+        if ($dato->Plan != $request->Plan){
+            $dato->Plan = $request->Plan; 
+        }
+
+        if ($dato->Avance != $request->Avance){
+            $dato->Avance = $request->Avance; 
+        }
+
+        if ($dato->FechaVtoCuota2 != $request->FechaVtoCuota2){
+            $dato->FechaVtoCuota2 = $request->FechaVtoCuota2; 
         }
 
         $dato->EsDatoNuevo =  0;
@@ -126,13 +173,14 @@ class GestionDatosController extends Controller
              $hoy = new DateTime('NOW');
              $ffHoy =  $hoy->format('Y-m-d H:i:s');
 
-            if ($dato->CodEstado == 5 && $request->CodEstado == 9){    
-                $dato->FechaVentaCaida = $ffHoy;
-            }
-
             if ($dato->CodEstado != $request->CodEstado){
                 $dato->CodEstado = $request->CodEstado;
+
+                if ($dato->CodEstado == 5){ //Pasar A Asignación
+                    //Generar Registro en SubiteDatos
+                }
             }
+
         
         }
         

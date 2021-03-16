@@ -6,6 +6,7 @@ import OficialesView from "@/views/OficialesView.vue";
 import EstadoGestionView from "@/views/EstadoGestionView.vue";
 import GestionDatosView from "@/views/GestionDatosView.vue";
 import DatosWebView from "@/views/GestionDatosWebView.vue";
+import DetalleDatoWeb from "@/components/propios/DetalleDatoWeb.vue";
 import AsignacionDatosView from "@/views/AsignacionDatosView.vue";
 import ImportarDatosView from "@/views/ImportarDatosView.vue";
 import ImportarHNView from "@/views/ImportarHNView.vue";
@@ -152,6 +153,14 @@ export default new Router({
           path: "datosweb",
           name: "datosweb",
           component: DatosWebView
+        },
+
+        {
+          name: "detalledatoweb",
+          path: "detalledatoweb",
+          props: true,
+          component: DetalleDatoWeb,
+          meta: { requiresAuth: true }
         },
 
         {

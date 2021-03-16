@@ -1,15 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Motivo;
-use App\MotivoCaida;
-use App\Estado;
-use App\EstadoWeb;
+use App\ObservacionWeb;
 use Illuminate\Http\Request;
 use DB;
+use App\User;
+use App\DatoWeb;
+use Session;
 
-class ComboboxController extends Controller
+class ObservacionWebController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,16 +16,10 @@ class ComboboxController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     /*
-    public function __invoke(Request $request){
-        return response()->json(DB::select("CALL net_subitegetoficiales ('C')"));
-    }
-    */
-
     public function index(Request $request)
     {
-       // return Oficial::all();
-        //return Supervisor::all();
+        return ObservacionWeb::all(); 
+       
     }
 
     /**
@@ -48,7 +41,17 @@ class ComboboxController extends Controller
     public function store(Request $request)
     {
 
-        //
+        $newObs = new ObservacionWeb();
+        $newObs->setConnection('GF');
+        $newObs->ID_DatoWeb = $request->id;
+        $newObs->Obs =$request->Obs;
+        $newObs->login = $request->login;
+        $newObs->Fecha = now();
+
+        $newObs->save();
+
+        return $newObs;
+       
     }
 
     /**
@@ -59,24 +62,16 @@ class ComboboxController extends Controller
      */
     public function show($id)
     {
-        switch($id){
-            case 'motivos':
-                return Motivo::all();
-            break;
-            case 'motivos_caida':
-                return MotivoCaida::all();
-            break;
-            case 'estados':
-                return Estado::all();
-            break;
-            case 'estadosweb':
-                return EstadoWeb::all();
-            break;
-            default:
-            return "";
-        break;
-        }
-  
+        return ObservacionWeb::where('ID_DatoWeb',$id)->get();
+
+    }
+
+    public function getObservacion(Request $request)
+    {
+        $observaciones = ObservacionWeb::where('ID_DatoWeb',$request->id)->get(); // static method
+
+        return $observaciones;
+
     }
 
     /**
@@ -99,8 +94,16 @@ class ComboboxController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        /*
+        $oficial = Oficial::findOrFail($id);
+        $oficial->Nombre = $request->Nombre;
+        $oficial->login = $request->login;
+        $oficial->Supervisor = $request->NomSup['Codigo'];
 
+        $oficial->save();
+
+        return $oficial;
+        */
     }
 
     /**
@@ -111,6 +114,6 @@ class ComboboxController extends Controller
      */
     public function destroy($id)
     {
-       // 
+      //
     }
 }

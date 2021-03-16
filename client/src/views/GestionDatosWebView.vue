@@ -16,8 +16,15 @@
                   sorteable: true,
                 },
                 {
-                  text: 'Grupo Orden',
-                  value: 'Grupo',
+                  text: 'Marca',
+                  value: 'MarcaPlan',
+                  align: 'center',
+                  sorteable: true,
+                  filterable: true,
+                },
+                {
+                  text: 'Grupo/Orden',
+                  value: 'GrupoOrden',
                   align: 'center',
                   sorteable: true,
                   filterable: true,
@@ -25,18 +32,26 @@
 
                 {
                   text: 'Apellido y Nombre',
-                  value: 'ApeNom',
+                  value: 'FullName',
                   align: 'left',
                   sorteable: true,
                   filterable: true,
                 },
-                /*
+                
                 {
-                  text: 'Cuotas PG',
-                  value: 'CPG',
+                  text: 'Cuotas Lead',
+                  value: 'CantidadCuotas',
                   align: 'center',
                   width: '1%'
                 },
+
+                {
+                  text: 'Estado Lead',
+                  value: 'EstadoPlan',
+                  align: 'center',
+                  width: '1%'
+                },
+                /*
                 {
                   text: 'Cutas AD',
                   value: 'CAD',
@@ -86,7 +101,7 @@ export default {
   },
 
   computed: {
-    ...mapState("gestiondatos", ["items"]),
+    ...mapState("gestiondatosweb", ["items"]),
   },
 
   created() {
@@ -102,7 +117,7 @@ export default {
       this.volverARuta = undefined;
     },
     ...mapActions({
-      getData: "gestiondatos/getData",
+      getData: "gestiondatosweb/getData",
     }),
   },
 };

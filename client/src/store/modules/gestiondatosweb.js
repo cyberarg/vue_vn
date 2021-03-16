@@ -151,6 +151,7 @@ export const mutations = {
   },
 
   ESTADOS_SUCCESS(state, respuesta) {
+    console.log(respuesta);
     state.estados = respuesta;
   }
 };
@@ -172,7 +173,7 @@ export const actions = {
     console.log(req);
     commit("SAVING_DATA");
     return axios
-      .post("/updatedato", req)
+      .post("/updatedatoweb", req)
       .then(response => {
         commit("SAVE_SUCCESS", response.data);
       })
@@ -195,7 +196,7 @@ export const actions = {
     commit("FILTERED_SUCCESS", filtrado);
   },
 
-  getData({ commit }, pars) {
+  getData({ commit }) {
     commit("GET_DATA_STATUS");
     var user = JSON.parse(localStorage.getItem("user"));
     var oficial = 29; // 29 Es el codigo de oficial Gral para la base GF
@@ -204,11 +205,13 @@ export const actions = {
       oficial = user.CodigoOficialHN;
     }
     //console.log(user);
+    let pars = {};
     pars.oficial = oficial;
+
     //console.log(oficial);
     console.log(pars);
     return axios
-      .post("/getdatos", pars)
+      .post("/getdatosweb", pars)
       .then(response => {
         commit("DATOS_SUCCESS", response.data);
       })
@@ -239,7 +242,7 @@ export const actions = {
       dispatch("loadCombosMotivoEstado");
     } else {
       return axios
-        .post("/showdato", params)
+        .post("/showdatoweb", params)
         .then(response => {
           //console.log(response.data);
           commit("SET_DATO", response.data[0]);
@@ -255,7 +258,7 @@ export const actions = {
 
   getObservaciones({ commit }, id) {
     return axios
-      .get("/observaciones/" + id)
+      .get("/getobservacionesweb/" + id)
       .then(response => {
         //console.log(response.data);
         commit("OBS_SUCCESS", response.data);
@@ -269,7 +272,7 @@ export const actions = {
   getObservacionesDato({ commit }, params) {
     console.log(params);
     return axios
-      .post("/getobservaciones", params)
+      .post("/getobservacionesweb", params)
       .then(response => {
         console.log(response.data);
         commit("OBS_SUCCESS", response.data);
@@ -283,7 +286,7 @@ export const actions = {
   newObs({ commit }, params) {
     console.log(params);
     return axios
-      .post("/observaciones", params)
+      .post("/observacionesweb", params)
       .then(response => {
         commit("ADD_OBS", response.data);
       })
@@ -293,10 +296,22 @@ export const actions = {
       });
   },
 
-  async loadCombosMotivoEstado({ commit }) {
+  loadCombosMotivoEstado({ commit }) {
+
+    return axios
+      .get("/combobox/estadosweb")
+      .then(response => {
+        commit("ESTADOS_SUCCESS", response.data);
+      })
+      .catch(err => {
+        commit("DATOS_ERROR");
+      });
+
+  //async loadCombosMotivoEstado({ commit }) {
+    /*
     await axios
       .all([axios.get(`/combobox/estados`), 
-      axios.get(`/combobox/motivos`),
+      axios.get(`/combobow/motivos`),
       axios.get(`/combobox/motivos_caida`)])
       .then(
         axios.spread((estados, motivos, motivos_caida) => {
@@ -305,9 +320,11 @@ export const actions = {
           commit("MOTIVOS_CAIDA_SUCCESS", motivos_caida.data);
         })
       )
+      
       .catch(err => {
         //console.log("get datos error");
         commit("DATOS_ERROR");
       });
+    */
   }
 };
