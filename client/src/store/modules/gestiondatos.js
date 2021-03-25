@@ -18,7 +18,9 @@ export const state = {
   loadingObs: true,
   showMsg: false,
   askData: false,
-  showItemsFiltered: false
+  showItemsFiltered: false,
+  codMarcaSelState: {},
+  codConcesSelState: {}
 };
 
 export const mutations = {
@@ -29,6 +31,8 @@ export const mutations = {
     state.items = [];
     state.items_filtered = [];
     state.observaciones = [];
+    state.codMarcaSelState = {};
+    state.codConcesSelState = {};
   },
 
   GET_FILTERED_DATA_STATUS(state) {
@@ -152,6 +156,12 @@ export const mutations = {
 
   ESTADOS_SUCCESS(state, respuesta) {
     state.estados = respuesta;
+  }, 
+
+  SET_COMBOS_MARCA_CONCES(state, valor){
+    console.log(valor);
+    state.codMarcaSelState = valor.Marca;
+    state.codConcesSelState = valor.Concesionario;
   }
 };
 
@@ -168,6 +178,11 @@ export const getters = {
 };
 
 export const actions = {
+
+  setMarcaConcesionario({commit}, params){
+    commit("SET_COMBOS_MARCA_CONCES", params);
+  },
+
   saveDato({ commit }, req) {
     console.log(req);
     commit("SAVING_DATA");

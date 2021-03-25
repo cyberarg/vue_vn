@@ -199,7 +199,8 @@ export default {
 
   created() {
     this.setDefaultDataSource(this.solo_CE);
-    this.headers = this.null_headers;
+   // this.headers = this.null_headers;
+   this.headers = this.headers_1;
   },
 
   methods: {

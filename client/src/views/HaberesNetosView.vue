@@ -940,6 +940,16 @@ export default {
       this.getResumenCompras(pars);
       this.getResumenCobros(pars);
       this.getHNProyectados(pars);
+
+      var params = {
+        //Marca: this.codMarca,
+        Marca: 99,
+        Concesionario: 0,
+        Anio: moment().format('YYYY'),
+      };
+
+      this.getHNResumenPerformance(params);
+
       /*
       this.getHNStock(pars);
 

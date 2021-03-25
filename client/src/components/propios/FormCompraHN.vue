@@ -323,6 +323,7 @@ export default {
         { Codigo: 8, Nombre: "RB", Marca: 2 },
         { Codigo: 9, Nombre: "Sapac", Marca: 9 },
         { Codigo: 10, Nombre: "Alizze", Marca: 3 },
+        { Codigo: 12, Nombre: "Peugeot Web", Marca: 3 },
       ],
       listTitularesCompra: [
         { Codigo: 0, Nombre: "Concesionario" },

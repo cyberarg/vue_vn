@@ -58,7 +58,7 @@ class ReporteAcaraController extends Controller
             $seriesOficial = DB::connection($db)->select("CALL hnweb_reporte_indice_dolar_v2('Oficial');");
 
             $fechaInicial = new DateTime('2015-01-01');
-            $fechaFinal = new DateTime('2021-02-01');
+            $fechaFinal = new DateTime('2021-03-01');
         }
 
         $intervalo = new DateInterval('P1M');
@@ -76,6 +76,7 @@ class ReporteAcaraController extends Controller
         $s1Nombre = '';
         $s1Data = array();
         $s1Acum = 0;
+        $s1Max = 0;
         $primeDato = 0;
         $pasadaF = 1;
         $s1Min = 0;
@@ -122,6 +123,7 @@ class ReporteAcaraController extends Controller
         $s2Nombre = '';
         $s2Data = array();
         $s2Acum = 0;
+        $s2Max = 0;
         $primeDato = 0;
         $pasada = 1;
         $s2Min = 0;
@@ -140,6 +142,11 @@ class ReporteAcaraController extends Controller
                 if ($s2Acum < $s2Min){
                     $s2Min = $s2Acum;
                 }
+
+                if ($s2Acum > $s2Max){
+                    $s2Max = $s2Acum;
+                }
+
             }
            $s2Nombre = $datoAcara->Nombre;
            $pasada++;
@@ -152,6 +159,7 @@ class ReporteAcaraController extends Controller
         $s3Nombre = '';
         $s3Data = array();
         $s3Acum = 0;
+        $s3Max = 0;
         $pasada = 0;
         $primeDato = 0;
 
@@ -170,6 +178,10 @@ class ReporteAcaraController extends Controller
                 if ($s3Acum < $s3Min){
                     $s3Min = $s3Acum;
                 }
+
+                if ($s3Acum > $s3Max){
+                    $s3Max = $s3Acum;
+                }
             }
            // }
 
@@ -184,6 +196,7 @@ class ReporteAcaraController extends Controller
         $s4Nombre = '';
         $s4Data = array();
         $s4Acum = 0;
+        $s4Max = 0;
         $pasada = 0;
         $primeDato = 0;
 
@@ -202,6 +215,11 @@ class ReporteAcaraController extends Controller
                 if ($s4Acum < $s4Min){
                     $s4Min = $s4Acum;
                 }
+
+                if ($s4Acum > $s4Max){
+                    $s4Max = $s4Acum;
+                }
+
             }
           //  }
 
@@ -215,7 +233,10 @@ class ReporteAcaraController extends Controller
         $serie4->data = $s4Data;
 
         $mimValue = min($s1Min, $s2Min, $s3Min, $s4Min);
-        $maxValue = max($s1Acum, $s2Acum, $s3Acum, $s4Acum);
+        //$maxValue = max($s1Acum, $s2Acum, $s3Acum, $s4Acum);
+        $maxValue = max($s1Max, $s2Max, $s3Max, $s4Max);
+
+       //$maxValue = max($s1Data, $s2Data, $s3Data, $s4Data);
 
         $series[] = $serie1;
         $series[] = $serie2;

@@ -258,7 +258,7 @@
                           item-text="Nombre"
                           item-value="Codigo"
                           label="Estado"
-                          :disabled="disabledCboEstado"
+                          :disabled="checkDisabledEstado"
                           :value="codEstado"
                           @input="setEstado"
                           @change="changeEstado"
@@ -272,7 +272,7 @@
                           item-text="Nombre"
                           item-value="Codigo"
                           label="Estado"
-                          :disabled="disabledCboEstado"
+                          :disabled="checkDisabledEstado"
                           :value="codEstado"
                           @input="setEstado"
                           @change="changeEstado"
@@ -913,6 +913,7 @@ export default {
     },
 
     mostrarFechaCompraGrabada() {
+      /*
       console.log('FechaCompra');
       console.log(this.item.FechaCompra);
       if (this.codEstado == 5 && this.item.FechaCompra != null) {
@@ -927,8 +928,12 @@ export default {
       }else{
         this.userCanChangeVenta = false;
       }
-      console.log('PuedeCambiarVenta');
+      console.log('PuedeCambiarVenta:');
       console.log(this.userCanChangeVenta);
+
+      console.log('Cbo Estado Disabled:');
+      console.log(this.disabledCboEstado);
+      */
     },
 
     mostrarFechaCaidaGrabada() {
@@ -951,7 +956,11 @@ export default {
       switch(value){
         case 5: // VendePlan
           this.ocultarDatePicker = false;
-           this.esCaida = false;
+          this.esCaida = false;
+          if (this.item.FechaCompra != null){ //Si tenia Fecha de Compra la pongo en blanco
+            this.item.FechaCompra = null;
+          }
+          
         break;
         case 9: //Venta Caida
           this.esCaida = true;
@@ -1017,6 +1026,44 @@ export default {
       if (this.item.CodEstado != 4) {
         return true;
       }
+    },
+
+    checkOcultarDatePicker(){
+      if (this.codEstado != 5){
+        this.ocultarDatePicker = false;
+      }
+    },
+
+    checkDisabledEstado() {
+      let disabled = false;
+      if (this.codEstado == 5 && this.item.FechaCompra != null) {
+        this.ocultarDatePicker = true;
+        this.disabledCboEstado = true;
+        if (this.user.HN_PuedeCambiarVendePlan == 1) {
+          disabled = false;
+        }else{
+          disabled = true;
+        }
+        
+      } else {
+        this.ocultarDatePicker = false;
+        this.disabledCboEstado = false;
+        disabled = false;
+      }
+
+     
+      if (this.user.HN_PuedeCambiarVendePlan == 1) {
+        this.userCanChangeVenta = true;
+      }else{
+        this.userCanChangeVenta = false;
+      }
+      console.log('PuedeCambiarVenta:');
+      console.log(this.userCanChangeVenta);
+
+      console.log('Cbo Estado Disabled:');
+      console.log(this.disabledCboEstado);
+
+      return disabled;
     },
 
     checkMotivoCaida() {

@@ -25,7 +25,7 @@
                 item-value="Codigo"
                 :items="listMarcas"
                 label="Marca"
-                :value="codMarcaSelected"
+                v-model="codMarcaSelected"
                 @change="filterListConcesionaria"
                 class="padded"
               ></v-combobox>
@@ -340,6 +340,7 @@ export default {
   },
   mounted() {
     this.checkEsConcesionario();
+    this.checkCombosSelected();
   },
 
   computed: {
@@ -349,6 +350,8 @@ export default {
       "showItemsFiltered",
       "loadingDatos",
       "askData",
+      "codMarcaSelState",
+      "codConcesSelState"
     ]),
 
     ...mapState("auth", [
@@ -496,6 +499,7 @@ export default {
         return false;
       }
     },
+
     mostrarbuscar() {
       if (typeof this.pars.mostrarbuscar !== "undefined") {
         return this.pars.mostrarbuscar;
@@ -504,22 +508,6 @@ export default {
       }
     },
 
-    /*
-    myitems() {
-      if (typeof this.pars.items !== "undefined") {
-        this.setData(this.pars.items);
-        return this.pars.items;
-      } else {
-        //this.setData(this.items);
-        //this.setLoader();
-        if (!this.askData) {
-          this.getData("gestiondatos");
-        }
-
-        return this.items;
-      }
-    },
-*/
     exportable() {
       if (typeof this.pars.exportable !== "undefined") {
         return this.pars.exportable;
@@ -530,6 +518,17 @@ export default {
   },
 
   methods: {
+
+    setMarca(value){
+      console.log(value);
+      this.codMarcaSelected = value.Codigo;
+    },
+
+    setConcesionario(value){
+      console.log(value);
+      this.codConcesSelected = value.Codigo;
+    },
+
     getTooltipData() {
       return "Cambió el Reconocimiento";
       this.showToolTip = true;
@@ -571,24 +570,40 @@ export default {
       });
 
       if (value.Codigo == 3){
-        this.sliderAvance = 1
-        this.minByBrand = 1
+        this.sliderAvance = 1;
+        this.minByBrand = 1;
       }else{
-        this.sliderAvance = 45
-        this.minByBrand = 45
+        this.sliderAvance = 45;
+        this.minByBrand = 45;
       }
       
+    },
+
+    setMinByBrand(marca){
+      if (marca== 3){
+        this.sliderAvance = 1;
+        this.minByBrand = 1;
+      }else{
+        this.sliderAvance = 45;
+        this.minByBrand = 45;
+      }
     },
 
     filterConcesionaria(value) {
       console.log(value);
       if (value.Codigo == 0) {
-      } else {
+      } //else {
         //this.filterData(value.Codigo);
+      //}
+
+    },
+
+    checkCombosSelected(){
+      if (typeof this.codMarcaSelState.Codigo !== "undefined"){
+          this.codMarcaSelected = this.codMarcaSelState;
+          this.codConcesSelected = this.codConcesSelState;
+          this.setMinByBrand(this.codMarcaSelState.Codigo);
       }
-
-      
-
     },
 
     checkEsConcesionario() {
@@ -613,10 +628,18 @@ export default {
     },
 
     getDatos() {
+   
       var pars = {
         Marca: this.codConcesSelected.Marca,
         Concesionario: this.codConcesSelected.Codigo,
       };
+
+      var params = {
+        Marca: this.codMarcaSelected,
+        Concesionario: this.codConcesSelected
+      };
+      
+      this.setMarcaConcesionario(params);
       this.getData(pars);
     },
 
@@ -731,25 +754,10 @@ export default {
       setData: "gestiondatos/setData",
       setLoader: "gestiondatos/setLoader",
       filterData: "gestiondatos/filterData",
+      setMarcaConcesionario: "gestiondatos/setMarcaConcesionario",
     }),
   },
 
-  /*
-
-Para cambiar el valor de alguna celda:
-let data = XLSX.utils.json_to_sheet(
- this.dataToExport,
- {
-   header: [‘transaction_date’, ‘business_name’, ‘credit’, ‘rate’]
- }
-)
-data[‘A1’].v = ‘Fecha’
-data[‘B1’].v = ‘Empresa solicitante’
-data[‘C1’].v = ‘Depósitos’
-data[‘D1’].v = ‘Tasa’
-const workbook = XLSX.utils.book_new()
-
-*/
 };
 </script>
 <style scoped>
