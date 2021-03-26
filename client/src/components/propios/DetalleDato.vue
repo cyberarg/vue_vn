@@ -315,74 +315,7 @@
                     ></v-select>
                   </v-col>
                 </v-row>
-                <!--
-                <v-row>
-                    <template v-if="userCanChangeVenta">
-                      <v-col cols="6" md="6">
-                          <v-text-field
-                            dense
-                            class="fillable"
-                            label="Fecha Compra"
-                            placeholder="Fecha Compra"
-                            :filled="filled"
-                            v-model="item.FechaCompra"
-                            @change="setVentaCaida()"
-                            :rules="ruleVendePlan"
-                            :required="validarRuleVendePlan"
-                          ></v-text-field>
-                      </v-col>
-                      <v-col cols="6" md="6">
 
-                      </v-col>
-                    </template>
-                    <template v-else>
-                      <v-col cols="6" md="6">
-                          <template v-if="ocultarDatePicker">
-                            <v-text-field
-                              dense
-                              class="fillable"
-                              label="Fecha Compra"
-                              placeholder="Fecha Compra"
-                              :disabled="true"
-                              :filled="filled"
-                              v-model="item.FechaCompra"
-                              :rules="ruleVendePlan"
-                              :required="validarRuleVendePlan"
-                            ></v-text-field>
-                          </template>
-                          <template v-else>
-                            <v-text-field
-                              type="date"
-                              dense
-                              class="fillable"
-                              :filled="filled"
-                              :min="getMin"
-                              :max="getToday"
-                              label="Fecha Compra"
-                              placeholder="Fecha Compra"
-                              v-model="item.FechaCompra"
-                              :disabled="checkEstado"
-                              :rules="ruleVendePlan"
-                              :required="validarRuleVendePlan"
-                            ></v-text-field>
-                          </template>
-                      </v-col>
-                      <v-col cols="6" md="6">
-                          <v-text-field
-                            dense
-                            type="number"
-                            class="fillable"
-                            label="Precio Compra"
-                            placeholder="Precio Compra"
-                            :filled="filled"
-                            v-model="item.PrecioCompra"
-                            :rules="ruleVendePlan"
-                            :required="validarRuleVendePlan"
-                          ></v-text-field>
-                      </v-col>
-                    </template>
-                </v-row>
-                -->
                 <v-row>  
                   <v-col cols="6" md="6">
                     <template v-if="userCanChangeVenta">
@@ -429,35 +362,9 @@
                         ></v-text-field>
                       </template>
                     </template>
-                    <!--
-                    <v-text-field
-                      dense
-                      class="fillable"
-                      label="Fecha Compra"
-                      placeholder="Fecha Compra"
-                      :disabled="checkEstado"
-                      :filled="filled"
-                      v-model="item.FechaCompra"
-                      :rules="ruleVendePlan"
-                      :required="validarRuleVendePlan"
-                    ></v-text-field>-->
 
-                    <!--
-                    <v-menu
-                      v-model="menu2"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-text-field v-model="date" label="Fecha Compra" readonly v-on="on"></v-text-field>
-                      </template>
-                      <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
-                    </v-menu>
-                    -->
                   </v-col>
+
                   <v-col cols="6" md="6">
                     <template v-if="userCanChangeVenta">
                       <v-text-field
@@ -653,6 +560,7 @@ export default {
   data() {
     return {
       date: new Date().toISOString().substr(0, 10),
+      codEstadoOriginal: null,
       menu2: false,
       validForm: true,
       esCaida: false,
@@ -715,6 +623,8 @@ export default {
     this.checkRulesEstado(this.item.CodEstado);
     this.mostrarFechaCompraGrabada();
     this.mostrarFechaCaidaGrabada();
+    this.codEstadoOriginal = this.item.CodEstado;
+    console.log(this.codEstadoOriginal);
     //this.setEstado();
   },
 
@@ -725,6 +635,7 @@ export default {
   },
 
   mounted() {
+   
     this.checkEsConcesionario();
     this.checkEsVinculo();
   },
@@ -957,9 +868,14 @@ export default {
         case 5: // VendePlan
           this.ocultarDatePicker = false;
           this.esCaida = false;
-          if (this.item.FechaCompra != null){ //Si tenia Fecha de Compra la pongo en blanco
-            this.item.FechaCompra = null;
+          if (this.codEstadoOriginal != 5){
+            if (this.item.FechaCompra != null){ //Si tenia Fecha de Compra la pongo en blanco
+              this.item.FechaCompra = null;
+            }
+          }else{
+            this.ocultarDatePicker = true;
           }
+          
           
         break;
         case 9: //Venta Caida
@@ -968,12 +884,16 @@ export default {
           this.disableFechaCompra = false;
         break;
         default:
+          console.log('Entro por el default');
           this.esCaida = false;
           this.ocultarDatePicker = true;
           this.disableFechaCompra = true;
         break;
 
       }
+
+      console.log('Ocultar DatePicker');
+      console.log(this.ocultarDatePicker);
       /*
       if (value == 5) {
         this.ocultarDatePicker = false;
@@ -1022,6 +942,12 @@ export default {
       }
     },
 
+    checkEstadoFechaPrecio() {
+      if (this.item.CodEstado != 5) {
+        return true;
+      }
+    },
+
     checkMotivo() {
       if (this.item.CodEstado != 4) {
         return true;
@@ -1036,7 +962,14 @@ export default {
 
     checkDisabledEstado() {
       let disabled = false;
-      if (this.codEstado == 5 && this.item.FechaCompra != null) {
+      console.log('EstadoOriginal:');
+      console.log(this.codEstadoOriginal);
+      console.log('FechaCompra:');
+      console.log(this.item.FechaCompra);
+      console.log('PrecioCompra:');
+      console.log(this.item.PrecioCompra);
+      if (this.codEstadoOriginal == 5 && this.item.FechaCompra != null && this.item.PrecioCompra > 0) {
+        
         this.ocultarDatePicker = true;
         this.disabledCboEstado = true;
         if (this.user.HN_PuedeCambiarVendePlan == 1) {
