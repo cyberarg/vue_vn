@@ -122,6 +122,9 @@ class GestionDatosController extends Controller
                     }else{
                         $oDet->AvanceAutomatico = $oDet->Avance;
                         
+                        if ($oDet->AvanceCalculado !== NULL){
+                            $oDet->Avance = $oDet->AvanceCalculado;
+                        }
                     }
 
                     $oEstado->Codigo = $oDet->CodEstado;

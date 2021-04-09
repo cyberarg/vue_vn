@@ -59,6 +59,7 @@
                   width: '1%',
                   filterable: false,
                 },
+                /*
                 {
                   text: 'Avance Calculado',
                   value: 'AvanceCalculado',
@@ -66,6 +67,7 @@
                   width: '1%',
                   filterable: false,
                 },
+                */
                 {
                   text: 'Oficial',
                   value: 'NomOficial',

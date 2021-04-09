@@ -70,12 +70,14 @@
                   align: 'center',
                   filterable: false,
                 },
+                /*
                 {
                   text: 'Avance Calculado',
                   value: 'AvanceCalculado',
                   align: 'center',
                   filterable: false,
                 },
+                */
                 {
                   text: 'Estado',
                   value: 'NomEstado',

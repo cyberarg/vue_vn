@@ -454,6 +454,7 @@ export default {
           filter: this.avanceFilter,
           filterable: true,
         },
+        /*
         {
           text: "Avance Calculado",
           value: "AvanceCalculado",
@@ -461,6 +462,7 @@ export default {
           width: "1%",
           filterable: false,
         },
+        */
         {
           text: "Oficial",
           value: "NomOficial",
