@@ -122,7 +122,6 @@
           outlined
           text
           @click="exportExcel"
-          v-show="showBotones"
         >
           <v-icon left>mdi-file-excel-outline</v-icon>Excel
         </v-btn>
@@ -237,7 +236,7 @@ export default {
     exportExcel: function () {
       let data = XLSX.utils.json_to_sheet(this.items);
       const workbook = XLSX.utils.book_new();
-      const filename = "archivoexcel";
+      const filename = "datos_web";
       XLSX.utils.book_append_sheet(workbook, data, filename);
       XLSX.writeFile(workbook, `${filename}.xlsx`);
     },

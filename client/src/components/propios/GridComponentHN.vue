@@ -759,11 +759,11 @@ export default {
 
     showDuration(marca, valor) {
       var duration = valor;
-
+/*
       if (marca == 2) {
         duration = valor / 365;
       }
-
+*/
       if (duration > 0) {
         return this.$options.filters.numFormat(duration, "0.0");
       } else {
@@ -1003,7 +1003,7 @@ export default {
     getDuration() {
       return "";
     },
-
+/*
     getTIR(mCompra, mCobro, fComp, fVtoCuota) {
       var duration = this.getDurationCompra(fComp, fVtoCuota);
       var utilidad = this.getUtilidad(mCompra, mCobro, fComp);
@@ -1031,9 +1031,11 @@ export default {
       //console.log(endDate);
       //console.log(startDate);
       // console.log(valor);
-      var duration = valor / 365;
+      //var duration = valor / 365;
+      
       return duration.toFixed(1);
     },
+    */
   },
 };
 </script>

@@ -114,7 +114,8 @@ export default {
     },
 
     concesSelecteds:{
-      type: Object,
+     // type: Object,
+      type: Array,
       required: true,
     }
   },

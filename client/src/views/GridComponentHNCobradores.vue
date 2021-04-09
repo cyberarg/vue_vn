@@ -87,9 +87,12 @@
                   grid: 'HNVigentes',
                   cotizaciones: cotizacionesLocal,
                 }"
-                :datos="datosHN_Vigentes"
+                :datos_items="datosHN_Vigentes"
                 :headers="headersVigentes"
                 :loadingDatos="loadingHNV"
+                :showButtons="showButons"
+                :filtro_Titular="this.selectFiltro"
+                
               ></GridComponentHN>
             </v-card>
             <v-spacer></v-spacer>
@@ -192,6 +195,7 @@ export default {
   },
   data() {
     return {
+      codConcesionariosSelecteds: {},
       datosHN_Vigentes: [],
       datosHN_Cobrados: [],
       retriveData: false,
@@ -208,6 +212,7 @@ export default {
       selectedConsolidado: false,
       showchkConsolidado: false,
       cotizaciones: [],
+      selectFiltro: { Codigo: 0, Nombre: "Todos" },
       tabitemsCE: [
         { Codigo: 1, Nombre: "HN Vigentes" },
         /*
@@ -697,25 +702,33 @@ export default {
     getDatosHN() {
       //this.checkEsConcesionario();
       this.retriveData = true;
+      let arrCG = [];
+      arrCG.push({ Codigo: 6, Nombre: "Car Group", Marca: 2, MostrarSwitch: false });
+      this.codConcesionariosSelecteds = arrCG;
       var pars = {
-        Marca: this.codConcesSelected.Marca,
-        Concesionario: this.codConcesSelected.Codigo,
+        Marca: 0,
+        Concesionario: 0,
+        Seleccionados: this.codConcesionariosSelecteds,
         Empresa: 8,
-        Anio: 2020,
+        Anio: moment().format('YYYY'),
         Filtros: "",
         ConsolidadoRB: this.selectedConsolidado,
       };
-
-      this.codMarcaSel = pars.Marca;
-      this.codConcesSel = pars.Concesionario;
+      console.log(pars);
+      this.codMarcaSel = 0;
+      this.codConcesSel = 0;
+      //this.codMarcaSel = pars.Marca;
+      //this.codConcesSel = pars.Concesionario;
 
       //console.log(pars);
       this.getHNVigentes(pars);
+      /*
       this.getHNCobrados(pars);
       this.getHNEERR(pars);
       this.getHNProyectados(pars);
       this.getResumenCompras(pars);
       this.getResumenCobros(pars);
+      */
     },
 
     exportExcel(items) {
@@ -746,7 +759,7 @@ export default {
         });
         this.codConcesSelected = itemC;
         this.codMarcaSelected = itemC.Marca;
-        this.showButons = false;
+        this.showButons = true;
         //this.showSwitch = true;
         this.showSwitch = false;
       } else {

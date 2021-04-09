@@ -599,8 +599,8 @@ class HNResumenCompradosController extends Controller
 
 
 
-            $lstCompradosRentUSD_Anio['Total'] += $lstCompradosRentUSD_Anio['M'.$i];
-            $lstCompradosRentUSD_Anio['Total'] += $lstCompradosRentUSD_Anio['M'.$i];
+            //$lstCompradosRentUSD_Anio['Total'] += $lstCompradosRentUSD_Anio['M'.$i];
+            //$lstCompradosRentUSD_Anio['Total'] += $lstCompradosRentUSD_Anio['M'.$i];
 
             $lstCompradosRentUSD_Spot_Anio['Total'] += $lstCompradosRentUSD_Spot_Anio['M'.$i];
             $lstCobradosUSD_Spot_Anio['Total'] += $lstCobradosUSD_Spot_Anio['M'.$i];
@@ -789,7 +789,7 @@ class HNResumenCompradosController extends Controller
         }
   
         for ($i=1; $i < 13; $i++) { 
-            
+            /*
             if ($marca == 2){
                 $lstPonderacionesMesesAnio['M'.$i] = round($lstPonderacionesMesesAnio['M'.$i] / 365, 1);
                 $lstPonderacionesActualMesesAnio['M'.$i] = round($lstPonderacionesActualMesesAnio['M'.$i] / 365, 1);
@@ -797,6 +797,10 @@ class HNResumenCompradosController extends Controller
                 $lstPonderacionesMesesAnio['M'.$i] = round($lstPonderacionesMesesAnio['M'.$i], 1);
                 $lstPonderacionesActualMesesAnio['M'.$i] = round($lstPonderacionesActualMesesAnio['M'.$i], 1);
             }
+            */
+
+            $lstPonderacionesMesesAnio['M'.$i] = round($lstPonderacionesMesesAnio['M'.$i], 1);
+            $lstPonderacionesActualMesesAnio['M'.$i] = round($lstPonderacionesActualMesesAnio['M'.$i], 1);
 
             if ($lstPonderacionesMesesAnio['M'.$i] > 0){
                 /*
@@ -840,6 +844,7 @@ class HNResumenCompradosController extends Controller
         
         for ($i=0; $i < 3; $i++) { 
 
+            /*
             if ($marca == 2){
                 $lstPonderaciones['A'.$i] = round($lstPonderaciones['A'.$i] / 365, 1);
                 $lstPonderacionesCompra['A'.$i] = round($lstPonderacionesCompra['A'.$i] / 365, 1);
@@ -849,8 +854,10 @@ class HNResumenCompradosController extends Controller
                 $lstPonderacionesCompra['A'.$i] = round($lstPonderacionesCompra['A'.$i], 1);
                 $lstPonderacionesActual['A'.$i] = round($lstPonderacionesActual['A'.$i], 1);
             }
-
-
+            */
+            $lstPonderaciones['A'.$i] = round($lstPonderaciones['A'.$i], 1);
+            $lstPonderacionesCompra['A'.$i] = round($lstPonderacionesCompra['A'.$i], 1);
+            $lstPonderacionesActual['A'.$i] = round($lstPonderacionesActual['A'.$i], 1);
             
         }
      

@@ -303,6 +303,7 @@ export default {
         { text: "Entrevista Pendiente", value: "Entrevista Pendiente" },
         { text: "No le interesa", value: "No le interesa" },
         { text: "Vende Plan", value: "Vende el Plan" },
+        { text: "Venta Caida", value: "Venta Caida" },	
         { text: "En Gestión", value: "En Gestion" },
       ],
 

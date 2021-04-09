@@ -9,9 +9,14 @@
           <template v-if="!esConcesionario" >
             <v-row align="end">
               <v-spacer></v-spacer>
-              <v-col cols="10" sm="10" lg="10">
-                <FilterConcesionarioMultipleChips @clickedFilters="getDatosHN_Filter" :listaCE="this.listConcesionariosNew" />
-              </v-col>
+              <template v-if="showListCE">
+                <v-col cols="10" sm="10" lg="10">
+                  <FilterConcesionarioMultipleChips @clickedFilters="getDatosHN_Filter" :listaCE="this.listConcesionariosNew" />
+                </v-col>
+              </template>
+              <template v-else>
+                Concesionario: RB - AutoNet - CarGroup - Volkswagen
+              </template>
             </v-row>
             <!--
             <v-combobox
@@ -309,6 +314,8 @@ export default {
   data() {
     return {
 
+      showListCE: true,
+
       headersReportHNV: ['Conces.', 'Titular', 'Grupo', 'Orden', 'Fecha Compra',
        'Monto Compra', 'Monto Compra USD', 'HN Subite', 'HN Subite USD', 'Util.', 
        'Duration', 'Dur. Compra', 'TIR', 'TIR Spot', 'Fecha Cuota 84'],
@@ -339,7 +346,8 @@ export default {
       codMarcaSel: null,
       codConcesSel: null,
       nomConcesSel: '',
-      codConcesionariosSelecteds: null,
+      //codConcesionariosSelecteds: null,
+      codConcesionariosSelecteds: {},
       selectedConsolidado: false,
       showchkConsolidado: false,
       cotizaciones: [],
@@ -414,6 +422,10 @@ export default {
         { Codigo: 99, Nombre: "RB - AutoNet - CarGroup - Volkswagen", Marca: 99, MostrarSwitch: false },
       ],
 
+      listConcesionariosAux: [
+        { Codigo: 99, Nombre: "RB - AutoNet - CarGroup - Volkswagen", Marca: 99, MostrarSwitch: false },
+      ],
+
       listConcesionariosNew: [
         { Codigo: 1, Nombre: "Sauma", Marca: 5, MostrarSwitch: true },
         { Codigo: 2, Nombre: "Iruña", Marca: 5, MostrarSwitch: true },
@@ -425,7 +437,7 @@ export default {
         { Codigo: 6, Nombre: "Car Group", Marca: 2, MostrarSwitch: false },
         { Codigo: 9, Nombre: "Sapac", Marca: 9, MostrarSwitch: true },
         { Codigo: 10, Nombre: "Alizze", Marca: 3, MostrarSwitch: true },
-        { Codigo: 99, Nombre: "RB - AutoNet - CarGroup - Volkswagen", Marca: 99, MostrarSwitch: false },
+        //{ Codigo: 99, Nombre: "RB - AutoNet - CarGroup - Volkswagen", Marca: 99, MostrarSwitch: false },
       ],
 
 
@@ -682,6 +694,32 @@ export default {
   },
 
   watch: {
+
+
+
+    tab(newValue){
+      console.log('Cambio de Tab:');
+      console.log(newValue);
+
+      if (newValue == 4){
+        this.showListCE = false;
+        if (!this.loading_resumen){
+          
+          var params = {
+            //Marca: this.codMarca,
+            Marca: 99,
+            Concesionario: 0,
+            Anio: moment().format('YYYY'),
+          };
+
+          this.getHNResumenPerformance(params);
+        }
+      }else{
+        this.showListCE = true;
+      }
+    },
+
+
     switch_CE(newValue) {
       //this.setDefaultDataSource(newValue);
     },
@@ -745,6 +783,10 @@ export default {
         "dataStatus",
         "concesionarios"
         
+    ]),
+
+     ...mapState("resumenperformance", [
+        "loading_resumen",       
     ]),
 
     ...mapState("haberneto", [
