@@ -6,6 +6,7 @@ use App\SubiteDatos;
 use App\DatosCBU;
 use App\Oficial;
 use App\ObservacionGestionCompra;
+use App\HistoricoCompra;
 use Illuminate\Http\Request;
 use DB;
 use ArrayObject;
@@ -209,9 +210,12 @@ class GestionComprasController extends Controller
 
         $dato = SubiteDatos::on($db)->findOrFail($request->ID);
 
+        $esFirmaCliente = false;
+
         switch ($request->TipoFecha){
             case 1:
                 $dato->FechaFirmaCliente = $request->FechaAGuardar;
+                $esFirmaCliente = true;
             break;
             case 2:
                 $dato->FechaFirmaNvoTitular = $request->FechaAGuardar;
@@ -229,6 +233,21 @@ class GestionComprasController extends Controller
                 $dato->FechaEnvioMail = $request->FechaAGuardar;
             break;
 
+        }
+
+        if ($esFirmaCliente){
+
+            $hist_id = HistoricoCompra::where('ID_Dato', $dato->ID)->where('Concesionario', $dato->Concesionario)->orderBy('ID', 'desc')->take(1)->get();
+        
+            if ($hist_id){
+                
+                $id = $hist_id[0]->ID;
+                $hist = HistoricoCompra::where('ID', '=', $id)->firstOrFail();
+
+                $hist->FechaFirmaCliente = $dato->FechaFirmaCliente;
+
+                $hist->save();
+            }
         }
 
         $dato->save();

@@ -6,6 +6,7 @@ use App\SubiteDatos;
 use App\User;
 use App\Oficial;
 use App\Observacion;
+use App\HistoricoCompra;
 use Illuminate\Http\Request;
 use DB;
 use App\Http\Controllers\UtilsController;
@@ -163,74 +164,7 @@ class GestionDatosController extends Controller
 
     public function index(Request $request)
     {
-        /*
-        $db3= "CG";
-        //$result = DB::select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
-        $marca = 5;
-        $concesionario = 'NULL';
 
-        $oficial = $request->oficial;
-        $supervisor = 60;
-  
-
-        $resultvw = DB::select("CALL hnweb_subitegetdatos_vw(NULL, ".$supervisor.", 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
-
-        $resultcg = DB::connection($db3)->select("CALL hnweb_subitegetdatos(NULL, 323, 0, 222);");
-        //$resultcg = array();
-
-        $result = array_merge($resultvw, $resultcg);
-       // $result = DB::connection($db3)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
-        $list = array();
-  
-        foreach ($result as $r) {
-
-            $oDet = json_decode(json_encode($r), FALSE);
-            $oEstado = new \stdClass();
-
-            $agregar = false;
-            if(!($this->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido))){
-                $agregar = true;
-            }
-            if ($agregar){
-                $oDet->ApeNom = $oDet->Apellido;
-                if ($oDet->Nombres != ""){
-                    $oDet->ApeNom = $oDet->ApeNom.", ".$oDet->Nombres;
-                }
-                
-
-                $fcav = null;
-                $fvc2 = strtotime($oDet->FechaVtoCuota2);
-
-                if ($oDet->FechaVtoCuota2 === NULL){
-                    if ($oDet->Marca == 5){
-                        $oDet->AvanceAutomatico = $oDet->Avance;
-                    }else{
-                        $oDet->AvanceAutomatico = 0;
-                    }
-    
-                }else{
-                    $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fvc2);
-                    $oDet->Avance = $oDet->AvanceAutomatico;
-                }
-
-                $oEstado->Codigo = $oDet->CodEstado;
-                $oEstado->Nombre = $oDet->NomEstado;
-
-                $oDet->Estado = $oEstado;
-
-                $util = new UtilsController;
-                $oDet->FechaCompra = $util->reversarFecha($oDet->FechaCompra, 'FE');
-
-                $oDet->PrecioMaximoCompra = $util->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
-
-                array_push($list, $oDet);
-            }
-           
-
-        } //end foreach
-
-        return $list;
-        */
     }
 
 
@@ -458,6 +392,9 @@ class GestionDatosController extends Controller
     public function updateDato(Request $request)
     {
 
+        $esVendePlan = false;
+        $esVentaCaida = false;
+
         switch($request->Marca){
             case 2:
                 switch($request->Concesionario){ 
@@ -544,6 +481,8 @@ class GestionDatosController extends Controller
 
             if ($dato->CodEstado == 5 && $request->CodEstado == 9){    
                 $dato->FechaVentaCaida = $ffHoy;
+
+                $esVentaCaida = true;
             }
 
             if ($dato->CodEstado != $request->CodEstado){
@@ -569,6 +508,8 @@ class GestionDatosController extends Controller
                     //La FechaVenta se pone solo una única vez
                     if ($dato->FechaVenta == null){
                         $dato->FechaVenta = $ffHoy;
+
+                        $esVendePlan = true;
 
                         $porcentajeComision = 0;
                         switch($request->Concesionario){
@@ -627,6 +568,41 @@ class GestionDatosController extends Controller
             $reqObs->Automatica = 1;
             
             $obs->store($reqObs);
+        }
+
+        //Evaluo si fue una compra o una caida para actualizar el historico de compras
+        //de donde sale el Reporte de Caidas
+        if ($esVendePlan){
+            $hist = new HistoricoCompra;
+            
+            $hist->ID_Dato = $dato->ID;
+            $hist->Concesionario = $dato->Concesionario;
+            $hist->Grupo = $dato->Grupo;
+            $hist->Orden = $dato->Orden;
+            $hist->CodOficial = $dato->CodOficial;
+            $hist->Avance = $dato->Avance;
+            $hist->HaberNeto = $dato->HaberNeto;
+            $hist->CodEstado = $dato->CodEstado;
+            $hist->FechaCompra = $dato->FechaCompra;
+            $hist->PrecioCompra = $dato->PrecioCompra;
+
+            $hist->save();
+        }
+
+        if ($esVentaCaida){
+
+            $hist_id = HistoricoCompra::where('ID_Dato', $dato->ID)->where('Concesionario', $dato->Concesionario)->orderBy('ID', 'desc')->take(1)->get();
+        
+            if ($hist_id){
+                
+                $id = $hist_id[0]->ID;
+                $hist = HistoricoCompra::where('ID', '=', $id)->firstOrFail();
+
+                $hist->MotivoCaida = $dato->MotivoCaida;
+                $hist->FechaCaida = $dato->FechaVentaCaida;
+
+                $hist->save();
+            }
         }
 
         return $dato;
