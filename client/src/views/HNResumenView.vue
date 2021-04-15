@@ -219,6 +219,7 @@ export default {
       ],
       selectFiltro: { Codigo: 0, Nombre: "Todos" },
       nameFilterTitHN: 'Todos',
+      tipoFiltro:{},
 
       header1: [
         { text: "", value: "Tipo", align: "left" },
@@ -336,6 +337,7 @@ export default {
 
     filtro_Titular(newValue){
       console.log(newValue);
+      this.tipoFiltro = newValue;
       this.setDefaultFiltered(newValue);
     },
 
@@ -346,9 +348,13 @@ export default {
         } else {
           this.datosDetalleGrid1_Compras = this.detalle_grid1_compras;
         }
+        console.log('Llanado al filtrado desde el loading detalle 1');
+        this.setDefaultFiltered(this.tipoFiltro);
+
       } else {
         this.datosDetalleGrid1_Compras = [];
       }
+
     },
 
     loadingdetalle_grid2_compras(newValue) {
@@ -489,7 +495,11 @@ export default {
         this.datosDetalleGrid1 = this.detalle_grid1;
         this.datosDetalleGrid2 = this.detalle_grid2;
         this.datosDetalleGrid3 = this.detalle_grid3;
-
+      }
+      console.log(this.tipoFiltro);
+      if (this.tipoFiltro != {}){
+        console.log('Llama al filtrado con la opcion seleccionada');
+        this.setDefaultFiltered(this.tipoFiltro);
       }
     },
 

@@ -131,6 +131,7 @@ export default {
       headersReportAnios: ['', '2021', '2022', '2023', '2024', '2025', '2026', 'Total'],
       selectAnio: 2021,
       selectFiltro: { Codigo: 0, Nombre: "Todos" },
+      tipoFiltro: {},
       arrayHeaders:[],
       datosDetalleMeses: [],
       datosDetalleRentMeses: [],
@@ -246,6 +247,7 @@ export default {
     },
 
     filtro_Titular(newValue){
+      this.tipoFiltro = newValue;
       this.setDefaultFiltered(newValue);
     },
 
@@ -264,6 +266,7 @@ export default {
         } else {
           this.datosDetalleMeses = this.detalle_proyec_mes;
         }
+        this.setDefaultFiltered(this.tipoFiltro);
       } else {
         this.datosDetalleMeses = [];  
       }

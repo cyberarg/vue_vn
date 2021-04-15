@@ -54,7 +54,7 @@ export const getters = {
 
 export const actions = {
   getReporte({ commit }, pars) {
-    //console.log(pars.periodo);
+    console.log(pars);
     commit("GET_DATA_STATUS");
     return axios
       .post("/reportecaidas", pars)

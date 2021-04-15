@@ -593,11 +593,14 @@ class HNResumenCobradosController extends Controller
         }
   
         for ($i=1; $i < 13; $i++) { 
+            /*
             if ($marca == 2){
                 $lstPonderacionesMesesAnio['M'.$i] = round($lstPonderacionesMesesAnio['M'.$i] / 365, 1);
             }else{
                 $lstPonderacionesMesesAnio['M'.$i] = round($lstPonderacionesMesesAnio['M'.$i], 1);
             }
+            */
+            $lstPonderacionesMesesAnio['M'.$i] = round($lstPonderacionesMesesAnio['M'.$i], 1);
             
         }
 
@@ -628,6 +631,7 @@ class HNResumenCobradosController extends Controller
 
      
         for ($i=0; $i < 3; $i++) { 
+            /*
             if ($marca == 2){
                 $lstPonderaciones['A'.$i] = round($lstPonderaciones['A'.$i] / 365, 1);
                 $lstPonderacionesCobro['A'.$i] = round($lstPonderacionesCobro['A'.$i] / 365, 1);
@@ -635,6 +639,10 @@ class HNResumenCobradosController extends Controller
                 $lstPonderaciones['A'.$i] = round($lstPonderaciones['A'.$i], 1);
                 $lstPonderacionesCobro['A'.$i] = round($lstPonderacionesCobro['A'.$i], 1);
             }
+            */
+
+            $lstPonderaciones['A'.$i] = round($lstPonderaciones['A'.$i], 1);
+            $lstPonderacionesCobro['A'.$i] = round($lstPonderacionesCobro['A'.$i], 1);
             
         }
       

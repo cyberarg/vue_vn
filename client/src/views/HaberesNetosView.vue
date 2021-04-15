@@ -334,6 +334,7 @@ export default {
       listCE:[],
       datosHN_Vigentes: [],
       datosHN_Cobrados: [],
+      tipoFiltro: {},
       retriveData: false,
       dialogCompra: false,
       loadingCompra: false,
@@ -726,6 +727,7 @@ export default {
 
     selectFiltro(newValue) {
       console.log(newValue);
+      this.tipoFiltro = newValue;
       this.setDefaultFiltered(newValue);
     },
 

@@ -23,6 +23,7 @@ class ReporteCaidasController extends Controller
         $selectedsCE = $request->SelectedsCE;
         $selectedsOf = $request->SelectedsOf;
 
+        $strOficiales = '';
         $strCE = '';
         $strOf = '';
         $strOf_CG = '';
@@ -72,6 +73,7 @@ class ReporteCaidasController extends Controller
                 $pasada ++;
             }
         }else{
+            $strOficiales = 'NULL';
             $strOf = 'NULL';
             $strOf_CG = 'NULL';
             $strOf_AN = 'NULL';
@@ -79,21 +81,19 @@ class ReporteCaidasController extends Controller
 
         }
 
-        
         //return 'GF: '.$strOf.' CG: '.$strOf_CG.' AN: '.$strOf_AN.' AC:'.$strOf_AC;
-    
-    
-        /*
-        $periodoMes = substr($periodo, 4, strlen($periodo));
-        $periodoAnio = substr($periodo, 0, 4);
-        */
-       
+        $strOficiales = $strOf.','.$strOf_CG.','.$strOf_AN.','.$strOf_AC;
+
+       //return $strOficiales;
+
         $periodoMes = date("m");
         $periodoAnio = date("Y");
 
         //$queryStrReport = "CALL hnweb_reporte_ventas_caidas_RB_New(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', '".$strOf_CG."', '".$strOf_AN."', '".$strOf_AC."');"; 
-        $queryStrReport = "CALL hnweb_reporte_ventas_caidas_RB_New(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."');"; 
-        $queryStrReport_Valores = "CALL hnweb_reporte_ventas_caidas_RB_Valores(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', '".$strOf_CG."', '".$strOf_AN."', '".$strOf_AC."');"; 
+        $queryStrReport = "CALL hnweb_reporte_ventas_caidas_RB(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOficiales."');"; 
+        //return $queryStrReport;
+        //$queryStrReport_Valores = "CALL hnweb_reporte_ventas_caidas_RB_Valores(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOf."', '".$strOf_CG."', '".$strOf_AN."', '".$strOf_AC."');"; 
+        $queryStrReport_Valores = "CALL hnweb_reporte_ventas_caidas_RB_Valores_New(".$periodoMes.", ".$periodoAnio.", '".$strCE."', '".$strOficiales."');";  
         //return $queryStrReport;
         $db = "GF";
         
