@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HaberNeto;
+use App\HistoricoCompra;
 use Illuminate\Http\Request;
 use DB;
 use App\Http\Controllers\UtilsController;
@@ -1039,9 +1040,20 @@ class HaberesNetosController extends Controller
                 $hn_calc = DB::connection($db)->select("CALL hnweb_set_variables_hn(".$request->Marca.", ".$request->Concesionario.", ".$empGyO.", ".$request->ID_Dato.", ".$montoCompraConComision.", ".$request->HaberNetoSubite.");");
             }else{
                 $hn_calc = DB::connection($db)->select("CALL hnweb_set_variables_hn(".$request->Marca.", ".$request->Concesionario.", ".$request->ID_Dato.", ".$montoCompraConComision.", ".$request->HaberNetoSubite.");");
-           
             }
             
+            $hist_id = HistoricoCompra::where('ID_Dato', $request->ID_Dato)->where('Concesionario', $request->Concesionario)->orderBy('ID', 'desc')->take(1)->get();
+        
+            if ($hist_id){
+                
+                $id = $hist_id[0]->ID;
+                
+                $hist = HistoricoCompra::where('ID', '=', $id)->firstOrFail();
+                $hist->Vendido = 1;
+
+                $hist->save();
+            }
+
             $hn = $hn_calc;
         }
        
