@@ -122,6 +122,7 @@ Route::post('/reportecaidas', 'ReporteCaidasController@getReporte');
 Route::post('/reportecomisiones', 'ReporteComisionesController@getReporte');
 Route::post('/reportefacturacion', 'ReporteFacturacionController@getReporte');
 Route::post('/reportecomisionesanual', 'ReporteComisionesController@getReporteAnual');
+Route::post('/reportecomisionesdetalle', 'ReporteComisionesController@getReporteDetalle');
 
 Route::post('/tablerocontrol', 'TableroControlController@getDatos');
 
@@ -133,6 +134,7 @@ Route::post('/saveobsgestion', 'GestionComprasController@saveObservacionGestion'
 Route::post('/pasarhnvigente', 'GestionComprasController@generarHNVigente');
 
 Route::post('/reportecomprasresumen', 'ReporteComprasResumenController@getReporte');
+
 
 Route::post('/reportecomprasceresumen', 'ReporteComprasCEResumenController@getReporte');
 

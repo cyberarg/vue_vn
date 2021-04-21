@@ -11,6 +11,9 @@
         <template v-else-if="perfilUsuario == 5">
           <DashboardAdmin></DashboardAdmin>
         </template>
+        <template v-else-if="perfilUsuario == 8">
+          <CalculadoraHNView></CalculadoraHNView>
+        </template>
         <template v-else>
           <DashboardFull></DashboardFull>
         </template>
@@ -34,6 +37,7 @@ import DashboardSupervisor from "@/components/propios/DashboardSupervisor";
 import DashboardOficiales from "@/components/propios/DashboardOficiales";
 import DashboardConcesionario from "@/components/propios/DashboardConcesionario";
 import GridComponentHNCobradores from "@/views/GridComponentHNCobradores";
+import CalculadoraHNView from "@/views/CalculadoraHNView";
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -50,6 +54,7 @@ export default {
     DashboardOficiales,
     DashboardConcesionario,
     GridComponentHNCobradores,
+    CalculadoraHNView
   },
   created() {
     //this.getCotizacionesDolar();

@@ -37,6 +37,7 @@
             <GridSummaryReporteComisionesComponent
               :headers="this.headers"
               :mesBase="this.mesSelected"
+              :periodo="this.codperiodo.Codigo"
             ></GridSummaryReporteComisionesComponent>
           </v-col>
         </v-row>
@@ -314,11 +315,13 @@ export default {
     }),
 
     getReport() {
-      console.log(this.codperiodo);
+      
       this.mesSelected = this.codperiodo.Codigo;
       var pars = {
         periodo: this.codperiodo.Codigo,
       };
+
+      console.log(this.codperiodo.Codigo);
 
       this.getReporte(pars);
       this.getReporteAnual(pars);

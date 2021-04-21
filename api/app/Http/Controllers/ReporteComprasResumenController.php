@@ -246,6 +246,7 @@ class ReporteComprasResumenController extends Controller
             $oDet->CAD = $r->CAD;
             if ($r->Marca != 2){
                 $oDet->Plan = $r->Plan;
+                $oDet->AvanceCalculado = $r->AvanceCalculado;
             }
             
             $oDet->Empresa = $emp3;
@@ -270,17 +271,42 @@ class ReporteComprasResumenController extends Controller
             $fcomp = strtotime($oDet->FechaAltaRegistro);
 
            // dd($oDet->FechaCompra);
+           
+            if ($marca == 2){
+                if ($oDet->FechaVtoCuota2 === NULL){
+                    $oDet->AvanceAutomatico = 0;
+                }else{
+                    $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fcav, $fvc2);
+                    $oDet->Avance = $oDet->AvanceAutomatico;
+                }
+            }else{
+                if ($oDet->AvanceCalculado === NULL){
+                    $oDet->AvanceAutomatico = $oDet->Avance;
+                    $oDet->Avance = $oDet->Avance;
+                }else{
+                    $oDet->AvanceAutomatico = $oDet->AvanceCalculado;
+                    $oDet->Avance = $oDet->AvanceCalculado;
+                   
+                }
+            }
+            
+            /*
            if ($oDet->FechaVtoCuota2 === NULL){
                if ($marca == 2){
                     $oDet->AvanceAutomatico = 0;
                }else{
-                    $oDet->AvanceAutomatico = $r->Avance;
+                    if ($r->AvanceCalculado !== NULL){
+                        $oDet->AvanceAutomatico = $r->AvanceCalculado;
+                    }else{
+                        $oDet->AvanceAutomatico = $r->Avance;
+                    }
                }
                 
            }else{
                 $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fcav, $fvc2);
                 $oDet->Avance = $oDet->AvanceAutomatico;
            }
+           */
            
             /*
             $debbug['GruOrd'] = $oDet->Grupo."-".$oDet->Orden;

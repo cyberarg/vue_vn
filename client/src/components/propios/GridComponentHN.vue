@@ -811,6 +811,9 @@ export default {
         case "9":
           return "SAPAC";
           break;
+        case "10":
+          return "ALIZZE";
+          break;
       }
     },
 
@@ -878,6 +881,9 @@ export default {
               break;
             case "9":
               return "Sapac";
+              break;
+            case "10":
+              return "Alizze";
               break;
             default:
               return "";

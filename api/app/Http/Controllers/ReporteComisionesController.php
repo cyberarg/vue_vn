@@ -79,4 +79,38 @@ class ReporteComisionesController extends Controller
     }
 
 
+    public function getReporteDetalle(Request $request)
+    {
+        
+        $periodo = $request->periodo;
+
+        $periodoPuntual = $request->PeriodoPuntual;
+        $codOficial = $request->CodOficial;
+        $mesesTotales = $request->MesesTotales;
+
+        $periodoMes = $periodo * 3;
+        $periodoAnio = date("Y");
+
+        if ($mesesTotales == 0){
+            $periodoMes = ($periodo * 3) - $periodoPuntual;
+        }
+
+        $queryStrReport = "CALL hnweb_reportecomisiones_detalle(".$periodoMes.", ".$periodoAnio.", ".$codOficial.", ".$mesesTotales.");";
+        //return $queryStrReport;
+        $reporte = DB::select($queryStrReport);
+
+        /*
+        foreach ($reporte as $r) {
+            
+        }
+        */
+
+        $lst = array();
+        
+        $lst['Reporte'] = $reporte;
+
+        return $lst;
+    }
+
+
 }

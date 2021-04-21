@@ -115,6 +115,15 @@
       </v-data-table>
 
       <v-card-actions v-show="exportable">
+        <v-btn
+          cclass="ma-2"
+          color="primary"
+          outlined
+          text
+          disabled
+        >
+          <v-icon left>mdi-folder-plus-outline</v-icon>Nuevo Dato
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn
           cclass="ma-2"

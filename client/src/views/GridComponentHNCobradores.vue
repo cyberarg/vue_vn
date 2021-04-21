@@ -97,7 +97,7 @@
             </v-card>
             <v-spacer></v-spacer>
             <v-card-actions>
-              <template v-if="showButons">
+              <template v-if="showActionButtons">
                 <v-row>
                   <v-col align="start">
                     <v-btn
@@ -207,6 +207,7 @@ export default {
       cargoDatos: false,
       isModalVisible: false,
       showButons: null,
+      showActionButtons: false,
       codMarcaSel: null,
       codConcesSel: null,
       selectedConsolidado: false,
@@ -702,9 +703,20 @@ export default {
     getDatosHN() {
       //this.checkEsConcesionario();
       this.retriveData = true;
-      let arrCG = [];
-      arrCG.push({ Codigo: 6, Nombre: "Car Group", Marca: 2, MostrarSwitch: false });
-      this.codConcesionariosSelecteds = arrCG;
+      let arrCE = [];
+
+      switch(this.codigoConcesionario){
+        case "6":
+          arrCE.push({ Codigo: this.codigoConcesionario, Nombre: 'Car Group', Marca: 2, MostrarSwitch: false });
+        break;
+        case "10":
+          arrCE.push({ Codigo: this.codigoConcesionario, Nombre: 'Alizze', Marca: 3, MostrarSwitch: false });
+        break;
+      };
+      
+
+
+      this.codConcesionariosSelecteds = arrCE;
       var pars = {
         Marca: 0,
         Concesionario: 0,
@@ -752,7 +764,7 @@ export default {
     checkEsConcesionario() {
       if (this.esConcesionario) {
         var codC = parseInt(this.codigoConcesionario);
-        //console.log(codC);
+        console.log(codC);
         var itemC = {};
         itemC = this.listConcesionarios.find(function (item) {
           return item.Codigo === codC;
@@ -760,17 +772,28 @@ export default {
         this.codConcesSelected = itemC;
         this.codMarcaSelected = itemC.Marca;
         this.showButons = true;
+        this.showActionButtons = false;
         //this.showSwitch = true;
         this.showSwitch = false;
       } else {
         if (this.esVinculo) {
           this.listMarcas.splice(0, 1);
           this.showButons = false;
+          this.showActionButtons = false;
         } else {
           this.showButons = true;
+          this.showActionButtons = true;
         }
       }
-      this.switch_CE = this.esConcesionario;
+      console.log('Cambio valor verdad:');
+      console.log(this.esConcesionario);
+      if (this.codigoConcesionario === "10"){
+        this.switch_CE = !this.esConcesionario;
+        
+      }else{
+        this.switch_CE = this.esConcesionario;
+      }
+      
     },
 
     setSelected(value) {
@@ -803,7 +826,70 @@ export default {
       }
     },
 
+    getTextEmpresaPorCE(valor, concesionario) {
+      console.log(concesionario);
+      switch (concesionario) {
+        case "4":
+        case "5":
+        case "6":
+        case "8":
+          return this.getTextEmpresaGiama(valor);
+          break;
+
+        default:
+          return this.getTextEmpresaCE(concesionario);
+          break;
+      }
+    },
+
+    getTextEmpresaCE(valor) {
+      console.log(valor);
+      switch (valor) {
+        case "1":
+          return "SAUMA";
+          break;
+        case "2":
+          return "IRUÑA";
+          break;
+        case "3":
+          return "AMENDOLA";
+          break;
+        case "7":
+          return "LUXCAR";
+          break;
+        case "9":
+          return "SAPAC";
+          break;
+         case "10":
+          return "ALIZZE";
+          
+      }
+    },
+
     getTextEmpresa(valor) {
+      switch (valor) {
+        case "1":
+          return "SAUMA";
+          break;
+        case "2":
+          return "IRUÑA";
+          break;
+        case "3":
+          return "AMENDOLA";
+          break;
+        case "7":
+          return "LUXCAR";
+          break;
+        case "9":
+          return "SAPAC";
+          break;
+        case "10":
+          return "ALIZZE"
+          break;
+      }
+    },
+
+    getTextEmpresaGiama(valor) {
       switch (valor) {
         case "1":
           return "Gestión Financiera S.A.";
@@ -822,6 +908,29 @@ export default {
           break;
         default:
           return valor;
+          break;
+      }
+    },
+
+    getNameCE(valor, codConces) {
+      switch (valor) {
+        case "1":
+          return "SAUMA";
+          break;
+        case "2":
+          return "IRUÑA";
+          break;
+        case "3":
+          return "AMENDOLA";
+          break;
+        case "7":
+          return "LUXCAR";
+          break;
+        case "9":
+          return "SAPAC";
+          break;
+        case "10":
+          return "ALIZZE"
           break;
       }
     },
@@ -877,6 +986,18 @@ export default {
         case "6":
           return "Corrección de Vta.";
           break;
+        case "7":
+            return "Para Venta de Adjudicados";
+          break;
+        case "8":
+              return "Compra Planes para Autos";
+              break;
+        case "9":
+              return "Mesa de planes";
+              break;
+        case "10":
+              return "Traspaso Interempresa";
+              break;
         default:
           return valor;
           break;

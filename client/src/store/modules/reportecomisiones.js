@@ -105,6 +105,21 @@ export const actions = {
       });
   },
 
+  getReporteDetalle({ commit }, pars) {
+    console.log(pars);
+    commit("GET_DATA_STATUS_DETALLE");
+    return axios
+      .post("/reportecomisionesdetalle", pars)
+      .then(response => {
+        console.log(response.data);
+        commit("DATOS_SUCCESS_DETALLE", response.data);
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("DATOS_ERROR_DETALLE");
+      });
+  },
+
   showFiltrados({ commit, getters }, parametros) {
     //console.log(parametros);
     commit("GETTING_FILTRO");

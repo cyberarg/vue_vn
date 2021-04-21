@@ -20,17 +20,17 @@
           <template v-slot:header="{ props }">
             <thead class="v-data-table-header">
               <tr>
-                <th />
-                <th colspan="3" class="text-center lineH1">
+                <th @click="showDetalle(0, 0, 1)"/>
+                <th colspan="3" class="text-center lineH1" @click="showDetalle(2, 0, 0)">
                   {{ getPeriodoName(2) }}
                 </th>
-                <th colspan="3" class="text-center lineH1">
+                <th colspan="3" class="text-center lineH1" @click="showDetalle(1, 0, 0)">
                   {{ getPeriodoName(1) }}
                 </th>
-                <th colspan="3" class="text-center lineH1L">
+                <th colspan="3" class="text-center lineH1L" @click="showDetalle(0, 0, 0)">
                   {{ getPeriodoName(0) }}
                 </th>
-                <th colspan="3" class="text-center lineH1L">
+                <th colspan="3" class="text-center lineH1L" @click="showDetalle(0, 0, 1)">
                   Totales Trimestre
                 </th>
               </tr>
@@ -42,7 +42,7 @@
                 <th class="text-center lineH2">Comprados</th>
                 -->
                 <th class="text-center lineH2">% Cumplimiento</th>
-                <th class="text-center lineH2">Casos Comisionables</th>
+                <th class="text-center lineH2" @click="showDetalle(2, 0, 0)">Casos Comisionables</th>
                 <th class="text-center lineH2">Comisión</th>
 
                 <!--
@@ -50,7 +50,7 @@
                 <th class="text-center lineH2">Comprados</th>
                 -->
                 <th class="text-center lineH2">% Cumplimiento</th>
-                <th class="text-center lineH2">Casos Comisionables</th>
+                <th class="text-center lineH2" @click="showDetalle(1, 0, 0)">Casos Comisionables</th>
                 <th class="text-center lineH2">Comisión</th>
 
                 <!--
@@ -58,7 +58,7 @@
                 <th class="text-center lineH2">Comprados</th>
                 -->
                 <th class="text-center lineH2">% Cumplimiento</th>
-                <th class="text-center lineH2">Casos Comisionables</th>
+                <th class="text-center lineH2" @click="showDetalle(0, 0, 0)">Casos Comisionables</th>
                 <th class="text-center lineH2">Comisión</th>
 
                 <!--
@@ -71,6 +71,63 @@
               </tr>
             </thead>
           </template>
+
+          <template v-slot:item.NomOficial="{item}">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-layout
+                  justify-center
+                  v-on="on"
+                  class="rowclass"
+                  @click="showDetalle(-1, item.CodOficial, 1)"
+                >{{ item.NomOficial }}</v-layout>
+              </template>
+              <span></span>
+            </v-tooltip>
+          </template>  
+
+          <template v-slot:item.CantHN_0="{item}">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-layout
+                  justify-center
+                  v-on="on"
+                  class="rowclass"
+                  @click="showDetalle(2, item.CodOficial, 0)"
+                >{{ item.CantHN_0 }}</v-layout>
+              </template>
+              <span></span>
+            </v-tooltip>
+          </template>
+
+          <template v-slot:item.CantHN_1="{item}">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-layout
+                  justify-center
+                  v-on="on"
+                  class="rowclass"
+                  @click="showDetalle(1, item.CodOficial, 0)"
+                >{{ item.CantHN_1 }}</v-layout>
+              </template>
+              <span></span>
+            </v-tooltip>
+          </template>
+
+          <template v-slot:item.CantHN_2="{item}">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-layout
+                  justify-center
+                  v-on="on"
+                  class="rowclass"
+                  @click="showDetalle(0, item.CodOficial, 0)"
+                >{{ item.CantHN_2 }}</v-layout>
+              </template>
+              <span></span>
+            </v-tooltip>
+          </template>
+          
 
           <!--
           <template v-slot:item.Vigentes_0="{item}">
@@ -259,6 +316,10 @@ export default {
       type: Number,
       required: true,
     },
+    periodo: {
+      type: String,
+      required: true,
+    }
   },
 
   data() {
@@ -297,7 +358,21 @@ export default {
   methods: {
     ...mapActions({
       showFiltrados: "reportecomisiones/showFiltrados",
+      getReporteDetalle: "reportecomisiones/getReporteDetalle",
     }),
+
+    showDetalle(periodoPuntual, codOficial, mesesTotales){
+      console.log('Entro el el click');
+      let pars = {
+        periodo: this.periodo,
+        PeriodoPuntual: periodoPuntual,
+        CodOficial: codOficial,
+        MesesTotales: mesesTotales
+      };
+
+      console.log(pars);
+      this.getReporteDetalle(pars);
+    },
 
     getTooltipData(nombre, cantidad) {
       if (cantidad > 0) {
@@ -310,6 +385,8 @@ export default {
         this.showToolTip = false;
       }
     },
+
+
 
     showValor(valor, mostrarMoneda) {
       if (valor > 0 && valor !== null) {

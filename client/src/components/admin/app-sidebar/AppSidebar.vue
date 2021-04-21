@@ -40,6 +40,7 @@ import { navigationRoutesOficial } from "./NavigationRoutesOficial";
 import { navigationRoutesConcesionario } from "./NavigationRoutesConcesionario";
 import { navigationRoutesConcesionarioCalculadora } from "./NavigationRoutesConcesionarioCalculadora";
 import { navigationRoutesCobradoresHN } from "./NavigationRoutesCobradoresHN";
+import { navigationRoutesSoloCalculadoraHN } from "./NavigationRoutesSoloCalculadoraHN";
 import AppSidebarLink from "./components/AppSidebarLink";
 import AppSidebarLinkGroup from "./components/AppSidebarLinkGroup";
 import { ColorThemeMixin } from "../../../services/vuestic-ui";
@@ -73,6 +74,7 @@ export default {
       itemsCE: navigationRoutesConcesionario.routes,
       itemsCECalculadora: navigationRoutesConcesionarioCalculadora.routes,
       itemsCobradores: navigationRoutesCobradoresHN.routes,
+      itemsSoloCalculadoraHN: navigationRoutesSoloCalculadoraHN.routes,
     };
   },
 
@@ -116,6 +118,9 @@ export default {
             break;
           case 7:
             this.items = this.itemsCobradores;
+            break;
+          case 8:
+            this.items = this.itemsSoloCalculadoraHN;
             break;
         }
       }
