@@ -48,18 +48,17 @@
             ></v-checkbox>
           --> 
           </template>
-          
-          <!--
-          <v-btn
-            class="ma-2"
-            outlined
-            color="blue darken-1"
-            text
-            @click="getDatosHN()"
-          >
-            <v-icon left>mdi-refresh</v-icon>Actualizar
-          </v-btn>
-          -->
+          <template v-else >
+            <v-btn
+              class="ma-2"
+              outlined
+              color="blue darken-1"
+              text
+              @click="getDatosHN_CE_Filter()"
+            >
+              <v-icon left>mdi-refresh</v-icon>Actualizar
+            </v-btn>
+          </template>
         </v-card-title>
         <!--<div class="contenedor">-->
         <!--<v-container class="maxH2">-->
@@ -347,6 +346,7 @@ export default {
       codMarcaSel: null,
       codConcesSel: null,
       nomConcesSel: '',
+      nomConcesSelected: '',
       //codConcesionariosSelecteds: null,
       codConcesionariosSelecteds: {},
       selectedConsolidado: false,
@@ -722,7 +722,7 @@ export default {
 
 
     switch_CE(newValue) {
-      //this.setDefaultDataSource(newValue);
+      this.setDefaultDataSource(newValue);
     },
 
     selectFiltro(newValue) {
@@ -881,6 +881,8 @@ export default {
 
   mounted() {
     this.checkEsConcesionario();
+    console.log(this.esConcesionario);
+    console.log(this.codigoConcesionario);
   },
 
   created() {
@@ -902,9 +904,10 @@ export default {
       getHNResumenPerformance: "resumenperformance/getHNResumenPerformance",
       getResumenCompras: "resumenhn/getHNResumenCompras",
       getResumenCobros: "resumenhn/getHNResumenCobros",
+
     }),
 
-    /*
+    
     setDefaultDataSource(soloCE) {
       if (this.cargoDatos) {
         if (soloCE) {
@@ -916,7 +919,7 @@ export default {
         }
       }
     },
-    */
+    
 
      setDefaultFiltered(valor){
         switch(valor.Codigo){
@@ -953,6 +956,47 @@ export default {
       };
 
       return pars;
+    },
+
+    getDatosHN_CE_Filter(){
+      
+      this.retriveData = true;
+      let arrCE = [];
+
+
+      arrCE.push({ Codigo: this.codConcesSelected, Nombre: this.nomConcesSelected, Marca: this.codMarcaSelected, MostrarSwitch: false });
+
+      console.log(arrCE);
+
+      this.codConcesionariosSelecteds = arrCE;
+      var pars = {
+        Marca: 0,
+        Concesionario: 0,
+        Seleccionados: this.codConcesionariosSelecteds,
+        Empresa: 8,
+        Anio: moment().format('YYYY'),
+        Filtros: "",
+        ConsolidadoRB: this.selectedConsolidado,
+      };
+
+      this.codMarcaSel = pars.Marca;
+      this.codConcesSel = pars.Concesionario;
+      //this.nomConcesSel =  this.codConcesSelected.Nombre;
+      
+   
+      //console.log(pars);
+       
+      this.getHNVigentes(pars);
+      this.getHNCobrados(pars);
+      this.getHNProyectados(pars);
+      /*
+      this.getHNEERR(pars);
+      this.getHNStock(pars);
+     
+      this.getHNResumenPerformance(pars);
+      this.getResumenCompras(pars);
+      this.getResumenCobros(pars);
+      */
     },
 
      getDatosHN_Filter(value) {
@@ -1074,13 +1118,14 @@ export default {
         itemC = await this.getDatosComboCE(parsCE);
         */
         //var itemC = {};
-        itemC = this.listConcesionarios.find(function (item) {
+
+        itemC = this.listConcesionariosNew.find(function (item) {
           return item.Codigo === codC;
         });
-        
 
-        this.codConcesSelected = itemC.ID;
-        this.codMarcaSelected = itemC.MarcaDefault;
+        this.codConcesSelected = itemC.Codigo;
+        this.codMarcaSelected = itemC.Marca;
+        this.nomConcesSelected = itemC.Nombre;
 
         this.showButons = false;
         this.showSwitch = true;
@@ -1098,7 +1143,7 @@ export default {
           this.showButons = true;
         }
       }
-      this.switch_CE = this.esConcesionario;
+      //this.switch_CE = this.esConcesionario;
      // this.listCE = itemC;
     },
 

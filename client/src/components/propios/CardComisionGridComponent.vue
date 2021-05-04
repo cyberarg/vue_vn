@@ -12,7 +12,7 @@
             <v-spacer></v-spacer>
                 Casos: {{casos() | numFormat}}
             </template>
-
+          
         </v-card-title>
 
             <v-expansion-panels v-model="panel">

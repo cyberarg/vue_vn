@@ -5,9 +5,11 @@ export const namespaced = true;
 export const state = {
   dataStatus: "",
   items: [],
+  items_detalle: [],
   datos: [],
   items_filtrados: [],
   loading: false,
+  loading_detalle: false,
 
   dataStatusAnual: "",
   itemsAnual: [],
@@ -34,6 +36,24 @@ export const mutations = {
   DATOS_ERROR(state) {
     state.dataStatus = "Error";
     state.loading = false;
+  },
+
+  GET_DATA_STATUS_DETALLE(state) {
+    state.dataStatus = "loading";
+    state.items_detalle = [];
+    state.loading_detalle = true;
+  },
+
+  DATOS_SUCCESS_DETALLE(state, datos) {
+    //console.log(datos);
+    state.items_detalle = datos.Reporte;
+    state.loading_detalle = false;
+    state.dataStatus = "success";
+  },
+
+  DATOS_ERROR_DETALLE(state) {
+    state.dataStatus = "Error";
+    state.loading_detalle = false;
   },
 
   GET_DATA_STATUS_ANUAL(state) {

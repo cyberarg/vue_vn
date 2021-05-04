@@ -53,6 +53,7 @@ import { navigationRoutesAdmin } from "../app-sidebar/NavigationRoutesAdmin";
 import { navigationRoutesFull } from "../app-sidebar/NavigationRoutesFull";
 import { navigationRoutesSupervisor } from "../app-sidebar/NavigationRoutesSupervisor";
 import { navigationRoutesOficial } from "../app-sidebar/NavigationRoutesOficial";
+import { navigationRoutesOficialWeb } from "../app-sidebar/NavigationRoutesOficialWeb";
 import { navigationRoutesConcesionario } from "../app-sidebar/NavigationRoutesConcesionario";
 import { navigationRoutesConcesionarioCalculadora } from "../app-sidebar/NavigationRoutesConcesionarioCalculadora";
 import { navigationRoutesCobradoresHN } from "../app-sidebar/NavigationRoutesCobradoresHN";
@@ -111,6 +112,7 @@ export default {
       itemsSupervisor: navigationRoutesSupervisor.routes,
       itemsFull: navigationRoutesFull.routes,
       itemsOficial: navigationRoutesOficial.routes,
+      itemsOficialWeb: navigationRoutesOficialWeb.routes,
       itemsCE: navigationRoutesConcesionario.routes,
       itemsCECalculadora: navigationRoutesConcesionarioCalculadora.routes,
       itemsCobradores: navigationRoutesCobradoresHN.routes,
@@ -149,6 +151,9 @@ export default {
             break;
           case 8:
             this.items = this.itemsSoloCalculadoraHN;
+            break;
+          case 9:
+            this.items = this.itemsOficialWeb;
             break;
         }
       }

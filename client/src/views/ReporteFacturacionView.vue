@@ -17,16 +17,27 @@
           @change="getReport()"
         ></v-combobox>
         </v-col>
-         <v-col cols="3" md="3">
-        <v-btn
-          class="ma-2"
-          outlined
-          color="blue darken-1"
-          text
-          @click="getReport()"
-        >
-          <v-icon left>mdi-refresh</v-icon>Actualizar
-        </v-btn>
+        <v-col cols="3" md="3">
+          <v-btn
+            class="ma-2"
+            outlined
+            color="blue darken-1"
+            text
+            @click="getReport()"
+          >
+            <v-icon left>mdi-refresh</v-icon>Actualizar
+          </v-btn>
+        </v-col>
+        <v-col cols="1" md="1">
+          <v-btn
+            class="ma-2"
+            outlined
+            color="success"
+            text
+            @click="exportExcel"
+          >
+            <v-icon left>mdi-file-excel</v-icon>Detalle
+          </v-btn>
         </v-col>
       </v-row>
       </v-card-title>
@@ -77,6 +88,7 @@ import DetalleGridFacturacionComponent from "@/components/propios/DetalleGridFac
 
 import moment from "moment";
 import { mapState, mapActions } from "vuex";
+import XLSX from "xlsx";
 
 export default {
   name: "reportefacturacion",
@@ -195,7 +207,9 @@ export default {
       "datos_rb",
       "loading_filter",
       "show_filtrados",
-      "items_filtrados"
+      "items_filtrados",
+      "detalle_rb",
+      "detalle_rb_ce"
     ]),
 
     expand_filtrados(){
@@ -244,6 +258,22 @@ export default {
 
     exandDetail(value){
       this.expandedDetail = value;
+    },
+
+    exportExcel: function () {
+      //let data = XLSX.utils.json_to_sheet(this.datos);
+      let data_rb = XLSX.utils.json_to_sheet(this.detalle_rb);
+      let data_ce = XLSX.utils.json_to_sheet(this.detalle_rb_ce);
+      const workbook = XLSX.utils.book_new();
+      const filename = "DetalleFacturacion";
+
+      let sheetname = "DetalleFacturacion_RB";
+      XLSX.utils.book_append_sheet(workbook, data_rb, sheetname);
+
+      sheetname = "DetalleFacturacion_CE";
+      XLSX.utils.book_append_sheet(workbook, data_ce, sheetname);
+
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
     },
 
     getReport() {

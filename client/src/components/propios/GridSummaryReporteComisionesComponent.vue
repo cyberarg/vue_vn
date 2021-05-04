@@ -20,17 +20,44 @@
           <template v-slot:header="{ props }">
             <thead class="v-data-table-header">
               <tr>
-                <th @click="showDetalle(0, 0, 1)"/>
-                <th colspan="3" class="text-center lineH1" @click="showDetalle(2, 0, 0)">
-                  {{ getPeriodoName(2) }}
-                </th>
-                <th colspan="3" class="text-center lineH1" @click="showDetalle(1, 0, 0)">
-                  {{ getPeriodoName(1) }}
-                </th>
-                <th colspan="3" class="text-center lineH1L" @click="showDetalle(0, 0, 0)">
-                  {{ getPeriodoName(0) }}
-                </th>
-                <th colspan="3" class="text-center lineH1L" @click="showDetalle(0, 0, 1)">
+                
+
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <th v-on="on" @click="showDetalle(0, 0, 1)"/>
+                    </template>
+                    <span>Descargar Detalle Período Total, Todos los Oficiales</span>
+                  </v-tooltip>
+
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <th v-on="on" colspan="3" class="text-center lineH1" @click="showDetalle(2, 0, 0)">
+                      {{ getPeriodoName(2) }}
+                    </th>
+                  </template>
+                  <span>Descargar Detalle del Mes de {{ getPeriodoName(2) }}, Todos los Oficiales</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <th v-on="on" colspan="3" class="text-center lineH1" @click="showDetalle(1, 0, 0)">
+                      {{ getPeriodoName(1) }}
+                    </th>
+                  </template>
+                  <span>Descargar Detalle del Mes de {{ getPeriodoName(1) }}, Todos los Oficiales</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                     <th v-on="on" colspan="3" class="text-center lineH1L" @click="showDetalle(0, 0, 0)">
+                      {{ getPeriodoName(0) }}
+                    </th>
+                  </template>
+                  <span>Descargar Detalle del Mes de {{ getPeriodoName(0) }}, Todos los Oficiales</span>
+                </v-tooltip>
+
+                <th colspan="3" class="text-center lineH1L">
                   Totales Trimestre
                 </th>
               </tr>
@@ -42,7 +69,7 @@
                 <th class="text-center lineH2">Comprados</th>
                 -->
                 <th class="text-center lineH2">% Cumplimiento</th>
-                <th class="text-center lineH2" @click="showDetalle(2, 0, 0)">Casos Comisionables</th>
+                <th class="text-center lineH2">Casos Comisionables</th>
                 <th class="text-center lineH2">Comisión</th>
 
                 <!--
@@ -50,7 +77,7 @@
                 <th class="text-center lineH2">Comprados</th>
                 -->
                 <th class="text-center lineH2">% Cumplimiento</th>
-                <th class="text-center lineH2" @click="showDetalle(1, 0, 0)">Casos Comisionables</th>
+                <th class="text-center lineH2">Casos Comisionables</th>
                 <th class="text-center lineH2">Comisión</th>
 
                 <!--
@@ -58,7 +85,7 @@
                 <th class="text-center lineH2">Comprados</th>
                 -->
                 <th class="text-center lineH2">% Cumplimiento</th>
-                <th class="text-center lineH2" @click="showDetalle(0, 0, 0)">Casos Comisionables</th>
+                <th class="text-center lineH2">Casos Comisionables</th>
                 <th class="text-center lineH2">Comisión</th>
 
                 <!--
@@ -82,50 +109,65 @@
                   @click="showDetalle(-1, item.CodOficial, 1)"
                 >{{ item.NomOficial }}</v-layout>
               </template>
-              <span></span>
+              <span>Descargar Detalle Período Total de {{item.NomOficial}}</span>
             </v-tooltip>
           </template>  
 
           <template v-slot:item.CantHN_0="{item}">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-layout
-                  justify-center
-                  v-on="on"
-                  class="rowclass"
-                  @click="showDetalle(2, item.CodOficial, 0)"
-                >{{ item.CantHN_0 }}</v-layout>
-              </template>
-              <span></span>
-            </v-tooltip>
+            <template v-if="item.CantHN_0 > 0" >
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-layout
+                    justify-center
+                    v-on="on"
+                    class="rowclass"
+                    @click="showDetalle(2, item.CodOficial, 0)"
+                  >{{ item.CantHN_0 }}</v-layout>
+                </template>
+                <span>Descargar Detalle de {{ getPeriodoName(2) }} de {{item.NomOficial}}</span>
+              </v-tooltip>
+            </template>
+            <template v-else>
+                <v-layout justify-center class="rowclass" >0</v-layout>
+            </template>
           </template>
 
           <template v-slot:item.CantHN_1="{item}">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-layout
-                  justify-center
-                  v-on="on"
-                  class="rowclass"
-                  @click="showDetalle(1, item.CodOficial, 0)"
-                >{{ item.CantHN_1 }}</v-layout>
-              </template>
-              <span></span>
-            </v-tooltip>
+            <template v-if="item.CantHN_1 > 0" >
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-layout
+                    justify-center
+                    v-on="on"
+                    class="rowclass"
+                    @click="showDetalle(1, item.CodOficial, 0)"
+                  >{{ item.CantHN_1 }}</v-layout>
+                </template>
+                <span>Descargar Detalle de {{ getPeriodoName(1) }} de {{item.NomOficial}}</span>
+              </v-tooltip>
+            </template>
+            <template v-else>
+                <v-layout justify-center class="rowclass" >0</v-layout>
+            </template>
           </template>
 
           <template v-slot:item.CantHN_2="{item}">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-layout
-                  justify-center
-                  v-on="on"
-                  class="rowclass"
-                  @click="showDetalle(0, item.CodOficial, 0)"
-                >{{ item.CantHN_2 }}</v-layout>
-              </template>
-              <span></span>
-            </v-tooltip>
+            <template v-if="item.CantHN_2 > 0" >
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-layout
+                    justify-center
+                    v-on="on"
+                    class="rowclass"
+                    @click="showDetalle(0, item.CodOficial, 0)"
+                  >{{ item.CantHN_2 }}</v-layout>
+                </template>
+                <span>Descargar Detalle de {{ getPeriodoName(0) }} de {{item.NomOficial}}</span>
+              </v-tooltip>
+            </template>
+            <template v-else>
+                <v-layout justify-center class="rowclass" >0</v-layout>
+            </template>
           </template>
           
 
@@ -345,6 +387,7 @@ export default {
       "datos",
       "empresa",
       "items_filtrados",
+      "items_detalle"
     ]),
 
     ...mapState("auth", [
@@ -361,7 +404,7 @@ export default {
       getReporteDetalle: "reportecomisiones/getReporteDetalle",
     }),
 
-    showDetalle(periodoPuntual, codOficial, mesesTotales){
+    async showDetalle(periodoPuntual, codOficial, mesesTotales){
       console.log('Entro el el click');
       let pars = {
         periodo: this.periodo,
@@ -371,7 +414,9 @@ export default {
       };
 
       console.log(pars);
-      this.getReporteDetalle(pars);
+      await this.getReporteDetalle(pars);
+
+      this.generateExcelDetalle(this.items_detalle)
     },
 
     getTooltipData(nombre, cantidad) {
@@ -689,10 +734,22 @@ export default {
       return "-";
     },
 
+     generateExcelDetalle: function (detalle) {
+      let data = XLSX.utils.json_to_sheet(detalle);
+      const workbook = XLSX.utils.book_new();
+      const filename = "detalle-comisiones";
+
+
+      XLSX.utils.book_append_sheet(workbook, data, filename);
+
+
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
+    },
+
     exportExcel: function () {
       let data = XLSX.utils.json_to_sheet(this.items);
       const workbook = XLSX.utils.book_new();
-      const filename = "devschile-admins";
+      const filename = "comisiones";
       XLSX.utils.book_append_sheet(workbook, data, filename);
       XLSX.writeFile(workbook, `${filename}.xlsx`);
     },

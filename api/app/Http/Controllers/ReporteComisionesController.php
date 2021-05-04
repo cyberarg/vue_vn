@@ -99,12 +99,6 @@ class ReporteComisionesController extends Controller
         //return $queryStrReport;
         $reporte = DB::select($queryStrReport);
 
-        /*
-        foreach ($reporte as $r) {
-            
-        }
-        */
-
         $lst = array();
         
         $lst['Reporte'] = $reporte;

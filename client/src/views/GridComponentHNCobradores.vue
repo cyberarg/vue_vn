@@ -714,8 +714,6 @@ export default {
         break;
       };
       
-
-
       this.codConcesionariosSelecteds = arrCE;
       var pars = {
         Marca: 0,

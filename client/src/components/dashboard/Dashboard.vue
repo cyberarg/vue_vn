@@ -14,6 +14,9 @@
         <template v-else-if="perfilUsuario == 8">
           <CalculadoraHNView></CalculadoraHNView>
         </template>
+        <template v-else-if="perfilUsuario == 9">
+          <DashboardOficialesWeb></DashboardOficialesWeb>
+        </template>
         <template v-else>
           <DashboardFull></DashboardFull>
         </template>
@@ -35,6 +38,7 @@ import DashboardAdmin from "@/components/propios/DashboardAdmin";
 import DashboardFull from "@/components/propios/DashboardFull";
 import DashboardSupervisor from "@/components/propios/DashboardSupervisor";
 import DashboardOficiales from "@/components/propios/DashboardOficiales";
+import DashboardOficialesWeb from "@/components/propios/DashboardOficialesWeb";
 import DashboardConcesionario from "@/components/propios/DashboardConcesionario";
 import GridComponentHNCobradores from "@/views/GridComponentHNCobradores";
 import CalculadoraHNView from "@/views/CalculadoraHNView";
@@ -52,6 +56,7 @@ export default {
     DashboardFull,
     DashboardSupervisor,
     DashboardOficiales,
+    DashboardOficialesWeb,
     DashboardConcesionario,
     GridComponentHNCobradores,
     CalculadoraHNView
