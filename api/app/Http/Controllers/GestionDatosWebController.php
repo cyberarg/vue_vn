@@ -167,6 +167,10 @@ class GestionDatosWebController extends Controller
             $dato->FechaVtoCuota2 = $request->FechaVtoCuota2; 
         }
 
+        if ($dato->PorcentajeValorHN != $request->PorcentajeValorHN){
+            $dato->PorcentajeValorHN = $request->PorcentajeValorHN; 
+        }
+
         $dato->EsDatoNuevo =  0;
 
         if ($request->CodEstado){

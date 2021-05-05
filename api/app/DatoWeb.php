@@ -29,7 +29,8 @@ class DatoWeb extends Model
     'Email', 'EstadoPlan', 'FechaLead', 
     'Marca', 'Grupo', 'Orden', 'Solicitud', 'NroDoc',
     'FechaVtoCuota2', 'Avance', 'HaberNeto', 'Domicilio', 'Plan', 
-    'CodOficial', 'CodSup', 'CodEstado', 'PasarDato', 'EsDatoNuevo'
+    'CodOficial', 'CodSup', 'CodEstado', 'PasarDato', 'EsDatoNuevo',
+    'PorcentajeValorHN'
     ];
 
     /**

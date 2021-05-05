@@ -292,6 +292,18 @@
                         @change="changeEstado"
                       ></v-select>
                   </v-col>
+                  <v-col cols="6" md="6">
+                     <v-text-field
+                      dense
+                      suffix="%"
+                      maxlength=2
+                      label="Porcentaje"
+                      placeholder="Porcentaje"
+                      class="importantDisabled"
+                      :filled="filled"
+                      v-model="item.PorcentajeValorHN"
+                    ></v-text-field>
+                  </v-col>
                 </v-row>                
               </v-container>
             </v-col>
