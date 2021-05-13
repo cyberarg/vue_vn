@@ -58,7 +58,7 @@ class ReporteAcaraController extends Controller
             $seriesOficial = DB::connection($db)->select("CALL hnweb_reporte_indice_dolar_v2('Oficial');");
 
             $fechaInicial = new DateTime('2015-01-01');
-            $fechaFinal = new DateTime('2021-04-01');
+            $fechaFinal = new DateTime('2021-05-01');
         }
 
         $intervalo = new DateInterval('P1M');

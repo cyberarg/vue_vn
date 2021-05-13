@@ -21,6 +21,9 @@ Vue.component("apexchart", VueApexCharts);
 
 Vue.filter("numFormat", numFormat);
 
+import { VueMaskDirective } from 'v-mask'
+Vue.directive('mask', VueMaskDirective);
+
 //Vue.use(Chart);
 Vue.use(moment);
 Vue.use(VueSwal);

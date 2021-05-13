@@ -6,18 +6,14 @@
         <v-divider class="mx-4" inset vertical></v-divider>
 
         <v-spacer></v-spacer>
-        <v-row class="padded"> 
-          <v-col cols="5">
-            <v-text-field
-              v-show="mostrarbuscar"
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Buscar"
-              single-line
-              hide-details
-            ></v-text-field>
-          </v-col>
-        </v-row>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Buscar"
+          single-line
+          hide-details
+        ></v-text-field>
+        <v-spacer></v-spacer>
         <v-btn class="ma-2" color="primary" outlined text @click="getDatos()">
           <v-icon left>mdi-refresh</v-icon>Actualizar
         </v-btn>
@@ -49,9 +45,7 @@
             <span>{{ getTooltipData() }}</span>
           </v-tooltip>
         </template>
-        <template v-slot:item.GrupoOrden="{ item }"
-          >{{ item.Grupo }}/{{ item.Orden }}</template
-        >
+        
         <template v-slot:item.HaberNeto="{ item }">
           {{ item.HaberNeto | numFormat("$0,0") }}
         </template>
@@ -76,7 +70,7 @@
           </v-btn>
         </template>
 
-
+        <!--
         <template v-slot:top>
           <v-expansion-panels focusable>
             <v-expansion-panel>
@@ -112,6 +106,7 @@
             </v-expansion-panel>
           </v-expansion-panels>
         </template>
+        -->
       </v-data-table>
 
       <v-card-actions v-show="exportable">
@@ -206,7 +201,6 @@ export default {
       "codigoConcesionario",
     ]),
 
-    
 
     exportable() {
       if (typeof this.pars.exportable !== "undefined") {

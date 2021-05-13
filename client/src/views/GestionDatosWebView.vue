@@ -22,14 +22,25 @@
                   sorteable: true,
                   filterable: true,
                 },
+                
+                
                 {
-                  text: 'Grupo/Orden',
-                  value: 'GrupoOrden',
+                  text: 'Grupo',
+                  value: 'Grupo',
                   align: 'center',
                   sorteable: true,
                   filterable: true,
+                  width: '1%'
                 },
-
+                {
+                  text: 'Orden',
+                  value: 'Orden',
+                  align: 'center',
+                  sorteable: true,
+                  filterable: true,
+                  width: '1%'
+                },
+                
                 {
                   text: 'Apellido y Nombre',
                   value: 'FullName',
@@ -42,14 +53,14 @@
                   text: 'Cuotas Lead',
                   value: 'CantidadCuotas',
                   align: 'center',
-                  width: '1%'
+                  width: '2%'
                 },
 
                 {
                   text: 'Estado Lead',
                   value: 'EstadoPlan',
                   align: 'center',
-                  width: '1%'
+                  width: '2%'
                 },
                 /*
                 {

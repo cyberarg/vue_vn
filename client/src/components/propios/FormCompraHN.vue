@@ -326,8 +326,9 @@ export default {
         { Codigo: 12, Nombre: "Peugeot Web", Marca: 3 },
       ],
       listTitularesCompra: [
-        { Codigo: 0, Nombre: "Concesionario" },
-        { Codigo: 1, Nombre: "Giama" },
+        { Codigo: 0, Nombre: "Concesionario", ComproGiama: 0 },
+        { Codigo: 1, Nombre: "Giama (RB)", ComproGiama: 1 },
+        { Codigo: 2, Nombre: "GB", ComproGiama: 1 },
       ],
       codTitularCSelected: null,
       tipoCompra: { Codigo: 1, Nombre: "Finanzas", Marca: 5 },
@@ -450,7 +451,7 @@ export default {
       console.log(value);
 
       if (value.Marca == 2) {
-        this.codTitularCSelected = { Codigo: 1, Nombre: "Giama" };
+        this.codTitularCSelected = { Codigo: 1, Nombre: "Giama (RB)", ComproGiama: 1 };
       }
     },
 
@@ -521,6 +522,7 @@ export default {
         this.disabledAceptar = false;
         return;
       }
+      console.log(this.codTitularCSelected);
 
       if (typeof this.operacion !== "undefined") {
         var pars = {
@@ -534,19 +536,21 @@ export default {
           MontoCobroEstimado: this.operacion.HaberNeto,
           HaberNetoSubite: this.operacion.HaberNeto,
           HaberNetoOriginal: this.operacion.HaberNeto,
-          ComproGiama: this.codTitularCSelected.Codigo,
+          TitularCompraHN: this.codTitularCSelected.Codigo,
+          ComproGiama: this.codTitularCSelected.ComproGiama,
           ID_Dato: this.operacion.ID,
           EmpresaGyO: this.operacion.EmpresaGyO,
           Login: this.login,
           NroTransferencia: this.nroTransferencia,
           TIRSpot: 0,
         };
-
+      
         //console.log(pars);
         await this.grabarHaberNeto(pars);
         await this.showSwal();
         this.$emit("refresh");
         this.volver();
+    
       }
     },
 
