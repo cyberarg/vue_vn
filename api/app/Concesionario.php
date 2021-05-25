@@ -21,7 +21,7 @@ class Concesionario extends Model
     /**
      * @var array
      */
-    protected $fillable = ['Nombre', 'MarcaDefault', 'CodigoConcesionaria'];
+    protected $fillable = ['Nombre', 'MarcaDefault', 'CodigoConcesionaria', 'EsDatosWeb', 'ComisionaTercero','OrdenamientoFacturacion'];
 
     public $timestamps = false;
    

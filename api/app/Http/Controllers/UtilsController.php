@@ -8,6 +8,7 @@ Use Session;
 Use Auth;
 Use Redirect;
 use App\Estado;
+use App\Concesionario;
 use App\MotivoCaida;
 use App\CotizacionDolar;
 use App\CotizacionDolarCCL;
@@ -19,6 +20,19 @@ use App\Precio;
 
 class UtilsController extends Controller
 {
+
+    public function getNameConcesionario($concesionario){
+
+        return Concesionario::select('Nombre')->where('ID',$concesionario)->get();
+
+    }
+
+    public function getCodeNameConcesionariosFacturacion(){
+
+        //return Concesionario::select('ID','Nombre')->whereNotIn('ID', [8,11,12])->get();
+        return Concesionario::select('ID','Nombre')->whereNotNull('OrdenamientoFacturacion')->orderBy('OrdenamientoFacturacion','asc')->get();
+
+    }
 
     public function getDabaseName($marca, $concesionario){
 
@@ -42,6 +56,22 @@ class UtilsController extends Controller
             default:
                 return 'GF';
             break;
+        }
+    }
+
+    public function getDabaseNameByCE($concesionario){
+
+        switch($concesionario){
+            case 4:
+                return 'AC';
+            case 5:
+                return 'AN';
+            case 6:
+                return 'CG';
+            case 8:
+                return 'RB';
+            default:
+                return 'GF';
         }
     }
 

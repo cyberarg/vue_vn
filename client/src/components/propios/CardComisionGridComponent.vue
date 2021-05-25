@@ -3,11 +3,20 @@
         <v-card
             class="mx-auto"
             outlined
+            :loading="this.loadingData"
         >
             <v-card-title>
             {{concesionario}}
             <v-spacer></v-spacer>
-            {{total() | numFormat('$0,0')}}
+            <template v-if="this.esGridPagos" >
+                {{this.totalComisiones | numFormat('$0,0')}}
+            </template>
+            <template v-else>
+                Total Facturar: {{total() * 0.05 | numFormat('$0,0')}}
+                <v-spacer></v-spacer> 
+                Total HN: {{total() | numFormat('$0,0')}}
+            </template>
+           
             <template v-if="casos() > 0">     
             <v-spacer></v-spacer>
                 Casos: {{casos() | numFormat}}
@@ -26,6 +35,8 @@
                         :headers="headers"
                         :items="datos"
                         :hide-default-footer="true"
+                        :loading="this.loadingData"
+                        loading-text="Cargando Datos... Aguarde"
                         >
                         
 
@@ -42,6 +53,24 @@
                             item.TotalHN | numFormat('$0,0')
                         }}</template>
 
+
+                         <template v-slot:item.Total="{ item }">{{
+                            item.Total | numFormat('$0,0')
+                        }}</template>
+
+                        <template v-slot:footer >
+                            <div class="d-flex justify-end mt-2"> 
+                                <v-btn
+                                    outlined
+                                    color="success"
+                                    text
+                                    small
+                                    @click="emitDetalleExcelCE()"
+                                >
+                                    <v-icon left>mdi-file-excel</v-icon>Detalle
+                                </v-btn>
+                            </div>
+                        </template>
                     </v-data-table>
                 </v-expansion-panel-content>
                 </v-expansion-panel>
@@ -54,6 +83,15 @@
 import { mapActions, mapState } from 'vuex';
     export default {
         props:{
+
+            loadingData:{
+                esGridPagos:Boolean,
+                required:true
+            },
+
+             codConcesionario:{
+                type:String
+            },
             concesionario:{
                 type:String,
                 required:true
@@ -70,7 +108,16 @@ import { mapActions, mapState } from 'vuex';
             datos:{
                 type:Array,
                 required:true
-            }
+            },
+             esGridPagos:{
+                esGridPagos:Boolean,
+                required:true
+            },
+            
+            totalComisiones:{
+                type:Number,
+            },
+           
         },
          data() {
             return {
@@ -101,6 +148,11 @@ import { mapActions, mapState } from 'vuex';
         methods: {
 
             ...mapActions({ showFiltradosRB: "reportefacturacion/getDetalleRB", showFiltradosRB_CE: "reportefacturacion/getDetalleRB_CE"}),
+       
+            emitDetalleExcelCE(){
+                console.log(this.codConcesionario);
+                this.$emit('detalleExcelCE', this.codConcesionario);
+            },
 
             casos() {
                 let casos = [];

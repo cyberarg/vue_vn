@@ -121,6 +121,12 @@ Route::post('/reportecompras', 'ReporteComprasController@getReporte');
 Route::post('/reportecaidas', 'ReporteCaidasController@getReporte');
 Route::post('/reportecomisiones', 'ReporteComisionesController@getReporte');
 Route::post('/reportefacturacion', 'ReporteFacturacionController@getReporte');
+Route::post('/detallefacturacion', 'ReporteFacturacionController@getDetalle');
+Route::post('/detalleporconces', 'ReporteFacturacionController@getDetalleConcesionario');
+Route::post('/detallegeneral', 'ReporteFacturacionController@getDetalleGeneral');
+
+
+
 Route::post('/reportecomisionesanual', 'ReporteComisionesController@getReporteAnual');
 Route::post('/reportecomisionesdetalle', 'ReporteComisionesController@getReporteDetalle');
 
