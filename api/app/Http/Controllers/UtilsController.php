@@ -9,6 +9,7 @@ Use Auth;
 Use Redirect;
 use App\Estado;
 use App\Concesionario;
+use App\Marca;
 use App\MotivoCaida;
 use App\CotizacionDolar;
 use App\CotizacionDolarCCL;
@@ -21,10 +22,41 @@ use App\Precio;
 class UtilsController extends Controller
 {
 
+    public function getMarcasReporteCarteraDashboard(){
+        return Marca::select('Codigo','Nombre')->where('MostrarReporteCartera',1)->get();
+    }
+
     public function getNameConcesionario($concesionario){
 
         return Concesionario::select('Nombre')->where('ID',$concesionario)->get();
 
+    }
+
+    public function getAvanceAutomaticoFiat($FechaVtoCuota2){
+
+        $avance = 0;
+
+        $fecha = strtotime(now());
+
+        if ($FechaVtoCuota2 === NULL){
+            return 0;
+        }else{
+            $fvtoc2 = date_create(date('Y-m-d', $FechaVtoCuota2));
+            $ff = date_create(date('Y-m-d', $fecha));       
+    
+            if (checkdate(date('m', $FechaVtoCuota2), date('d', $FechaVtoCuota2), date('Y', $FechaVtoCuota2))){
+                $diff = date_diff($fvtoc2 , $ff);
+                //$avance = ($diff->format('%y') * 12 + $diff->format('%m')) + 2;
+                $avance = (($diff->format('%a') / 365) * 12) + 2;
+                $avance = round($avance, 0);
+            }
+        }
+
+        if ($avance > 84){
+            $avance = 84;
+        }
+
+        return $avance;
     }
 
     public function getCodeNameConcesionariosFacturacion(){

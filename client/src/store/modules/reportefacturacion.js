@@ -16,6 +16,13 @@ export const state = {
   detalle_gral:[],
   filtrados: [],
 
+  acumulados_rb: [],
+  cantAcum_RB: 0,
+  acumulados_ce: [],
+  cantAcum_CE: 0,
+  acumulados_tot: [],
+  cantAcum_TOT: 0,
+
   detalle_comisionistas:[],
   totalComisiones: 0,
 
@@ -76,7 +83,13 @@ export const mutations = {
     state.totalComisiones = 0;
     state.loadingdetalle = true;
 
+    state.acumulados_rb = [];
+    state.cantAcum_RB = 0;
+    state.acumulados_ce = [];
+    state.cantAcum_CE = 0;
 
+    state.acumulados_tot = [];
+    state.cantAcum_TOT = 0;
   },
 
   DETALLE_SUCCESS(state, datos) {
@@ -87,6 +100,14 @@ export const mutations = {
     state.detalle_comisionistas = datos.ComisionesTerceros;
     state.totalComisiones = datos.TotalComisiones;
 
+    state.acumulados_rb =  datos.Acumulados_RB;
+    state.cantAcum_RB = datos.CantAcumulados_RB;
+
+    state.acumulados_ce = datos.Acumulados_CE;
+    state.cantAcum_CE = datos.CantAcumulados_CE;
+
+    state.acumulados_tot =  datos.Acumulados_TOT;
+    state.cantAcum_TOT = datos.CantAcumulados_TOT;
 
     state.table_rb = datos.Tabla_RB;
     state.table_gral = datos.Tabla_Gral;
@@ -100,6 +121,12 @@ export const mutations = {
     state.loadingdetalle = false;
     state.table_gral = [];
     state.table_rb = [];
+    state.acumulados_rb = [];
+    state.cantAcum_RB = 0;
+    state.acumulados_ce = [];
+    state.cantAcum_CE = 0;
+    state.acumulados_tot = [];
+    state.cantAcum_TOT = 0;
 
   },
 

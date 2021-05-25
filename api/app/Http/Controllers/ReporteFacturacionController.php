@@ -173,7 +173,8 @@ class ReporteFacturacionController extends Controller
         $acum_CG = 0;
         $acum_CE_RB = 0;
 
-        $lstAcumulados = array();
+        $lstAcumulados_Giama = array();
+        $lstAcumulados_CE = array();
 
         $portentajeClientes = 0.07;
         $portentajePropios = 0.05;
@@ -196,6 +197,9 @@ class ReporteFacturacionController extends Controller
             $oCE_RB = new \stdClass();
             $oCE_CE = new \stdClass();
 
+            $oAcum_Giama = new \stdClass();
+            $oAcum_CE = new \stdClass();
+            
             $oCE->ID = $ce->ID;
             $oCE->Nombre = $ce->Nombre;
 
@@ -204,6 +208,11 @@ class ReporteFacturacionController extends Controller
 
             $oCE_CE->ID = $ce->ID;
             $oCE_CE->Nombre = $ce->Nombre;
+
+            $oAcum_Giama->ID = $ce->ID;
+            $oAcum_Giama->Nombre = $ce->Nombre;
+            $oAcum_CE->ID = $ce->ID;
+            $oAcum_CE->Nombre = $ce->Nombre;
 
             $oCE->Casos = 0;
             $oCE->HN = 0;
@@ -220,6 +229,11 @@ class ReporteFacturacionController extends Controller
             $lstTabla_CE[$ce->ID] = $oCE;
             $lstTabla_CE_RB[$ce->ID] = $oCE_RB;
             $lstTabla_CE_CE[$ce->ID] = $oCE_CE;
+
+
+
+            $lstAcumulados_Giama[$ce->ID] = $oAcum_Giama;
+            $lstAcumulados_CE[$ce->ID] = $oAcum_CE;
         } 
 
 
@@ -338,12 +352,80 @@ class ReporteFacturacionController extends Controller
            // array_push($lstHNs,$oDet);
         }
 
+        $arrAcum_Giama = array();
+        $rowHeader = array();
+        $rowValores = array();
+        $acum = 0;
+        $cant_Acum_Giama = 0;
 
+        foreach ($lstTabla_CE_RB as $acumRB) {
+            if ($acumRB->AFacturar > 0){
+                array_push($rowHeader, $acumRB->Nombre);
+                array_push($rowValores, round($acumRB->AFacturar,2));
+                $acum += round($acumRB->AFacturar,2);
+                $cant_Acum_Giama ++;
+            } 
+        }
+         
+        if ($acum > 0){
+            array_push($rowHeader, 'TOTAL RB');
+            array_push($rowValores, $acum);
+            $cant_Acum_Giama ++;
+        }
+
+        array_push($arrAcum_Giama, $rowHeader);
+        array_push($arrAcum_Giama, $rowValores);
+
+
+       // $lstAcumulados['Acumulados_RB'] = $arrAcum_Giama;
+
+        $arrAcum_CE = array();
+        $rowHeader_CE = array();
+        $rowValores_CE = array();
+        $acum_CE = 0;
+        $cant_Acum_CE = 0;
+
+        foreach ($lstTabla_CE_CE as $acumCE) {
+            if ($acumCE->AFacturar > 0){
+                array_push($rowHeader_CE, $acumCE->Nombre);
+                array_push($rowValores_CE, round($acumCE->AFacturar,2));
+                $acum_CE += round($acumCE->AFacturar,2);
+                $cant_Acum_CE ++;
+            } 
+        }
+         
+        if ($acum_CE > 0){
+            array_push($rowHeader_CE, 'TOTAL CE');
+            array_push($rowValores_CE, $acum_CE);
+            $cant_Acum_CE ++;
+        }
+
+        array_push($arrAcum_CE, $rowHeader_CE);
+        array_push($arrAcum_CE, $rowValores_CE);
+
+        $arrAcum_TOT = array();
+        $rowHeader_Tot = array();
+        $rowValores_Tot = array();
+        $acum_Tot = 0;
+        $cant_Acum_Tot = 1;
+
+        if ($acum > 0 || $acum_CE > 0){
+            $acum_tot = $acum + $acum_CE;
+            array_push($rowHeader_Tot, 'TOTAL');
+            array_push($rowValores_Tot, round($acum_tot, 2));
+        }
+
+        //array_push($arrAcum_TOT, $rowHeader_Tot);
+        array_push($arrAcum_TOT, $rowValores_Tot);
+
+       // $lstAcumulados['Acumulados_CE'] = $arrAcum_CE;
+
+        /*
         $lstAcumulados['AutoNet'] = $acum_AN;
         $lstAcumulados['AutoCervo'] = $acum_AC;
         $lstAcumulados['CarGroup'] = $acum_CG;
         $lstAcumulados['RB_CE'] = $acum_CE_RB;
-
+        */
 
         $lst = array();
 
@@ -356,7 +438,15 @@ class ReporteFacturacionController extends Controller
         $lst['Tabla_CE'] = $lstTabla_CE_CE;
 
 
-        $lst['Acumulados'] = $lstAcumulados;
+        $lst['Acumulados_RB'] = $arrAcum_Giama;
+        $lst['CantAcumulados_RB'] = $cant_Acum_Giama;
+
+        $lst['Acumulados_CE'] = $arrAcum_CE;
+        $lst['CantAcumulados_CE'] = $cant_Acum_CE;
+
+        $lst['Acumulados_TOT'] = $arrAcum_TOT;
+        $lst['CantAcumulados_TOT'] = $arrAcum_TOT;
+
        
         $lst['Reporte_CE'] = $lstCEs;
         $lst['Reporte_CE_RB'] = $lstRBs;

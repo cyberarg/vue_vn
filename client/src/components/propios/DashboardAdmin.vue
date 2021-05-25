@@ -1,6 +1,6 @@
 <template>
   <v-app class="contenedor">
-    <div class="dashboard">
+    <div class="dashboard-admin">
       <!--
       <v-row>
         <v-col cols="12" sm="6" lg="4">
@@ -156,7 +156,7 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row justfy="center">
+      <v-row justfy="center" class="evolucion">
         <v-col cols="12" xs="12" sm="12" lg="6" md="6">
           <v-card hover elevation-2 color="grey lighten-4">
             <v-card-title>Evolución Compras</v-card-title>
@@ -164,6 +164,14 @@
           </v-card>
         </v-col>
         <v-col cols="12" xs="12" sm="12" lg="6" md="6">
+          <v-card hover elevation-2 color="grey lighten-4">
+            <v-card-title>Reporte Cartera General</v-card-title>
+            <GridCarteraGral></GridCarteraGral>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row justfy="center" class="performance">
+        <v-col cols="12" xs="12" sm="12" lg="12" md="12">
           <v-card hover elevation-2 color="grey lighten-4">
             <v-card-title>Reporte Performance</v-card-title>
             <GridPerformanceComponent></GridPerformanceComponent>
@@ -179,6 +187,7 @@ import GridControlComponent from "@/components/propios/GridControlComponent";
 import GridPerformanceComponent from "@/components/propios/GridPerformanceComponent";
 import ChartDolarAcaraComponent from "@/components/propios/ChartDolarAcaraComponent";
 import ChartDolarAcaraFechasComponent from "@/components/propios/ChartDolarAcaraFechasComponent";
+import GridCarteraGral from "@/components/propios/GridCarteraGral";
 //import BaseMaterialStatsCard from "@/components/base/MaterialCard";
 
 export default {
@@ -192,7 +201,8 @@ export default {
     GridControlComponent,
     GridPerformanceComponent,
     ChartDolarAcaraComponent,
-    ChartDolarAcaraFechasComponent
+    ChartDolarAcaraFechasComponent,
+    GridCarteraGral
   },
 };
 </script>
@@ -201,6 +211,10 @@ export default {
 .contenedor {
   width: 100%;
   //background-color: #eeeeee;
+}
+
+.performance {
+  padding-top: 115px;
 }
 
 .row-equal {
@@ -218,8 +232,7 @@ export default {
   }
 }
 
-.dashboard {
-  //background-color: #eeeeee;
-  margin: 50px 20px;
+.dashboard-admin {
+  padding-bottom: 10px;
 }
 </style>

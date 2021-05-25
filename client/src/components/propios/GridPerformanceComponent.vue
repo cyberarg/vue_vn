@@ -142,7 +142,7 @@ export default {
 
 <style lang="scss" scoped>
 .contenedor {
-  height: 150px;
+  height: 1px;
 }
 
 .total {

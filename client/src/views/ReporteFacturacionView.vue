@@ -254,7 +254,13 @@ export default {
       "table_rb",
       "table_gral",
       "disableButtonResumenPDF",
-      "disableButtonDetalleGralXLS"
+      "disableButtonDetalleGralXLS",
+      "acumulados_rb",
+      "cantAcum_RB",
+      "acumulados_ce",
+      "cantAcum_CE",
+      "acumulados_tot",
+      "cantAcum_TOT",
     ]),
 
     expand_filtrados(){
@@ -434,16 +440,21 @@ export default {
       console.log(this.table_gral);
       var source1 = this.table_gral;
       let rows1 = [];
+      let rows_comision = [];
+      let rows_acum_rb = [];
+      let rows_acum_ce = [];
 
       let periodo = this.getPeriodoName(this.periodo_selected);
       //let titulo = 'Período: '+ periodo;
-      let subtitulo = '';
-      var heading = 'Resumen Facturacion - Período: ' + periodo;
+      let subtitulo = 'Período: ' + periodo;
+      var heading = 'Resumen Facturación';
       let pdfName = 'Resumen_Facturacion_' + periodo;
 
 
       console.log(this.table_rb);
-
+      let totCasos = 0;
+      let totHN = 0;
+      let totFact = 0;
       for (var prop in this.table_gral) {
         var element = this.table_gral[prop];
 
@@ -455,8 +466,53 @@ export default {
                 
             ];
             rows1.push(temp);
+
+        totCasos += element.Casos; 
+        totHN += element.HN;
+        totFact += element.AFacturar;
         
       }
+      var totales = [
+          'TOTAL', 
+          this.setSymbol(totCasos, 1),
+          this.setSymbol(totHN, 2),
+          this.setSymbol(totFact, 2)];
+      rows1.push(totales);
+
+
+      rows_acum_rb.push(this.acumulados_rb[0]);
+      let temprb = [];
+      this.acumulados_rb[1].forEach(element => {
+
+          temprb.push(this.setSymbol(element, 2));
+
+      });
+      rows_acum_rb.push(temprb);
+
+      rows_acum_ce.push(this.acumulados_ce[0]);
+      let tempce = [];
+      this.acumulados_ce[1].forEach(element => {
+
+          tempce.push(this.setSymbol(element, 2));
+
+      });
+      rows_acum_ce.push(tempce);
+
+ 
+      this.detalle_comisionistas.forEach(element => {
+         
+           var temp2 = [
+                element.Comisionista,
+                element.Porcentaje,
+                element.Concesionarios,
+                element.Aclaracion,
+                this.setSymbol(element.Total, 2),
+                
+            ];
+         
+          rows_comision.push(temp2);
+        });
+
 
         var doc = new jsPDF({orientation: 'landscape'});
         doc.setFont("helvetica");
@@ -497,8 +553,8 @@ export default {
           },
         });
 
-
-        // RESUMEN TOTALES
+        let lastCol = this.cantAcum_RB - 1;
+        // RESUMEN TOTALES RB
         doc.autoTable({
           styles: { fontSize: 8, halign: 'center' },
           
@@ -506,80 +562,69 @@ export default {
             [
               {
                 content: 'RB',
-                colSpan: 6,
-                styles: { halign: 'center', fillColor: [22, 160, 133], minCellHeight: 5 },
+                colSpan: this.cantAcum_RB,
+                styles: { halign: 'center', fillColor: [184, 194, 193], minCellHeight: 5 },
               },
             ],
           ],
-          tableWidth: 100,
-          body: [
-            ['AutoNet', 'Iruña', 'Luxcar','Amendola', 'Sauma', 'Cargroup'],
-            ['$231910', '$160132', '$329706', '$-', '$78106', '$538194'],
-          ],
-          startY: 25,
-         // body: rows1,
+          tableWidth: this.cantAcum_RB * 17,
+          body: rows_acum_rb,
+          startY: 30,
+         // startY: 25,
+         
         })
 
-        // RESUMEN TOTALES
+
+        // RESUMEN TOTALES CE
         doc.autoTable({
           styles: { fontSize: 8, halign: 'center' },
-          
+    
           head: [
-            [
+            [ 
               {
-                content: 'Total RB',
-                colSpan: 1,
-                rowSpan: 2,
-                styles: { halign: 'center', valign: 'middle', fillColor: [22, 160, 133], minCellHeight: 13 },
+                content: 'CONCESIONARIOS',
+                colSpan: this.cantAcum_CE,
+                styles: { halign: 'center', minCellHeight: 5 },
               },
-              {
-                content: 'Cargroup',
-                colSpan: 1,
-                rowSpan: 2,
-                styles: { halign: 'center', valign: 'middle', fillColor: [6, 22, 133], minCellHeight: 13 },
-              },
-              {
-                content: 'Sauma',
-                colSpan: 1,
-                rowSpan: 2,
-                styles: { halign: 'center', valign: 'middle', fillColor: [16, 22, 133], minCellHeight: 13 },
-              },
-              {
-                content: 'Iruña',
-                colSpan: 1,
-                rowSpan: 2,
-                styles: { halign: 'center', valign: 'middle', fillColor: [16, 22, 133], minCellHeight: 13 },
-              },
-              {
-                content: 'Allize',
-                colSpan: 1,
-                rowSpan: 2,
-                styles: { halign: 'center', valign: 'middle', fillColor: [16, 22, 133], minCellHeight: 13 },
-              },
+            ],
+          ],
+
+          body: rows_acum_ce,
+          margin: {left: (this.cantAcum_RB * 17) + 15},
+          tableWidth: this.cantAcum_CE * 17,
+          startY: 30,
+        })
+
+        let total_acumulados = this.setSymbol(this.acumulados_tot, 2);
+        // RESUMEN TOTALES TOT
+        doc.autoTable({
+          styles: { fontSize: 8, halign: 'center' },
+    
+          head: [
+            [ 
               {
                 content: 'TOTAL',
                 colSpan: 1,
-                rowSpan: 2,
-                styles: { halign: 'center', valign: 'middle', minCellHeight: 13},
+                rowSpan: 1,
+                styles: { halign: 'center', valign: 'middle', fillColor: [100, 132, 144],  minCellHeight: 13 },
               },
-
             ],
           ],
 
-
-          tableWidth: 120,
-          margin: {left: 113 },
-          body: [
-              ['$231910', '$160132', '$329706', '$-', '$78106', '$538194'],
-              ['$231910', '$160132', '$329706', '$-', '$78106', '$538194'],
+         body: [
+            [{ content: total_acumulados, styles: { halign: 'center' } }],
           ],
-          startY: 25,
-         // body: rows1,
+          margin: {left: (this.cantAcum_RB * 17) + (this.cantAcum_CE * 17) + 16},
+          startY: 30,
+          //tableWidth: 'wrap',
+          //margin: { top: 30 },
         })
+        
 
         // TABLA GENERAL
         doc.autoTable({
           styles: { fontSize: 9, halign: 'center' },
+          headStyles: {fillColor: [100, 132, 144]},
           columnStyles: { 
             0:{ halign: 'left' }, 
             1:{ halign: 'center' }, 
@@ -587,13 +632,32 @@ export default {
             3:{ halign: 'right' }, 
 
           }, // Cells in first column centered 
-          margin: { top: 10 },
-          tableWidth: 'wrap',
+          margin: { top: 30 },
+          tableWidth: this.cantAcum_RB * 17,
           columns: ['Empresa','Casos', 'HN', 'A Facturar'],
           body: rows1,
         });
 
         
+        // TABLA COMISIONES
+        doc.setFontSize(10);
+        doc.text(15, 147, 'Comisiones a Pagar');
+        doc.autoTable({
+          styles: { fontSize: 9, halign: 'center' },
+          headStyles: {fillColor: [60, 162, 118]},
+          columnStyles: { 
+            0:{ halign: 'left' }, 
+            1:{ halign: 'center' }, 
+            2:{ halign: 'left' }, 
+            3:{ halign: 'left' },
+            4:{ halign: 'right' }, 
+
+          }, // Cells in first column centered 
+          startY: 150,
+          //tableWidth: this.cantAcum_RB * 17,
+          columns: ['Destinatario','Porcentaje', 'Concesionarios', 'Aclaración', 'Importe'],
+          body: rows_comision,
+        });
 
         doc.autoTable({
             didDrawPage: function (data) {  

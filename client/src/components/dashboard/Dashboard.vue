@@ -1,6 +1,6 @@
 <template>
   <v-app class="contenedor">
-    <div class="dashboard">
+    <div class="initialdashboard">
       <template v-if="!esConcesionario && !esVinculo">
         <template v-if="perfilUsuario == 3">
           <DashboardOficiales></DashboardOficiales>
@@ -109,8 +109,8 @@ export default {
   }
 }
 
-.dashboard {
+.initialdashboard {
   //background-color: #eeeeee;
-  margin: 50px 20px;
+  //margin: 50px 20px;
 }
 </style>

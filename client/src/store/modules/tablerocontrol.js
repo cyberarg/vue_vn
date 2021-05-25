@@ -6,8 +6,11 @@ export const state = {
   dataStatus: "",
   items: [],
   datos: [],
+  datos_cartera: [],
+  items_cartera: [],
   items_filtrados: [],
-  loading: false
+  loading: false,
+  loading_cartera: false
 };
 
 export const mutations = {
@@ -28,6 +31,26 @@ export const mutations = {
   DATOS_ERROR(state) {
     state.dataStatus = "Error";
     state.loading = false;
+  },
+
+  GET_CARTERA_STATUS(state) {
+    state.dataStatus = "loading";
+    state.datos_cartera = [];
+    state.items_cartera = [];
+    state.loading_cartera = true;
+  },
+
+  CARTERA_SUCCESS(state, datos) {
+    //console.log(datos);
+    state.datos_cartera = datos.Reporte;
+    state.items_cartera = datos.Reporte;
+    state.loading_cartera = false;
+    state.dataStatus = "success";
+  },
+
+  CARTERA_ERROR(state) {
+    state.dataStatus = "Error";
+    state.loading_cartera = false;
   },
 
   GETTING_FILTRO(state) {
@@ -64,6 +87,22 @@ export const actions = {
         commit("DATOS_ERROR");
       });
   },
+
+  getCarteraGral({ commit }) {
+    //console.log(pars.periodo);
+    commit("GET_CARTERA_STATUS");
+    return axios
+      .post("/reportecarteradashboard")
+      .then(response => {
+        console.log(response.data);
+        commit("CARTERA_SUCCESS", response.data);
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("CARTERA_ERROR");
+      });
+  },
+  
 
   showFiltrados({ commit, getters }, parametros) {
     //console.log(parametros);
