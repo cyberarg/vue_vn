@@ -497,18 +497,33 @@ class GestionDatosController extends Controller
                         $textObsAutom .= ", Motivo a ".$util->getNombreMotivo($request->Motivo).".";
                         $dato->Motivo =  $request->Motivo;
                     }
+                    // Limpio todos los campos claves para las comisiones
+                    $dato->FechaVenta = null;
+                    $dato->MontoHNCompra = null;
+                    $dato->MontoCompraDato = null;
+
+                    $dato->PrecioMaximoCompra = null;
+                    $dato->ComisionALiquidar = null;
                 break;
                 case 9:
                     if ($dato->MotivoCaida != $request->MotivoCaida){
                         $textObsAutom .= ", Motivo Caida a ".$util->getNombreMotivoCaida($request->MotivoCaida).".";
                         $dato->MotivoCaida =  $request->MotivoCaida;
                     }
+                    // Limpio todos los campos claves para las comisiones
+                    $dato->FechaVenta = null;
+                    $dato->MontoHNCompra = null;
+                    $dato->MontoCompraDato = null;
+
+                    $dato->PrecioMaximoCompra = null;
+                    $dato->ComisionALiquidar = null;
+
                 break;
                 case 5:
-                    //La FechaVenta se pone solo una única vez
+                    //La FechaVenta se pone solo una única vez 
                     if ($dato->FechaVenta == null){
                         $dato->FechaVenta = $ffHoy;
-
+                
                         $esVendePlan = true;
 
                         $porcentajeComision = 0;
@@ -516,15 +531,20 @@ class GestionDatosController extends Controller
                             case 1:
                             case 2:
                             case 3:
+                            case 7: 
                                 $porcentajeComision = 0.08;
                             break;
-                            case 7: //Luxcar es el 8 + 12 = 20%
+                            /*
+                            case 7:
+                            //Luxcar es el 8 + 12 = 20%
                                 $porcentajeComision = 0.2;
                             break;
+                            */
                             case 4:
                             case 5:
                             case 6:
                             case 8:
+                            case 10:
                                 $porcentajeComision = 0.06;
                             break;
                         }
@@ -535,14 +555,24 @@ class GestionDatosController extends Controller
                         $dato->ComisionALiquidar = $util->getComisionALiquidar($dato->PrecioCompra, $dato->PrecioMaximoCompra);
                     }
                 break;
+                default:
+                    // Limpio todos los campos claves para las comisiones
+                    $dato->FechaVenta = null;
+                    $dato->MontoHNCompra = null;
+                    $dato->MontoCompraDato = null;
+
+                    $dato->PrecioMaximoCompra = null;
+                    $dato->ComisionALiquidar = null;
+                break;
             }
+
+           
 
             if ($request->CodEstado == 4){
                 if ($dato->Motivo != $request->Motivo){
                     $textObsAutom .= ", Motivo a ".$util->getNombreMotivo($request->Motivo).".";
                     $dato->Motivo =  $request->Motivo;
                 }
-
             }else{
                 $dato->Motivo = null;
             }

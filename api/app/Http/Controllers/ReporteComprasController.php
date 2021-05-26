@@ -52,11 +52,11 @@ class ReporteComprasController extends Controller
 
         $utils = new UtilsController;
 
-        $datos_gf =  SubiteDatos::on('GF')->where('CodEstado', '<>', 5)->get();
+        $datos_gf =  SubiteDatos::on('GF')->select('ID','Marca','Concesionario','CodEstado','Avance','AvanceCalculado')->whereNull('CodEstado')->orWhere('CodEstado', '<>', 5)->get();
 
-        $datos_cg =  SubiteDatos::on('CG')->where('CodEstado', '<>', 5)->get()->toArray();
-        $datos_ac =  SubiteDatos::on('AC')->where('CodEstado', '<>', 5)->get()->toArray();
-        $datos_an =  SubiteDatos::on('AN')->where('CodEstado', '<>', 5)->get()->toArray();
+        $datos_cg =  SubiteDatos::on('CG')->select('ID','Marca','Concesionario','CodEstado','Avance','FechaVtoCuota2')->whereNull('CodEstado')->orWhere('CodEstado', '<>', 5)->get()->toArray();
+        $datos_ac =  SubiteDatos::on('AC')->select('ID','Marca','Concesionario','CodEstado','Avance','FechaVtoCuota2')->whereNull('CodEstado')->orWhere('CodEstado', '<>', 5)->get()->toArray();
+        $datos_an =  SubiteDatos::on('AN')->select('ID','Marca','Concesionario','CodEstado','Avance','FechaVtoCuota2')->whereNull('CodEstado')->orWhere('CodEstado', '<>', 5)->get()->toArray();
 
         $arrFiat = array_merge($arrFiat, $datos_cg, $datos_ac, $datos_an);
 
