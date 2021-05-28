@@ -32,6 +32,21 @@ class UtilsController extends Controller
 
     }
 
+    public function seEstaTrabajando($fechaUltimaObs){
+
+        $dias = 0;
+        $fecha = strtotime(now());
+
+        $fult = date_create(date('Y-m-d', $fechaUltimaObs));
+        $ff = date_create(date('Y-m-d', $fecha)); 
+
+        $diff = date_diff($fult , $ff);
+        $dias = $diff->format('%a');
+
+        return $dias < 90;
+
+    }
+
     public function getAvanceAutomaticoFiat($FechaVtoCuota2){
 
         $avance = 0;

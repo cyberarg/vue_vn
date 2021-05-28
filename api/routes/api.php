@@ -47,6 +47,7 @@ Route::post('/updatedato', 'GestionDatosController@updateDato');
 Route::post('/getdatosweb', 'GestionDatosWebController@getDatos');
 Route::post('/showdatoweb', 'GestionDatosWebController@showDato');
 Route::post('/updatedatoweb', 'GestionDatosWebController@updateDato');
+Route::post('/altadatoweb', 'GestionDatosWebController@createDato');
 Route::resource('observacionesweb', 'ObservacionWebController');
 Route::post('/getobservacionesweb', 'ObservacionWebController@getObservacion');
 
@@ -118,7 +119,7 @@ Route::post('/reporteasignacion', 'ReporteAsignacionController@getDatos');
 Route::post('/reporteobservaciones', 'ReporteObservacionesOficialController@getReporteObservaciones');
 
 Route::post('/reportecompras', 'ReporteComprasController@getReporte');
-Route::post('/reportecarteradashboard', 'ReporteComprasController@getReporteCarteraDashboard');
+Route::post('/reportecarteradashboard', 'ReporteComprasController@getReporteCarteraDashboardStoredProcedure');
 Route::post('/reportecaidas', 'ReporteCaidasController@getReporte');
 Route::post('/reportecomisiones', 'ReporteComisionesController@getReporte');
 Route::post('/reportefacturacion', 'ReporteFacturacionController@getReporte');

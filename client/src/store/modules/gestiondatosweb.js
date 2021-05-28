@@ -18,7 +18,12 @@ export const state = {
   loadingObs: true,
   showMsg: false,
   askData: false,
-  showItemsFiltered: false
+  showItemsFiltered: false,
+
+  loadingStatusInsert: false,
+  dataStatusInsert: "",
+  dataStatusMsgInsert: "",
+
 };
 
 export const mutations = {
@@ -72,6 +77,25 @@ export const mutations = {
     // console.log(colection);
     state.dataStatus = "success";
     state.showMsg = false;
+  },
+
+  GET_ALTA_STATUS(state) {
+    state.loadingStatusInsert = true;
+    state.dataStatusInsert = "loading"
+  },
+
+  ALTA_SUCCESS(state, respuesta) {
+    state.loadingStatusInsert = false;
+    state.dataStatusInsert = "success";
+    state.dataStatusMsgInsert = "El nuevo dato web se agregeó exitosamente";
+    console.log(respuesta);
+  },
+
+  ALTA_ERROR(state) {
+    state.loadingStatusInsert = false;
+    state.dataStatusInsert = "error";
+    state.dataStatusMsgInsert = "Ocurrió un error al intengar grabar el nuevo dato web";
+
   },
 
   SET_LOADING_STATUS(state) {
@@ -218,6 +242,19 @@ export const actions = {
       .catch(err => {
         //console.log("get datos error");
         commit("DATOS_ERROR");
+      });
+  },
+
+  grabarDatoWeb({ commit }, pars) {
+    commit("GET_ALTA_STATUS");
+   
+    return axios
+      .post("/altadatoweb", pars)
+      .then(response => {
+        commit("ALTA_SUCCESS", response.data);
+      })
+      .catch(err => {
+        commit("ALTA_ERROR");
       });
   },
 

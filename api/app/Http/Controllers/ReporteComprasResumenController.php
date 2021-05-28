@@ -316,7 +316,8 @@ class ReporteComprasResumenController extends Controller
             array_push($lstDeb, $debbug);
             */
 
-            if ($oDet->AvanceAutomatico < 84 && $oDet->HaberNeto > 14999){
+           if ($oDet->AvanceAutomatico < 84 && $oDet->HaberNeto > 14999){
+            //if ($oDet->AvanceAutomatico < 84 ){
                 $cant += 1;
                 $list[0]['Cantidad'] += 1;
 

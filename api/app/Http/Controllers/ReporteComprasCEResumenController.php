@@ -87,10 +87,13 @@ class ReporteComprasCEResumenController extends Controller
      
        switch ($marca){
       
+           case 3:
+            $nombreOrigen = "Base Total Peugeot";
+           break; 
            case 5:
             $nombreOrigen = "Base Total Volkswagen";
            break;
-           case 6:
+           case 9:
             $nombreOrigen = "Base Total Ford";
            break;
            default:
@@ -114,7 +117,7 @@ class ReporteComprasCEResumenController extends Controller
             $concesionario = 'NULL';
         }
 
-        $result = DB::connection($db)->select("CALL hnweb_subitereportecompras_vw('".$periodoAct."', ".$concesionario.");");
+        $result = DB::connection($db)->select("CALL hnweb_subitereportecompras_vw('".$periodoAct."', ".$marca.", ".$concesionario.");");
  
        
 //dd($result);
@@ -187,7 +190,8 @@ class ReporteComprasCEResumenController extends Controller
             $oDet->Email1= $r->Email1;
             $oDet->Email2 = $r->Email2;
             $oDet->FechaVtoCuota2 = $r->FechaVtoCuota2;
-            $oDet->Avance = $r->Avance;
+            //$oDet->Avance = $r->Avance;
+            $oDet->Avance = $r->AvanceCalculado;
             $oDet->HaberNeto= $r->HaberNeto;
             $oDet->CodOficial = $oCodOficial;
             $oDet->NomOficial = $oNomOficial;
@@ -223,9 +227,11 @@ class ReporteComprasCEResumenController extends Controller
                 $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fcav, $fvc2);
            }
            */
-          $oDet->AvanceAutomatico = $r->Avance;
+          //$oDet->AvanceAutomatico = $r->Avance;
+          $oDet->AvanceAutomatico = $r->AvanceCalculado;
 
             if ($oDet->AvanceAutomatico < 84 && $oDet->HaberNeto > 14999){
+            //if ($oDet->AvanceAutomatico < 84){
                 $cant += 1;
                 $list[0]['Cantidad'] += 1;
 
@@ -608,12 +614,12 @@ class ReporteComprasCEResumenController extends Controller
             (strpos($nomLow,"autotag") !== false) ||
             (strpos($nomLow ,"autofinancia") !== false) ||
             (strpos($nomLow ,"auto financia") !== false) ||
-            (strpos($apeUpp,'AUTO HAUS S.A.') !== false) ||
+            (strpos($apeUpp,'AUTO HAUS') !== false) ||
             (strpos($apeUpp,'AUTOMOTORES RUSSONIELLO SA') !== false) ||
             (strpos($apeUpp,'AUTORA SA') !== false) ||
             (strpos($apeUpp,'AUTOSTAD SA') !== false) ||
             (strpos($apeUpp,'GRAS AUTOMOTORES SA') !== false) ||
-            (strpos($apeUpp,'GUIDO GUIDI S.A.') !== false) ||
+            (strpos($apeUpp,'GUIDO GUIDI') !== false) ||
             (strpos($apeUpp,'GUILLERMO DIETRICH S.A.') !== false) ||
             (strpos($apeUpp,'PLAN OPORTUNIDAD') !== false) ||
            
@@ -647,6 +653,7 @@ class ReporteComprasCEResumenController extends Controller
             (strpos($apeLow, "gestion financiera") !== false) ||
             (strpos($apeLow,"margian") !== false) ||
             (strpos($apeLow,"ricardo bevacqua") !== false) ||
+            (strpos($apeLow,"bevacqua ricardo") !== false) ||
             (strpos($nomLow,"luxcar") !== false) ||
             (strpos($nomLow ,"car group") !== false) ||
             (strpos($nomLow ,"car gruop") !== false )||
@@ -655,6 +662,7 @@ class ReporteComprasCEResumenController extends Controller
             (strpos($nomLow ,"gestion financiera") !== false) ||
             (strpos($nomLow ,"margian") !== false) ||
             (strpos($nomLow ,"ricardo bevacqua") !== false) ||
+            (strpos($nomLow ,"bevacqua ricardo") !== false) ||
             ((strpos($nomLow ,"ricardo") !== false) && (strpos($apeLow,"bevacqua") !== false))
         ){
             return true;

@@ -115,7 +115,8 @@
           color="primary"
           outlined
           text
-          disabled
+          
+          @click="showModalWeb"
         >
           <v-icon left>mdi-folder-plus-outline</v-icon>Nuevo Dato
         </v-btn>
@@ -131,14 +132,34 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+
+     <template>
+        <v-dialog
+          v-model="dialogAlta"
+          :scrollable="false"
+          :hide-overlay="false"
+          max-width="700px"
+          ma-0
+        >
+          <FormAltaDatoWeb
+            @hide="dialogAlta = false"
+            @refresh="getDatos()"
+          ></FormAltaDatoWeb>
+        </v-dialog>
+      </template>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
 import XLSX from "xlsx";
 import moment from "moment";
+import FormAltaDatoWeb from "@/components/propios/FormAltaDatoWeb.vue";
 
 export default {
+  name: "formaltadatoweb",
+  components: {
+    FormAltaDatoWeb,
+  },
   props: {
     pars: {
       type: Object,
@@ -157,6 +178,7 @@ export default {
       stateFilterValue: null,
       sliderAvance: 45,
       sliderHaberNeto: 15000,
+      dialogAlta: false,
 
       statesList: [
         { text: "Todos", value: 0 },
@@ -181,7 +203,7 @@ export default {
     this.getData();
   },
   mounted() {
-    this.checkEsConcesionario();
+    //this.checkEsConcesionario();
   },
 
   computed: {
@@ -212,6 +234,12 @@ export default {
   },
 
   methods: {
+
+    showModalWeb() {
+      this.dialogAlta = true;
+    },
+
+
     getTooltipData() {
       return "Cambió el Reconocimiento";
       this.showToolTip = true;

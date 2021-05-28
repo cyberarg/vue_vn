@@ -157,13 +157,13 @@
         </v-col>
       </v-row>
       <v-row justfy="center" class="evolucion">
-        <v-col cols="12" xs="12" sm="12" lg="6" md="6">
+        <v-col cols="12" xs="12" sm="12" lg="4" md="4">
           <v-card hover elevation-2 color="grey lighten-4">
             <v-card-title>Evolución Compras</v-card-title>
             <GridControlComponent></GridControlComponent>
           </v-card>
         </v-col>
-        <v-col cols="12" xs="12" sm="12" lg="6" md="6">
+        <v-col cols="12" xs="12" sm="12" lg="8" md="8">
           <v-card hover elevation-2 color="grey lighten-4">
             <v-card-title>Reporte Cartera General</v-card-title>
             <GridCarteraGral></GridCarteraGral>

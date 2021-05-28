@@ -42,6 +42,146 @@ class ReporteComprasController extends Controller
         return $lst;
     }
 
+    public function getReporteCarteraDashboardStoredProcedure(Request $request)
+    {
+        $arrFiat = array();
+        $datos_cg = array();
+        $datos_ac = array();
+        $datos_an = array();
+
+        $utils = new UtilsController;
+
+        $datos_totales =  DB::select('CALL hnweb_get_cartera_general()');
+
+        $acumMenos45 = 0;
+        $acumEntre45y60 = 0;
+        $acumMas60 = 0;
+
+        $lstTabla_Cartera_Marcas = array();
+
+        $marcas = $utils->getMarcasReporteCarteraDashboard();
+
+        foreach ($marcas as $marca) {
+            $oMar = new \stdClass();
+            $oDetalleMenor = new \stdClass();
+            $oDetalleEntre = new \stdClass();
+            $oDetalleMayor = new \stdClass();
+          
+            $oMar->Codigo = $marca->Codigo;
+            $oMar->Nombre = $marca->Nombre;
+
+            $oMar->CantDatos = 0;
+
+            $oDetalleMenor->Cantidad = 0;
+            $oDetalleMenor->CantTrabajados = 0;
+            $oDetalleMenor->CantHNBajo = 0;
+
+            $oDetalleEntre->Cantidad = 0;
+            $oDetalleEntre->CantTrabajados = 0;
+            $oDetalleEntre->CantHNBajo = 0;
+
+            $oDetalleMayor->Cantidad = 0;
+            $oDetalleMayor->CantTrabajados = 0;
+            $oDetalleMayor->CantHNBajo = 0;
+
+            /*
+            $oMar->Menor45 = 0;
+            $oMar->Entre45y60 = 0;
+            $oMar->Mayor60 = 0;
+            */
+
+            $oMar->Menor45 = $oDetalleMenor;
+            $oMar->Entre45y60 = $oDetalleEntre;
+            $oMar->Mayor60 = $oDetalleMayor;
+
+            $lstTabla_Cartera_Marcas[$marca->Codigo] = $oMar;
+
+        }
+
+        foreach ($datos_totales as $dato) {
+            $oDet = new \stdClass();
+
+            $oDet->Marca = $dato->Marca;
+
+            if ($oDet->Marca == 2){ // SI son de Fiat, tengo que calcular el avance con el campo de FechaVtoCuota2, para el resto es directamente el campo AvanceCalculado
+
+                $fvc2 = strtotime($dato->FechaVtoCuota2);
+    
+                if ($dato->FechaVtoCuota2 === NULL){
+                    $oDet->Avance = 0;
+                }else{
+                    $oDet->Avance = $utils->getAvanceAutomaticoFiat($fvc2);
+                }
+            }else{
+
+                if($dato->AvanceCalculado != null){
+                    $oDet->Avance = $dato->AvanceCalculado;
+                }else{
+                    $oDet->Avance = $dato->Avance;
+                }
+            }
+
+            //Filtro por Avance MENOR a 84
+
+            if ($oDet->Avance < 84){
+
+                $lstTabla_Cartera_Marcas[$dato->Marca]->CantDatos += 1;
+
+                if ($oDet->Avance < 45){
+
+                    $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->Cantidad += 1;
+
+                    if($dato->HaberNeto < 15000){
+                        $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantHNBajo += 1;
+                    }
+                    if($utils->seEstaTrabajando(strtotime($dato->FechaUltObs))){
+                        $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantTrabajados += 1;
+                    }
+
+                }elseif ($oDet->Avance >= 45 && $oDet->Avance < 60) {
+
+                    $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->Cantidad += 1;
+
+                    if($dato->HaberNeto < 15000){
+                        $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantHNBajo += 1;
+                    }
+                    if($utils->seEstaTrabajando(strtotime($dato->FechaUltObs))){
+                        $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantTrabajados += 1;
+                    }
+                }else{
+                    $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->Cantidad += 1;
+
+                    if($dato->HaberNeto < 15000){
+                        $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantHNBajo += 1;
+                    }
+                    if($utils->seEstaTrabajando(strtotime($dato->FechaUltObs))){
+                        $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantTrabajados += 1;
+                    }
+                }
+            }
+
+        }
+
+
+        $lst = array();
+        $row = array();
+        $arrAux = array();
+        
+        foreach ($lstTabla_Cartera_Marcas as $tabla) {
+            $row['NomMarca'] = $tabla->Nombre;
+            $row['CantDatos'] = $tabla->CantDatos;
+            $row['Menor45'] = $tabla->Menor45;
+            $row['Entre45y60'] = $tabla->Entre45y60;
+            $row['Mayor60'] = $tabla->Mayor60;
+
+            array_push($arrAux, $row);
+        }
+
+        $lst['Reporte'] = $arrAux;
+
+        return $lst;
+    }
+
 
     public function getReporteCarteraDashboard(Request $request)
     {

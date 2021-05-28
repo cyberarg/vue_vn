@@ -3,6 +3,7 @@
     <v-data-table
       dense
       :headers="headers"
+      :hide-default-header="true"
       :items="datos_cartera"
       :search="search"
       item-key="itemkey"
@@ -13,13 +14,90 @@
       :hide-default-footer="true"
     >
 
-    <template slot="body.append">
+      <template v-slot:header="{ props }">
+        <thead class="v-data-table-header">
+          <tr>
+              <th class="text-center child-header"></th>
+              <th class="text-center child-header lineH2LB" colspan="2">Avance Menor a 45</th>
+              <th class="text-center child-header lineH2LB" colspan="3">Avance Entre 45 y 60</th>
+              <th class="text-center child-header lineH2LB" colspan="3">Avance Mayor a 60</th>
+              <th class="text-center child-header lineH2L"></th>
+          </tr>
+          <tr>
+            <th class="text-center child-header">Marca</th>
+
+            <th class="text-center lineH2">Cantidad</th>
+            <th class="text-center lineH2">% HN Bajo</th>
+
+            <th class="text-center lineH2">Cantidad</th>
+            <th class="text-center lineH2">% HN Bajo</th>
+            <th class="text-center lineH2">% Trabajados</th>
+
+
+            <th class="text-center lineH2">Cantidad</th>
+            <th class="text-center lineH2">% HN Bajo</th>
+            <th class="text-center lineH2">% Trabajados</th>
+
+
+            <th class="text-center lineH2">Total</th>
+          </tr>
+        </thead>
+      </template>
+
+              
+
+      <template v-slot:item.NomMarca="{ item }">
+          {{ item.NomMarca }}
+      </template>
+
+      <template v-slot:item.Menor45.Cantidad="{ item }">
+          {{ item.Menor45.Cantidad }}
+      </template>
+
+      <template v-slot:item.Menor45.CantHNBajo="{ item }">
+          {{ getPorcentaje(item.Menor45.Cantidad, item.Menor45.CantHNBajo) }}
+      </template>
+
+      <template v-slot:item.Entre45y60.Cantidad="{ item }">
+          {{ item.Entre45y60.Cantidad }}
+      </template>
+
+      <template v-slot:item.Entre45y60.CantHNBajo="{ item }">
+          {{ getPorcentaje(item.Entre45y60.Cantidad, item.Entre45y60.CantHNBajo) }}
+      </template>
+
+      <template v-slot:item.Entre45y60.CantTrabajados="{ item }">
+          {{ getPorcentaje(item.Entre45y60.Cantidad, item.Entre45y60.CantTrabajados) }}
+      </template>
+
+      <template v-slot:item.Mayor60.Cantidad="{ item }">
+          {{ item.Mayor60.Cantidad }}
+      </template>
+
+      <template v-slot:item.Mayor60.CantHNBajo="{ item }">
+          {{ getPorcentaje(item.Mayor60.Cantidad, item.Mayor60.CantHNBajo) }}
+      </template>
+
+      <template v-slot:item.Mayor60.CantTrabajados="{ item }">
+          {{ getPorcentaje(item.Mayor60.Cantidad, item.Mayor60.CantTrabajados) }}
+      </template>
+
+      <template v-slot:item.CantDatos="{ item }">
+          {{ item.CantDatos }}
+      </template>
+
+      <template slot="body.append">
         <tr>
           <td class="total">Totales</td>
-          <td class="totales">{{ sumField("Menor45") | numFormat("0,0") }}</td>
-          <td class="totales">{{ sumField("Entre45y60") | numFormat("0,0") }}</td>
-          <td class="totales">{{ sumField("Mayor60") | numFormat("0,0") }}</td>
-          <td class="totales">{{ sumFields("Menor45", "Entre45y60", "Mayor60") | numFormat("0,0") }}</td>
+          <td class="totales">{{ sumFieldCantidad("Menor45") | numFormat("0,0") }}</td>
+          <td></td>
+          <td class="totales">{{ sumFieldCantidad("Entre45y60") | numFormat("0,0") }}</td>
+          <td></td>
+          <td></td>
+          <td class="totales">{{ sumFieldCantidad("Mayor60") | numFormat("0,0") }}</td>
+          <td></td>
+          <td></td>
+          <td class="totales">{{ sumFieldCantidadTotal("CantDatos") | numFormat("0,0") }}</td>
         </tr>
       </template>
 
@@ -58,16 +136,46 @@ export default {
           align: "start",
           value: "NomMarca",
         },
-        { text: "Menor a 45", value: "Menor45", align: "center" },
+        { 
+          text: "Menor a 45", 
+          value: "Menor45.Cantidad", 
+          align: "center" 
+        },
+        { 
+          text: "Porc. HN Bajo", 
+          value: "Menor45.CantHNBajo",  
+          align: "center" 
+        },
         {
           text: "Entre 45 y 60",
-          value: "Entre45y60",
+          value: "Entre45y60.Cantidad",
           align: "center",
+        },
+        { 
+          text: "Porc. HN Bajo", 
+          value: "Entre45y60.CantHNBajo", 
+          align: "center" 
+        },
+        { 
+          text: "Porc. Trabajados", 
+          value: "Entre45y60.CantTrabajados", 
+          align: "center" 
         },
         {
           text: "Mayor a 60",
-          value: "Mayor60",
+          value: "Mayor60.Cantidad",
           align: "center",
+        },
+
+        { 
+          text: "Porc. HN Bajo", 
+          value: "Mayor60.CantHNBajo", 
+          align: "center" 
+        },
+        { 
+          text: "Porc. Trabajados", 
+          value: "Mayor60.CantTrabajados", 
+          align: "center" 
         },
         
         {
@@ -95,6 +203,16 @@ export default {
   methods: {
     ...mapActions({ getDatosCartera: "tablerocontrol/getCarteraGral" }),
 
+
+    getPorcentaje(total, parte){
+      if (parte == 0){
+        return "-";
+      }
+      if (total > 0){
+        return this.$options.filters.numFormat((parte / total), "%0,0"); 
+      }
+    },
+
     sumField(key) {
       // sum data in give key (property)
       return this.items_cartera.reduce((a, b) => a + parseInt(b[key] || 0), 0);
@@ -102,11 +220,48 @@ export default {
 
     sumFields(key1, key2, key3) {
       // sum data in give key (property)
-      var tot1 = this.items_cartera.reduce((a, b) => a + parseInt(b[key1] || 0), 0);
-      var tot2 = this.items_cartera.reduce((a, b) => a + parseInt(b[key2] || 0), 0);
-      var tot3 = this.items_cartera.reduce((a, b) => a + parseInt(b[key3] || 0), 0);
+      console.log(this.items_cartera);
+      console.log(key1);
+      console.log(key2);
+      console.log(key3);
+      var tot1 = this.items_cartera.reduce((a, b) => a + parseInt(b[key1.Cantidad] || 0), 0);
+      var tot2 = this.items_cartera.reduce((a, b) => a + parseInt(b[key2.Cantidad] || 0), 0);
+      var tot3 = this.items_cartera.reduce((a, b) => a + parseInt(b[key3.Cantidad] || 0), 0);
 
       return parseInt(tot1) + parseInt(tot2) + parseInt(tot3) ;
+    },
+
+    sumFieldCantidad(key) {
+
+      let tot = 0;
+      this.items_cartera.forEach(element => {
+          tot += element[key]['Cantidad'];
+      });
+
+      return tot;
+
+    },
+
+    sumFieldCantidadTotal(key) {
+
+      let tot = 0;
+      this.items_cartera.forEach(element => {
+          tot += element[key];
+      });
+
+      return tot;
+
+    },
+
+    sumFieldsCantidad(key1, key2, key3) {
+ 
+      let tot = 0;
+      this.items_cartera.forEach(element => {
+          tot += element[key1]['Cantidad'];
+      });
+
+      return tot;
+
     },
     /*
     getTotal(item) {
@@ -122,6 +277,39 @@ export default {
 <style lang="scss" scoped>
 .contenedor {
   height: 15px;
+}
+
+.lineH1 {
+  font-weight: bold;
+  border-left: 1px solid #000000;
+  border-right: 1px solid #000000;
+}
+
+.lineH1L {
+  font-weight: bold;
+  border-left: 1px solid #000000;
+}
+
+.lineH2 {
+  border-left: 1px solid #000000;
+  border-right: 1px solid #000000;
+}
+
+.lineH2L {
+  border-left: 1px solid #000000;
+}
+
+.lineH2LB {
+  border-left: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+
+.lineL {
+  border-left: 1px solid #000000;
+}
+
+.lineR {
+  border-right: 1px solid #000000;
 }
 
 .total {

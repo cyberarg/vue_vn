@@ -94,6 +94,34 @@ class GestionDatosWebController extends Controller
         //
     }
 
+    public function createDato(Request $request)
+    {
+
+        return $request;
+        $newDatoW = new DatoWeb();
+        $newDatoW->setConnection('GF');
+
+        $newDatoW->FullName = $request->FullName;
+        $newDatoW->Telefono = $request->Telefono;
+        $newDatoW->Email = $request->Email;
+        $newDatoW->MarcaPlan = $request->NomMarca;
+        $newDatoW->ModeloAhorro = $request->ModeloAhorro;
+        $newDatoW->CantidadCuotas = $request->CantidadCuotas;
+        $newDatoW->EstadoPlan = $request->EstadoPlan->Nombre;
+
+        $newDatoW->Marca = $request->CodMarca;
+        $newDatoW->NroDoc = $request->Documento;
+        $newDatoW->Grupo = $request->Grupo;
+        $newDatoW->Orden = $request->Orden;
+        $newDatoW->Avance = $request->Avance;
+        
+
+        $newDatoW->save();
+
+        return $newDatoW;
+
+    }
+
     public function updateDato(Request $request)
     {
 

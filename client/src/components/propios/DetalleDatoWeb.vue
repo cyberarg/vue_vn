@@ -391,6 +391,8 @@
     <v-dialog v-model="loadingDatos" persistent max-width="350px">
       <v-progress-linear indeterminate height="10" color="primary darken-1"></v-progress-linear>
     </v-dialog>
+
+   
   </v-app>
 </template>
 
@@ -487,7 +489,7 @@ export default {
   },
 
   mounted() {
-    this.checkEsConcesionario();
+  //  this.checkEsConcesionario();
     this.checkEsVinculo();
   },
 
