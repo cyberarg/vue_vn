@@ -84,6 +84,8 @@ class ReporteComprasCEResumenController extends Controller
         $marca = $request->marca;
 
         $estadoGestion = [];
+
+        $utils = new UtilsController;
      
        switch ($marca){
       
@@ -220,13 +222,7 @@ class ReporteComprasCEResumenController extends Controller
             $fvc2 = strtotime($oDet->FechaVtoCuota2);
             $fcomp = strtotime($oDet->FechaAltaRegistro);
   
-            /*
-           if ($oDet->FechaVtoCuota2 === NULL){
-                $oDet->AvanceAutomatico = $r->Avance;
-           }else{
-                $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fcav, $fvc2);
-           }
-           */
+
           //$oDet->AvanceAutomatico = $r->Avance;
           $oDet->AvanceAutomatico = $r->AvanceCalculado;
 
@@ -239,13 +235,13 @@ class ReporteComprasCEResumenController extends Controller
 
                 $perteneceUniverso = true;
 
-                if($this->esPropio($oDet->Nombres, $oDet->Apellido )){
+                if($utils->esPropio($oDet->Nombres, $oDet->Apellido )){
                     $list[1]['Cantidad'] += 1;
                     $perteneceUniverso = false;
                     $oDet->EsUniverso = -1;
                     $oDet->EsPropio = 1;
                 }
-                if($this->enOtraSociedad($oDet->Nombres, $oDet->Apellido )){
+                if($utils->enOtraSociedad($oDet->Nombres, $oDet->Apellido )){
                     //$list[2]['Cantidad'] += 1;
                     $list[1]['Cantidad'] += 1;
                     $perteneceUniverso = false;
@@ -290,7 +286,7 @@ class ReporteComprasCEResumenController extends Controller
        //dd($listMesActual);
 
         foreach ($listMesActual as $new) {
-            if(!($this->esPropio($new->Nombres, $new->Apellido)) && !($this->enOtraSociedad($new->Nombres, $new->Apellido))){
+            if(!($utils->esPropio($new->Nombres, $new->Apellido)) && !($utils->enOtraSociedad($new->Nombres, $new->Apellido))){
                 $encontro = false;
 
                 foreach ($listMesAnterior as $old) {
@@ -596,122 +592,9 @@ class ReporteComprasCEResumenController extends Controller
     }
 
 
-    Public Function enOtraSociedad($nombre, $apellido){
-        $apeLow = strtolower($apellido);
-        $nomLow = strtolower($nombre);
-
-        $apeUpp = strtoupper($apellido);
-
-        if (
-            (strpos($apeLow,"sapac") !== false) ||
-            (strpos($apeLow,"volkswagen argentina sa") !== false) ||
-            (strpos($apeLow,"volkswagen argentina s.a.") !== false) ||
-            (strpos($apeLow,"autokar") !== false) ||
-            (strpos($apeLow,"autotag") !== false) ||
-            (strpos($apeLow,"autofinancia") !== false) ||
-            (strpos($apeLow,"auto financia") !== false) ||    
-            (strpos($nomLow ,"autokar") !== false )||
-            (strpos($nomLow,"autotag") !== false) ||
-            (strpos($nomLow ,"autofinancia") !== false) ||
-            (strpos($nomLow ,"auto financia") !== false) ||
-            (strpos($apeUpp,'AUTO HAUS') !== false) ||
-            (strpos($apeUpp,'AUTOMOTORES RUSSONIELLO SA') !== false) ||
-            (strpos($apeUpp,'AUTORA SA') !== false) ||
-            (strpos($apeUpp,'AUTOSTAD SA') !== false) ||
-            (strpos($apeUpp,'GRAS AUTOMOTORES SA') !== false) ||
-            (strpos($apeUpp,'GUIDO GUIDI') !== false) ||
-            (strpos($apeUpp,'GUILLERMO DIETRICH S.A.') !== false) ||
-            (strpos($apeUpp,'PLAN OPORTUNIDAD') !== false) ||
-           
-            (strpos($apeUpp,'PLAN REENGANCHE') !== false) ||
     
-            (strpos($apeUpp, 'SAUMA WAGEN SAN ISIDRO S.A.') !== false) ||
-            (strpos($apeUpp, 'TORINO AUTOS S.A.') !== false) 
-        ){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
 
 
-    Public Function esPropio($nombre, $apellido){
-
-        $apeLow = strtolower($apellido);
-        $nomLow = strtolower($nombre);
-
-        if (
-            (strpos($apeLow,"luxcar") !== false) ||
-            (strpos($apeLow,"iruna") !== false) ||
-            (strpos($apeLow,"iru#a") !== false) ||
-            (strpos($apeLow,"mirage") !== false) ||
-            (strpos($apeLow,"car group") !== false) ||
-            (strpos($apeLow,"car gruop") !== false) ||
-            (strpos($apeLow,"autonet") !== false) ||
-            (strpos($apeLow,"mdplanes") !== false) ||
-            (strpos($apeLow, "gestion financiera") !== false) ||
-            (strpos($apeLow,"margian") !== false) ||
-            (strpos($apeLow,"ricardo bevacqua") !== false) ||
-            (strpos($apeLow,"bevacqua ricardo") !== false) ||
-            (strpos($nomLow,"luxcar") !== false) ||
-            (strpos($nomLow ,"car group") !== false) ||
-            (strpos($nomLow ,"car gruop") !== false )||
-            (strpos($nomLow ,"autonet") !== false) ||
-            (strpos($nomLow ,"mdplanes") !== false) ||
-            (strpos($nomLow ,"gestion financiera") !== false) ||
-            (strpos($nomLow ,"margian") !== false) ||
-            (strpos($nomLow ,"ricardo bevacqua") !== false) ||
-            (strpos($nomLow ,"bevacqua ricardo") !== false) ||
-            ((strpos($nomLow ,"ricardo") !== false) && (strpos($apeLow,"bevacqua") !== false))
-        ){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
-
-   
-
-    public function getAvanceAutomatico($FechaCalculoAvance, $FechaVtoCuota2){
-
-        $avance = 0;
-        if (isset($FechaCalculoAvance)){
-            $fecha = $FechaCalculoAvance;
-        }else{
-            $fecha = now();
-        }
-
-        if ($FechaVtoCuota2 === NULL){
-            return 0;
-        }else{
-            $fvtoc2 = date_create(date('Y-m-d', $FechaVtoCuota2));
-            $ff = date_create(date('Y-m-d', $fecha));       
-    
-            if (checkdate(date('m', $FechaVtoCuota2), date('d', $FechaVtoCuota2), date('Y', $FechaVtoCuota2))){
-                $diff = date_diff($fvtoc2 , $ff);
-
-                $avance = (($diff->format('%a') / 365) * 12) + 2;
-                $avance = round($avance, 0);
-               //dd($avance);
-                    /*
-                if (isset($FechaCalculoAvance)){
-                    if (date('d', $fecha) <= 10){
-                        $avance -= 1;
-                    }
-                }
-                */
-                
-            }
-        }
-
-        if ($avance > 84){
-            $avance = 84;
-        }
-
-        return $avance;
-    }
 
     /**
      * Show the form for creating a new resource.

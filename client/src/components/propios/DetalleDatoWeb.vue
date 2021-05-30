@@ -461,7 +461,7 @@ export default {
       ocultarDatePicker: false,
       disableFechaCompra: false,
       fechaCompraFormated: "",
-      showBotones: null,
+      showBotones: true,
       userCanChangeVenta: false,
       requiereObsCaida: false,
     };
@@ -490,7 +490,7 @@ export default {
 
   mounted() {
   //  this.checkEsConcesionario();
-    this.checkEsVinculo();
+    // this.checkEsVinculo();
   },
 
   methods: {

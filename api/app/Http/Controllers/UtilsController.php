@@ -47,6 +47,205 @@ class UtilsController extends Controller
 
     }
 
+    public Function enOtraSociedadOPropio($nombre, $apellido){
+        $apeLow = strtolower($apellido);
+        $nomLow = strtolower($nombre);
+
+        if (
+
+            (strpos($apeLow,"volkswagen") !== false) ||
+            (strpos($apeLow,"autokar") !== false) ||
+            (strpos($apeLow,"autofinancia") !== false) ||
+            (strpos($apeLow,"auto financia") !== false) ||   
+
+            (strpos($apeLow,"bevacqua ricardo nicolas") !== false) ||   
+            (strpos($apeLow,"iruña") !== false) || 
+            (strpos($apeLow,"iruna") !== false) || 
+            (strpos($apeLow,"mirage") !== false) || 
+            
+            (strpos($apeLow,"auto haus") !== false) ||   
+            (strpos($apeLow,"automotores russoniello") !== false) ||   
+            (strpos($apeLow,"autora") !== false) ||   
+            (strpos($apeLow,"autostad") !== false) ||   
+            (strpos($apeLow,"biara srl") !== false) ||   
+            (strpos($apeLow,"gras automotores") !== false) ||   
+            (strpos($apeLow,"guido guidi") !== false) ||   
+            (strpos($apeLow,"guillermo dietrich") !== false) ||   
+            (strpos($apeLow,"sauma") !== false) ||   
+            (strpos($apeLow,"plan oportunidad") !== false) ||   
+            (strpos($apeLow,"plan reenganche") !== false) ||   
+            (strpos($apeLow,"sauma") !== false) ||   
+            (strpos($apeLow,"torino autos") !== false) ||   
+
+            (strpos($nomLow ,"autokar") !== false )||
+            (strpos($nomLow ,"autofinancia") !== false) ||
+            (strpos($nomLow ,"auto financia") !== false) ||
+            (strpos($apeLow,"car group") !== false) ||
+            (strpos($apeLow,"car gruop") !== false) ||
+            (strpos($apeLow,"autonet") !== false) ||
+            (strpos($apeLow,"mdplanes") !== false) ||
+            (strpos($apeLow, "gestion financiera") !== false) ||
+            (strpos($apeLow,"margian") !== false) ||
+            (strpos($apeLow,"ricardo bevacqua") !== false) ||
+            (strpos($apeLow,"bevacqua ricardo") !== false) ||
+            (strpos($apeLow,"bevacqua ricardo nicolas") !== false) ||
+
+            (strpos(str_replace(' ', '', $apeLow),"bevacquaricardonicolas") !== false) ||
+            (strpos(str_replace(' ', '', $apeLow),"bevaqcuaricardonicolas") !== false) ||
+            (strpos(str_replace(' ', '', $apeLow),"bevaquaricardonicolas") !== false) ||
+
+            (strpos($apeLow,"mirage") !== false) ||
+            (strpos($apeLow,"iruna") !== false) ||
+            (strpos($apeLow,"iruña") !== false) ||
+            (strpos($apeLow,"iru#a") !== false) ||
+            (strpos($nomLow ,"car group") !== false) ||
+            (strpos($nomLow ,"car gruop") !== false )||
+            (strpos($nomLow ,"autonet") !== false) ||
+            (strpos($nomLow ,"mdplanes") !== false) ||
+            (strpos($nomLow ,"gestion financiera") !== false) ||
+            (strpos($nomLow ,"margian") !== false) ||
+            (strpos($nomLow ,"ricardo bevacqua") !== false) ||
+            ((strpos($nomLow ,"ricardo") !== false) && (strpos($apeLow,"bevacqua") !== false))
+        ){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    public Function enOtraSociedadOPropioMerge($nombre, $apellido){
+
+        return ($this->enOtraSociedad($nombre, $apellido) || $this->esPropio($nombre, $apellido));
+
+    }
+
+    public Function enOtraSociedad($nombre, $apellido){
+        $apeLow = strtolower($apellido);
+        $nomLow = strtolower($nombre);
+
+        $apeUpp = strtoupper($apellido);
+
+        if (
+
+            (strpos($apeLow,"volkswagen argentina") !== false) ||
+            (strpos($apeLow,"volkswagen argentina sa") !== false) ||
+            (strpos($apeLow,"volkswagen argentina s.a.") !== false) ||
+            (strpos($apeLow,"autokar") !== false) ||
+            (strpos($apeLow,"autotag") !== false) ||
+            (strpos($apeLow,"autofinancia") !== false) ||
+            (strpos($apeLow,"auto financia") !== false) ||    
+            (strpos($nomLow ,"autokar") !== false )||
+            (strpos($nomLow,"autotag") !== false) ||
+            (strpos($nomLow ,"autofinancia") !== false) ||
+            (strpos($nomLow ,"auto financia") !== false) ||
+
+            (strpos($apeLow,"auto haus") !== false) ||   
+            (strpos($apeLow,"automotores russoniello") !== false) ||   
+            (strpos($apeLow,"autora") !== false) ||   
+            (strpos($apeLow,"autostad") !== false) ||   
+            (strpos($apeLow,"biara srl") !== false) ||   
+            (strpos($apeLow,"gras automotores") !== false) ||   
+            (strpos($apeLow,"guido guidi") !== false) ||   
+            (strpos($apeLow,"guillermo dietrich") !== false) ||   
+            (strpos($apeLow,"sauma") !== false) ||   
+            (strpos($apeLow,"plan oportunidad") !== false) ||   
+            (strpos($apeLow,"plan reenganche") !== false) ||   
+            (strpos($apeLow,"sauma") !== false) ||   
+            (strpos($apeLow,"torino autos") !== false) ||   
+
+            (strpos($nomLow ,"autokar") !== false )||
+            (strpos($nomLow ,"autofinancia") !== false) ||
+            (strpos($nomLow ,"auto financia") !== false) ||
+            (strpos($nomLow ,"autokar") !== false )||
+            (strpos($nomLow,"autotag") !== false) ||
+
+            (strpos($apeUpp, 'SAUMA WAGEN SAN ISIDRO S.A.') !== false) ||
+            (strpos($apeUpp, 'TORINO AUTOS') !== false) 
+        ){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+    public Function esPropio($nombre, $apellido){
+
+        $apeLow = strtolower($apellido);
+        $nomLow = strtolower($nombre);
+
+        if (
+
+            (strpos($apeLow,"iruna") !== false) ||
+            (strpos($apeLow,"mirage") !== false) ||
+            (strpos($apeLow,"luxcar") !== false) ||
+            (strpos($apeLow,"car group") !== false) ||
+            (strpos($apeLow,"car gruop") !== false) ||
+            (strpos($apeLow,"autonet") !== false) ||
+            (strpos($apeLow,"mdplanes") !== false) ||
+            (strpos($apeLow, "gestion financiera") !== false) ||
+            (strpos($apeLow,"margian") !== false) ||
+            (strpos($apeLow,"ricardo bevacqua") !== false) ||
+            (strpos($nomLow,"luxcar") !== false) ||
+            (strpos($nomLow,"iruna") !== false) ||
+            (strpos($nomLow,"mirage") !== false) ||
+            (strpos($nomLow ,"car group") !== false) ||
+            (strpos($nomLow ,"car gruop") !== false )||
+            (strpos($nomLow ,"autonet") !== false) ||
+            (strpos($nomLow ,"mdplanes") !== false) ||
+            (strpos($nomLow ,"gestion financiera") !== false) ||
+            (strpos($nomLow ,"margian") !== false) ||
+            (strpos($nomLow ,"ricardo bevacqua") !== false) ||
+            (strpos($apeLow,"bevacqua ricardo") !== false) ||
+            (strpos($apeLow,"bevacqua ricardo nicolas") !== false) ||
+
+            (strpos(str_replace(' ', '', $apeLow),"bevacquaricardonicolas") !== false) ||
+            (strpos(str_replace(' ', '', $apeLow),"bevaqcuaricardonicolas") !== false) ||
+            (strpos(str_replace(' ', '', $apeLow),"bevaquaricardonicolas") !== false) ||
+            ((strpos($nomLow ,"ricardo") !== false) && (strpos($apeLow,"bevacqua") !== false))
+
+        ){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    public function getAvanceAutomaticoAFecha($FechaCalculoAvance, $FechaVtoCuota2){
+
+        $avance = 0;
+        if (isset($FechaCalculoAvance)){
+            $fecha = $FechaCalculoAvance;
+        }else{
+            $fecha = now();
+        }
+
+        if ($FechaVtoCuota2 === NULL){
+            return 0;
+        }else{
+            $fvtoc2 = date_create(date('Y-m-d', $FechaVtoCuota2));
+            $ff = date_create(date('Y-m-d', $fecha));       
+    
+            if (checkdate(date('m', $FechaVtoCuota2), date('d', $FechaVtoCuota2), date('Y', $FechaVtoCuota2))){
+                $diff = date_diff($fvtoc2 , $ff);
+                //$avance = ($diff->format('%y') * 12 + $diff->format('%m')) + 2;
+                $avance = (($diff->format('%a') / 365) * 12) + 2;
+                $avance = round($avance, 0);
+                
+            }
+        }
+
+        if ($avance > 84){
+            $avance = 84;
+        }
+
+        return $avance;
+    }
+
+
     public function getAvanceAutomaticoFiat($FechaVtoCuota2){
 
         $avance = 0;

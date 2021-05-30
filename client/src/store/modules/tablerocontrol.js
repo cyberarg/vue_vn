@@ -10,11 +10,14 @@ export const state = {
   items_cartera: [],
   items_filtrados: [],
   loading: false,
-  loading_cartera: false
+  loading_cartera: false,
+  loading_items_detalle_cartera:false,
+  items_detalle_cartera:[],
 };
 
 export const mutations = {
   GET_DATA_STATUS(state) {
+    
     state.dataStatus = "loading";
     state.items = [];
     state.loading = true;
@@ -25,12 +28,14 @@ export const mutations = {
     state.items = datos.Reporte;
     state.datos = datos.Datos;
     state.loading = false;
+
     state.dataStatus = "success";
   },
 
   DATOS_ERROR(state) {
     state.dataStatus = "Error";
     state.loading = false;
+    state.loading_items_detalle_cartera = true;
   },
 
   GET_CARTERA_STATUS(state) {
@@ -38,6 +43,7 @@ export const mutations = {
     state.datos_cartera = [];
     state.items_cartera = [];
     state.loading_cartera = true;
+    state.loading_items_detalle_cartera = true;
   },
 
   CARTERA_SUCCESS(state, datos) {
@@ -45,12 +51,33 @@ export const mutations = {
     state.datos_cartera = datos.Reporte;
     state.items_cartera = datos.Reporte;
     state.loading_cartera = false;
+    state.loading_items_detalle_cartera = false;
     state.dataStatus = "success";
   },
 
   CARTERA_ERROR(state) {
     state.dataStatus = "Error";
     state.loading_cartera = false;
+    state.loading_items_detalle_cartera = true;
+  },
+
+  GET_DETALLE_CARTERA_STATUS(state) {
+    state.dataStatus = "loading";
+    state.items_detalle_cartera = [];
+    state.loading_items_detalle_cartera = true;
+  },
+
+  CARTERA_DETALLE_SUCCESS(state, datos) {
+    console.log(datos);
+    state.items_detalle_cartera = datos.Detalle;
+    state.loading_items_detalle_cartera = false;
+    state.dataStatus = "success";
+  },
+
+  CARTERA_DETALLE_ERROR(state) {
+    state.dataStatus = "Error";
+    state.items_detalle_cartera = [];
+    state.loading_items_detalle_cartera = true;
   },
 
   GETTING_FILTRO(state) {
@@ -102,6 +129,22 @@ export const actions = {
         commit("CARTERA_ERROR");
       });
   },
+
+  getDetallePendientesCarteraGral({ commit }) {
+    //console.log(pars.periodo);
+    commit("GET_DETALLE_CARTERA_STATUS");
+    return axios
+      .post("/reportecarteradetalledashboard")
+      .then(response => {
+        console.log(response.data);
+        commit("CARTERA_DETALLE_SUCCESS", response.data);
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("CARTERA_DETALLE_ERROR");
+      });
+  },
+  
   
 
   showFiltrados({ commit, getters }, parametros) {

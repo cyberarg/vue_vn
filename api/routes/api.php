@@ -119,7 +119,12 @@ Route::post('/reporteasignacion', 'ReporteAsignacionController@getDatos');
 Route::post('/reporteobservaciones', 'ReporteObservacionesOficialController@getReporteObservaciones');
 
 Route::post('/reportecompras', 'ReporteComprasController@getReporte');
-Route::post('/reportecarteradashboard', 'ReporteComprasController@getReporteCarteraDashboardStoredProcedure');
+
+//Route::post('/reportecarteradashboard', 'ReporteComprasController@getReporteCarteraDashboardStoredProcedure');
+Route::post('/reportecarteradashboard', 'ReporteComprasController@getReporteCarteraDashboard');
+Route::post('/reportecarteradetalledashboard', 'ReporteComprasController@getReporteDetallePendientesCarteraDashboard');
+
+
 Route::post('/reportecaidas', 'ReporteCaidasController@getReporte');
 Route::post('/reportecomisiones', 'ReporteComisionesController@getReporte');
 Route::post('/reportefacturacion', 'ReporteFacturacionController@getReporte');

@@ -83,6 +83,8 @@ class ReporteComprasResumenController extends Controller
         $concesionario = $request->concesionario;
         $marca = $request->marca;
 
+        $utils = new UtilsController;
+
         $emp1 = "AutoCervo";
         $db1= "AC";
         $emp2 = "AutoNet";
@@ -273,10 +275,10 @@ class ReporteComprasResumenController extends Controller
            // dd($oDet->FechaCompra);
            
             if ($marca == 2){
-                if ($oDet->FechaVtoCuota2 === NULL){
+                if ($r->FechaVtoCuota2 === NULL){
                     $oDet->AvanceAutomatico = 0;
                 }else{
-                    $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fcav, $fvc2);
+                    $oDet->AvanceAutomatico = $utils->getAvanceAutomaticoAFecha($fcav, $fvc2);
                     $oDet->Avance = $oDet->AvanceAutomatico;
                 }
             }else{
@@ -325,13 +327,13 @@ class ReporteComprasResumenController extends Controller
 
                 $perteneceUniverso = true;
 
-                if($this->esPropio($oDet->Nombres, $oDet->Apellido )){
+                if($utils->esPropio($oDet->Nombres, $oDet->Apellido )){
                     $list[1]['Cantidad'] += 1;
                     $perteneceUniverso = false;
                     $oDet->EsUniverso = -1;
                     $oDet->EsPropio = 1;
                 }
-                if($this->enOtraSociedad($oDet->Nombres, $oDet->Apellido )){
+                if($utils->enOtraSociedad($oDet->Nombres, $oDet->Apellido )){
                     //$list[2]['Cantidad'] += 1;
                     $list[1]['Cantidad'] += 1;
                     $perteneceUniverso = false;
@@ -375,7 +377,7 @@ class ReporteComprasResumenController extends Controller
        // dd($listMesActual);
 
         foreach ($listMesActual as $new) {
-            if(!($this->esPropio($new->Nombres, $new->Apellido)) && !($this->enOtraSociedad($new->Nombres, $new->Apellido))){
+            if(!($utils->esPropio($new->Nombres, $new->Apellido)) && !($utils->enOtraSociedad($new->Nombres, $new->Apellido))){
                 $encontro = false;
 
                 foreach ($listMesAnterior as $old) {
@@ -661,70 +663,9 @@ class ReporteComprasResumenController extends Controller
         return $listUniv;
 
     }
-
-
-    Public Function enOtraSociedad($nombre, $apellido){
-        $apeLow = strtolower($apellido);
-        $nomLow = strtolower($nombre);
-
-        if (
-            (strpos($apeLow,"volkswagen argentina sa") !== false) ||
-            (strpos($apeLow,"volkswagen argentina s.a.") !== false) ||
-            (strpos($apeLow,"autokar") !== false) ||
-            (strpos($apeLow,"autotag") !== false) ||
-            (strpos($apeLow,"autofinancia") !== false) ||
-            (strpos($apeLow,"auto financia") !== false) ||    
-            (strpos($nomLow ,"autokar") !== false )||
-            (strpos($nomLow,"autotag") !== false) ||
-            (strpos($nomLow ,"autofinancia") !== false) ||
-            (strpos($nomLow ,"auto financia") !== false) 
-        ){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
-
-
-    Public Function esPropio($nombre, $apellido){
-
-        $apeLow = strtolower($apellido);
-        $nomLow = strtolower($nombre);
-
-        if (
-            (strpos($apeLow,"iruna") !== false) ||
-            (strpos($apeLow,"mirage") !== false) ||
-            (strpos($apeLow,"luxcar") !== false) ||
-            (strpos($apeLow,"car group") !== false) ||
-            (strpos($apeLow,"car gruop") !== false) ||
-            (strpos($apeLow,"autonet") !== false) ||
-            (strpos($apeLow,"mdplanes") !== false) ||
-            (strpos($apeLow, "gestion financiera") !== false) ||
-            (strpos($apeLow,"margian") !== false) ||
-            (strpos($apeLow,"ricardo bevacqua") !== false) ||
-            (strpos($nomLow,"luxcar") !== false) ||
-            (strpos($nomLow,"iruna") !== false) ||
-            (strpos($nomLow,"mirage") !== false) ||
-            (strpos($nomLow ,"car group") !== false) ||
-            (strpos($nomLow ,"car gruop") !== false )||
-            (strpos($nomLow ,"autonet") !== false) ||
-            (strpos($nomLow ,"mdplanes") !== false) ||
-            (strpos($nomLow ,"gestion financiera") !== false) ||
-            (strpos($nomLow ,"margian") !== false) ||
-            (strpos($nomLow ,"ricardo bevacqua") !== false) ||
-            ((strpos($nomLow ,"ricardo") !== false) && (strpos($apeLow,"bevacqua") !== false))
-        ){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
-
    
-
-    public function getAvanceAutomatico($FechaCalculoAvance, $FechaVtoCuota2){
+    /*
+    public function getAvanceAutomaticoAFecha($FechaCalculoAvance, $FechaVtoCuota2){
 
         $avance = 0;
         if (isset($FechaCalculoAvance)){
@@ -744,14 +685,6 @@ class ReporteComprasResumenController extends Controller
                 //$avance = ($diff->format('%y') * 12 + $diff->format('%m')) + 2;
                 $avance = (($diff->format('%a') / 365) * 12) + 2;
                 $avance = round($avance, 0);
-               //dd($avance);
-                    /*
-                if (isset($FechaCalculoAvance)){
-                    if (date('d', $fecha) <= 10){
-                        $avance -= 1;
-                    }
-                }
-                */
                 
             }
         }
@@ -762,6 +695,7 @@ class ReporteComprasResumenController extends Controller
 
         return $avance;
     }
+    */
 
     /**
      * Show the form for creating a new resource.

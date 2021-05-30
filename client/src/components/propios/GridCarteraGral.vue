@@ -1,5 +1,20 @@
 <template>
   <div class="contenedor">
+    <v-card hover elevation-2 color="grey lighten-4">
+        <v-card-title>
+          Reporte Cartera General 
+          <v-spacer></v-spacer>
+          <v-btn
+                outlined
+                color="success"
+                text
+                small
+                :disabled="this.loading_items_detalle_cartera"
+                @click="this.detalleExcelPendientes()"
+            >
+                <v-icon left>mdi-file-excel</v-icon>Detalle Pendientes
+            </v-btn>
+        </v-card-title>
     <v-data-table
       dense
       :headers="headers"
@@ -21,7 +36,7 @@
               <th class="text-center child-header lineH2LB" colspan="2">Avance Menor a 45</th>
               <th class="text-center child-header lineH2LB" colspan="3">Avance Entre 45 y 60</th>
               <th class="text-center child-header lineH2LB" colspan="3">Avance Mayor a 60</th>
-              <th class="text-center child-header lineH2L"></th>
+              <th class="text-center child-header lineH2LB" colspan="3">Total</th>
           </tr>
           <tr>
             <th class="text-center child-header">Marca</th>
@@ -39,7 +54,9 @@
             <th class="text-center lineH2">% Trabajados</th>
 
 
-            <th class="text-center lineH2">Total</th>
+            <th class="text-center lineH2">Cantidad</th>
+            <th class="text-center lineH2">% HN Bajo</th>
+            <th class="text-center lineH2">% Trabajados</th>
           </tr>
         </thead>
       </template>
@@ -55,19 +72,37 @@
       </template>
 
       <template v-slot:item.Menor45.CantHNBajo="{ item }">
-          {{ getPorcentaje(item.Menor45.Cantidad, item.Menor45.CantHNBajo) }}
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+              <v-layout justify-center v-on="on" class="rowclass" >{{ getPorcentaje(item.Menor45.Cantidad, item.Menor45.CantHNBajo) }}</v-layout> 
+          </template>
+          <span>{{ getTooltipData(item.Menor45.CantHNBajo) }}</span>
+        </v-tooltip>
       </template>
+
+      
 
       <template v-slot:item.Entre45y60.Cantidad="{ item }">
           {{ item.Entre45y60.Cantidad }}
       </template>
 
       <template v-slot:item.Entre45y60.CantHNBajo="{ item }">
-          {{ getPorcentaje(item.Entre45y60.Cantidad, item.Entre45y60.CantHNBajo) }}
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+              <v-layout justify-center v-on="on" class="rowclass" >{{ getPorcentaje(item.Entre45y60.Cantidad, item.Entre45y60.CantHNBajo) }}</v-layout> 
+          </template>
+          <span>{{ getTooltipData(item.Entre45y60.CantHNBajo) }}</span>
+        </v-tooltip>
+          
       </template>
 
       <template v-slot:item.Entre45y60.CantTrabajados="{ item }">
-          {{ getPorcentaje(item.Entre45y60.Cantidad, item.Entre45y60.CantTrabajados) }}
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+              <v-layout justify-center v-on="on" class="rowclass" >{{ getPorcentaje(item.Entre45y60.Cantidad, item.Entre45y60.CantTrabajados) }}</v-layout> 
+          </template>
+          <span>{{ getTooltipData(item.Entre45y60.CantTrabajados) }}</span>
+        </v-tooltip>
       </template>
 
       <template v-slot:item.Mayor60.Cantidad="{ item }">
@@ -75,34 +110,83 @@
       </template>
 
       <template v-slot:item.Mayor60.CantHNBajo="{ item }">
-          {{ getPorcentaje(item.Mayor60.Cantidad, item.Mayor60.CantHNBajo) }}
+          <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+              <v-layout justify-center v-on="on" class="rowclass" >{{ getPorcentaje(item.Mayor60.Cantidad, item.Mayor60.CantHNBajo) }}</v-layout> 
+          </template>
+          <span>{{ getTooltipData(item.Mayor60.CantHNBajo) }}</span>
+        </v-tooltip>
       </template>
 
       <template v-slot:item.Mayor60.CantTrabajados="{ item }">
-          {{ getPorcentaje(item.Mayor60.Cantidad, item.Mayor60.CantTrabajados) }}
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+              <v-layout justify-center v-on="on" class="rowclass" >{{ getPorcentaje(item.Mayor60.Cantidad, item.Mayor60.CantTrabajados) }}</v-layout> 
+          </template>
+          <span>{{ getTooltipData(item.Mayor60.CantTrabajados) }}</span>
+        </v-tooltip>
       </template>
 
       <template v-slot:item.CantDatos="{ item }">
           {{ item.CantDatos }}
       </template>
 
+      <template v-slot:item.CantDatos.CantHNBajo="{ item }">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+              <v-layout justify-center v-on="on" class="rowclass" > {{ getPorcentaje(item.CantDatos, item.TotalesHNBajo) }}</v-layout> 
+          </template>
+          <span>{{ getTooltipData(item.TotalesHNBajo) }}</span>
+        </v-tooltip>
+      </template>
+      <template v-slot:item.CantDatos.CantTrabajados="{ item }">
+          
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+              <v-layout justify-center v-on="on" class="rowclass" > {{ getPorcentaje(item.CasosTrabajables, item.TotalesTrabajados) }}</v-layout> 
+          </template>
+          <span>{{ getTooltipData(item.TotalesTrabajados) }}</span>
+        </v-tooltip>
+      </template>
+
       <template slot="body.append">
         <tr>
           <td class="total">Totales</td>
           <td class="totales">{{ sumFieldCantidad("Menor45") | numFormat("0,0") }}</td>
-          <td></td>
+          <td class="totales">{{ sumFieldCantidadPorc("Menor45", "CantHNBajo") }}</td>
+          
           <td class="totales">{{ sumFieldCantidad("Entre45y60") | numFormat("0,0") }}</td>
-          <td></td>
-          <td></td>
+          <td class="totales">{{ sumFieldCantidadPorc("Entre45y60", "CantHNBajo")  }}</td>
+          <td class="totales">{{ sumFieldCantidadPorc("Entre45y60", "CantTrabajados") }}</td>
+
           <td class="totales">{{ sumFieldCantidad("Mayor60") | numFormat("0,0") }}</td>
-          <td></td>
-          <td></td>
+          <td class="totales">{{ sumFieldCantidadPorc("Mayor60", "CantHNBajo") }}</td>
+          <td class="totales">{{ sumFieldCantidadPorc("Mayor60", "CantTrabajados") }}</td>
+
           <td class="totales">{{ sumFieldCantidadTotal("CantDatos") | numFormat("0,0") }}</td>
+          <td class="totales">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                  <v-layout justify-center v-on="on" class="rowclass" > {{ sumFieldCantidadPorcTotal("CantDatos", "TotalesHNBajo") }}</v-layout> 
+              </template>
+              <span>{{ this.getTooltipData(this.sumFieldCantidadTotal("TotalesHNBajo"))}}</span>
+            </v-tooltip>
+          </td>
+
+          <td class="totales">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                  <v-layout justify-center v-on="on" class="rowclass" > {{ sumFieldCantidadPorcTotal("CantDatos", "TotalesTrabajados") }}</v-layout> 
+              </template>
+              <span>{{ this.getTooltipData(this.sumFieldCantidadTotal("TotalesTrabajados"))}}</span>
+            </v-tooltip>
+          </td>
         </tr>
       </template>
 
       
     </v-data-table>
+     </v-card>
   </div>
 </template>
 
@@ -183,6 +267,17 @@ export default {
           value: "CantDatos",
           align: "center",
         },
+
+        { 
+          text: "Porc. HN Bajo", 
+          value: "CantDatos.CantHNBajo", 
+          align: "center" 
+        },
+        { 
+          text: "Porc. Trabajados", 
+          value: "CantDatos.CantTrabajados", 
+          align: "center" 
+        },
       ],
     };
   },
@@ -197,12 +292,20 @@ export default {
       "datos_cartera",
       "items_cartera",
       "loading_cartera",
+      "loading_items_detalle_cartera",
+      "items_detalle_cartera"
     ]),
   },
 
   methods: {
-    ...mapActions({ getDatosCartera: "tablerocontrol/getCarteraGral" }),
+    ...mapActions({ 
+      getDatosCartera: "tablerocontrol/getCarteraGral",
+      getDetalle: "tablerocontrol/getDetallePendientesCarteraGral" 
+    }),
 
+    detalleExcelPendientes(){
+      this.getDetalle();
+    },
 
     getPorcentaje(total, parte){
       if (parte == 0){
@@ -213,23 +316,45 @@ export default {
       }
     },
 
-    sumField(key) {
-      // sum data in give key (property)
-      return this.items_cartera.reduce((a, b) => a + parseInt(b[key] || 0), 0);
+    getTooltipDataTotales(key){
+      this.getTooltipData(this.sumFieldCantidadTotal(key));
     },
 
-    sumFields(key1, key2, key3) {
-      // sum data in give key (property)
-      console.log(this.items_cartera);
-      console.log(key1);
-      console.log(key2);
-      console.log(key3);
-      var tot1 = this.items_cartera.reduce((a, b) => a + parseInt(b[key1.Cantidad] || 0), 0);
-      var tot2 = this.items_cartera.reduce((a, b) => a + parseInt(b[key2.Cantidad] || 0), 0);
-      var tot3 = this.items_cartera.reduce((a, b) => a + parseInt(b[key3.Cantidad] || 0), 0);
-
-      return parseInt(tot1) + parseInt(tot2) + parseInt(tot3) ;
+    getTooltipData(valor){
+      if (valor > 0){
+        return "Cant. Casos: " + valor;
+      }
     },
+
+    sumFieldCantidadPorcTotal(key,key2){
+      let totCasos = 0;
+      let totParte = 0;
+      this.items_cartera.forEach(element => {
+          totCasos += element[key];
+          totParte += element[key2];
+      });
+
+      if (totCasos > 0){
+        return this.$options.filters.numFormat((totParte / totCasos), "%0,0"); 
+      }
+      return "-"
+
+   },
+
+   sumFieldCantidadPorc(key,key2){
+      let totCasos = 0;
+      let totParte = 0;
+      this.items_cartera.forEach(element => {
+          totCasos += element[key]['Cantidad'];
+          totParte += element[key][key2];
+      });
+
+      if (totCasos > 0){
+        return this.$options.filters.numFormat((totParte / totCasos), "%0,0"); 
+      }
+      return "-"
+
+   },
 
     sumFieldCantidad(key) {
 
@@ -263,13 +388,10 @@ export default {
       return tot;
 
     },
-    /*
-    getTotal(item) {
-      var tot = 0;
-      tot = parseInt(item.ComprasAyer) + parseInt(item.ComprasHoy);
-      return this.$options.filters.numFormat(tot, "0,0");
+    
+    detalleExcelPendientes(){
+
     },
-    */
   },
 };
 </script>
@@ -319,5 +441,13 @@ export default {
 .totales {
   font-weight: bold;
   text-align: center;
+}
+
+.rowclass {
+  padding: 0;
+}
+
+.rowclassBtn {
+  padding-top: 2;
 }
 </style>
