@@ -620,12 +620,13 @@ export default {
 
     },
 
-    getDatos() {
+    async getDatos() {
       var pars = {
         Marca: this.codConcesSelected.Marca,
         Concesionario: this.codConcesSelected.Codigo,
       };
-      this.$store.dispatch(this.module + "/getDatos", pars);
+      await this.$store.dispatch(this.module + "/getDatos", pars);
+      console.log(this.items);
       //this.setColection(this.items);
     },
 

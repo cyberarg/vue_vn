@@ -57,7 +57,8 @@ class AsignacionDatosController extends Controller
 
                 $oDet = json_decode(json_encode($r), FALSE);
 
-                $fvc2 = strtotime($oDet->FechaVtoCuota2);
+                //$fvc2 = strtotime($oDet->FechaVtoCuota2);
+                $fvc2 = $oDet->FechaVtoCuota2;
 
                 if ($oDet->Marca == 2){
                     if ($oDet->FechaVtoCuota2 === NULL){
