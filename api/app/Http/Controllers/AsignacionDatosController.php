@@ -30,16 +30,16 @@ class AsignacionDatosController extends Controller
                 switch($concesionario){
                     case 4:
                         $db = 'AC';
-                        $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0, NULL);");   
+                        $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, NULL, 1, NULL);");   
                     break;
                     case 5:
                         $db = 'AN';
-                        $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0, NULL);");
+                        $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, NULL, 1, NULL);");
 
                     break;
                     case 6:
                         $db = 'CG';
-                        $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0, NULL);");
+                        $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, NULL, 1, NULL);");
 
                     break;
                 }
@@ -89,8 +89,12 @@ class AsignacionDatosController extends Controller
                 //Pedido Guido 12/11/2020 SACAR los casos Cuotas Pagas < 10
                 //if(!($this->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->HaberNeto > 29999 && $oDet->CodEstado <> 5){
                 //if((!($utils->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->CodEstado <> 5) || ($oDet->Marca == 3 && $oDet->CodEstado <> 5)){
-                    if((!($utils->enOtraSociedadOPropioMerge($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->CodEstado <> 5) || ($oDet->Marca == 3 && $oDet->CodEstado <> 5)){
-                    
+                    // Los casos cuotas pagas < 10 NO aplican para Fiat. Audio WA Dani 1/6/21 
+
+
+                   if ( (!($utils->enOtraSociedadOPropioMerge($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $oDet->CodEstado <> 5)){
+
+    
                     if ($oDet->Avance == 84 && $oDet->CodOficial == null){
                         continue;
                     }

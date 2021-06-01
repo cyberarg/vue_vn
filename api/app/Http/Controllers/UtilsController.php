@@ -195,6 +195,7 @@ class UtilsController extends Controller
             (strpos($apeLow,"volkswagen argentina sa") !== false) ||
             (strpos($apeLow,"volkswagen argentina s.a.") !== false) ||
             (strpos($apeLow,"autokar") !== false) ||
+            (strpos($apeLow,"autokar sa") !== false) ||
             (strpos($apeLow,"autotag") !== false) ||
             (strpos($apeLow,"autofinancia") !== false) ||
             (strpos($apeLow,"auto financia") !== false) ||    
