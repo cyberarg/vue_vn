@@ -12,6 +12,7 @@ export const state = {
   loading: false,
   loading_cartera: false,
   loading_items_detalle_cartera:false,
+  getting_items_detalle_cartera:false,
   items_detalle_cartera:[],
 };
 
@@ -65,12 +66,14 @@ export const mutations = {
     state.dataStatus = "loading";
     state.items_detalle_cartera = [];
     state.loading_items_detalle_cartera = true;
+    state.getting_items_detalle_cartera = true;
   },
 
   CARTERA_DETALLE_SUCCESS(state, datos) {
-    console.log(datos);
+    //console.log(datos);
     state.items_detalle_cartera = datos.Detalle;
     state.loading_items_detalle_cartera = false;
+    state.getting_items_detalle_cartera = false;
     state.dataStatus = "success";
   },
 
@@ -78,6 +81,7 @@ export const mutations = {
     state.dataStatus = "Error";
     state.items_detalle_cartera = [];
     state.loading_items_detalle_cartera = true;
+    state.getting_items_detalle_cartera = false;
   },
 
   GETTING_FILTRO(state) {
@@ -136,7 +140,7 @@ export const actions = {
     return axios
       .post("/reportecarteradetalledashboard")
       .then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         commit("CARTERA_DETALLE_SUCCESS", response.data);
       })
       .catch(err => {

@@ -10,7 +10,8 @@
                 text
                 small
                 :disabled="this.loading_items_detalle_cartera"
-                @click="this.detalleExcelPendientes()"
+                :loading="this.getting_items_detalle_cartera"
+                @click="detalleExcelPendientes()"
             >
                 <v-icon left>mdi-file-excel</v-icon>Detalle Pendientes
             </v-btn>
@@ -33,7 +34,7 @@
         <thead class="v-data-table-header">
           <tr>
               <th class="text-center child-header"></th>
-              <th class="text-center child-header lineH2LB" colspan="2">Avance Menor a 45</th>
+              <th class="text-center child-header lineH2LB" colspan="3">Avance Menor a 45</th>
               <th class="text-center child-header lineH2LB" colspan="3">Avance Entre 45 y 60</th>
               <th class="text-center child-header lineH2LB" colspan="3">Avance Mayor a 60</th>
               <th class="text-center child-header lineH2LB" colspan="3">Total</th>
@@ -43,6 +44,7 @@
 
             <th class="text-center lineH2">Cantidad</th>
             <th class="text-center lineH2">% HN Bajo</th>
+            <th class="text-center lineH2">% Trabajados</th>
 
             <th class="text-center lineH2">Cantidad</th>
             <th class="text-center lineH2">% HN Bajo</th>
@@ -77,6 +79,15 @@
               <v-layout justify-center v-on="on" class="rowclass" >{{ getPorcentaje(item.Menor45.Cantidad, item.Menor45.CantHNBajo) }}</v-layout> 
           </template>
           <span>{{ getTooltipData(item.Menor45.CantHNBajo) }}</span>
+        </v-tooltip>
+      </template>
+
+      <template v-slot:item.Menor45.CantTrabajados="{ item }">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+              <v-layout justify-center v-on="on" class="rowclass" >{{ getPorcentaje(item.Menor45.Cantidad, item.Menor45.CantTrabajados) }}</v-layout> 
+          </template>
+          <span>{{ getTooltipData(item.Menor45.CantTrabajados) }}</span>
         </v-tooltip>
       </template>
 
@@ -154,6 +165,7 @@
           <td class="total">Totales</td>
           <td class="totales">{{ sumFieldCantidad("Menor45") | numFormat("0,0") }}</td>
           <td class="totales">{{ sumFieldCantidadPorc("Menor45", "CantHNBajo") }}</td>
+          <td class="totales">{{ sumFieldCantidadPorc("Menor45", "CantTrabajados") }}</td>
           
           <td class="totales">{{ sumFieldCantidad("Entre45y60") | numFormat("0,0") }}</td>
           <td class="totales">{{ sumFieldCantidadPorc("Entre45y60", "CantHNBajo")  }}</td>
@@ -176,7 +188,7 @@
           <td class="totales">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                  <v-layout justify-center v-on="on" class="rowclass" > {{ sumFieldCantidadPorcTotal("CantDatos", "TotalesTrabajados") }}</v-layout> 
+                  <v-layout justify-center v-on="on" class="rowclass" > {{ sumFieldCantidadPorcTotal("CasosTrabajables", "TotalesTrabajados") }}</v-layout> 
               </template>
               <span>{{ this.getTooltipData(this.sumFieldCantidadTotal("TotalesTrabajados"))}}</span>
             </v-tooltip>
@@ -192,6 +204,9 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import XLSX from "xlsx";
+import jsPDF from 'jspdf'
+
 export default {
   name: "gridcarteragralcomponent",
   props: {
@@ -228,6 +243,11 @@ export default {
         { 
           text: "Porc. HN Bajo", 
           value: "Menor45.CantHNBajo",  
+          align: "center" 
+        },
+        { 
+          text: "Porc. Trabajados", 
+          value: "Menor45.CantTrabajados",  
           align: "center" 
         },
         {
@@ -293,7 +313,8 @@ export default {
       "items_cartera",
       "loading_cartera",
       "loading_items_detalle_cartera",
-      "items_detalle_cartera"
+      "items_detalle_cartera",
+      "getting_items_detalle_cartera"
     ]),
   },
 
@@ -303,9 +324,48 @@ export default {
       getDetalle: "tablerocontrol/getDetallePendientesCarteraGral" 
     }),
 
-    detalleExcelPendientes(){
-      this.getDetalle();
+    async detalleExcelPendientes(){
+      
+      await this.getDetalle();
+
+      console.log(this.items_detalle_cartera);
+      this.generateExcel();
+
     },
+
+
+    generateExcel(){
+      
+      const workbook = XLSX.utils.book_new();
+      const filename = "DetallePendientes";
+      
+      let sheetname1 = "";
+      let sheetname2 = "";
+
+      //console.log(this.detalle_gral);
+      this.items_detalle_cartera.forEach(element => {
+         
+          let nomMarca = element.NomMarca.toUpperCase();
+          let data45_60 = element.Entre45y60;
+          let data60 = element.Mayor60;
+
+          let data1 = XLSX.utils.json_to_sheet(data45_60.lstPendientes);
+          let data2 = XLSX.utils.json_to_sheet(data60.lstPendientes);
+         
+          sheetname1 = nomMarca + ' - Entre 45 y 60';
+          sheetname2 = nomMarca + ' - Mayor a 60';
+         
+          XLSX.utils.book_append_sheet(workbook, data1, sheetname1);
+          XLSX.utils.book_append_sheet(workbook, data2, sheetname2);
+        });
+       
+      
+
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
+
+
+    },
+    
 
     getPorcentaje(total, parte){
       if (parte == 0){
@@ -388,10 +448,7 @@ export default {
       return tot;
 
     },
-    
-    detalleExcelPendientes(){
 
-    },
   },
 };
 </script>

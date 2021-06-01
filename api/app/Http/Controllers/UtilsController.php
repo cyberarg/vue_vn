@@ -7,6 +7,7 @@ Use DB;
 Use Session;
 Use Auth;
 Use Redirect;
+use DateTime;
 use App\Estado;
 use App\Concesionario;
 use App\Marca;
@@ -21,6 +22,46 @@ use App\Precio;
 
 class UtilsController extends Controller
 {
+    public function getNombreCE($codCE){
+
+        switch($codCE){
+            case 1:
+                return 'Sauma';
+            case 2:
+                return 'Iruña';
+            case 3:
+                return 'Amendola';
+            case 4:
+                return 'AutoCervo';
+            case 5:
+                return 'AutoNet';
+            case 6:
+                return 'CarGroup';
+            case 7:
+                return 'Luxcar';
+            case 8:
+                return 'RB';
+            case 9:
+                return 'Sapac';
+            case 10:
+                return 'Alizze';
+            default:
+                return '';
+
+        }
+    }
+
+    public function formatFecha($fecha){
+        
+        if ($fecha === NULL){
+            return '';
+        }
+
+        $fechaStr = strtotime($fecha);    
+        
+        return $fecha;
+        return date_create(date('Y-m-d', $fechaStr));  
+    }
 
     public function getMarcasReporteCarteraDashboard(){
         return Marca::select('Codigo','Nombre')->where('MostrarReporteCartera',1)->get();
@@ -34,17 +75,26 @@ class UtilsController extends Controller
 
     public function seEstaTrabajando($fechaUltimaObs){
 
-        $dias = 0;
+        if ($fechaUltimaObs === NULL){
+            return false;
+        }
+
+        $dias = 100; // Lo pongo por arriba del corte de 90 por si viene con un tipo raro de NULL, que no quede luego debajo de 90 en el retorno
         $fecha = strtotime(now());
+        $fultObs = strtotime($fechaUltimaObs);    
 
-        $fult = date_create(date('Y-m-d', $fechaUltimaObs));
-        $ff = date_create(date('Y-m-d', $fecha)); 
+        $dateUltObs = date_create(date('Y-m-d', $fultObs));
+        $ff = date_create(date('Y-m-d', $fecha));       
 
-        $diff = date_diff($fult , $ff);
-        $dias = $diff->format('%a');
+        if (checkdate(date('m', $fultObs), date('d', $fultObs), date('Y', $fultObs))){
+            $diff = date_diff($dateUltObs , $ff);
 
-        return $dias < 90;
-
+            $dias = $diff->format('%a');
+            $dias = round($dias, 0);
+        }
+       
+        return ($dias <= 90);
+        
     }
 
     public Function enOtraSociedadOPropio($nombre, $apellido){
@@ -76,6 +126,13 @@ class UtilsController extends Controller
             (strpos($apeLow,"plan reenganche") !== false) ||   
             (strpos($apeLow,"sauma") !== false) ||   
             (strpos($apeLow,"torino autos") !== false) ||   
+
+            (strpos($apeLow,"levy damian") !== false) ||  
+            (strpos($apeLow,"levy esteban") !== false) ||  
+            (strpos($apeLow,"chaul andres nicolas") !== false) ||   
+            (strpos(str_replace(' ', '', $apeLow),"levydamian") !== false) ||
+            (strpos(str_replace(' ', '', $apeLow),"levyesteban") !== false) ||
+            (strpos(str_replace(' ', '', $apeLow),"chaulandresnicolas") !== false) ||
 
             (strpos($nomLow ,"autokar") !== false )||
             (strpos($nomLow ,"autofinancia") !== false) ||
@@ -152,7 +209,15 @@ class UtilsController extends Controller
             (strpos($apeLow,"plan oportunidad") !== false) ||   
             (strpos($apeLow,"plan reenganche") !== false) ||   
             (strpos($apeLow,"sauma") !== false) ||   
-            (strpos($apeLow,"torino autos") !== false) ||   
+            (strpos($apeLow,"torino autos") !== false) ||  
+
+            (strpos($apeLow,"levy damian") !== false) ||  
+            (strpos($apeLow,"levy esteban") !== false) ||  
+            (strpos($apeLow,"chaul andres nicolas") !== false) ||   
+            (strpos(str_replace(' ', '', $apeLow),"levydamian") !== false) ||
+            (strpos(str_replace(' ', '', $apeLow),"levyesteban") !== false) ||
+            (strpos(str_replace(' ', '', $apeLow),"chaulandresnicolas") !== false) ||
+
 
             (strpos($nomLow ,"autokar") !== false )||
             (strpos($nomLow ,"autofinancia") !== false) ||

@@ -303,7 +303,7 @@ class ReporteComprasController extends Controller
 
         foreach ($datos_gf as $dato) {
 
-            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5) && ($dato->HaberNeto > 14999)){
+            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5)  && ($dato->HaberNeto > 14999)){
 
                 $oDet = new \stdClass();
 
@@ -315,9 +315,10 @@ class ReporteComprasController extends Controller
                     $oDet->Avance = $dato->Avance;
                 }
                 
-            // if ($gf->Marca != 9){ // SACO FORD
-
                 if ($oDet->Avance < 84){
+
+                    //return 'ID: '.$dato->ID.', FechaUltObs: '.$dato->FechaUltObs.', Avance: '.$oDet->Avance;
+                    //return $utils->seEstaTrabajando($dato->FechaUltObs);
 
                     $lstTabla_Cartera_Marcas[$dato->Marca]->CantDatos += 1;
 
@@ -328,7 +329,7 @@ class ReporteComprasController extends Controller
                         if($dato->HaberNeto < 30000){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantHNBajo += 1;
                         }else{
-                            if($utils->seEstaTrabajando(strtotime($dato->FechaUltObs))){
+                            if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantTrabajados += 1;
                             }
                         }
@@ -340,7 +341,7 @@ class ReporteComprasController extends Controller
                         if($dato->HaberNeto < 30000){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantHNBajo += 1;
                         }else{
-                            if($utils->seEstaTrabajando(strtotime($dato->FechaUltObs))){
+                            if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantTrabajados += 1;
                             }
                         }
@@ -352,18 +353,18 @@ class ReporteComprasController extends Controller
                         if($dato->HaberNeto < 30000){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantHNBajo += 1;
                         }else{
-                            if($utils->seEstaTrabajando(strtotime($dato->FechaUltObs))){
+                            if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantTrabajados += 1;
                             }
                         }
                     }
-            // }
                 }
 
             }
 
         }
 
+        
         $fcav = strtotime($periodoActPrimerDia);
 
         foreach ($arrFiat as $dato) {
@@ -392,7 +393,7 @@ class ReporteComprasController extends Controller
                         if($dato->HaberNeto < 15000){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantHNBajo += 1;
                         }else{
-                            if($utils->seEstaTrabajando(strtotime($dato->FechaUltObs))){
+                            if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantTrabajados += 1;
                             }
                         }
@@ -404,7 +405,7 @@ class ReporteComprasController extends Controller
                         if($dato->HaberNeto < 15000){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantHNBajo += 1;
                         }else{
-                            if($utils->seEstaTrabajando(strtotime($dato->FechaUltObs))){
+                            if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantTrabajados += 1;
                             }
                         }
@@ -416,7 +417,7 @@ class ReporteComprasController extends Controller
                         if($dato->HaberNeto < 15000){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantHNBajo += 1;
                         }else{
-                            if($utils->seEstaTrabajando(strtotime($dato->FechaUltObs))){
+                            if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantTrabajados += 1;
                             }
                         }
@@ -438,8 +439,12 @@ class ReporteComprasController extends Controller
             $row['Entre45y60'] = $tabla->Entre45y60;
             $row['Mayor60'] = $tabla->Mayor60;
 
+            if ($tabla->Codigo == 3){ // Para Peugeot se contabilizan todos los casos como posibles trabajables porque no se hace el corte por Avance
+                $row['CasosTrabajables'] = $tabla->Menor45->Cantidad + $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
+            }else{
+                $row['CasosTrabajables'] = $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
+            }
             
-            $row['CasosTrabajables'] = $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
             $row['TotalesHNBajo'] = $tabla->Menor45->CantHNBajo + $tabla->Entre45y60->CantHNBajo + $tabla->Mayor60->CantHNBajo;
             $row['TotalesTrabajados'] = $tabla->Menor45->CantTrabajados + $tabla->Entre45y60->CantTrabajados + $tabla->Mayor60->CantTrabajados;
 
@@ -455,9 +460,6 @@ class ReporteComprasController extends Controller
     public function getReporteDetallePendientesCarteraDashboard(Request $request)
     {
         $arrFiat = array();
-        $datos_cg = array();
-        $datos_ac = array();
-        $datos_an = array();
 
         $utils = new UtilsController;
 
@@ -476,9 +478,8 @@ class ReporteComprasController extends Controller
         $acumEntre45y60 = 0;
         $acumMas60 = 0;
 
-        $lstTabla_Cartera_Marcas = array();
-
         $marcas = $utils->getMarcasReporteCarteraDashboard();
+        $lstTabla_Cartera_Marcas = array();
 
         foreach ($marcas as $marca) {
             $oMar = new \stdClass();
@@ -509,6 +510,8 @@ class ReporteComprasController extends Controller
 
                 $oDet = new \stdClass();
 
+                $oPend = new \stdClass();
+
                 $oDet->Marca = $dato->Marca;
 
                 if($dato->AvanceCalculado != null){
@@ -517,20 +520,56 @@ class ReporteComprasController extends Controller
                     $oDet->Avance = $dato->Avance;
                 }
 
-                if ($oDet->Avance >= 45 && $oDet->Avance < 60) {
+                if ($oDet->Avance < 84){
 
-                    if($dato->HaberNeto > 30000){
-                        $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->Cantidad += 1;
-                        if(!($utils->seEstaTrabajando(strtotime($dato->FechaUltObs)))){
-                            $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->lstPendientes[] = $dato;
+                    if ($oDet->Avance >= 45 && $oDet->Avance < 60) {
+
+                        if($dato->HaberNeto > 30000){
+                            
+                            if(!($utils->seEstaTrabajando($dato->FechaUltObs))){
+                                $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->Cantidad += 1;
+                                
+                                $oPend->ID = $dato->ID;
+                                $oPend->Concesionario = $utils->getNombreCE($dato->Concesionario);
+                                $oPend->Grupo = $dato->Grupo;
+                                $oPend->Orden = $dato->Orden;
+                                //$oPend->Solicitud = $dato->Solicitud;
+                                $oPend->Apellido = $dato->Apellido;
+                                $oPend->Nombres = $dato->Nombres;
+                                $oPend->Avance = $oDet->Avance;
+                                $oPend->HaberNeto = $dato->HaberNeto;
+                                $oPend->Oficial = $dato->NomOficial;
+                                $oPend->Estado = $dato->NomEstado;
+                                $oPend->FechaUltObs = $dato->FechaUltObsMostrar;
+                                $oPend->UsuarioObs = $dato->UsuarioObs;
+                                $oPend->UltimaObs = $dato->UltObs;
+
+                                $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->lstPendientes[] = $oPend;
+                            }
                         }
-                    }
 
-                }elseif ($oDet->Avance >= 60 && $oDet->Avance < 84) {
-                    if($dato->HaberNeto > 30000){
-                        $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->Cantidad += 1;
-                        if(!($utils->seEstaTrabajando(strtotime($dato->FechaUltObs)))){
-                            $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->lstPendientes[] = $dato;
+                    }elseif ($oDet->Avance >= 60 && $oDet->Avance < 84) {
+                        if($dato->HaberNeto > 30000){
+                            if(!($utils->seEstaTrabajando($dato->FechaUltObs))){
+                                $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->Cantidad += 1;
+                                
+                                $oPend->ID = $dato->ID;
+                                $oPend->Concesionario = $utils->getNombreCE($dato->Concesionario);
+                                $oPend->Grupo = $dato->Grupo;
+                                $oPend->Orden = $dato->Orden;
+                                //$oPend->Solicitud = $dato->Solicitud;
+                                $oPend->Apellido = $dato->Apellido;
+                                $oPend->Nombres = $dato->Nombres;
+                                $oPend->Avance = $oDet->Avance;
+                                $oPend->HaberNeto = $dato->HaberNeto;
+                                $oPend->Oficial = $dato->NomOficial;
+                                $oPend->Estado = $dato->NomEstado;
+                                $oPend->FechaUltObs = $dato->FechaUltObsMostrar;
+                                $oPend->UsuarioObs = $dato->UsuarioObs;
+                                $oPend->UltimaObs = $dato->UltObs;
+
+                                $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->lstPendientes[] = $oPend;
+                            }
                         }
                     }
                 }
@@ -556,20 +595,58 @@ class ReporteComprasController extends Controller
                     $oDet->Avance = $utils->getAvanceAutomaticoAFecha($fcav, $fvc2);
                 }
 
-                if ($oDet->Avance >= 45 && $oDet->Avance < 60) {
+                if ($oDet->Avance < 84){
 
-                    if($dato->HaberNeto > 15000){
-                        $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->Cantidad += 1;
-                        if(!($utils->seEstaTrabajando(strtotime($dato->FechaUltObs)))){
-                            $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->lstPendientes[] = $dato;
+                    $oPend = new \stdClass();
+
+                    if ($oDet->Avance >= 45 && $oDet->Avance < 60) {
+
+                        if($dato->HaberNeto > 15000){
+                            
+                            if(!($utils->seEstaTrabajando($dato->FechaUltObs))){
+                                $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->Cantidad += 1;
+
+                                $oPend->ID = $dato->ID;
+                                $oPend->Concesionario = $utils->getNombreCE($dato->Concesionario);
+                                $oPend->Grupo = $dato->Grupo;
+                                $oPend->Orden = $dato->Orden;
+                                $oPend->Solicitud = $dato->Solicitud;
+                                $oPend->Apellido = $dato->Apellido;
+                                $oPend->Nombres = $dato->Nombres;
+                                $oPend->Avance = $oDet->Avance;
+                                $oPend->HaberNeto = $dato->HaberNeto;
+                                $oPend->Oficial = $dato->NomOficial;
+                                $oPend->Estado = $dato->NomEstado;
+                                $oPend->FechaUltObs = $dato->FechaUltObsMostrar;
+                                $oPend->UsuarioObs = $dato->UsuarioObs;
+                                $oPend->UltimaObs = $dato->UltObs;
+
+                                $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->lstPendientes[] = $oPend;
+                            }
                         }
-                    }
 
-                }elseif ($oDet->Avance >= 60 && $oDet->Avance < 84) {
-                    if($dato->HaberNeto > 15000){
-                        $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->Cantidad += 1;
-                        if(!($utils->seEstaTrabajando(strtotime($dato->FechaUltObs)))){
-                            $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->lstPendientes[] = $dato;
+                    }elseif ($oDet->Avance >= 60 && $oDet->Avance < 84) {
+                        if($dato->HaberNeto > 15000){  
+                            if(!($utils->seEstaTrabajando($dato->FechaUltObs))){
+                                $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->Cantidad += 1;
+
+                                $oPend->ID = $dato->ID;
+                                $oPend->Concesionario = $utils->getNombreCE($dato->Concesionario);
+                                $oPend->Grupo = $dato->Grupo;
+                                $oPend->Orden = $dato->Orden;
+                                $oPend->Solicitud = $dato->Solicitud;
+                                $oPend->Apellido = $dato->Apellido;
+                                $oPend->Nombres = $dato->Nombres;
+                                $oPend->Avance = $oDet->Avance;
+                                $oPend->HaberNeto = $dato->HaberNeto;
+                                $oPend->Oficial = $dato->NomOficial;
+                                $oPend->Estado = $dato->NomEstado;
+                                $oPend->FechaUltObs = $dato->FechaUltObsMostrar;
+                                $oPend->UsuarioObs = $dato->UsuarioObs;
+                                $oPend->UltimaObs = $dato->UltObs;
+
+                                $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->lstPendientes[] = $oPend;
+                            }
                         }
                     }
                 }
