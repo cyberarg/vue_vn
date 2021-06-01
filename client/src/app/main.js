@@ -24,6 +24,9 @@ Vue.filter("numFormat", numFormat);
 import { VueMaskDirective } from 'v-mask'
 Vue.directive('mask', VueMaskDirective);
 
+import { VueFormBase } from 'vuetify-form-base'
+Vue.directive('v-form-base', VueFormBase);
+
 //Vue.use(Chart);
 Vue.use(moment);
 Vue.use(VueSwal);

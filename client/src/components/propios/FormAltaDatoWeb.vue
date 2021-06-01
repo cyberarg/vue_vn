@@ -12,169 +12,17 @@
       </v-card-title>
 
        <div class="container">
-        <v-form v-model="valid" ref="form">
-          <v-row justify="center">
-            <v-col lg="10" md="10" sm="10" xs="10">
-              <div class="contenedor">
-                <v-row>
-                  <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      class="fillable"
-                      label="Nombre y Apellido"
-                      placeholder="Nombre y Apellido"
-                      v-model="this.item.FullName"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      class="fillable"
-                      label="Documento"
-                      placeholder="Documento"
-                      v-model="this.item.Documento" 
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              
-                <v-row>
-                  <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      class="fillable"
-                      label="Teléfono"
-                      placeholder="Teléfono"
-                      v-model="this.item.Telefono" 
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      class="fillable"
-                      label="Email"
-                      placeholder="Email"
-                      v-model="this.item.Email" 
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row> 
-                  <v-col cols="12" md="12" class="margintop">
-                    <v-divider class="mx-1" horizontal></v-divider>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="6" md="6">
-                    <v-select
-                        dense
-                        class="fillable"
-                        :items="listMarcas"
-                        item-text="Nombre"
-                        item-value="Codigo"
-                        label="Marca"
-                        v-model="this.item.Marca" 
-                        @input="setMarca"
-                        @change="changeMarca"
-                      ></v-select>
-                  </v-col>
-                  <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      label="Modelo Plan"
-                      placeholder="Modelo Plan"
-                      :readonly="disabled"
-                      class="importantDisabled"
-                      :filled="filled"
-                      v-model="this.item.ModeloAhorro" 
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      label="Cantidad Cuotas"
-                      placeholder="Cantidad Cuotas"
-                      :readonly="disabled"
-                      class="importantDisabled"
-                      :filled="filled"
-                      v-model="this.item.CantidadCuotas" 
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" md="6">
-                  <v-select
-                          dense
-                          class="fillable"
-                          :items="estados"
-                          item-text="Nombre"
-                          item-value="Codigo"
-                          label="Estado Plan"
-                          v-model="this.item.EstadoPlan"
-                          @input="setEstado"
-                          @change="changeEstado"
-                        ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="4" md="4">
-                      <v-text-field
-                        dense
-                        class="importantDisabled"
-                        label="Grupo"
-                        placeholder="Grupo"
-                        :filled="filled"
-                        v-model="this.item.Grupo"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="4" md="4">
-                      <v-text-field
-                        dense
-                        class="importantDisabled"
-                        label="Orden"
-                        placeholder="Orden"
-                        :filled="filled"
-                        v-model="this.item.Orden"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="4" md="4">
-                      <v-text-field
-                        dense
-
-                        class="importantDisabled"
-                        label="Avance"
-                        placeholder="Avance"
-                        :filled="filled"
-                        v-model="this.item.Avance"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-divider horizontal></v-divider>
-                    <v-row>
-                      <v-col>
-                        <v-btn
-                          small
-                          outlined
-                          :disabled="disabledAceptar"
-                          color="success"
-                          @click="grabarDato"
-                        >
-                          <v-icon left>mdi-content-save-outline</v-icon>Aceptar
-                        </v-btn>
-                      </v-col>
-                      <v-spacer></v-spacer>
-                      <v-spacer></v-spacer>
-                      <v-spacer></v-spacer>
-                      <v-spacer></v-spacer>
-                      <v-spacer></v-spacer>
-                      <v-col>
-                        <v-btn small outlined color="error" @click="volver">
-                          <v-icon left>mdi-close-circle</v-icon>Cancelar
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-              </div>
-            </v-col>
-          </v-row>
+        <v-form class="formulario">
+          <v-form-base :model="Model" :schema="Schema" @input="handleInput"/>
+          <v-btn
+              small
+              outlined
+              :disabled="disabledAceptar"
+              color="success"
+              @click="grabarDato"
+            >
+              <v-icon left>mdi-content-save-outline</v-icon>Aceptar
+            </v-btn>
         </v-form>
        </div>   
       
@@ -192,8 +40,10 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import VFormBase from 'vuetify-form-base'
 
 export default {
+  components:{ VFormBase },
   props: {
     dato: {
       type: Object,
@@ -202,6 +52,40 @@ export default {
   },
   data() {
     return {
+      Model: {
+          form:{
+          fullname: '',
+          nrodocumento: '',
+          telefono: '',
+          email: '',
+          marca: '',
+          modelo: '',
+          cuotas: '',
+          estdo: '',
+          grupo: '',
+          orden: '',
+          avance: '',
+          obs: '',
+        }
+      },
+
+      Schema: {
+        form:{
+          fullname: { type:'text', label:'Nombre y Apellido', class:'pr-2', col: { cols:12, sm:12, md:6, lg:6, xs:12 }},
+          nrodocumento: { type:'number', label:'Documento', col: { cols:12, sm:12, md:6, lg:6, xs:12 } },
+          telefono: { type:'text', label:'Teléfono', class:'pr-2', col: { cols:12, sm:12, md:6, lg:6, xs:12 } },
+          email: { type:'email', label:'Email', col: { cols:12, sm:12, md:6, lg:6, xs:12 } },
+          marca: { type: 'combobox', label: 'MarcaC', returnObject: false, itemText: 'codigo', itemValue: 'nombre', class:'pr-2', items: this.listMarcas, col: { cols:12, sm:12, md:6, lg:6, xs:12 }},    
+          modelo: { type:'text', label:'Modelo', col: { cols:12, sm:12, md:6, lg:6, xs:12 } },    
+          cuotas: { type:'number', label:'Cantidad Cuotas', class:'pr-2', col: { cols:12, sm:12, md:6, lg:6, xs:12 } },
+          estado: { type: 'combobox', label: 'Estado Plan',  items: this.listMarcas, col: { cols:12, sm:12, md:6, lg:6, xs:12 }},  
+          grupo: { type:'number', label:'Grupo', class:'pr-2', col: { cols:12, sm:12, md:4, lg:4, xs:12 } },
+          orden: { type:'number', label:'Orden', class:'pr-2', col: { cols:12, sm:12, md:4, lg:4, xs:12 } },
+          avance: { type:'number', label:'Avance',  col: { cols:12, sm:12, md:4, lg:4, xs:12 } },
+          obs: { type:'textarea', label:'Observaciones', col: { cols:12, sm:12, md:12, lg:12, xs:12 } },
+        }
+
+      },  
 
       item: {
         FullName: null,
@@ -227,12 +111,12 @@ export default {
       },
 
       listMarcas: [
-        { Codigo: 2, Nombre: "Fiat" },
-        { Codigo: 5, Nombre: "Volkswagen" },
-        { Codigo: 9, Nombre: "Ford" },
-        { Codigo: 3, Nombre: "Peugeot" },
-        { Codigo: 7, Nombre: "Jeep" },
-        { Codigo: 10, Nombre: "Citroen" },
+        { codigo: 2, nombre: "Fiat" },
+        { codigo: 5, nombre: "Volkswagen" },
+        { codigo: 9, nombre: "Ford" },
+        { codigo: 3, nombre: "Peugeot" },
+        { codigo: 7, nombre: "Jeep" },
+        { codigo: 10, nombre: "Citroen" },
       ],
     };
   },
@@ -248,6 +132,11 @@ export default {
   },
 
   methods: {
+
+    handleInput( ev ){
+      console.log( ev ) 
+    },
+
     ...mapActions({
   
       grabarDatoWeb: "gestiondatosweb/grabarDatoWeb",
@@ -316,6 +205,9 @@ export default {
     async grabarDato() {
       this.disabledAceptar = true;
 
+      console.log(this.Model);
+
+/*
         var pars = {
           FullName: this.item.FullName,
           Telefono: this.item.Telefono,
@@ -338,6 +230,7 @@ export default {
         await this.showSwal();
         this.$emit("refresh");
         this.volver();
+        */
 
     },
 
@@ -396,6 +289,10 @@ export default {
   padding-bottom: 20px;
   padding-top: 20px;
   margin-bottom: 0;
+}
+
+.formulario {
+  padding: 20px;
 }
 
 .contenedor {

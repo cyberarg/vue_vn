@@ -126,6 +126,10 @@ class UtilsController extends Controller
             (strpos($apeLow,"plan reenganche") !== false) ||   
             (strpos($apeLow,"sauma") !== false) ||   
             (strpos($apeLow,"torino autos") !== false) ||   
+            (strpos($apeLow ,"itals") !== false) || 
+            (strpos($apeLow ,"lombardia autos") !== false) || 
+            (strpos($nomLow ,"itals") !== false) || 
+            (strpos($nomLow ,"lombardia autos") !== false) || 
 
             (strpos($apeLow,"levy damian") !== false) ||  
             (strpos($apeLow,"levy esteban") !== false) ||  
@@ -155,6 +159,8 @@ class UtilsController extends Controller
             (strpos($apeLow,"iruna") !== false) ||
             (strpos($apeLow,"iruña") !== false) ||
             (strpos($apeLow,"iru#a") !== false) ||
+            (strpos($nomLow,"iruña") !== false) ||
+            (strpos($nomLow,"iru#a") !== false) ||
             (strpos($nomLow ,"car group") !== false) ||
             (strpos($nomLow ,"car gruop") !== false )||
             (strpos($nomLow ,"autonet") !== false) ||
@@ -196,6 +202,8 @@ class UtilsController extends Controller
             (strpos($nomLow,"autotag") !== false) ||
             (strpos($nomLow ,"autofinancia") !== false) ||
             (strpos($nomLow ,"auto financia") !== false) ||
+            (strpos($nomLow ,"itals") !== false) ||
+            (strpos($nomLow ,"lombardia autos") !== false) ||
 
             (strpos($apeLow,"auto haus") !== false) ||   
             (strpos($apeLow,"automotores russoniello") !== false) ||   
@@ -209,7 +217,9 @@ class UtilsController extends Controller
             (strpos($apeLow,"plan oportunidad") !== false) ||   
             (strpos($apeLow,"plan reenganche") !== false) ||   
             (strpos($apeLow,"sauma") !== false) ||   
-            (strpos($apeLow,"torino autos") !== false) ||  
+            (strpos($apeLow,"torino autos") !== false) || 
+            (strpos($apeLow ,"itals") !== false) || 
+            (strpos($apeLow ,"lombardia autos") !== false) || 
 
             (strpos($apeLow,"levy damian") !== false) ||  
             (strpos($apeLow,"levy esteban") !== false) ||  
@@ -255,6 +265,8 @@ class UtilsController extends Controller
             (strpos($apeLow,"ricardo bevacqua") !== false) ||
             (strpos($nomLow,"luxcar") !== false) ||
             (strpos($nomLow,"iruna") !== false) ||
+            (strpos($nomLow,"iruña") !== false) ||
+            (strpos($nomLow,"iru#a") !== false) ||
             (strpos($nomLow,"mirage") !== false) ||
             (strpos($nomLow ,"car group") !== false) ||
             (strpos($nomLow ,"car gruop") !== false )||
