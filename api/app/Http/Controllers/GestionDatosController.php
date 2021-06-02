@@ -413,8 +413,8 @@ class GestionDatosController extends Controller
         $esVendePlan = false;
         $esVentaCaida = false;
 
-        switch($request->Marca){
-            case 2:
+       // switch($request->Marca){
+         //   case 2:
                 switch($request->Concesionario){ 
                     case 4:
                         $db = 'AC';
@@ -425,12 +425,13 @@ class GestionDatosController extends Controller
                     case 6:
                         $db = 'CG';
                     break;
+                    default:
+                        $db = 'GF';
+                    break;
                 }
-            break;
-            default:
-                $db = 'GF';
-            break;
-        }
+          //  break;
+           
+        //}
 
         $dato = SubiteDatos::on($db)->findOrFail($request->ID);
         $textObsAutom = "";
@@ -558,11 +559,16 @@ class GestionDatosController extends Controller
                                 $porcentajeComision = 0.2;
                             break;
                             */
+                            /*
                             case 4:
                             case 5:
                             case 6:
                             case 8:
                             case 10:
+                                $porcentajeComision = 0.06;
+                            break;
+                            */
+                            default: // Por ahora todos los CE de DatosWeb van a tener el mismo porcentaje que CG, AN, AC y Alizze
                                 $porcentajeComision = 0.06;
                             break;
                         }
