@@ -66,7 +66,7 @@ class AsignacionDatosController extends Controller
 
                 if ($oDet->Marca == 2){
                     if ($oDet->FechaVtoCuota2 === NULL){
-                        if ($oDet->AvanceCalculado === NULL){
+                        if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
                             $oDet->AvanceAutomatico = 0;
                             $oDet->AvanceCalculado = $oDet->AvanceAutomatico;
                         }

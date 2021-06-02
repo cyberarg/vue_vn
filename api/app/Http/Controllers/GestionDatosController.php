@@ -119,7 +119,8 @@ class GestionDatosController extends Controller
                     if ($oDet->Marca == 2 ){
                         if ($oDet->FechaVtoCuota2 === NULL){
                             $oDet->AvanceAutomatico = 0;
-                            if ($oDet->AvanceCalculado === NULL){
+
+                            if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
                                 $oDet->AvanceCalculado = $oDet->AvanceAutomatico;
                             }
                            
@@ -360,7 +361,7 @@ class GestionDatosController extends Controller
                 */
                 if ($oDet->Marca == 2){
                     if ($oDet->FechaVtoCuota2 === NULL){
-                        if ($oDet->AvanceCalculado === NULL){
+                        if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
                             $oDet->AvanceAutomatico = 0;
                         }else{
                             $oDet->AvanceAutomatico = $oDet->AvanceCalculado;

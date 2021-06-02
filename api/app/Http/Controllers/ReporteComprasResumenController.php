@@ -282,7 +282,7 @@ class ReporteComprasResumenController extends Controller
                     $oDet->Avance = $oDet->AvanceAutomatico;
                 }
             }else{
-                if ($oDet->AvanceCalculado === NULL){
+                if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
                     $oDet->AvanceAutomatico = $oDet->Avance;
                     $oDet->Avance = $oDet->Avance;
                 }else{
