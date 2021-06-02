@@ -53,32 +53,7 @@
                   align: 'center',
                   filterable: false,
                 },
-                /*
-                {
-                  text: 'Domicilio',
-                  value: 'Domicilio',
-                  align: 'center',
-                  width: '1%'
-                },
-                {
-                  text: 'Teléfono 1',
-                  value: 'Telefono1',
-                  align: 'center',
-                  width: '1%'
-                },
-                {
-                  text: 'Teléfono 2',
-                  value: 'Telefono2',
-                  align: 'center',
-                  width: '1%'
-                },
-                {
-                  text: 'Email 1',
-                  value: 'Email1',
-                  align: 'center',
-                  width: '1%'
-                },
-                */
+
                 {
                   text: 'Cuotas PG',
                   value: 'CPG',
@@ -95,7 +70,7 @@
                 },
                 {
                   text: 'Avance',
-                  value: 'Avance',
+                  value: 'AvanceCalculado',
                   align: 'center',
                   width: '1%',
                   filterable: false,

@@ -34,9 +34,11 @@ class EstadoGestionController extends Controller
             $results1 = array();
             $results2 = array();
             $results3 = array(); 
+            $results4 = array(); 
             $total1 = array();
             $total2 = array();
             $total3 = array();    
+            $total4 = array(); 
 
             if (!$esVinculo){
                 $results1 = DB::connection($db1)->select("CALL hnweb_subitereporte();");
@@ -71,17 +73,23 @@ class EstadoGestionController extends Controller
                             $estados = DB::connection($db3)->select("CALL hnweb_subitereporte();");
                             $totaldatos = DB::connection($db3)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
                         break;
+                        case 13: // Fiat - Datos Web
+                            $estados = DB::select("CALL hnweb_subitereporte_marca_conc(".$marca.", ".$concesionario.");");
+                            $totaldatos = DB::select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", ".$concesionario.");");
+                        break;
                         default:
                             $results1 = DB::connection($db1)->select("CALL hnweb_subitereporte();");
                             $results2 = DB::connection($db2)->select("CALL hnweb_subitereporte();");
                             $results3 =  DB::connection($db3)->select("CALL hnweb_subitereporte();");
+                            $results4 = DB::select("CALL hnweb_subitereporte_marca_conc(".$marca.", NULL);");
 
                             $total1 = DB::connection($db1)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
                             $total2 = DB::connection($db2)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
                             $total3 =  DB::connection($db3)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
+                            $total4 =  DB::connection($db4)->select("CALL hnweb_subitereporte_totales_marca_conc(".$marca.", NULL);");
 
-                            $estados = array_merge($results1, $results2, $results3);
-                            $totaldatos =  array_merge($total1, $total2, $total3);
+                            $estados = array_merge($results1, $results2, $results3, $results4);
+                            $totaldatos =  array_merge($total1, $total2, $total3, $total4);
                         break;
                     }
                    

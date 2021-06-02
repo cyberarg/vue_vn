@@ -25,8 +25,8 @@ class AsignacionDatosController extends Controller
         $utils = new UtilsController;
         
         $result = array();
-        switch($marca){
-            case 2:
+        //switch($marca){
+        //    case 2:
                 switch($concesionario){
                     case 4:
                         $db = 'AC';
@@ -42,13 +42,17 @@ class AsignacionDatosController extends Controller
                         $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, NULL, 1, NULL);");
 
                     break;
+                    default:
+                        $db = 'GF';
+                        $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, NULL, 0, ".$marca.", ".$concesionario.", NULL);"); 
+                    break;
                 }
-            break;
-            default:
-                $db = 'GF';
-                $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, NULL, 0, ".$marca.", ".$concesionario.", NULL);"); 
-            break;
-        }
+           // break;
+           // default:
+           //     $db = 'GF';
+           //     $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, NULL, 0, ".$marca.", ".$concesionario.", NULL);"); 
+           // break;
+       // }
 
         $list = array();
         if (isset($result)){
@@ -62,8 +66,11 @@ class AsignacionDatosController extends Controller
 
                 if ($oDet->Marca == 2){
                     if ($oDet->FechaVtoCuota2 === NULL){
-                        $oDet->AvanceAutomatico = 0;
-                        $oDet->AvanceCalculado = $oDet->AvanceAutomatico;
+                        if ($oDet->AvanceCalculado === NULL){
+                            $oDet->AvanceAutomatico = 0;
+                            $oDet->AvanceCalculado = $oDet->AvanceAutomatico;
+                        }
+                        
                     }else{
                         $oDet->AvanceAutomatico = $utils->getAvanceAutomatico($fvc2);
                         $oDet->Avance = $oDet->AvanceAutomatico;
@@ -145,8 +152,8 @@ class AsignacionDatosController extends Controller
             
             $js = json_decode(json_encode($dato));
 
-            switch($marca){
-                case 2:
+           // switch($marca){
+           //     case 2:
                     switch($concesionario){ 
                         case 4:      
                             $db = 'AC';
@@ -172,17 +179,25 @@ class AsignacionDatosController extends Controller
                             $res[] = DB::connection($db)->select("CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$marca.", ".$codOficial.", ".$codSupervisor.");");
 
                         break;
+                        default:
+                            $db = 'GF';
+
+                            $codOficial = $oficial->Codigo;
+                            $str[] = "CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$js->Marca.", ".$js->Concesionario.", ".$codOficial.", ".$codSupervisor.");";
+                            $res[] = DB::connection($db)->select("CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$marca.", ".$concesionario.", ".$codOficial.", ".$codSupervisor.");");
+
+                        break;
                     }
-                break;
-                default:
-                    $db = 'GF';
+            //    break;
+            //    default:
+            //        $db = 'GF';
 
-                    $codOficial = $oficial->Codigo;
-                    $str[] = "CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$js->Marca.", ".$js->Concesionario.", ".$codOficial.", ".$codSupervisor.");";
-                    $res[] = DB::connection($db)->select("CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$marca.", ".$concesionario.", ".$codOficial.", ".$codSupervisor.");");
+           //         $codOficial = $oficial->Codigo;
+           //         $str[] = "CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$js->Marca.", ".$js->Concesionario.", ".$codOficial.", ".$codSupervisor.");";
+           //         $res[] = DB::connection($db)->select("CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$marca.", ".$concesionario.", ".$codOficial.", ".$codSupervisor.");");
 
-                break;
-            }
+           //     break;
+          //  }
 
             //$str[] = "CALL hnweb_subiteasignacion(".$asignaOficial.", '".$js->Grupo."', ".$js->Orden.", ".$codOficial.", ".$codSupervisor.");";
         // DB::select("CALL hnweb_subiteasignacion(p_ASIGNAOFICIAL, P_GRUPO, P_ORDEN, p_MARCA, P_OFICIAL, P_SUPERVISOR);");
@@ -211,8 +226,8 @@ class AsignacionDatosController extends Controller
             
             $js = json_decode(json_encode($dato));
 
-            switch($js->Marca){
-                case 2:
+          //  switch($js->Marca){
+           //     case 2:
                     switch($js->Concesionario){ 
                         case 4:      
                             $db = 'AC';
@@ -223,12 +238,15 @@ class AsignacionDatosController extends Controller
                         case 6:
                             $db = 'CG'; 
                         break;
+                        default:
+                            $db = 'GF';
+                        break;
                     }
-                break;
-                default:
-                    $db = 'GF';
-                break;
-            }
+            //    break;
+            //    default:
+            //        $db = 'GF';
+            //    break;
+           // }
 
             $str[] = "CALL hnweb_reciclarDato('".$js->Grupo."', ".$js->Orden.", ".$js->Marca.", ".$js->Concesionario.");";
             $res[] = DB::connection($db)->select("CALL hnweb_reciclarDato('".$js->Grupo."', ".$js->Orden.", ".$js->Marca.", ".$js->Concesionario.");");
@@ -247,8 +265,8 @@ class AsignacionDatosController extends Controller
             
             $js = json_decode(json_encode($dato));
 
-            switch($js->Marca){
-                case 2:
+          //  switch($js->Marca){
+          //      case 2:
                     switch($js->Concesionario){ 
                         case 4:      
                             $db = 'AC';
@@ -260,12 +278,16 @@ class AsignacionDatosController extends Controller
                         case 6:
                             $db = 'CG'; 
                         break;
+                        default:
+                            $db = 'GF';
+                        break;
                     }
-                break;
-                default:
-                    $db = 'GF';
-                break;
-            }
+
+          //      break;
+           //     default:
+           //         $db = 'GF';
+           //     break;
+         //   }
 
             $str[] = "CALL hnweb_subitepasarasingestionar('".$js->Grupo."', ".$js->Orden.", ".$js->Marca.");";
             $res[] = DB::connection($db)->select("CALL hnweb_subitepasarasingestionar('".$js->Grupo."', ".$js->Orden.", ".$js->Marca.");");

@@ -242,8 +242,8 @@ class ReporteComprasController extends Controller
         $arrFiat = array_merge($arrFiat, $datos_cg, $datos_ac, $datos_an);
         */
 
-        $periodoActPrimerDia = '2021-5-1';
-        $periodoAct = 20210531; 
+        $periodoActPrimerDia = '2021-6-1';
+        $periodoAct = 20210630; 
 
         $res_ac = DB::connection('AC')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
         $res_aut = DB::connection('AN')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
@@ -252,9 +252,6 @@ class ReporteComprasController extends Controller
         $datos_gf = DB::connection('GF')->select("CALL hnweb_subitereportecompras_cli('".$periodoAct."');");
 
         $arrFiat = array_merge($res_ac, $res_aut, $res_cg);
-
-
-        
 
         $acumMenos45 = 0;
         $acumEntre45y60 = 0;

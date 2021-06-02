@@ -41,8 +41,8 @@ class ObservacionController extends Controller
     public function store(Request $request)
     {
 
-        switch($request->marca){
-            case 2:
+        //switch($request->marca){
+        //    case 2:
                 switch($request->concesionario){
                     case 4:
                         $db = 'AC';
@@ -53,12 +53,16 @@ class ObservacionController extends Controller
                     case 6:
                         $db = 'CG';
                     break;
+                    default:
+                        $db = 'GF';
+                    break;
                 }
-            break;
-            default:
-                $db = 'GF';
-            break;
-        }
+
+        //    break;
+         //    default:
+         //        $db = 'GF';
+         //    break;
+        //}
        
         $newObs = new Observacion();
         $newObs->setConnection($db);
@@ -93,8 +97,8 @@ class ObservacionController extends Controller
 
     public function getObservacion(Request $request)
     {
-        switch($request->marca){
-            case 2:
+        //switch($request->marca){
+        //    case 2:
                 switch($request->concesionario){
                     case 4:
                         $db = 'AC';
@@ -105,12 +109,15 @@ class ObservacionController extends Controller
                     case 6:
                         $db = 'CG';
                     break;
+                    default:
+                        $db = 'GF';
+                    break;
                 }
-            break;
-            default:
-                $db = 'GF';
-            break;
-        }
+           // break;
+           // default:
+           //     $db = 'GF';
+           // break;
+        //}
         $observaciones = Observacion::on($db)->where('ID_Datos',$request->id)->get(); // static method
 
         return $observaciones;

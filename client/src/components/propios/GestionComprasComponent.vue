@@ -429,6 +429,8 @@ export default {
         { Codigo: 5, Nombre: "Volkswagen" },
         { Codigo: 6, Nombre: "Ford" },
         { Codigo: 3, Nombre: "Peugeot" },
+        { Codigo: 7, Nombre: "Jeep" },
+        { Codigo: 10, Nombre: "Citroen" },
       ],
       codConcesSelected: null,
       listC: [],
@@ -444,6 +446,12 @@ export default {
         { Codigo: 6, Nombre: "Car Group", Marca: 2 },
         { Codigo: 9, Nombre: "Sapac", Marca: 6 },
         { Codigo: 10, Nombre: "Alizze", Marca: 3 },
+        { Codigo: 12, Nombre: "Datos Web - Peugeot", Marca: 3 },
+        { Codigo: 13, Nombre: "Datos Web - Fiat", Marca: 2 },
+        { Codigo: 14, Nombre: "Datos Web - Jeep", Marca: 7 },
+        { Codigo: 15, Nombre: "Datos Web - Volkswagen", Marca: 5 },
+        { Codigo: 16, Nombre: "Datos Web - Ford", Marca: 9 },
+        { Codigo: 17, Nombre: "Datos Web - Citroen", Marca: 10 },
       ],
 
       listTitularesCompra: [
@@ -455,6 +463,7 @@ export default {
         { Codigo: 6, Concesionario: 6, ComproGiama: 0, Nombre: "Car Group" },
         { Codigo: 7, Concesionario: 7, ComproGiama: 0, Nombre: "LuxCar" },
         { Codigo: 8, Concesionario: 10, ComproGiama: 0, Nombre: "Alizze" },
+
       ],
     };
   },
@@ -713,6 +722,16 @@ export default {
             { Codigo: 8, Concesionario: 10, ComproGiama: 1, Nombre: "Alizze" },
           ];
           break;
+        case 12: // Dato Web - Peugeot
+        case 13: // Dato Web - Fiat
+        case 14: // Dato Web - Jeep
+        case 15: // Dato Web - Volkswagen
+        case 16: // Dato Web - Ford
+        case 17: // Dato Web - Citroen
+          arrTitulares = [
+            { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+          ];
+          break;
       }
 
       return arrTitulares;
@@ -743,6 +762,27 @@ export default {
           break;
         case "8":
           return "RB";
+          break;
+        case "9":
+          return "Sapac";
+          break;
+        case "10":
+          return "Alizze";
+          break;
+        case "12":
+          return "Dato Web - Peugeot";
+          break;
+        case "13":
+          return "Dato Web - Fiat";
+          break;
+        case "14":
+          return "Dato Web - Jeep";
+        case "15":
+          return "Dato Web - Volskwagen";
+        case "16":
+          return "Dato Web - Ford";
+        case "17":
+          return "Dato Web - Citroen";
           break;
         default:
           return "";

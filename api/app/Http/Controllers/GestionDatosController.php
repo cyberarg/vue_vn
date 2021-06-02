@@ -37,8 +37,8 @@ class GestionDatosController extends Controller
         $objOficial = Oficial::find($oficial);
         $supervisor = $objOficial->Supervisor;
 
-        switch($marca){
-            case 2:
+       // switch($marca){
+       //     case 2:
                 switch($concesionario){
                     case 4:
                         $db = 'AC';
@@ -59,13 +59,18 @@ class GestionDatosController extends Controller
                             $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, ".$objOficial->SupervisorCarGroup.", 0, ".$objOficial->CodigoCarGroup.");");
                         } 
                     break;
+
+                    default:
+                        $db = 'GF';
+                        $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, ".$supervisor.", 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
+                    break;
                 }
-            break;
-            default:
-                $db = 'GF';
-                $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, ".$supervisor.", 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
-            break;
-        }
+           // break;
+           // default:
+           //     $db = 'GF';
+           //     $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, ".$supervisor.", 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
+           // break;
+       // }
 
         
 
@@ -111,10 +116,13 @@ class GestionDatosController extends Controller
                     }
                     */
 
-                    if ($oDet->Marca == 2){
+                    if ($oDet->Marca == 2 ){
                         if ($oDet->FechaVtoCuota2 === NULL){
                             $oDet->AvanceAutomatico = 0;
-                            $oDet->AvanceCalculado = $oDet->AvanceAutomatico;
+                            if ($oDet->AvanceCalculado === NULL){
+                                $oDet->AvanceCalculado = $oDet->AvanceAutomatico;
+                            }
+                           
                         }else{
                             $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fvc2);
                             $oDet->Avance = $oDet->AvanceAutomatico;
@@ -301,8 +309,8 @@ class GestionDatosController extends Controller
         $concesionario = $request->concesionario;
         
         $result = array();
-        switch($marca){
-            case 2:
+       // switch($marca){
+           // case 2:
                 switch($concesionario){
                     case 4:
                         $db = 'AC';
@@ -318,13 +326,17 @@ class GestionDatosController extends Controller
                         $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(".$id.", NULL, 0, NULL);");
 
                     break;
+                    default:
+                        $db = 'GF';
+                        $result = DB::select("CALL hnweb_subitegetdatos_vw(".$id.", NULL, 0, ".$marca.", ".$concesionario.", NULL);");
+                    break;
                 }
-            break;
-            default:
-                $db = 'GF';
-                $result = DB::select("CALL hnweb_subitegetdatos_vw(".$id.", NULL, 0, ".$marca.", ".$concesionario.", NULL);");
-            break;
-        }
+           //  break;
+           // default:
+           //     $db = 'GF';
+           //     $result = DB::select("CALL hnweb_subitegetdatos_vw(".$id.", NULL, 0, ".$marca.", ".$concesionario.", NULL);");
+          //  break;
+       // }
 
         $list = array();
         if (isset($result)){
@@ -348,7 +360,12 @@ class GestionDatosController extends Controller
                 */
                 if ($oDet->Marca == 2){
                     if ($oDet->FechaVtoCuota2 === NULL){
-                        $oDet->AvanceAutomatico = 0;
+                        if ($oDet->AvanceCalculado === NULL){
+                            $oDet->AvanceAutomatico = 0;
+                        }else{
+                            $oDet->AvanceAutomatico = $oDet->AvanceCalculado;
+                        }
+                        
                     }else{
                         $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fvc2);
                         $oDet->Avance = $oDet->AvanceAutomatico;

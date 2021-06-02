@@ -280,6 +280,8 @@ export default {
         { Codigo: 5, Nombre: "Volkswagen" },
         { Codigo: 9, Nombre: "Ford" },
         { Codigo: 3, Nombre: "Peugeot" },
+        { Codigo: 7, Nombre: "Jeep" },
+        { Codigo: 10, Nombre: "Citroen" },
       ],
       codConcesSelected: null,
       listC: [],
@@ -294,6 +296,12 @@ export default {
         { Codigo: 6, Nombre: "Car Group", Marca: 2 },
         { Codigo: 9, Nombre: "Sapac", Marca: 9 },
         { Codigo: 10, Nombre: "Alizze", Marca: 3 },
+        { Codigo: 12, Nombre: "Datos Web - Peugeot", Marca: 3 },
+        { Codigo: 13, Nombre: "Datos Web - Fiat", Marca: 2 },
+        { Codigo: 14, Nombre: "Datos Web - Jeep", Marca: 7 },
+        { Codigo: 15, Nombre: "Datos Web - Volkswagen", Marca: 5 },
+        { Codigo: 16, Nombre: "Datos Web - Ford", Marca: 9 },
+        { Codigo: 17, Nombre: "Datos Web - Citroen", Marca: 10 },
       ],
 
       statesList: [

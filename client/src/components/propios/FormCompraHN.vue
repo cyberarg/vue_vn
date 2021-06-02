@@ -308,6 +308,8 @@ export default {
         { Codigo: 5, Nombre: "Volkswagen" },
         { Codigo: 9, Nombre: "Ford" },
         { Codigo: 3, Nombre: "Peugeot" },
+        { Codigo: 7, Nombre: "Jeep" },
+        { Codigo: 10, Nombre: "Citroen" },
       ],
       codConcesSelected: null,
       listC: [],
