@@ -87,14 +87,14 @@ export const mutations = {
   ALTA_SUCCESS(state, respuesta) {
     state.loadingStatusInsert = false;
     state.dataStatusInsert = "success";
-    state.dataStatusMsgInsert = "El nuevo dato web se agregeó exitosamente";
+    state.dataStatusMsgInsert = "El nuevo dato web se agregó exitosamente";
     console.log(respuesta);
   },
 
   ALTA_ERROR(state) {
     state.loadingStatusInsert = false;
     state.dataStatusInsert = "error";
-    state.dataStatusMsgInsert = "Ocurrió un error al intengar grabar el nuevo dato web";
+    state.dataStatusMsgInsert = "Ocurrió un error al intentar grabar el nuevo dato web";
 
   },
 

@@ -22,6 +22,43 @@ use App\Precio;
 
 class UtilsController extends Controller
 {
+
+    public function getNombreMarcaDatoWeb($codigo){
+
+        switch ($codigo){
+            case 2:
+                return 'Fiat';
+            case 3:
+                return 'Peugeot';
+            case 5:
+                return 'Volkswagen';
+            case 7:
+                return 'Jeep';
+            case 9:
+                return 'Ford';
+            case 10:
+                return 'Citroen';
+            default:
+                return '';
+        }
+
+    }
+
+    public function getNombreEstadoPlanDatoWeb($codigo){
+        switch ($codigo){
+            case 1:
+                return 'Pago al día';
+            case 2:
+                return 'Rescindido / Renunciado';
+            case 3:
+                return 'Más de 3 cuotas en mora';
+            case 4:
+                return 'Menos de 3 cuotas en mora';
+            default:
+                return '';
+        }
+    }
+
     public function getNombreCE($codCE){
 
         switch($codCE){

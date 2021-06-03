@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\UtilsController;
 use DateTime;
 
+
 class GestionDatosWebController extends Controller
 {
 
@@ -97,17 +98,18 @@ class GestionDatosWebController extends Controller
     public function createDato(Request $request)
     {
 
-        return $request;
+        
         $newDatoW = new DatoWeb();
         $newDatoW->setConnection('GF');
+        $utils = new UtilsController;
 
         $newDatoW->FullName = $request->FullName;
         $newDatoW->Telefono = $request->Telefono;
         $newDatoW->Email = $request->Email;
-        $newDatoW->MarcaPlan = $request->NomMarca;
+        $newDatoW->MarcaPlan = $utils->getNombreMarcaDatoWeb($request->CodMarca);
         $newDatoW->ModeloAhorro = $request->ModeloAhorro;
         $newDatoW->CantidadCuotas = $request->CantidadCuotas;
-        $newDatoW->EstadoPlan = $request->EstadoPlan->Nombre;
+        $newDatoW->EstadoPlan = $utils->getNombreEstadoPlanDatoWeb($request->EstadoPlan);
 
         $newDatoW->Marca = $request->CodMarca;
         $newDatoW->NroDoc = $request->Documento;
@@ -115,8 +117,22 @@ class GestionDatosWebController extends Controller
         $newDatoW->Orden = $request->Orden;
         $newDatoW->Avance = $request->Avance;
         
+        $newDatoW->FechaLead = now();
 
         $newDatoW->save();
+
+        if ($request->Obs != null){
+
+            $newObs = new ObservacionWeb();
+            $newObs->setConnection('GF');
+            $newObs->ID_DatoWeb = $newDatoW->ID;
+            $newObs->Obs = $request->Obs;
+            $newObs->login = 'hnweb';
+            $newObs->Fecha = now();
+    
+            $newObs->save();
+            
+        }
 
         return $newDatoW;
 

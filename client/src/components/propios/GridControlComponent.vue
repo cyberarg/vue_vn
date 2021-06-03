@@ -11,6 +11,7 @@
       :loading-text="loadingtext"
       no-data-text="No hay datos disponibles"
       :hide-default-footer="true"
+      :items-per-page="-1"
     >
       <template v-slot:item.Total="{item}">{{getTotal(item)}}</template>
 
@@ -110,9 +111,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.contenedor {
-  height: 150px;
-}
 
 .total {
   font-weight: bold;

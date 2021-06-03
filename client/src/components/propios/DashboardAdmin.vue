@@ -164,9 +164,22 @@
           </v-card>
         </v-col>
         <v-col cols="12" xs="12" sm="12" lg="9" md="9">
-            <GridCarteraGral></GridCarteraGral>
+            <v-row>
+              <v-col cols="12" xs="12" sm="12" lg="12" md="12">
+                  <GridCarteraGral></GridCarteraGral>
+              </v-col>
+            </v-row>
+            <v-row  class="performance">
+              <v-col cols="12" xs="12" sm="12" lg="12" md="12">
+                  <v-card hover elevation-2 color="grey lighten-4">
+                    <v-card-title>Reporte Performance</v-card-title>
+                    <GridPerformanceComponent></GridPerformanceComponent>
+                  </v-card>
+              </v-col>
+            </v-row>
         </v-col>
       </v-row>
+      <!--
       <v-row justfy="center" class="performance">
         <v-col cols="12" xs="12" sm="12" lg="12" md="12">
           <v-card hover elevation-2 color="grey lighten-4">
@@ -175,6 +188,7 @@
           </v-card>
         </v-col>
       </v-row>
+      -->
     </div>
   </v-app>
 </template>
@@ -211,7 +225,7 @@ export default {
 }
 
 .performance {
-  padding-top: 115px;
+  padding-top: 190px;
 }
 
 .row-equal {

@@ -137,7 +137,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" xs="12" sm="12" lg="6" md="6">
+        <v-col cols="12" xs="12" sm="6" lg="4" md="4">
           <v-card hover elevation-2 color="grey lighten-4">
             <v-card-title>Evolución Compras</v-card-title>
             <GridControlComponent></GridControlComponent>
