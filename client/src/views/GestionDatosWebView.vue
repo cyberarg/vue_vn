@@ -13,14 +13,13 @@
                   text: '',
                   value: 'Star',
                   align: 'center',
-                  sorteable: true,
+
                 },
                 {
                   text: 'Marca',
                   value: 'MarcaPlan',
                   align: 'center',
-                  sorteable: true,
-                  filterable: true,
+
                 },
                 
                 
@@ -28,16 +27,14 @@
                   text: 'Grupo',
                   value: 'Grupo',
                   align: 'center',
-                  sorteable: true,
-                  filterable: true,
+
                   width: '1%'
                 },
                 {
                   text: 'Orden',
                   value: 'Orden',
                   align: 'center',
-                  sorteable: true,
-                  filterable: true,
+
                   width: '1%'
                 },
                 
@@ -45,9 +42,10 @@
                   text: 'Apellido y Nombre',
                   value: 'FullName',
                   align: 'left',
-                  sorteable: true,
-                  filterable: true,
+
                 },
+
+                
                 
                 {
                   text: 'Cuotas Lead',
@@ -60,22 +58,15 @@
                   text: 'Estado Lead',
                   value: 'EstadoPlan',
                   align: 'center',
-                  width: '2%'
+                  width: '2%',
+
                 },
-                /*
-                {
-                  text: 'Cutas AD',
-                  value: 'CAD',
-                  align: 'center',
-                  width: '1%'
-                },
-                */
                
                 {
                   text: 'Estado',
-                  value: 'NomEstado',
-                  align: 'left',
-                  filterable: false,
+                  value: 'CodEstado',
+                  align: 'center',
+      
                 },
                
         
@@ -83,7 +74,7 @@
                   text: 'Fecha Lead',
                   value: 'FechaLead',
                   align: 'center',
-                  filterable: false,
+
                 },
                 
                 { text: '', value: 'VerDato', align: 'center', width: '1%' },

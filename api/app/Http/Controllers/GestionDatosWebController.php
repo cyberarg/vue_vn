@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\DatoWeb;
 use App\ObservacionWeb;
+use App\ReferenciaAvance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UtilsController;
 use DateTime;
+use DB;
 
 
 class GestionDatosWebController extends Controller
@@ -93,6 +95,40 @@ class GestionDatosWebController extends Controller
 
     public function update(Request $request){
         //
+    }
+
+    public function getAvanceGrupo(Request $request){
+
+        $grupoFrom = $request->Grupo - 10;
+        $grupoTo = $request->Grupo + 10;
+
+        $lstGrupos = ReferenciaAvance::where('Marca', $request->Marca)->whereBetween('Grupo', [$grupoFrom, $grupoTo]);
+        $ref = 0;
+
+        foreach ($lstGrupos as $lista) {
+
+            if ($lista->Grupo == $request->Grupo){
+                $ref = $lista;
+                break;
+            }
+
+        }
+
+        if ($ref == 0){
+            //Buscar el mas cercano
+        }
+
+        return $ref;
+        
+    }
+
+    public function searchByGrupoBrand(Request $request)
+    {
+        $grupo = $request->Grupo;
+        $marca = $request->Marca;
+
+        return DB::select('CALL hnweb_get_informacion_dato_web('.$marca.', '.$grupo.');');
+
     }
 
     public function createDato(Request $request)

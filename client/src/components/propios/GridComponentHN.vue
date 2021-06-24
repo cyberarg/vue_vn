@@ -295,7 +295,7 @@
                       {{ item.MontoCobrado | numFormat('$0,0') }}
                  </template>
                   <template v-slot:item.PrimerCobro="{ item }">
-                      <template v-show="item.PrimerCobro == 1">
+                      <template v-if="item.PrimerCobro == 1">
                         <v-badge color="green" content="Primer Cobro" inline tile></v-badge>
                       </template>
                  </template>
@@ -586,6 +586,7 @@ export default {
     },
 
     editItem(item) {
+      console.log(item);
       this.editedIndex = this.datos_items.indexOf(item);
       this.editedItem = Object.assign({}, item);
       //console.log();
@@ -620,7 +621,7 @@ export default {
       }
       await this.showSwal();
       this.close();
-      this.refreshHNCobrados();
+      //this.refreshHNCobrados();
     },
 
     getHistorialCobros(marca, concesionario, id_hn){
@@ -653,7 +654,7 @@ export default {
       }
       await this.showSwal();
       this.close();
-      this.refreshHNCobrados();
+      //this.refreshHNCobrados();
     },
 
     refreshHNCobrados() {

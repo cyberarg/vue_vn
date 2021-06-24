@@ -138,6 +138,18 @@ class HaberesNetosController extends Controller
         return DB::select('SELECT hnweb_codigos_planes.Plan AS Codigo, hnweb_codigos_planes.Plan AS Nombre FROM hnweb_codigos_planes WHERE hnweb_codigos_planes.marca = '.$request->marca.' AND hnweb_codigos_planes.CodigoModelo = '.$request->modelo.' ORDER BY hnweb_codigos_planes.Plan ASC;');
     }
 
+    public function getPlanesSinModeloHN(Request $request){
+        //return DB::select('SELECT hnweb_codigos_planes.Plan AS Codigo, hnweb_codigos_planes.Plan AS Nombre FROM hnweb_codigos_planes WHERE hnweb_codigos_planes.marca = '.$request->marca.' ORDER BY hnweb_codigos_planes.Plan ASC;');
+  
+        return DB::select('SELECT hnweb_codigos_planes.Plan AS Codigo, hnweb_codigos_planes.Plan AS Nombre, 
+        hnweb_codigos_planes.CodigoModelo AS CodModelo, modelos.Nombre AS NomModelo
+        FROM hnweb_codigos_planes 
+        LEFT JOIN modelos ON modelos.Codigo = hnweb_codigos_planes.CodigoModelo AND modelos.Marca = '.$request->marca.'
+        WHERE hnweb_codigos_planes.marca = '.$request->marca.' 
+        ORDER BY hnweb_codigos_planes.Plan ASC;');
+  
+    }
+
     public function getListasHN(Request $request){
 
 
@@ -571,6 +583,7 @@ class HaberesNetosController extends Controller
 
             $oHN->Operacion = $oOp;
             $oHN->Id = $hn->Id;
+            $oHN->ID_Dato = $hn->ID_Dato;
             $oHN->Rescindido = $hn->Rescindido;
             $oHN->Titular = $hn->Titular;
             $oHN->TipoCompra = $hn->TipoCompra;
@@ -798,6 +811,7 @@ class HaberesNetosController extends Controller
 
             $oHN->Operacion = $oOp;
             $oHN->Id = $hn->Id;
+            $oHN->ID_Dato = $hn->ID_Dato;
             $oHN->Rescindido = $hn->Rescindido;
             $oHN->Titular = $hn->Titular;
             $oHN->TipoCompra = $hn->TipoCompra;

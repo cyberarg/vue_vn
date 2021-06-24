@@ -304,7 +304,7 @@ export const actions = {
       //.post("/haberesnetos", params)
       .post("/haberesnetos_select", params)
       .then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         commit("HNV_SUCCESS", response.data);
         dispatch("setValoresDolar", response.data);
       })
@@ -336,6 +336,21 @@ export const actions = {
       .then(response => {
         console.log(response.data);
         commit("MODELOS_SUCCESS", response.data);
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("HN_ERROR");
+      });
+  },
+
+  getPlanesSinModelo({ commit }, p) {
+    commit("GET_PLANES_STATUS");
+    console.log(p);
+    return axios
+      .get("/getplanesmodelhn?marca=" + p.marca)
+      .then(response => {
+        console.log(response.data);
+        commit("PLANES_SUCCESS", response.data);
       })
       .catch(err => {
         //console.log("get datos error");

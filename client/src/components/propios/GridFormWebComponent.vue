@@ -51,7 +51,7 @@
         </template>
         <template v-slot:item.ApeNom="{ item }">{{ item.ApeNom }}</template>
         <template v-slot:item.Avance="{ item }">{{ item.Avance }}</template>
-        <template v-slot:item.NomEstado="{ item }">
+        <template v-slot:item.CodEstado="{ item }">
           {{ getTextEstado(item.CodEstado) }}
         </template>
        
@@ -224,6 +224,7 @@ export default {
     ]),
 
 
+
     exportable() {
       if (typeof this.pars.exportable !== "undefined") {
         return this.pars.exportable;
@@ -299,26 +300,7 @@ export default {
     },
 
 
-    getTextEstado(estado) {
-      if (estado != null) {
-        switch(parseInt(estado)){
-          case 1:
-            return "En Gestión";
-          case 2:
-            return "Avance Bajo";
-          case 3:
-            return "Cuotas Insuficientes";
-          case 4:
-            return "Llamar Mas Adelante";
-          case 5:
-            return "Pasar A Asignación";
-          default:
-            return estado;
-        }
-      } else {
-        return "Sin Gestionar";
-      }
-    },
+    
 
     getDato(item) {
 
@@ -335,6 +317,29 @@ export default {
       var date = moment(fecha);
       if (date.isValid()) {
         return moment(fecha).format("DD/MM/YYYY");
+      }
+    },
+
+    getTextEstado(estado) {
+      if (estado != null) {
+        switch(estado){
+          case "1":
+            return "En Gestión";
+          case "2":
+            return "Avance Bajo";
+          case "3":
+            return "Cuotas Insuficientes";
+          case "4":
+            return "Llamar Mas Adelante";
+          case "5":
+            return "Pasar A Asignación";
+          case "6":
+            return "Deje Mensaje";
+          default:
+            return estado;
+        }
+      } else {
+        return "Sin Gestionar";
       }
     },
 

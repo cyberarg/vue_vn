@@ -244,7 +244,7 @@
                       v-model="item.Orden"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4" md="4">
+                  <v-col cols="2" md="2">
                     <v-text-field
                       dense
  
@@ -254,6 +254,11 @@
                       :filled="filled"
                       v-model="item.Avance"
                     ></v-text-field>
+                  </v-col>
+                  <v-col cols="2" md="2">
+                    <v-btn icon small color="green" @click="getDatosPlan">
+                      <v-icon>mdi-cached</v-icon>
+                    </v-btn>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -498,12 +503,23 @@ export default {
       updateDato: "gestiondatosweb/updateDato",
       newObs: "gestiondatosweb/newObs",
       saveDato: "gestiondatosweb/saveDato",
+      searchValuesByGroup: "gestiondatosweb/searchValuesByGroup",
     }),
 
     setVentaCaida() {
       this.requiereObsCaida = true;
       this.esCaida = true;
       //this.dialog = true;
+    },
+
+    async getDatosPlan(){
+      let pars = {
+        Marca: 5, 
+        Grupo: 1756
+      }
+
+      await this.searchValuesByGroup(pars);
+      console.log(this.valores);
     },
 
     async submit() {
@@ -727,7 +743,9 @@ export default {
       "showMsg",
       "estados",
       "motivos",
-      "motivosCaida"
+      "motivosCaida",
+      "valores",
+      "loadingSearch",
     ]),
   },
 };

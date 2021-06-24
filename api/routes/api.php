@@ -51,6 +51,9 @@ Route::post('/altadatoweb', 'GestionDatosWebController@createDato');
 Route::resource('observacionesweb', 'ObservacionWebController');
 Route::post('/getobservacionesweb', 'ObservacionWebController@getObservacion');
 
+Route::post('/search_grupo', 'GestionDatosWebController@searchByGrupoBrand');
+
+
 Route::resource('asignaciondatos', 'AsignacionDatosController');
 Route::post('/getdatosasignacion', 'AsignacionDatosController@getDatosAsignar');
 
@@ -79,6 +82,8 @@ Route::post('/calculadorahn', 'HaberesNetosController@getCalculoHN');
 Route::post('/calculadorahnguido', 'HaberesNetosController@getCalculoHNGuido');
 Route::get('/getmodeloshn', 'HaberesNetosController@getModelosHN');
 Route::get('/getplaneshn', 'HaberesNetosController@getPlanesHN');
+Route::get('/getplanesmodelhn', 'HaberesNetosController@getPlanesSinModeloHN');
+
 Route::get('/getlistashn', 'HaberesNetosController@getListasHN');
 Route::post('/getoperacionhn', 'HaberesNetosController@buscarOp');
 Route::post('/grabarhn', 'HaberesNetosController@grabarHN');

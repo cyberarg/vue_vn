@@ -137,11 +137,14 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" xs="12" sm="6" lg="4" md="4">
+        <v-col cols="12" xs="12" sm="6" lg="3" md="3">
           <v-card hover elevation-2 color="grey lighten-4">
             <v-card-title>Evolución Compras</v-card-title>
             <GridControlComponent></GridControlComponent>
           </v-card>
+        </v-col>
+        <v-col cols="12" xs="12" sm="6" lg="9" md="9">
+            <GridCarteraGral></GridCarteraGral>
         </v-col>
       </v-row>
     </div>
@@ -150,6 +153,7 @@
 
 <script>
 import GridControlComponent from "@/components/propios/GridControlComponent";
+import GridCarteraGral from "@/components/propios/GridCarteraGral";
 //import BaseMaterialStatsCard from "@/components/base/MaterialCard";
 
 export default {
@@ -161,6 +165,7 @@ export default {
   },
   components: {
     GridControlComponent,
+    GridCarteraGral
   },
 };
 </script>

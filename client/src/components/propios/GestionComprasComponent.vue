@@ -669,22 +669,26 @@ export default {
           arrTitulares = [
             { Codigo: 1, Concesionario: 1, ComproGiama: 0, Nombre: "Sauma" },
             { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 9, Concesionario: 0, ComproGiama: 1, Nombre: "GB" },
           ];
           break;
         case "2":
           arrTitulares = [
             { Codigo: 3, Concesionario: 2, ComproGiama: 0, Nombre: "Mirage" },
             { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 9, Concesionario: 0, ComproGiama: 1, Nombre: "GB" },
           ];
           break;
         case "3":
           arrTitulares = [
             { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 9, Concesionario: 0, ComproGiama: 1, Nombre: "GB" },
           ];
           break;
         case "4":
           arrTitulares = [
             { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 9, Concesionario: 0, ComproGiama: 1, Nombre: "GB" },
             {
               Codigo: 4,
               Concesionario: 4,
@@ -696,12 +700,14 @@ export default {
         case "5":
           arrTitulares = [
             { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 9, Concesionario: 0, ComproGiama: 1, Nombre: "GB" },
             { Codigo: 5, Concesionario: 5, ComproGiama: 0, Nombre: "AutoNet" },
           ];
           break;
         case "6":
           arrTitulares = [
             { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 9, Concesionario: 0, ComproGiama: 1, Nombre: "GB" },
             {
               Codigo: 6,
               Concesionario: 6,
@@ -713,12 +719,14 @@ export default {
         case "7":
           arrTitulares = [
             { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 9, Concesionario: 0, ComproGiama: 1, Nombre: "GB" },
             { Codigo: 7, Concesionario: 7, ComproGiama: 1, Nombre: "LuxCar" },
           ];
           break;
         case "10":
           arrTitulares = [
             { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
+            { Codigo: 9, Concesionario: 0, ComproGiama: 1, Nombre: "GB" },
             { Codigo: 8, Concesionario: 10, ComproGiama: 1, Nombre: "Alizze" },
           ];
           break;

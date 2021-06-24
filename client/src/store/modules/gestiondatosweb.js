@@ -14,8 +14,10 @@ export const state = {
   item: {},
   obsStatus: "",
   observaciones: [],
+  valores: [],
   loadingDatos: false,
   loadingObs: true,
+  loadingSearch:false,
   showMsg: false,
   askData: false,
   showItemsFiltered: false,
@@ -154,6 +156,27 @@ export const mutations = {
     state.loadingDatos = false;
   },
 
+
+  GET_GRUPO_STATUS(state) {
+    state.dataStatus = "loading";
+    state.valores = [];
+    state.loadingSearch = true;
+  },
+
+  GRUPO_SUCCESS(state, datos) {
+    console.log(datos);
+    state.valores = datos;
+    state.dataStatus = "success";
+    state.loadingSearch = false;
+
+  },
+
+  GRUPO_ERROR(state) {
+    state.dataStatus = "error";
+    state.valores = [];
+    state.loadingSearch = false;
+  },
+
   SET_DATO(state, dato) {
     state.item = dato;
     state.showMsg = false;
@@ -242,6 +265,20 @@ export const actions = {
       .catch(err => {
         //console.log("get datos error");
         commit("DATOS_ERROR");
+      });
+  },
+
+  
+  searchValuesByGroup({ commit }, pars) {
+    commit("GET_GRUPO_STATUS");
+   
+    return axios
+      .post("/search_grupo", pars)
+      .then(response => {
+        commit("GRUPO_SUCCESS", response.data);
+      })
+      .catch(err => {
+        commit("GRUPO_ERROR");
       });
   },
 

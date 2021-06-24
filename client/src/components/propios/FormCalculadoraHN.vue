@@ -21,9 +21,10 @@
                       item-value="Codigo"
                       label="Marca"
                       v-model="marcaSelect"
-                      @change="loadModelos()"
+                      @change="loadPlanesSinModelo()"
                     ></v-select>
                   </v-col>
+                  <!--
                    <v-col lg="3" md="3" sm="12" xs="12">
                     <v-select
                       dense
@@ -36,17 +37,28 @@
                       @change="loadPlanes"
                     ></v-select>
                   </v-col>
+                  -->
                    <v-col lg="2" md="2" sm="12" xs="12">
                     <v-select
                       dense
+                      return-object
                       :items="items_planes"
                       item-text="Nombre"
                       item-value="Codigo"
                       label="Plan"
                       :disabled="loadingPlanes"
                       v-model="planSelect"
-                      @change="loadListas()"
+                      @change="loadListas"
                     ></v-select>
+                  </v-col>
+                  <v-col lg="3" md="3" sm="12" xs="12">
+                    <v-text-field
+                      dense
+                      label="Modelo"
+                      placeholder="Modelo"
+                      disabled
+                      v-model="nomModelo"
+                    ></v-text-field>
                   </v-col>
                    <v-col lg="2" md="2" sm="12" xs="12">
                       <v-combobox
@@ -143,6 +155,7 @@ export default {
       filled: true,
       cpg: 0,
       cad: 0,
+      nomModelo:'',
       valormovilsel:0,
       descuento:0,
       marcaSelect: null,
@@ -181,6 +194,7 @@ export default {
       getMarcas: "haberneto/getMarcas",
       getModelos: "haberneto/getModelos",
       getPlanes: "haberneto/getPlanes",
+      getPlanesSinModel: "haberneto/getPlanesSinModelo",
       getListas: "haberneto/getListas",
       //getCalculoHN: "haberneto/getCalculoHN",
       getCalculoHN: "haberneto/getCalculoHNGuido",
@@ -203,7 +217,21 @@ export default {
       await this.getPlanes(p);
     },
 
-    async loadListas() {
+     async loadPlanesSinModelo() {
+      this.esperandoCalculo = false;
+      var p = {
+        marca: this.marcaSelect,
+        //modelo: this.modeloSelect,
+      };
+
+      await this.getPlanesSinModel(p);
+    },
+
+    async loadListas(value) {
+      console.log(value);
+      this.nomModelo = value.NomModelo;
+      this.modeloSelect = value.CodModelo;
+
       this.esperandoCalculo = false;
       var p = {
         marca: this.marcaSelect,
@@ -211,6 +239,7 @@ export default {
       };
 
       await this.getListas(p);
+      
     },
 
 
@@ -244,7 +273,7 @@ export default {
       this.esperandoCalculo = true;
       var params = {
         marca: this.marcaSelect,
-        plan: this.planSelect,
+        plan: this.planSelect.Codigo,
         cpagas: this.cpg,
         cadel: this.cad,
         valormovil: this.valormovilsel,
