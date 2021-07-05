@@ -223,8 +223,9 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
+                
                 <v-row>
-                  <v-col cols="4" md="4">
+                  <v-col cols="3" md="3">
                     <v-text-field
                       dense
                       class="importantDisabled"
@@ -234,7 +235,7 @@
                       v-model="item.Grupo"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4" md="4">
+                  <v-col cols="3" md="3">
                     <v-text-field
                       dense
                       class="importantDisabled"
@@ -244,10 +245,31 @@
                       v-model="item.Orden"
                     ></v-text-field>
                   </v-col>
+                  
+                  <v-col cols="2" md="2">
+                    <v-btn
+                      class="ma-2"
+                      small
+                      :loading="loadingSearch"
+                      :disabled="loadingSearch"
+                      color="secondary"
+                      @click="getDatosPlan"
+                    >
+                      Obtener Datos del Grupo
+                      <v-icon right>mdi-cached</v-icon>
+                    </v-btn>
+
+                  </v-col>
+                </v-row>
+                <v-row> 
+                  <v-col cols="12" md="12" class="margintopdivider">
+                    <v-divider class="mx-1" horizontal></v-divider>
+                  </v-col>
+                </v-row>
+                <v-row>
                   <v-col cols="2" md="2">
                     <v-text-field
                       dense
- 
                       class="importantDisabled"
                       label="Avance"
                       placeholder="Avance"
@@ -256,15 +278,55 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="2" md="2">
-                    <v-btn icon small color="green" @click="getDatosPlan">
-                      <v-icon>mdi-cached</v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="6" md="6">
                     <v-text-field
                       dense
+                      label="Plan Real"
+                      placeholder="Plan Real"
+                      class="importantDisabled"
+                      :filled="filled"
+                      v-model="item.Plan"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="8" md="8">
+                    <v-text-field
+                      dense
+                      label="Modelo"
+                      placeholder="Modelo"
+                      class="importantDisabled"
+                      :filled="filled"
+                      v-model="item.Modelo"
+                    ></v-text-field>
+                  </v-col>
+
+                </v-row>
+                <v-row>
+                  <v-col cols="3" md="3">
+                     <v-text-field
+                      dense
+                      suffix="%"
+                      v-mask="'##.##'"
+                      label="Porcentaje"
+                      placeholder="Porcentaje"
+                      class="importantDisabled"
+                      :filled="filled"
+                      v-model="item.PorcentajeValorHN"
+                      :disabled="this.codMarca != 2 && this.codMarca != 7"
+                    ></v-text-field>
+                  </v-col>
+                   <v-col cols="1" md="1">
+                     <v-btn
+                      icon
+                      :disabled="(this.codMarca != 2 && this.codMarca != 7) || item.PorcentajeValorHN == ''"
+                      @click="calculateHaberNeto"
+                      >
+                      <v-icon>mdi-calculator</v-icon>
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="4" md="4">
+                    <v-text-field
+                      dense
+                      prefix="$"
+                      type="number"
                       label="Haber Neto"
                       placeholder="Haber Neto"
                       class="importantDisabled"
@@ -272,19 +334,7 @@
                       v-model="item.HaberNeto"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" md="6">
-                    <v-text-field
-                      dense
-                      label="Plan"
-                      placeholder="Plan"
-                      class="importantDisabled"
-                      :filled="filled"
-                      v-model="item.Plan"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="6" md="6">
+                   <v-col cols="4" md="4">
                      <v-select
                         dense
                         class="fillable"
@@ -297,19 +347,10 @@
                         @change="changeEstado"
                       ></v-select>
                   </v-col>
-                  <v-col cols="6" md="6">
-                     <v-text-field
-                      dense
-                      suffix="%"
-                      v-mask="'##.##'"
-                      label="Porcentaje"
-                      placeholder="Porcentaje"
-                      class="importantDisabled"
-                      :filled="filled"
-                      v-model="item.PorcentajeValorHN"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>                
+                </v-row>    
+                <v-row>
+                 
+                </v-row>            
               </v-container>
             </v-col>
         
@@ -512,6 +553,10 @@ export default {
       //this.dialog = true;
     },
 
+    calculateHaberNeto(){
+        console.log(this.item.PorcentajeValorHN);
+    },
+
     async getDatosPlan(){
       let pars = {
         Marca: 5, 
@@ -519,6 +564,8 @@ export default {
       }
 
       await this.searchValuesByGroup(pars);
+      this.item.Plan = this.valores[0].CodigoPlan;
+      this.item.Modelo = this.valores[0].NombreModelo;
       console.log(this.valores);
     },
 
@@ -811,5 +858,9 @@ export default {
 .margintop {
   margin-top: 30px;
   margin-bottom: -12px;
+}
+
+.margintopdivider {
+  margin-top: 5px;
 }
 </style>
