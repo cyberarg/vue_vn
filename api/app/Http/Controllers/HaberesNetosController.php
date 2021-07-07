@@ -932,6 +932,9 @@ class HaberesNetosController extends Controller
                     case 8:
                         $db = 'RB';
                     break;
+                    default:
+                        $db = 'GF';
+                    break;
                 }
 
                 if (isset($request->Grupo)){
@@ -941,9 +944,12 @@ class HaberesNetosController extends Controller
                     $request->Orden = 'NULL';
                 }
 
-                //$busqueda = DB::connection($db)->select("CALL net_buscaop_v2(".$request->Marca.", ".$request->Solicitud.", NULL, ".$request->Grupo.", ".$request->Orden.", NULL, NULL);");
-                $busqueda = DB::connection($db)->select("CALL hnweb_buscaop_v2(".$request->Marca.", ".$request->Solicitud.", ".$request->Grupo.", ".$request->Orden.");");
-
+                if ($db == 'GF'){
+                    $busqueda = DB::select("CALL hnweb_buscaop_v2(".$request->Marca.", ".$request->Concesionario.", ".$request->Solicitud.", ".$request->Grupo.", ".$request->Orden.");");
+                }else{
+                    $busqueda = DB::connection($db)->select("CALL hnweb_buscaop_v2(".$request->Marca.", ".$request->Solicitud.", ".$request->Grupo.", ".$request->Orden.");");
+                }
+              
             break;
             default:
                 if (isset($request->Grupo)){
@@ -973,6 +979,8 @@ class HaberesNetosController extends Controller
             case 2: //FIAT
                 $porcentajeComision = 0.06;
 
+                $empGyO = $request->EmpresaGyO;
+                
                 switch($request->Concesionario){
                     case 4: //AutoCervo
                         $db = 'AC';
@@ -994,9 +1002,15 @@ class HaberesNetosController extends Controller
                         $porcentajeComision = 0.06;
                         //$empGyO = 10;
                     break;
+                    default:
+                        $db = 'GF';
+                        $porcentajeComision = 0.06;
+
+                        $empGyO = 'NULL';
+                    break;
                 }
                 
-                $empGyO = $request->EmpresaGyO;
+                
 
             break;
             case 3: //PEU

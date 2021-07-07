@@ -340,12 +340,12 @@ class ReporteFacturacionController extends Controller
             }
 
             $lstTabla_CE[$codCe]->Casos += 1;
-            $lstTabla_CE[$codCe]->HN += $det->HaberNetoOriginal;
+            $lstTabla_CE[$codCe]->HN += $det_RB->HaberNetoOriginal;
             $lstTabla_CE[$codCe]->AFacturar += $oDet->AFacturar;
 
 
             $lstTabla_CE_RB[$codCe]->Casos += 1;
-            $lstTabla_CE_RB[$codCe]->HN += $det->HaberNetoOriginal;
+            $lstTabla_CE_RB[$codCe]->HN += $det_RB->HaberNetoOriginal;
             $lstTabla_CE_RB[$codCe]->AFacturar += $oDet->AFacturar;
 
             

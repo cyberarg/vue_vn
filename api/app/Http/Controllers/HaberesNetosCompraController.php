@@ -21,6 +21,8 @@ class HaberesNetosCompraController extends Controller
         $result_transfer = array();
         $lstTransfers = array();
 
+        $response = array();
+
         switch($marca){
             case 2:
                 switch($concesionario){
@@ -39,6 +41,11 @@ class HaberesNetosCompraController extends Controller
                     case 8: //RB
                         $db = 'RB';
                         $spName = 'hnweb_gettransferencias_incluyerb';
+                    break;
+                    case 13: // Fiat Dato Web pasa por arriba los chequeos
+                        $response['Msg'] = "";
+                        $response['EstaUtilizada'] = false;
+                        return $response;
                     break;
                 }
             break;
@@ -106,7 +113,7 @@ class HaberesNetosCompraController extends Controller
             
         } //END FOREACH
 
-        $response = array();
+        
         if (count($lstTransfers) > 0){
             
             $ctActual = array_values($lstTransfers)[0];
