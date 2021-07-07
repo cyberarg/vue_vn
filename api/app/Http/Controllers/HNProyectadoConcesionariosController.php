@@ -87,14 +87,19 @@ class HNProyectadoConcesionariosController extends Controller
             $respuesta['listProyectados'] = $lstProy;
             $respuesta['listProyectados_CE'] = $lstProy_Solo_CE;
 
+  
         }else{
 
             switch ($soloCE_Giama_Todos){
                 case 0: // TODOS
                     $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND Concesionario = ".$concesionario);
                 break;
-                case 1: // GIAMA
+                case 1: // GIAMA (RB)
                     $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND ComproGiama = 1 AND Concesionario = ".$concesionario);
+                break;
+                case 3: // Total GIAMA 
+                    $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 1 OR ContabilizarParaRB = 1) AND Concesionario = ".$concesionario);
+                    
                 break;
                 case 2: //SOLO CE
                     $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND ComproGiama = 0 AND Concesionario = ".$concesionario);

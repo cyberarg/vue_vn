@@ -39,7 +39,7 @@
                 <v-col cols="12" >
                   <v-row >
                     <v-col >
-                    <CardComisionGridComponent :loadingData="this.loading" :esGridPagos="false" @detalleExcelCE="getDetalleExcelCE" codConcesionario="8" @setNombreConc="nomConcesDetalle" @setExpand="exandDetail"  concesionario="RB" subtitle="Detalle por Concesionario" :headers="headers" :datos="datos_rb"></CardComisionGridComponent>
+                    <CardComisionGridComponent :loadingData="this.loading" :esGridPagos="false" @detalleExcelCE="getDetalleExcelCE" codConcesionario="8" @setNombreConc="nomConcesDetalle" @setExpand="exandDetail" totalFacturar="0"  concesionario="RB" subtitle="Detalle por Concesionario" :headers="headers" :datos="datos_rb"></CardComisionGridComponent>
                     </v-col>
                   </v-row>
                   <v-row v-if="expand_filtrados">
@@ -47,6 +47,13 @@
                       <DetalleGridFacturacionComponent :titulo="titulo_detalle" :headers="headers_detalle" :datos="items_filtrados"></DetalleGridFacturacionComponent>
                     </v-col>
                   </v-row>
+
+                  <v-row >
+                    <v-col >
+                    <CardComisionGridComponent :loadingData="this.loading" :esGridPagos="false" @detalleExcelCE="getDetalleExcelCE" codConcesionario="888" @setNombreConc="nomConcesDetalle" @setExpand="exandDetail" totalFacturar="0"  concesionario="GB" subtitle="Detalle por Concesionario" :headers="headers" :datos="datos_gb"></CardComisionGridComponent>
+                    </v-col>
+                  </v-row>
+
                   <v-row  >
                     <v-col
                     v-for="(item, i) in datos_ce"
@@ -238,11 +245,14 @@ export default {
       "loading",
       "datos_ce",
       "datos_rb",
+      "datos_gb",
       "loading_filter",
       "show_filtrados",
       "items_filtrados",
       "detalle_rb",
       "detalle_rb_ce",
+      "detalle_gb",
+      "detalle_gb_ce",
       "loadingdetalle",
       "detalle_conces",
       "detalle_gral",
@@ -252,11 +262,14 @@ export default {
       "periodo_selected",
       "concesionarios_facturados",
       "table_rb",
+      "table_gb",
       "table_gral",
       "disableButtonResumenPDF",
       "disableButtonDetalleGralXLS",
       "acumulados_rb",
       "cantAcum_RB",
+      "acumulados_gb",
+      "cantAcum_GB",
       "acumulados_ce",
       "cantAcum_CE",
       "acumulados_tot",
@@ -346,6 +359,8 @@ export default {
               return 'Luxcar';
             case 8:
               return 'RB';  
+            case 888:
+              return 'GB';  
             case 9:
               return 'Sapac';
             case 10:
@@ -366,7 +381,7 @@ export default {
 
       this.datos_ce.forEach(element => {
           if (pasadaStr == 1){
-            consFacturar = '8,' + element.Concesionario;
+            consFacturar = '8,888,' + element.Concesionario;
           }else{
             consFacturar = consFacturar + ',' + element.Concesionario;
           }

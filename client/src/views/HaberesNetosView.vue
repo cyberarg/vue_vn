@@ -325,7 +325,8 @@ export default {
 
       itemsFiltro: [
         { Codigo: 0, Nombre: "Todos" },
-        { Codigo: 1, Nombre: "Giama" },
+        { Codigo: 1, Nombre: "Giama (RB)" },
+        { Codigo: 3, Nombre: "Total Giama" },
         { Codigo: 2, Nombre: "Concesionario" },
       ],
       selectFiltro: { Codigo: 0, Nombre: "Todos" },

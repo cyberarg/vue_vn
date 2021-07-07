@@ -53,6 +53,7 @@ class HNProyectadoSelectsController extends Controller
 
         $lstItemsHN_Proy = array();
         $lstItemsHN_Proy_Giama = array();
+        $lstItemsHN_Proy_Giama_Total = array();
         $lstItemsHN_Proy_CE = array();
 
         foreach ($seleccionados as $seleccionado) {
@@ -64,6 +65,7 @@ class HNProyectadoSelectsController extends Controller
 
             $lstItemsHN_Proy = array_merge($lstItemsHN_Proy, $resProy->getItemProyectado_Selecteds($anio, $marca, $concesionario, 0, $filtros));
             $lstItemsHN_Proy_Giama = array_merge($lstItemsHN_Proy_Giama, $resProy->getItemProyectado_Selecteds($anio, $marca, $concesionario, 1, $filtros));
+            $lstItemsHN_Proy_Giama_Total = array_merge($lstItemsHN_Proy_Giama_Total, $resProy->getItemProyectado_Selecteds($anio, $marca, $concesionario, 3, $filtros));
             $lstItemsHN_Proy_CE = array_merge($lstItemsHN_Proy_CE, $resProy->getItemProyectado_Selecteds($anio, $marca, $concesionario, 2, $filtros));
         
         }
@@ -71,34 +73,42 @@ class HNProyectadoSelectsController extends Controller
 
         $lstMeses = $resProy->getProyectadosMeses($anio, $lstItemsHN_Proy);
         $lstMeses_Giama = $resProy->getProyectadosMeses($anio, $lstItemsHN_Proy_Giama);
+        $lstMeses_Giama_Total = $resProy->getProyectadosMeses($anio, $lstItemsHN_Proy_Giama_Total);
         $lstMeses_CE = $resProy->getProyectadosMeses($anio, $lstItemsHN_Proy_CE);
 
         $lstRentabilidadMeses = $resProy->getProyectadosMesesRentabilidad($anio, $lstItemsHN_Proy);
         $lstRentabilidadMeses_Giama = $resProy->getProyectadosMesesRentabilidad($anio, $lstItemsHN_Proy_Giama);
+        $lstRentabilidadMeses_Giama_Total = $resProy->getProyectadosMesesRentabilidad($anio, $lstItemsHN_Proy_Giama_Total);
         $lstRentabilidadMeses_CE = $resProy->getProyectadosMesesRentabilidad($anio, $lstItemsHN_Proy_CE);
 
         $lstAnios = $resProy->getProyectadoAnios($lstItemsHN_Proy);
         $lstAnios_Giama = $resProy->getProyectadoAnios($lstItemsHN_Proy_Giama);
+        $lstAnios_Giama_Total = $resProy->getProyectadoAnios($lstItemsHN_Proy_Giama_Total);
         $lstAnios_CE = $resProy->getProyectadoAnios($lstItemsHN_Proy_CE);
 
         $lstRentabilidadAnios = $resProy->getProyectadosAniosRentabilidad($lstItemsHN_Proy);
         $lstRentabilidadAnios_Giama = $resProy->getProyectadosAniosRentabilidad($lstItemsHN_Proy_Giama);
+        $lstRentabilidadAnios_Giama_Total = $resProy->getProyectadosAniosRentabilidad($lstItemsHN_Proy_Giama_Total);
         $lstRentabilidadAnios_CE = $resProy->getProyectadosAniosRentabilidad($lstItemsHN_Proy_CE);
         
         $lstProyectado['Meses'] = $lstMeses;
         $lstProyectado['Meses_Giama'] = $lstMeses_Giama;
+        $lstProyectado['Meses_Giama_Total'] = $lstMeses_Giama_Total;
         $lstProyectado['Meses_CE'] = $lstMeses_CE;
 
         $lstProyectado['RentabilidadMeses'] = $lstRentabilidadMeses;
         $lstProyectado['RentabilidadMeses_Giama'] = $lstRentabilidadMeses_Giama;
+        $lstProyectado['RentabilidadMeses_Giama_Total'] = $lstRentabilidadMeses_Giama_Total;
         $lstProyectado['RentabilidadMeses_CE'] = $lstRentabilidadMeses_CE;
 
         $lstProyectado['Anios'] = $lstAnios;
         $lstProyectado['Anios_Giama'] = $lstAnios_Giama;
+        $lstProyectado['Anios_Giama_Total'] = $lstAnios_Giama_Total;
         $lstProyectado['Anios_CE'] = $lstAnios_CE;
 
         $lstProyectado['RentabilidadAnios'] = $lstRentabilidadAnios;
         $lstProyectado['RentabilidadAnios_Giama'] = $lstRentabilidadAnios_Giama;
+        $lstProyectado['RentabilidadAnios_Giama_Total'] = $lstRentabilidadAnios_Giama_Total;
         $lstProyectado['RentabilidadAnios_CE'] = $lstRentabilidadAnios_CE;
 
         return $lstProyectado;

@@ -320,18 +320,22 @@ export default {
     ...mapState("proyectadohn", [
       "detalle_proyec_mes",
       "detalle_proyec_mes_Giama",
+      "detalle_proyec_mes_Giama_Total",
       "detalle_proyec_mes_CE",
       "loadingdetalle_proyec_mes",
       "detalle_proyec_renta_mes",
       "detalle_proyec_renta_mes_Giama",
+      "detalle_proyec_renta_mes_Giama_Total",
       "detalle_proyec_renta_mes_CE",
       "loadingdetalle_proyec_renta_mes",
       "detalle_proyec_anios",
       "detalle_proyec_anios_Giama",
+      "detalle_proyec_anios_Giama_Total",
       "detalle_proyec_anios_CE",
       "loadingdetalle_proyec_anios",
       "detalle_proyec_renta_anios",
       "detalle_proyec_renta_anios_Giama",
+      "detalle_proyec_renta_anios_Giama_Total",
       "detalle_proyec_renta_anios_CE",
       "loadingdetalle_proyec_renta_anios",
     ]),
@@ -398,11 +402,17 @@ export default {
             this.datosDetalleAnios = this.detalle_proyec_anios;
             this.datosDetalleRentAnios = this.detalle_proyec_renta_anios;
           break;
-          case 1: //Giama
+          case 1: //Giama (RB)
             this.datosDetalleMeses = this.detalle_proyec_mes_Giama;
             this.datosDetalleRentMeses = this.detalle_proyec_renta_mes_Giama;
             this.datosDetalleAnios = this.detalle_proyec_anios_Giama;
             this.datosDetalleRentAnios = this.detalle_proyec_renta_anios_Giama;
+          break;
+          case 3: //Total Giama
+            this.datosDetalleMeses = this.detalle_proyec_mes_Giama_Total;
+            this.datosDetalleRentMeses = this.detalle_proyec_renta_mes_Giama_Total;
+            this.datosDetalleAnios = this.detalle_proyec_anios_Giama_Total;
+            this.datosDetalleRentAnios = this.detalle_proyec_renta_anios_Giama_Total;
           break;
           case 2: //Conces
               this.datosDetalleMeses = this.detalle_proyec_mes_CE;

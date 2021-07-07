@@ -27,10 +27,12 @@ class ReporteFacturacionController extends Controller
         $periodoAnio = substr($periodo, 0, 4);
         
         $queryStrReport_CE = "CALL hnweb_reporte_facturacion_v2(".$periodoMes.", ".$periodoAnio.");";
-        $queryStrReport_RB = "CALL hnweb_reporte_facturacion_v2_rb(".$periodoMes.", ".$periodoAnio.");";
+        $queryStrReport_RB = "CALL hnweb_reporte_facturacion_v2_rb(".$periodoMes.", ".$periodoAnio.", 1);";
+        $queryStrReport_GB = "CALL hnweb_reporte_facturacion_v2_rb(".$periodoMes.", ".$periodoAnio.", 2);";
           
         $reporte_CE = DB::select($queryStrReport_CE);
         $reporte_RB = DB::select($queryStrReport_RB);
+        $reporte_GB = DB::select($queryStrReport_GB);
 
         //$detalle_RB_RB = HaberNeto::on('RB')->whereYear('FechaAltaRegistro', '=', $periodoAnio)->whereMonth('FechaAltaRegistro', '=', $periodoMes)->get();
         //$detalle_RB_GF = HaberNeto::on('GF')->where('ComproGiama', '=', 1)->whereYear('FechaAltaRegistro', '=', $periodoAnio)->whereMonth('FechaAltaRegistro', '=', $periodoMes)->get();
@@ -53,6 +55,7 @@ class ReporteFacturacionController extends Controller
         
         $lst['Reporte_CE'] = $reporte_CE;
         $lst['Reporte_RB'] = $reporte_RB;
+        $lst['Reporte_GB'] = $reporte_GB;
         $lst['Detalle_CE'] = $detalle_CE_GF;
 
        // $lst['Detalle_RB_RB'] = $detalle_RB_RB;
@@ -71,11 +74,18 @@ class ReporteFacturacionController extends Controller
         $periodoMes = substr($periodo, 4, strlen($periodo));
         $periodoAnio = substr($periodo, 0, 4);
 
-        if ($codConcesionario == 8){ // Para RB llamo a un SP distinto
-            $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.");";
-        }else{
-            $queryStr_Detail = "CALL hnweb_detalle_facturacion_ce(".$periodoMes.", ".$periodoAnio.", ". $codConcesionario.", ".$comproGiama.");";
+        switch($codConcesionario){
+            case 8:  // Para RB y GB llamo a un SP distinto
+                $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 1, 0);";
+            break;
+            case 888: // El codigo para GB
+                $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 2, 0);";
+            break;
+            default:
+                $queryStr_Detail = "CALL hnweb_detalle_facturacion_ce(".$periodoMes.", ".$periodoAnio.", ". $codConcesionario.", ".$comproGiama.", 0);";
+            break;
         }
+
           
         $result = DB::select($queryStr_Detail); 
     
@@ -107,11 +117,18 @@ class ReporteFacturacionController extends Controller
         foreach ($selectedsCE as $selected) {
             $result = array();
 
-            if ($selected == 8){ // Para RB llamo a un SP distinto
-                $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.");";
-            }else{
-                $queryStr_Detail = "CALL hnweb_detalle_facturacion_ce(".$periodoMes.", ".$periodoAnio.", ". $selected.", 0);"; // AGREGAR CLAUSE IFNULL
+            switch($selected){
+                case 8: // Para RB y GB llamo a un SP distinto
+                    $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 1, 1);";
+                break;
+                case 888: // GB
+                    $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 2, 1);";
+                break;
+                default:
+                    $queryStr_Detail = "CALL hnweb_detalle_facturacion_ce(".$periodoMes.", ".$periodoAnio.", ". $selected.", 0, 1);"; // AGREGAR CLAUSE IFNULL
+                break;
             }
+ 
 
             $result = DB::select($queryStr_Detail);
 
@@ -153,17 +170,23 @@ class ReporteFacturacionController extends Controller
         
         $lstCEs = array();
         $lstRBs = array();
+        $lstGBs = array();
         $lstHNs = array();
 
         $lstRB_AN = array();
         $lstRB_AC = array();
         $lstRB_CG = array();
+        
+        $lstGB_AN = array();
+        $lstGB_AC = array();
+        $lstGB_CG = array();
 
         $lstDetalle_FC = array();
 
         $lstTabla_CE = array();
 
         $lstTabla_CE_RB = array();
+        $lstTabla_CE_GB = array();
         $lstTabla_CE_CE = array();
 
         $lstComisionTerceros = array();
@@ -172,6 +195,7 @@ class ReporteFacturacionController extends Controller
         $acum_AC = 0;
         $acum_CG = 0;
         $acum_CE_RB = 0;
+        $acum_CE_GB = 0;
 
         $lstAcumulados_Giama = array();
         $lstAcumulados_CE = array();
@@ -195,6 +219,7 @@ class ReporteFacturacionController extends Controller
         foreach ($concesionarios as $ce) {
             $oCE = new \stdClass();
             $oCE_RB = new \stdClass();
+            $oCE_GB = new \stdClass();
             $oCE_CE = new \stdClass();
 
             $oAcum_Giama = new \stdClass();
@@ -205,6 +230,9 @@ class ReporteFacturacionController extends Controller
 
             $oCE_RB->ID = $ce->ID;
             $oCE_RB->Nombre = $ce->Nombre;
+
+            $oCE_GB->ID = $ce->ID;
+            $oCE_GB->Nombre = $ce->Nombre;
 
             $oCE_CE->ID = $ce->ID;
             $oCE_CE->Nombre = $ce->Nombre;
@@ -222,12 +250,17 @@ class ReporteFacturacionController extends Controller
             $oCE_RB->HN = 0;
             $oCE_RB->AFacturar = 0;
 
+            $oCE_GB->Casos = 0;
+            $oCE_GB->HN = 0;
+            $oCE_GB->AFacturar = 0;
+
             $oCE_CE->Casos = 0;
             $oCE_CE->HN = 0;
             $oCE_CE->AFacturar = 0;
 
             $lstTabla_CE[$ce->ID] = $oCE;
             $lstTabla_CE_RB[$ce->ID] = $oCE_RB;
+            $lstTabla_CE_GB[$ce->ID] = $oCE_GB;
             $lstTabla_CE_CE[$ce->ID] = $oCE_CE;
 
 
@@ -266,16 +299,35 @@ class ReporteFacturacionController extends Controller
             }
 
             if ($det->ComproGiama == 1){
-                $oDet->Titular = 'RB';
-                $acum_CE_RB += $oDet->AFacturar;
-                $oDet_Detalle->Nombre = 'RB';
-                $oDet->NombreConcesionario = $oDet_Detalle->Nombre;
 
-                $lstTabla_CE_RB[$det->Concesionario]->Casos += 1;
-                $lstTabla_CE_RB[$det->Concesionario]->HN += $det->HaberNetoOriginal;
-                $lstTabla_CE_RB[$det->Concesionario]->AFacturar += $oDet->AFacturar;
+                switch($det->TitularHN){
+                    case 1: //RB
+                        $oDet->Titular = 'RB';
+                        $acum_CE_RB += $oDet->AFacturar;
+                        $oDet_Detalle->Nombre = 'RB';
+                        $oDet->NombreConcesionario = $oDet_Detalle->Nombre;
 
-                array_push($lstRBs,$oDet);
+                        $lstTabla_CE_RB[$det->Concesionario]->Casos += 1;
+                        $lstTabla_CE_RB[$det->Concesionario]->HN += $det->HaberNetoOriginal;
+                        $lstTabla_CE_RB[$det->Concesionario]->AFacturar += $oDet->AFacturar;
+
+                        array_push($lstRBs,$oDet);
+                    break;
+                    case 2: //GB
+                        $oDet->Titular = 'GB';
+                        $acum_CE_RB += $oDet->AFacturar;
+                        $oDet_Detalle->Nombre = 'GB';
+                        $oDet->NombreConcesionario = $oDet_Detalle->Nombre;
+
+                        $lstTabla_CE_GB[$det->Concesionario]->Casos += 1;
+                        $lstTabla_CE_GB[$det->Concesionario]->HN += $det->HaberNetoOriginal;
+                        $lstTabla_CE_GB[$det->Concesionario]->AFacturar += $oDet->AFacturar;
+
+                        array_push($lstGBs,$oDet);
+                    break;
+                }
+
+                
             }else{
                 $oDet->Titular = 'CONCESIONARIO';
                 $oDet_Detalle->Nombre = $utils->getNameConcesionario($det->Concesionario);
@@ -323,35 +375,77 @@ class ReporteFacturacionController extends Controller
                     $acum_AN += $oDet->AFacturar;
                     $oDet_Detalle_Emp->Nombre = 'AutoNet';
                     $codCe = 5;
-                    array_push($lstRB_AN,$oDet);
+                    switch($det_RB->TitularHN){
+                        case 1: //RB
+                            array_push($lstRB_AN,$oDet);
+                        break;
+                        case 2: //GB
+                            $oDet->Titular = 'GB';
+                            array_push($lstGB_AN,$oDet);
+                        break;
+                    }
+                    
                 break;
                 case 6: //AC
                     $acum_AC += $oDet->AFacturar;
                     $oDet_Detalle_Emp->Nombre = 'AutoCervo';
                     $codCe = 4;
-                    array_push($lstRB_AC,$oDet); 
+
+                    switch($det_RB->TitularHN){
+                        case 1: //RB
+                            array_push($lstRB_AC,$oDet); 
+                        break;
+                        case 2: //GB
+                            $oDet->Titular = 'GB';
+                            array_push($lstGB_AC,$oDet); 
+                        break;
+                    }
+                    
                 break;
                 case 8: //CG
                     $acum_CG += $oDet->AFacturar;
                     $oDet_Detalle_Emp->Nombre = 'CarGroup';
                     $codCe = 6;
-                    array_push($lstRB_CG,$oDet);
+
+                    switch($det_RB->TitularHN){
+                        case 1: //RB
+                            array_push($lstRB_CG,$oDet);
+                        break;
+                        case 2: //GB
+                            $oDet->Titular = 'GB';
+                            array_push($lstGB_CG,$oDet);
+                        break;
+                    }
+
+                   
                 break;
             }
-
+            
             $lstTabla_CE[$codCe]->Casos += 1;
             $lstTabla_CE[$codCe]->HN += $det_RB->HaberNetoOriginal;
             $lstTabla_CE[$codCe]->AFacturar += $oDet->AFacturar;
 
+            switch($det_RB->TitularHN){
+                case 1: //RB
 
-            $lstTabla_CE_RB[$codCe]->Casos += 1;
-            $lstTabla_CE_RB[$codCe]->HN += $det_RB->HaberNetoOriginal;
-            $lstTabla_CE_RB[$codCe]->AFacturar += $oDet->AFacturar;
+                    $lstTabla_CE_RB[$codCe]->Casos += 1;
+                    $lstTabla_CE_RB[$codCe]->HN += $det_RB->HaberNetoOriginal;
+                    $lstTabla_CE_RB[$codCe]->AFacturar += $oDet->AFacturar;
+                break;
+                case 2: //GB
+                    $lstTabla_CE_GB[$codCe]->Casos += 1;
+                    $lstTabla_CE_GB[$codCe]->HN += $det_RB->HaberNetoOriginal;
+                    $lstTabla_CE_GB[$codCe]->AFacturar += $oDet->AFacturar;
+                break;
+            }
+
+            
 
             
            // array_push($lstHNs,$oDet);
         }
 
+        // RB
         $arrAcum_Giama = array();
         $rowHeader = array();
         $rowValores = array();
@@ -375,7 +469,33 @@ class ReporteFacturacionController extends Controller
 
         array_push($arrAcum_Giama, $rowHeader);
         array_push($arrAcum_Giama, $rowValores);
+        // \ RB
 
+        // GB
+        $arrAcum_GB = array();
+        $rowHeader = array();
+        $rowValores = array();
+        $acum = 0;
+        $cant_Acum_GB = 0;
+
+        foreach ($lstTabla_CE_GB as $acumGB) {
+            if ($acumGB->AFacturar > 0){
+                array_push($rowHeader, $acumGB->Nombre);
+                array_push($rowValores, round($acumGB->AFacturar,2));
+                $acum += round($acumGB->AFacturar,2);
+                $cant_Acum_GB ++;
+            } 
+        }
+         
+        if ($acum > 0){
+            array_push($rowHeader, 'TOTAL GB');
+            array_push($rowValores, $acum);
+            $cant_Acum_GB ++;
+        }
+
+        array_push($arrAcum_GB, $rowHeader);
+        array_push($arrAcum_GB, $rowValores);
+        // \ GB
 
        // $lstAcumulados['Acumulados_RB'] = $arrAcum_Giama;
 
@@ -435,11 +555,15 @@ class ReporteFacturacionController extends Controller
         $lst['Tabla_Gral'] = $lstTabla_CE;
 
         $lst['Tabla_RB'] = $lstTabla_CE_RB;
+        $lst['Tabla_GB'] = $lstTabla_CE_GB;
         $lst['Tabla_CE'] = $lstTabla_CE_CE;
 
 
         $lst['Acumulados_RB'] = $arrAcum_Giama;
         $lst['CantAcumulados_RB'] = $cant_Acum_Giama;
+
+        $lst['Acumulados_GB'] = $arrAcum_GB;
+        $lst['CantAcumulados_GB'] = $cant_Acum_GB;
 
         $lst['Acumulados_CE'] = $arrAcum_CE;
         $lst['CantAcumulados_CE'] = $cant_Acum_CE;
@@ -450,9 +574,15 @@ class ReporteFacturacionController extends Controller
        
         $lst['Reporte_CE'] = $lstCEs;
         $lst['Reporte_CE_RB'] = $lstRBs;
+        $lst['Reporte_CE_GB'] = $lstGBs;
+
         $lst['Detalle_RB_AN'] = $lstRB_AN;
         $lst['Detalle_RB_AC'] = $lstRB_AC;
         $lst['Detalle_RB_CG'] = $lstRB_CG;
+
+        $lst['Detalle_GB_AN'] = $lstGB_AN;
+        $lst['Detalle_GB_AC'] = $lstGB_AC;
+        $lst['Detalle_GB_CG'] = $lstGB_CG;
 
 
         return $lst;

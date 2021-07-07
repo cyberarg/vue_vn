@@ -12,7 +12,7 @@
                 {{this.totalComisiones | numFormat('$0,0')}}
             </template>
             <template v-else>
-                Total Facturar: {{total() * 0.05 | numFormat('$0,0')}}
+                <!-- Total Facturar: {{this.totalFacturar | numFormat('$0,0')}} -->
                 <v-spacer></v-spacer> 
                 Total HN: {{total() | numFormat('$0,0')}}
             </template>
@@ -115,6 +115,10 @@ import { mapActions, mapState } from 'vuex';
             },
             
             totalComisiones:{
+                type:Number,
+            },
+
+            totalFacturar:{
                 type:Number,
             },
            

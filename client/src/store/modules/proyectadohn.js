@@ -19,7 +19,12 @@ export const state = {
   loadingdetalle_proyec_mes: false,
   loadingdetalle_proyec_renta_mes: false,
   loadingdetalle_proyec_anios: false,
-  loadingdetalle_proyec_renta_anios: false
+  loadingdetalle_proyec_renta_anios: false,
+
+  detalle_proyec_mes_Giama_Total: [],
+  detalle_proyec_renta_mes_Giama_Total: [],
+  detalle_proyec_anios_Giama_Total: [],
+  detalle_proyec_renta_anios_Giama_Total: [],
 };
 
 export const mutations = {
@@ -43,6 +48,11 @@ export const mutations = {
     state.detalle_proyec_renta_mes_Giama = [];
     state.detalle_proyec_anios_Giama = [];
     state.detalle_proyec_renta_anios_Giama = [];
+
+    state.detalle_proyec_mes_Giama_Total = [];
+    state.detalle_proyec_renta_mes_Giama_Total = [];
+    state.detalle_proyec_anios_Giama_Total = [];
+    state.detalle_proyec_renta_anios_Giama_Total = [];
 
     state.detalle_proyec_mes_CE = [];
     state.detalle_proyec_renta_mes_CE = [];
@@ -75,6 +85,11 @@ export const mutations = {
     state.detalle_proyec_renta_anios_Giama = datos["RentabilidadAnios_Giama"];
     state.detalle_proyec_renta_anios_CE = datos["RentabilidadAnios_CE"];
     state.loadingdetalle_proyec_renta_anios = false;
+
+    state.detalle_proyec_mes_Giama_Total = datos["Meses_Giama_Total"];
+    state.detalle_proyec_renta_mes_Giama_Total = datos["RentabilidadMeses_Giama_Total"];
+    state.detalle_proyec_anios_Giama_Total = datos["Anios_Giama_Total"];
+    state.detalle_proyec_renta_anios_Giama_Total = datos["RentabilidadAnios_Giama_Total"];
 
     state.dataStatus = "success";
   },

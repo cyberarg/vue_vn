@@ -6,11 +6,15 @@ export const state = {
   dataStatus: "",
   datos_ce: [],
   datos_rb: [],
+  datos_gb: [],
   detalle_rb:[],
   detalle_rb_ce:[],
+  detalle_gb:[],
+  detalle_gb_ce:[],
   detalle_conces:[],
 
   table_rb: [],
+  table_gb: [],
   table_gral:[],
   
   detalle_gral:[],
@@ -18,6 +22,8 @@ export const state = {
 
   acumulados_rb: [],
   cantAcum_RB: 0,
+  acumulados_gb: [],
+  cantAcum_GB: 0,
   acumulados_ce: [],
   cantAcum_CE: 0,
   acumulados_tot: [],
@@ -49,6 +55,9 @@ export const mutations = {
     state.datos_rb = [];
     state.detalle_rb = [];
     state.detalle_rb_ce = [];
+    state.datos_gb = [];
+    state.detalle_gb = [];
+    state.detalle_gb_ce = [];
     state.periodo_selected = periodo;
     state.loading = true;
     state.show_filtrados = false;
@@ -58,6 +67,7 @@ export const mutations = {
     console.log(datos);
     state.datos_ce = datos.Reporte_CE;
     state.datos_rb = datos.Reporte_RB;
+    state.datos_gb = datos.Reporte_GB;
 
     //state.detalle_rb = datos.Detalle_RB_RB;
     //state.detalle_rb_ce = datos.Detalle_RB_CE;
@@ -75,9 +85,12 @@ export const mutations = {
     state.dataStatus = "loading";
     state.detalle_rb = [];
     state.detalle_rb_ce = [];
+    state.detalle_gb = [];
+    state.detalle_gb_ce = [];
 
     state.table_gral = [];
     state.table_rb = [];
+    state.table_gb = [];
 
     state.detalle_comisionistas = [];
     state.totalComisiones = 0;
@@ -85,6 +98,8 @@ export const mutations = {
 
     state.acumulados_rb = [];
     state.cantAcum_RB = 0;
+    state.acumulados_gb = [];
+    state.cantAcum_GB = 0;
     state.acumulados_ce = [];
     state.cantAcum_CE = 0;
 
@@ -97,11 +112,17 @@ export const mutations = {
     state.detalle_rb = datos.Detalle_RB_RB;
     state.detalle_rb_ce = datos.Detalle_RB_CE;
 
+    state.detalle_gb = datos.Detalle_GB_GB;
+    state.detalle_gb_ce = datos.Detalle_GB_CE;
+
     state.detalle_comisionistas = datos.ComisionesTerceros;
     state.totalComisiones = datos.TotalComisiones;
 
     state.acumulados_rb =  datos.Acumulados_RB;
     state.cantAcum_RB = datos.CantAcumulados_RB;
+
+    state.acumulados_gb =  datos.Acumulados_GB;
+    state.cantAcum_GB = datos.CantAcumulados_GB;
 
     state.acumulados_ce = datos.Acumulados_CE;
     state.cantAcum_CE = datos.CantAcumulados_CE;
@@ -110,6 +131,7 @@ export const mutations = {
     state.cantAcum_TOT = datos.CantAcumulados_TOT;
 
     state.table_rb = datos.Tabla_RB;
+    state.table_gb = datos.Tabla_GB;
     state.table_gral = datos.Tabla_Gral;
 
     state.loadingdetalle = false;
@@ -121,8 +143,11 @@ export const mutations = {
     state.loadingdetalle = false;
     state.table_gral = [];
     state.table_rb = [];
+    state.table_gb = [];
     state.acumulados_rb = [];
     state.cantAcum_RB = 0;
+    state.acumulados_gb = [];
+    state.cantAcum_GB = 0;
     state.acumulados_ce = [];
     state.cantAcum_CE = 0;
     state.acumulados_tot = [];
