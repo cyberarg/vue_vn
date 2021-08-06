@@ -52,13 +52,18 @@ class ReporteAcaraController extends Controller
 
             //$seriesVW = DB::connection($db)->select('CALL hnweb_reporte_indice_precios(5);');
     
-            $seriesAcara = DB::connection($db)->select("SELECT 'IPSA' AS Nombre, Periodo, Indice, Precio FROM hnweb_indices_ipsa ORDER BY Periodo ASC;");
+            //$seriesAcara = DB::connection($db)->select("SELECT 'IPSA' AS Nombre, Periodo, Indice, Precio FROM hnweb_indices_ipsa ORDER BY Periodo ASC;");
     
             $seriesCCL = DB::connection($db)->select("CALL hnweb_reporte_indice_dolar_v2('CCL');");
             $seriesOficial = DB::connection($db)->select("CALL hnweb_reporte_indice_dolar_v2('Oficial');");
 
+            /*
             $fechaInicial = new DateTime('2015-01-01');
             $fechaFinal = new DateTime('2021-07-01');
+            */
+
+            $fechaInicial = new DateTime('2005-01-01');
+            $fechaFinal = new DateTime('2021-08-01');
         }
 
         $intervalo = new DateInterval('P1M');
@@ -120,6 +125,7 @@ class ReporteAcaraController extends Controller
         $serie1->name = $s1Nombre;
         $serie1->data = $s1Data;
 
+        
         $s2Nombre = '';
         $s2Data = array();
         $s2Acum = 0;
@@ -127,6 +133,7 @@ class ReporteAcaraController extends Controller
         $primeDato = 0;
         $pasada = 1;
         $s2Min = 0;
+        /*
         foreach ($seriesAcara as $datoAcara) {
         
             if ($pasada == 1){
@@ -155,7 +162,7 @@ class ReporteAcaraController extends Controller
         $serie2 = new \stdClass();
         $serie2->name = $s2Nombre;
         $serie2->data = $s2Data;
-
+*/
         $s3Nombre = '';
         $s3Data = array();
         $s3Acum = 0;
@@ -239,7 +246,7 @@ class ReporteAcaraController extends Controller
        //$maxValue = max($s1Data, $s2Data, $s3Data, $s4Data);
 
         $series[] = $serie1;
-        $series[] = $serie2;
+       // $series[] = $serie2;
         $series[] = $serie3;
         $series[] = $serie4;
         

@@ -1,24 +1,27 @@
 <template>
-  <div class="padded">
+  <div class="isPadded">
     <v-data-table
       dense
       :headers="headers"
       :items="pars.items"
       :search="search"
       item-key="pars.itemkey"
-      class="elevation-5"
+      :class="elevationComp"
       :loading="pars.loading"
       :loading-text="pars.loadingtext"
       :hide-default-footer="ocultarPaginacion"
       :disable-sort="ocultarOredenamiento"
       :hide-default-header="ocultarHeaders"
     >
+      
       <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title>{{ pars.titleform }}</v-toolbar-title>
-        </v-toolbar>
+        <template v-if="mostrarTitulo">
+          <v-toolbar flat>
+            <v-toolbar-title>{{ pars.titleform }}</v-toolbar-title>
+          </v-toolbar>
+        </template>
       </template>
-
+      
       <template v-slot:item="{ item }">
         <template v-if="pars.grid == 'Resumen'">
           <tr>
@@ -82,6 +85,18 @@ export default {
       type: Object,
       required: true
     },
+    solo_tabla:{
+      type: Boolean,
+      default: null
+    },
+    elevation: {
+      type: Number,
+      default: null
+    },
+    padding: {
+      type: Number,
+      default: null
+    },
     headers: {
       type: Array,
       required: true
@@ -99,6 +114,28 @@ export default {
   },
 
   computed: {
+
+    elevationComp(){
+      if (this.elevation !== null ){
+        return 'elevation-' + this.elevation + ' table-striped';
+      } 
+      return 'elevation-5';
+    },
+
+    isPadded(){
+      if (this.padding !== null ){
+        return '';
+      } 
+      return 'padded';
+    },
+
+    mostrarTitulo(){
+      if (this.solo_tabla !== null){
+        return false;
+      }
+      return true;
+    },
+
     api() {
       return this.pars.routeapi;
     },

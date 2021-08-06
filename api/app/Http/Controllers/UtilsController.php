@@ -23,6 +23,12 @@ use App\Precio;
 class UtilsController extends Controller
 {
 
+    public function getArrayConcesionarios(){
+
+        return Concesionario::select('ID AS Codigo', 'MarcaDefault AS Marca', 'Nombre')->where('MarcaDefault', '<>', 99)->get();
+
+    }
+
     public function getNombreMarcaDatoWeb($codigo){
 
         switch ($codigo){
@@ -40,6 +46,21 @@ class UtilsController extends Controller
                 return 'Citroen';
             default:
                 return '';
+        }
+
+    }
+
+    public function getCodigoOficialUnificado($codOficial, $concesionario){
+    
+        switch($concesionario){
+            case 4: // AutoCervo
+                return DB::select("SELECT Codigo FROM subite_oficiales WHERE Activo = 1 AND CodigoAutoCervo = ".$codOficial);
+            case 5: //AutoNet
+                return DB::select("SELECT Codigo FROM subite_oficiales WHERE Activo = 1 AND CodigoAutoNet = ".$codOficial);
+            case 6: //CarGroup
+                return DB::select("SELECT Codigo FROM subite_oficiales WHERE Activo = 1 AND CodigoCarGroup = ".$codOficial);
+            default: //Para el resto de los CE, el codigo de oficial unificado es el que traen, porque sale de la DB pa7_gf
+                return $codOficial;
         }
 
     }

@@ -4,6 +4,8 @@ import "regenerator-runtime/runtime";
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from "vue";
+window.Vue = Vue;
+
 import App from "./App";
 import { ColorThemePlugin } from "../services/vuestic-ui";
 import router from "../router/index";
@@ -16,6 +18,16 @@ import numFormat from "vue-filter-number-format";
 //import Chart from "v-chart-plugin";
 import VueApexCharts from "vue-apexcharts";
 Vue.use(VueApexCharts);
+
+/*
+import vueToPdf from 'vue-to-pdf';
+import VueEasyPrinter from 'vue-easy-printer';
+Vue.use(vueToPdf);
+Vue.use(VueEasyPrinter);
+*/
+
+import htmlToPdf from '@/components/utils/htmlToPdf';
+Vue.use(htmlToPdf)
 
 Vue.component("apexchart", VueApexCharts);
 

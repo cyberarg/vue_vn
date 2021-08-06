@@ -133,6 +133,11 @@ export const navigationRoutesAdmin = {
           name: "reportefacturacion",
           displayName: "Reporte Facturación"
         }
+        ,
+        {
+          name: "reportesemestre",
+          displayName: "Reporte Semestral"
+        }
       ]
     },
     {

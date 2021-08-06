@@ -46,7 +46,7 @@ class HNResumenPerformanceController extends Controller
             break;
     
             default:
-                $lstRes = DB::connection('GF')->select("CALL hnweb_get_resumen_anual_ce(".$anio.", ".$concesionario.")");
+                $lstRes_CE = DB::connection('GF')->select("CALL hnweb_get_resumen_anual_ce(".$anio.", ".$concesionario.")");
 
                 $lstFlujo = DB::connection($db)->select("CALL hnweb_get_saldo_caja_ce(".$anio.", ".$concesionario.", NULL)");
                 $lstFlujo_RB = DB::connection($db)->select("CALL hnweb_get_saldo_caja_ce(".$anio.", ".$concesionario.", 1)");

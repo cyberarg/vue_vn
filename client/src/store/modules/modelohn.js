@@ -5,6 +5,7 @@ export const namespaced = true;
 export const state = {
   dataStatus: "",
   datos: [],
+  datos_modelo: [],
   loading: false,
   generarModelo: true,
   codMarca: null,
@@ -16,6 +17,7 @@ export const mutations = {
     state.generarModelo = true;
     state.dataStatus = "loading";
     state.datos = [];
+    state.datos_modelo = [];
     state.loading = true;
     state.codMarca = pars.Marca;
     state.codConcesionario = pars.Concesionario;
@@ -28,9 +30,11 @@ export const mutations = {
     if (respuesta.length == 0) {
       state.generarModelo = true;
       state.datos = [];
+      state.datos_modelo = [];
     } else {
       state.generarModelo = false;
       state.datos = respuesta[0];
+      state.datos_modelo =  respuesta[0];
       console.log(state.datos);
     }
 

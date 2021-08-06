@@ -633,7 +633,10 @@ class GestionDatosController extends Controller
             $hist->Concesionario = $dato->Concesionario;
             $hist->Grupo = $dato->Grupo;
             $hist->Orden = $dato->Orden;
+            
             $hist->CodOficial = $dato->CodOficial;
+            $hist->CodOficialUnificado = $util->getCodigoOficialUnificado($dato->CodOficial, $dato->Concesionario);
+
             $hist->Avance = $dato->Avance;
             $hist->HaberNeto = $dato->HaberNeto;
             $hist->CodEstado = $dato->CodEstado;

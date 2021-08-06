@@ -715,6 +715,9 @@ export default {
       let arrCE = [];
 
       switch(this.codigoConcesionario){
+        case "5":
+          arrCE.push({ Codigo: this.codigoConcesionario, Nombre: 'AutoNet', Marca: 2, MostrarSwitch: false });
+        break;
         case "6":
           arrCE.push({ Codigo: this.codigoConcesionario, Nombre: 'Car Group', Marca: 2, MostrarSwitch: false });
         break;

@@ -83,6 +83,12 @@ class ReporteComprasResumenController extends Controller
         $concesionario = $request->concesionario;
         $marca = $request->marca;
 
+        if (isset($request->ReporteFondo)){
+            $ocultarFilas = true;
+        }else{
+            $ocultarFilas = false;
+        }
+
         $utils = new UtilsController;
 
         $emp1 = "AutoCervo";
@@ -102,65 +108,86 @@ class ReporteComprasResumenController extends Controller
        $est2 = array();
 
        $fiatTotal = false;
-       switch ($marca){
-           case 2:
-                $nombreOrigen = "SGA";
-                switch ($concesionario){
-                    case 0:
-                        $fiatTotal = true;
-                    case 4:
-                    //AutoCervo
-                    $db = "AC";
-                    break;
-                    case 5:
-                        //AutoNet
-                        $db = "AN";
-                    break;
-                    case 6:
-                        //Car Group
-                        $db = "CG";
-                    break;
-                }
-           break;
-           case 5:
-            $nombreOrigen = "Base Total Volkswagen";
-            //Busco en la DB de Gestion Financiera pa7_gf
-            $db = "GF";
-           break;
-           default:
-           $nombreOrigen = "Casos Importados";
-           //Busco en la DB de Gestion Financiera pa7_gf
-           $db = "GF";
-        break;
-       }
+       $baseTotal = false;
+
+       $periodoAct = $this->getUltimoDiaPeriodo($periodo);
+       $periodoActPrimerDia = $this->getPrimerDiaPeriodo($periodo);
+       $periodoAnt = $this->getUltimoDiaPeriodoAnterior($periodo);
+
+      //dd($periodoAct);
+
+       $periodoActual = strtotime($periodoAct);
+       $periodoAnterior = strtotime($periodoAnt);
 
 
-        $periodoAct = $this->getUltimoDiaPeriodo($periodo);
-        $periodoActPrimerDia = $this->getPrimerDiaPeriodo($periodo);
-        $periodoAnt = $this->getUltimoDiaPeriodoAnterior($periodo);
+       if ($concesionario != 8){
+            switch ($marca){
+                case 2:
+                        $nombreOrigen = "SGA";
+                        switch ($concesionario){
+                            case 0:
+                                $fiatTotal = true;
+                            case 4:
+                            //AutoCervo
+                            $db = "AC";
+                            break;
+                            case 5:
+                                //AutoNet
+                                $db = "AN";
+                            break;
+                            case 6:
+                                //Car Group
+                                $db = "CG";
+                            break;
+                        }
+                break;
+                case 5:
+                    $nombreOrigen = "Base Total Volkswagen";
+                    //Busco en la DB de Gestion Financiera pa7_gf
+                    $db = "GF";
+                break;
+                default:
+                $nombreOrigen = "Casos Importados";
+                //Busco en la DB de Gestion Financiera pa7_gf
+                $db = "GF";
+                break;
+            }
 
-       //dd($periodoAct);
-
-        $periodoActual = strtotime($periodoAct);
-        $periodoAnterior = strtotime($periodoAnt);
-
-        if ($concesionario == 0){
-            $concesionario = 'NULL';
-        }
-
-       if ($fiatTotal){
-            $res_ac = DB::connection($db1)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
-            $res_aut = DB::connection($db2)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
-            $res_cg = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
-
-            $result = array_merge($res_ac, $res_aut, $res_cg);
-       }else{
-           if ($marca == 2){
-                $result = DB::connection($db)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+            if ($concesionario == 0){
+                $concesionario = 'NULL';
+            }
+    
+           if ($fiatTotal){
+                $res_ac = DB::connection($db1)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+                $res_aut = DB::connection($db2)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+                $res_cg = DB::connection($db3)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+    
+                $result = array_merge($res_ac, $res_aut, $res_cg);
            }else{
-                $result = DB::connection($db)->select("CALL hnweb_subitereportecompras_vw('".$periodoAct."', ".$concesionario.");");
-           } 
+               if ($marca == 2){
+                    $result = DB::connection($db)->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+               }else{
+                    $result = DB::connection($db)->select("CALL hnweb_subitereportecompras_vw('".$periodoAct."', ".$concesionario.");");
+               } 
+           }
+
+       }else{
+            $nombreOrigen = "Base Total RB";
+            $baseTotal = true;
+
+            $res_ac = DB::connection('AC')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+            $res_aut = DB::connection('AN')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+            $res_cg = DB::connection('CG')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
+
+            $datos_gf = DB::connection('GF')->select("CALL hnweb_subitereportecompras_total('".$periodoAct."');");
+
+            $result = array_merge($res_ac, $res_aut, $res_cg, $datos_gf);
+
        }
+
+
+
+        
        
 //dd($result);
         $list = array();
@@ -260,7 +287,10 @@ class ReporteComprasResumenController extends Controller
             $oDet->NomOrigen = $oNomOrigen;
             $oDet->Supervisor = $oSupervisor;
             $oDet->FechaUltimaAsignacion = $r->FechaUltimaAsignacion;
-            $oDet->FechaUltObs = $r->FechaUltObs;
+            if (!$baseTotal){
+                $oDet->FechaUltObs = $r->FechaUltObs;
+            }
+            
             $oDet->Retrabajar = $r->Retrabajar;
             $oDet->Vendido = $r->Vendido;
             $oDet->Motivo = $r->Motivo;
@@ -274,7 +304,7 @@ class ReporteComprasResumenController extends Controller
 
            // dd($oDet->FechaCompra);
            
-            if ($marca == 2){
+            if ($r->Marca == 2){
                 if ($r->FechaVtoCuota2 === NULL){
                     $oDet->AvanceAutomatico = 0;
                 }else{
@@ -282,7 +312,7 @@ class ReporteComprasResumenController extends Controller
                     $oDet->Avance = $oDet->AvanceAutomatico;
                 }
             }else{
-                if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
+                if (isset($oDet->AvanceCalculado) && is_null($oDet->AvanceCalculado)){
                     $oDet->AvanceAutomatico = $oDet->Avance;
                     $oDet->Avance = $oDet->Avance;
                 }else{
@@ -405,6 +435,11 @@ class ReporteComprasResumenController extends Controller
 
        // $lst['Debbug'] = $lstDeb;
         $lst['Datos'] = $lstDatos;
+
+        if ($ocultarFilas){
+            $list = array_slice($list, -3, 3); 
+        }
+
         $lst['Resumen'] = $list;
         $lst['MesActual'] = $this->getListMesActual($listCasosNuevos);
         $lst['Universo'] = $this->getListUniverso($listUniverso);

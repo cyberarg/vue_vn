@@ -25,6 +25,9 @@ export const state = {
   detalle_proyec_renta_mes_Giama_Total: [],
   detalle_proyec_anios_Giama_Total: [],
   detalle_proyec_renta_anios_Giama_Total: [],
+
+  cobros_anuales: [],
+  rentabilidades_anuales: [],
 };
 
 export const mutations = {
@@ -34,6 +37,9 @@ export const mutations = {
     state.detalle_proyec_renta_mes = [];
     state.detalle_proyec_anios = [];
     state.detalle_proyec_renta_anios = [];
+
+    state.cobros_anuales = [];
+    state.rentabilidades_anuales = [];
   },
 
   GET_DPM_STATUS(state) {
@@ -58,6 +64,9 @@ export const mutations = {
     state.detalle_proyec_renta_mes_CE = [];
     state.detalle_proyec_anios_CE = [];
     state.detalle_proyec_renta_anios_CE = [];
+
+    state.cobros_anuales = [];
+    state.rentabilidades_anuales = [];
 
     state.loadingdetalle_proyec_mes = true;
     state.loadingdetalle_proyec_renta_mes = true;
@@ -91,6 +100,11 @@ export const mutations = {
     state.detalle_proyec_anios_Giama_Total = datos["Anios_Giama_Total"];
     state.detalle_proyec_renta_anios_Giama_Total = datos["RentabilidadAnios_Giama_Total"];
 
+    state.cobros_anuales = datos["CobrosAnuales"];
+    state.rentabilidades_anuales = datos["RentabilidadesAnuales"];
+
+    console.log(datos["CobrosAnuales"]);
+    
     state.dataStatus = "success";
   },
 

@@ -4,7 +4,7 @@
       dense
       :items="datos"
       :headers="headers"
-      class="elevation-1 small cell-height"
+      :class="elevationComp"
       :loading="loadingState"
       :loading-text="loadingText"
       no-data-text="No hay datos disponibles."
@@ -189,9 +189,24 @@ export default {
       type: String,
       required: true
     }, 
+    elevation:{
+      type: Number,
+      default: null
+    }
   },
 
-  computed: {},
+  computed: {
+    elevationComp(){
+      if (this.elevation !== null ){
+        return 'elevation-' + this.elevation + ' small cell-height table-striped';
+      } 
+      return 'elevation-1 small cell-height';
+      
+    }
+    
+
+
+  },
 
   methods: {
     setValor(tipo, valor) {
@@ -266,6 +281,10 @@ export default {
 
 .titulo {
   font-weight: bold;
+}
+
+.v-data-table tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.06) !important;
 }
 
 </style>

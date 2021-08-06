@@ -83,6 +83,13 @@ class ReporteComprasCEResumenController extends Controller
         $concesionario = $request->concesionario;
         $marca = $request->marca;
 
+        if (isset($request->ReporteFondo)){
+            $ocultarFilas = true;
+        }else{
+            $ocultarFilas = false;
+        }
+        
+
         $estadoGestion = [];
 
         $utils = new UtilsController;
@@ -133,6 +140,7 @@ class ReporteComprasCEResumenController extends Controller
 
         $lstDeb = array();
 
+        
         
         $list[0]['Nombre'] = $nombreOrigen;
         $list[0]['Cantidad'] = 0;
@@ -314,6 +322,11 @@ class ReporteComprasCEResumenController extends Controller
 
        // $lst['Debbug'] = $lstDeb;
         $lst['Datos'] = $lstDatos;
+
+        if ($ocultarFilas){
+            $list = array_slice($list, -3, 3); 
+        }
+
         $lst['Resumen'] = $list;
         $lst['MesActual'] = $this->getListMesActual($listCasosNuevos);
         $lst['Universo'] = $this->getListUniverso($listUniverso);

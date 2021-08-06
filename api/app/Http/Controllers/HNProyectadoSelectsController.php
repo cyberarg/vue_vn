@@ -23,6 +23,15 @@ class HNProyectadoSelectsController extends Controller
         $filtros = $request->Filtros;
         $rbConsolidado = $request->ConsolidadoRB;
 
+        if (isset($request->ReporteFondo) && $concesionario == 8){
+            $utils = new UtilsController;
+            $seleccionados = $utils->getArrayConcesionarios();
+            $reporteFondoRB = true;
+
+        }else{
+            $reporteFondoRB = false;
+        }
+
         $empresa = 0;
         if ($marca == 2){
 
@@ -55,7 +64,7 @@ class HNProyectadoSelectsController extends Controller
         $lstItemsHN_Proy_Giama = array();
         $lstItemsHN_Proy_Giama_Total = array();
         $lstItemsHN_Proy_CE = array();
-
+        
         foreach ($seleccionados as $seleccionado) {
             
             $marca = $seleccionado['Marca'];
@@ -91,25 +100,59 @@ class HNProyectadoSelectsController extends Controller
         $lstRentabilidadAnios_Giama_Total = $resProy->getProyectadosAniosRentabilidad($lstItemsHN_Proy_Giama_Total);
         $lstRentabilidadAnios_CE = $resProy->getProyectadosAniosRentabilidad($lstItemsHN_Proy_CE);
         
-        $lstProyectado['Meses'] = $lstMeses;
-        $lstProyectado['Meses_Giama'] = $lstMeses_Giama;
-        $lstProyectado['Meses_Giama_Total'] = $lstMeses_Giama_Total;
-        $lstProyectado['Meses_CE'] = $lstMeses_CE;
+        if ($reporteFondoRB) {
 
-        $lstProyectado['RentabilidadMeses'] = $lstRentabilidadMeses;
-        $lstProyectado['RentabilidadMeses_Giama'] = $lstRentabilidadMeses_Giama;
-        $lstProyectado['RentabilidadMeses_Giama_Total'] = $lstRentabilidadMeses_Giama_Total;
-        $lstProyectado['RentabilidadMeses_CE'] = $lstRentabilidadMeses_CE;
+            $lstProyectado['Meses'] = $lstMeses;
+            $lstProyectado['Meses_Giama'] = $lstMeses_Giama;
+            $lstProyectado['Meses_Giama_Total'] = $lstMeses_Giama_Total;
+            //$lstProyectado['Meses_CE'] = $lstMeses_CE;
+            $lstProyectado['Meses_CE'] = $lstMeses_Giama_Total;
 
-        $lstProyectado['Anios'] = $lstAnios;
-        $lstProyectado['Anios_Giama'] = $lstAnios_Giama;
-        $lstProyectado['Anios_Giama_Total'] = $lstAnios_Giama_Total;
-        $lstProyectado['Anios_CE'] = $lstAnios_CE;
+            $lstProyectado['RentabilidadMeses'] = $lstRentabilidadMeses;
+            $lstProyectado['RentabilidadMeses_Giama'] = $lstRentabilidadMeses_Giama;
+            $lstProyectado['RentabilidadMeses_Giama_Total'] = $lstRentabilidadMeses_Giama_Total;
+            //$lstProyectado['RentabilidadMeses_CE'] = $lstRentabilidadMeses_CE;
+            $lstProyectado['RentabilidadMeses_CE'] = $lstRentabilidadMeses_Giama_Total;
 
-        $lstProyectado['RentabilidadAnios'] = $lstRentabilidadAnios;
-        $lstProyectado['RentabilidadAnios_Giama'] = $lstRentabilidadAnios_Giama;
-        $lstProyectado['RentabilidadAnios_Giama_Total'] = $lstRentabilidadAnios_Giama_Total;
-        $lstProyectado['RentabilidadAnios_CE'] = $lstRentabilidadAnios_CE;
+            $lstProyectado['Anios'] = $lstAnios;
+            $lstProyectado['Anios_Giama'] = $lstAnios_Giama;
+            $lstProyectado['Anios_Giama_Total'] = $lstAnios_Giama_Total;
+            //$lstProyectado['Anios_CE'] = $lstAnios_CE;
+            $lstProyectado['Anios_CE'] = $lstAnios_Giama_Total;
+
+            $lstProyectado['RentabilidadAnios'] = $lstRentabilidadAnios;
+            $lstProyectado['RentabilidadAnios_Giama'] = $lstRentabilidadAnios_Giama;
+            $lstProyectado['RentabilidadAnios_Giama_Total'] = $lstRentabilidadAnios_Giama_Total;
+            //$lstProyectado['RentabilidadAnios_CE'] = $lstRentabilidadAnios_CE;
+            $lstProyectado['RentabilidadAnios_CE'] = $lstRentabilidadAnios_Giama_Total;
+
+            $lstProyectado['CobrosAnuales'] = $lstAnios_Giama_Total[1]; // Fila HN a Cobrar USD
+            $lstProyectado['RentabilidadesAnuales'] = $lstRentabilidadAnios_Giama_Total[2]; // Fila Rent. USD
+
+        }else{
+            $lstProyectado['Meses'] = $lstMeses;
+            $lstProyectado['Meses_Giama'] = $lstMeses_Giama;
+            $lstProyectado['Meses_Giama_Total'] = $lstMeses_Giama_Total;
+            $lstProyectado['Meses_CE'] = $lstMeses_CE;
+
+            $lstProyectado['RentabilidadMeses'] = $lstRentabilidadMeses;
+            $lstProyectado['RentabilidadMeses_Giama'] = $lstRentabilidadMeses_Giama;
+            $lstProyectado['RentabilidadMeses_Giama_Total'] = $lstRentabilidadMeses_Giama_Total;
+            $lstProyectado['RentabilidadMeses_CE'] = $lstRentabilidadMeses_CE;
+
+            $lstProyectado['Anios'] = $lstAnios;
+            $lstProyectado['Anios_Giama'] = $lstAnios_Giama;
+            $lstProyectado['Anios_Giama_Total'] = $lstAnios_Giama_Total;
+            $lstProyectado['Anios_CE'] = $lstAnios_CE;
+
+            $lstProyectado['RentabilidadAnios'] = $lstRentabilidadAnios;
+            $lstProyectado['RentabilidadAnios_Giama'] = $lstRentabilidadAnios_Giama;
+            $lstProyectado['RentabilidadAnios_Giama_Total'] = $lstRentabilidadAnios_Giama_Total;
+            $lstProyectado['RentabilidadAnios_CE'] = $lstRentabilidadAnios_CE;
+
+            $lstProyectado['CobrosAnuales'] = $lstAnios_CE[1]; // Fila HN a Cobrar USD
+            $lstProyectado['RentabilidadesAnuales'] = $lstRentabilidadAnios_CE[2]; // Fila Rent. USD
+        }
 
         return $lstProyectado;
 

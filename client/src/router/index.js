@@ -25,6 +25,7 @@ import ReporteComprasObjetivosView from "@/views/ReporteComprasObjetivosView.vue
 import ReporteCaidasView from "@/views/ReporteCaidasRBView.vue";
 import ReporteComisionesView from "@/views/ReporteComisionesView.vue";
 import ReporteFacturacionView from "@/views/ReporteFacturacionView.vue";
+import ReporteSemestreView from "@/views/ReporteSemestreView.vue";
 
 Vue.use(Router);
 
@@ -227,6 +228,13 @@ export default new Router({
           name: "reportefacturacion",
           component: ReporteFacturacionView
         },
+
+        {
+          path: "reportesemestre",
+          name: "reportesemestre",
+          component: ReporteSemestreView
+        },
+        
         
         {
           path: "gestioncompras",

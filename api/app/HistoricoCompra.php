@@ -17,7 +17,7 @@ class HistoricoCompra extends Model
     /**
      * @var array
      */
-    protected $fillable = ['ID_Dato', 'Concesionario', 'Grupo', 'Orden', 'CodOficial', 
+    protected $fillable = ['ID_Dato', 'Concesionario', 'Grupo', 'Orden', 'CodOficial', 'CodOficialUnificado',
     'Avance', 'HaberNeto', 'CodEstado', 'FechaCompra', 'PrecioCompra',
     'MotivoCaida', 'FechaCaida',  'FechaFirmaCliente', 'Vendido'
     ];

@@ -169,6 +169,7 @@
                   <GridCarteraGral></GridCarteraGral>
               </v-col>
             </v-row>
+
             <v-row  class="performance">
               <v-col cols="12" xs="12" sm="12" lg="12" md="12">
                   <v-card hover elevation-2 color="grey lighten-4">
@@ -225,7 +226,7 @@ export default {
 }
 
 .performance {
-  padding-top: 190px;
+  padding-top: 208px;
 }
 
 .row-equal {
