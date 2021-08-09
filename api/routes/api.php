@@ -135,6 +135,7 @@ Route::post('/reportecomisiones', 'ReporteComisionesController@getReporte');
 Route::post('/reportefacturacion', 'ReporteFacturacionController@getReporte');
 Route::post('/detallefacturacion', 'ReporteFacturacionController@getDetalle');
 Route::post('/detalleporconces', 'ReporteFacturacionController@getDetalleConcesionario');
+Route::post('/detallecomisionista', 'ReporteFacturacionController@getDetalleComisionesTerceros');
 Route::post('/detallegeneral', 'ReporteFacturacionController@getDetalleGeneral');
 
 

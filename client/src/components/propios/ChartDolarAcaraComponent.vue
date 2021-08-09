@@ -176,7 +176,7 @@ export default {
       this.$refs.demoChart.updateOptions({
 
         title: {
-          text: "Indices Mensuales - Enero 2015 a " + lastPeriodStr,
+          text: "Indices Mensuales - Enero 2005 a " + lastPeriodStr,
           align: "left",
         },
 

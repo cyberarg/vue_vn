@@ -76,13 +76,16 @@ class ReporteFacturacionController extends Controller
 
         switch($codConcesionario){
             case 8:  // Para RB y GB llamo a un SP distinto
-                $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 1, 0);";
+                //$queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 1, 0);";
+                $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 1, 1);";
             break;
             case 888: // El codigo para GB
-                $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 2, 0);";
+                //$queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 2, 0);";
+                $queryStr_Detail = "CALL hnweb_detalle_facturacion_rb(".$periodoMes.", ".$periodoAnio.", 2, 1);";
             break;
             default:
-                $queryStr_Detail = "CALL hnweb_detalle_facturacion_ce(".$periodoMes.", ".$periodoAnio.", ". $codConcesionario.", ".$comproGiama.", 0);";
+                //$queryStr_Detail = "CALL hnweb_detalle_facturacion_ce(".$periodoMes.", ".$periodoAnio.", ". $codConcesionario.", ".$comproGiama.", 0);";
+                $queryStr_Detail = "CALL hnweb_detalle_facturacion_ce(".$periodoMes.", ".$periodoAnio.", ". $codConcesionario.", ".$comproGiama.", 1);";
             break;
         }
 
@@ -92,6 +95,26 @@ class ReporteFacturacionController extends Controller
         $lst = array();
        
         $lst['Detalle_CE'] = $result;
+
+        return  $lst;
+
+    }
+
+    public function getDetalleComisionesTerceros(Request $request ){
+
+        $periodo = $request->periodo;
+       
+       
+        $periodoMes = substr($periodo, 4, strlen($periodo));
+        $periodoAnio = substr($periodo, 0, 4);
+
+        $queryStr_Detail = "CALL hnweb_detalle_facturacion_comisionistas(".$periodoMes.", ".$periodoAnio.", 1);";
+          
+        $result = DB::select($queryStr_Detail); 
+    
+        $lst = array();
+       
+        $lst['Detalle_Comisionistas'] = $result;
 
         return  $lst;
 
@@ -256,15 +279,12 @@ class ReporteFacturacionController extends Controller
 
             $oCE_CE->Casos = 0;
             $oCE_CE->HN = 0;
-            $oCE_CE->AFacturar = 0;
+            $oCE_CE->AFacturar = 0;  
 
             $lstTabla_CE[$ce->ID] = $oCE;
             $lstTabla_CE_RB[$ce->ID] = $oCE_RB;
             $lstTabla_CE_GB[$ce->ID] = $oCE_GB;
             $lstTabla_CE_CE[$ce->ID] = $oCE_CE;
-
-
-
             $lstAcumulados_Giama[$ce->ID] = $oAcum_Giama;
             $lstAcumulados_CE[$ce->ID] = $oAcum_CE;
         } 
@@ -281,7 +301,13 @@ class ReporteFacturacionController extends Controller
             $oDet->HaberNeto = $det->HaberNetoOriginal;
             $oDet->Concesionario = $det->Concesionario;
             
-            if ($det->Concesionario == 10){ // Si es Alizze, va el 5%
+            if ($det->Concesionario == 10 || 
+                $det->Concesionario == 12 ||
+                $det->Concesionario == 13 ||
+                $det->Concesionario == 14 ||
+                $det->Concesionario == 15 ||
+                $det->Concesionario == 16 ||
+                $det->Concesionario == 17 ){ // Si es Alizze o los WEB, va el 5%
                 $oDet->AFacturar = $det->HaberNetoOriginal * $portentajePropios;
             }else{
                 $oDet->AFacturar = $det->HaberNetoOriginal * $portentajeClientes;
@@ -296,6 +322,8 @@ class ReporteFacturacionController extends Controller
 
             if ($this->esConcesionarioComisionable($det->Concesionario)){
                 $comisionTerceros += ($det->HaberNetoOriginal * $portentajeComisionTerceros);
+
+
             }
 
             if ($det->ComproGiama == 1){

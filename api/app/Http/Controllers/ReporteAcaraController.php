@@ -104,6 +104,10 @@ class ReporteAcaraController extends Controller
                 if ($s1Acum < $s1Min){
                     $s1Min = $s1Acum;
                 }
+
+                if ($s1Acum > $s1Max){
+                    $s1Max = $s1Acum;
+                }
             }
             
 

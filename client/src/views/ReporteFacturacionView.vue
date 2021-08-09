@@ -65,7 +65,7 @@
                   </v-row>
                   <v-row >
                     <v-col >
-                      <CardComisionGridComponent :loadingData="this.loadingdetalle" :esGridPagos="true" concesionario="Pagos" subtitle="Detalle de Comisiones a Pagar" :totalComisiones="totalComisiones" cantidad="" :headers="headers2" :datos="detalle_comisionistas"></CardComisionGridComponent>
+                      <CardComisionGridComponent @detalleExcelCE="getDetalleExcelComisionista" :loadingData="this.loadingdetalle" :esGridPagos="true" concesionario="Pagos" subtitle="Detalle de Comisiones a Pagar" :totalComisiones="totalComisiones" cantidad="" :headers="headers2" :datos="detalle_comisionistas"></CardComisionGridComponent>
                     </v-col>
                   </v-row>
                 
@@ -255,6 +255,7 @@ export default {
       "detalle_gb_ce",
       "loadingdetalle",
       "detalle_conces",
+      "detalle_comi",
       "detalle_gral",
       "detalle_comisionistas",
       "totalComisiones",
@@ -316,6 +317,7 @@ export default {
       getDetalleReporte: "reportefacturacion/getDetalleReporte",
       getDetallePor_CE_Filtered: "reportefacturacion/getDetallePor_CE",
       getDetalleConcesionario: "reportefacturacion/getDetalleConcesionario",
+      getDetalleComisionista: "reportefacturacion/getDetalleComisionista",
       getDetalleGeneral: "reportefacturacion/getDetalleGeneral",
     }),
 
@@ -335,6 +337,29 @@ export default {
       const filename = "DetalleFacturacion_" + this.nomConcesDetalle(value);
 
       let sheetname = "DetalleFacturacion";
+
+
+      XLSX.utils.book_append_sheet(workbook, data, sheetname);
+
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
+    },
+
+    async getDetalleExcelComisionista(value) {
+
+     // console.log(value);
+      let pars = {
+        periodo: this.periodo_selected,
+      }
+      //console.log(pars)
+      await this.getDetalleComisionista(pars);
+
+      let data = XLSX.utils.json_to_sheet(this.detalle_comi);
+      const workbook = XLSX.utils.book_new();
+      const filename = "DetalleFacturacion_" + 'JoseDeMarco';
+
+      let sheetname = "DetalleFacturacion";
+
+
       XLSX.utils.book_append_sheet(workbook, data, sheetname);
 
       XLSX.writeFile(workbook, `${filename}.xlsx`);

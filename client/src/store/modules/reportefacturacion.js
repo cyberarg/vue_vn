@@ -12,6 +12,7 @@ export const state = {
   detalle_gb:[],
   detalle_gb_ce:[],
   detalle_conces:[],
+  detalle_comi:[],
 
   table_rb: [],
   table_gb: [],
@@ -41,6 +42,7 @@ export const state = {
   loading_filter: false,
   show_filtrados:false,
   loadingdetalle_ce: false,
+  loadingdetalle_comi: false,
   loadingdetalle_gral: false,
   
   disableButtonResumenPDF:false,
@@ -153,6 +155,26 @@ export const mutations = {
     state.acumulados_tot = [];
     state.cantAcum_TOT = 0;
 
+  },
+
+
+  GET_DETALLE_COMI_STATUS(state) {
+    state.dataStatus = "loading";
+    state.detalle_comi =  [];
+
+    state.loadingdetalle_comi = true;
+  },
+
+  DETALLE_COMI_SUCCESS(state, datos) {
+    state.detalle_comi =  datos.Detalle_Comisionistas;
+
+    state.loadingdetalle_comi = false;
+    state.dataStatus = "success";
+  },
+
+  DETALLE_COMI_ERROR(state) {
+    state.dataStatus = "Error";
+    state.loadingdetalle_comi = false;
   },
 
   GET_DETALLE_CE_STATUS(state) {
@@ -285,6 +307,23 @@ export const actions = {
       });
     
   },
+
+  getDetalleComisionista({ commit }, pars){
+    commit("GET_DETALLE_COMI_STATUS");
+    return axios
+      .post("/detallecomisionista", pars)
+      .then(response => {
+        console.log(response.data);
+        commit("DETALLE_COMI_SUCCESS", response.data);
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("DETALLE_COMI_ERROR");
+      });
+    
+  },
+
+  
 
   getDetalleGeneral({ commit }, pars){
     commit("GET_DETALLE_GRAL_STATUS");

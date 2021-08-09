@@ -167,6 +167,7 @@ export default {
         { Codigo: 4, Nombre: "AutoCervo", Marca: 2 },
         { Codigo: 5, Nombre: "AutoNet", Marca: 2 },
         { Codigo: 6, Nombre: "Car Group", Marca: 2 },
+        { Codigo: 8, Nombre: "RB", Marca: 2 },
         { Codigo: 9, Nombre: "Sapac", Marca: 9 },
         { Codigo: 10, Nombre: "Alizze", Marca: 3 },
         { Codigo: 12, Nombre: "Datos Web - Peugeot", Marca: 3 },
