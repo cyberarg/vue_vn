@@ -50,6 +50,7 @@ export const mutations = {
   },
 
   COMPRAS_SUCCESS(state, datos) {
+    console.log('COMPRAS:');
     console.log(datos);
     state.detalle_grid1_compras = datos["Grid1_Comprados"];
     state.detalle_grid1_compras_Giama = datos["Grid1_Comprados_Giama"];
@@ -90,6 +91,8 @@ export const mutations = {
   },
 
   COBROS_SUCCESS(state, datos) {
+    console.log('COBROS:');
+    console.log(datos);
     state.detalle_grid1_cobros = datos["Grid1_Cobrados"];
     state.detalle_grid1_cobros_Giama = datos["Grid1_Cobrados_Giama"];
     state.detalle_grid1_cobros_CE = datos["Grid1_Cobrados_CE"];
@@ -140,7 +143,7 @@ export const actions = {
       //.post("/hnresumencobros", params)
       .post("/hnresumencobros_select", params)
       .then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         commit("COBROS_SUCCESS", response.data);
       })
       .catch(err => {

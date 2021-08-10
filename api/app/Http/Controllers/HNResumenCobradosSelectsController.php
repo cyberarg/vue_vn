@@ -43,8 +43,8 @@ class HNResumenCobradosSelectsController extends Controller
             
             // soloCE_Giama_Todos: 0-Todos, 1-Giama, 2-Solo CE
             $lstItemsHN_Resumen = array_merge($lstItemsHN_Resumen, $resCobros->getItemsResumen_Selecteds($anio, $marca, $concesionario, 0, $filtros, 1));
-            $lstItemsHN_Resumen_Giama = array_merge($lstItemsHN_Resumen_CE, $resCobros->getItemsResumen_Selecteds($anio, $marca, $concesionario, 1, $filtros, 1));
-            $lstItemsHN_Resumen_CE = array_merge($lstItemsHN_Resumen_CE, $resCobros->getItemsResumen_Selecteds($anio, $marca, $concesionario, 2, $filtros, 1));
+            $lstItemsHN_Resumen_Giama = array_merge($lstItemsHN_Resumen_Giama, $resCobros->getItemsResumen_Selecteds($anio, $marca, $concesionario, 1, $filtros, 1));
+            $lstItemsHN_Resumen_CE = array_merge($lstItemsHN_Resumen_CE, $resCobros->getItemsResumen_Selecteds($anio, $marca, $concesionario, 2, $filtros, 0));
 
             $p++;
         }

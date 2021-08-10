@@ -206,6 +206,9 @@ class HaberesNetosController extends Controller
                     $db = "RB";
                     $codEmpresa = 10;
                 break;
+                default:
+                    $db = "GF";
+                break;
             }
             
             if ($db == 'RB' && $rbConsolidado){
@@ -462,6 +465,9 @@ class HaberesNetosController extends Controller
                 case 8:
                     $db = "RB";
                     $codEmpresa = 10;
+                break;
+                default:
+                    $db = "GF";
                 break;
             }
             

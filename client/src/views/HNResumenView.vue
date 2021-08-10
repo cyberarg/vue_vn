@@ -187,7 +187,8 @@ export default {
     },
 
     concesSelecteds:{
-      type: Object,
+      //type: Object,
+      type: Array,
       required: true,
     }
   },
@@ -211,13 +212,14 @@ export default {
         { Codigo: 2, Nombre: "Cobrados" },
         { Codigo: 3, Nombre: "Stock" },
       ],
-
+      /*
       itemsFiltro: [
         { Codigo: 0, Nombre: "Todos" },
         { Codigo: 1, Nombre: "Giama" },
         { Codigo: 2, Nombre: "Concesionario" },
       ],
       selectFiltro: { Codigo: 0, Nombre: "Todos" },
+      */
       nameFilterTitHN: 'Todos',
       tipoFiltro:{},
 
@@ -376,6 +378,8 @@ export default {
         } else {
           this.datosDetalleGrid1_Cobros = this.detalle_grid1_cobros;
         }
+        console.log('Llanado al filtrado desde el loading detalle 1 - Cobros');
+        this.setDefaultFiltered(this.tipoFiltro);
       } else {
         this.datosDetalleGrid1_Cobros = [];
       }
@@ -505,6 +509,7 @@ export default {
 
     setDefaultFiltered(valor){
         this.nameFilterTitHN = valor.Nombre;
+        console.log('Filtro Selected en setDefault: '+valor.Codigo);
         switch(valor.Codigo){
           case 0: //Todos
             this.datosDetalleGrid1_Compras = this.detalle_grid1_compras;
@@ -517,8 +522,10 @@ export default {
             this.datosDetalleGrid3 = this.detalle_grid3;
           break;
           case 1: //Giama
-            this.datosDetalleGrid1_Compras = this.detalle_grid1_compras_Giama;
+          case 3: // Total Giama
+              this.datosDetalleGrid1_Compras = this.detalle_grid1_compras_Giama;
               this.datosDetalleGrid2_Compras = this.detalle_grid2_compras_Giama;
+
               this.datosDetalleGrid1_Cobros = this.detalle_grid1_cobros_Giama;
               this.datosDetalleGrid2_Cobros = this.detalle_grid2_cobros_Giama;
 
@@ -529,6 +536,7 @@ export default {
           case 2: //Conces
               this.datosDetalleGrid1_Compras = this.detalle_grid1_compras_CE;
               this.datosDetalleGrid2_Compras = this.detalle_grid2_compras_CE;
+
               this.datosDetalleGrid1_Cobros = this.detalle_grid1_cobros_CE;
               this.datosDetalleGrid2_Cobros = this.detalle_grid2_cobros_CE;
 

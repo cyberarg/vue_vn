@@ -266,10 +266,11 @@ export default {
         } else {
           this.datosDetalleMeses = this.detalle_proyec_mes;
         }
-        this.setDefaultFiltered(this.tipoFiltro);
+        this.setDefaultFiltered(this.filtro_Titular);
       } else {
         this.datosDetalleMeses = [];  
       }
+      
     },
 
     loadingdetalle_proyec_renta_mes(newValue) {
@@ -390,10 +391,14 @@ export default {
         this.datosDetalleAnios = this.detalle_proyec_anios;
         this.datosDetalleRentAnios = this.detalle_proyec_renta_anios;
       }
+      if (this.tipoFiltro != {}){
+        console.log('Llama al filtrado con la opcion seleccionada');
+        this.setDefaultFiltered(this.filtro_Titular);
+      }
     },
 
     setDefaultFiltered(valor){
-        //console.log(valor.Nombre);
+        console.log('Filtro Selected: ' + valor.Codigo);
         this.nameFilterTitHN = valor.Nombre;
         switch(valor.Codigo){
           case 0: //Todos
@@ -408,7 +413,7 @@ export default {
             this.datosDetalleAnios = this.detalle_proyec_anios_Giama;
             this.datosDetalleRentAnios = this.detalle_proyec_renta_anios_Giama;
           break;
-          case 2: //Total Giama
+          case 3: //Total Giama
             this.datosDetalleMeses = this.detalle_proyec_mes_Giama_Total;
             this.datosDetalleRentMeses = this.detalle_proyec_renta_mes_Giama_Total;
             this.datosDetalleAnios = this.detalle_proyec_anios_Giama_Total;

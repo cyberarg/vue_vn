@@ -86,6 +86,9 @@ class HNResumenCompradosController extends Controller
                 case 8:
                     $db = "RB";
                 break;
+                default:
+                    $db = "GF";
+                break;
             }
             
         }else{
@@ -116,7 +119,7 @@ class HNResumenCompradosController extends Controller
 
                 $lstHN_RB = DB::connection('RB')->select("SELECT *  FROM haberesnetosok WHERE Concesionario = 8");
 
-                $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE ComproGiama = 1");
+                $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE (ComproGiama = 1 OR ContabilizarParaRB = 1)");
 
                 $lstHN_AN = DB::connection('AN')->select("SELECT *  FROM haberesnetosok WHERE Concesionario = 5");
                 $lstHN_CG = DB::connection('CG')->select("SELECT *  FROM haberesnetosok WHERE Concesionario = 6");
@@ -129,10 +132,10 @@ class HNResumenCompradosController extends Controller
                         $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE Concesionario = ".$concesionario);
                     break;
                     case 1: // GIAMA
-                        $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE ComproGiama = 1 AND Concesionario = ".$concesionario);
+                        $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE (ComproGiama = 1 OR ContabilizarParaRB = 1) AND Concesionario = ".$concesionario);
                     break;
                     case 2: //SOLO CE
-                        $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE ComproGiama = 0 AND Concesionario = ".$concesionario);
+                        $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE (ComproGiama = 0 AND IFNULL(ContabilizarParaRB, 2) = 2) AND Concesionario = ".$concesionario);
                     break;
                 }
               
@@ -205,7 +208,7 @@ class HNResumenCompradosController extends Controller
 
             $lstHN_RB = DB::connection('RB')->select("SELECT *  FROM haberesnetosok WHERE Concesionario = ".$concesionario);
 
-            $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE ComproGiama = 1");
+            $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE (ComproGiama = 1 OR ContabilizarParaRB = 1)");
 
             $lstHN = array_merge($lstHN_RB, $lstHN_GF);
         }else{
@@ -219,7 +222,7 @@ class HNResumenCompradosController extends Controller
 
                 $lstHN_RB = DB::connection('RB')->select("SELECT *  FROM haberesnetosok WHERE Concesionario = 8");
 
-                $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE ComproGiama = 1");
+                $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE (ComproGiama = 1 OR ContabilizarParaRB = 1)");
 
                 $lstHN_AN = DB::connection('AN')->select("SELECT *  FROM haberesnetosok WHERE Concesionario = 5");
                 $lstHN_CG = DB::connection('CG')->select("SELECT *  FROM haberesnetosok WHERE Concesionario = 6");

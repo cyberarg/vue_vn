@@ -52,6 +52,9 @@ class HNProyectadoSelectsController extends Controller
                     $db = "RB";
                     $empresa = 10;
                 break;
+                default:
+                    $db = "GF";
+                break;
             }
 
         }else{
