@@ -160,6 +160,8 @@ Route::post('/reportecomprasceresumen', 'ReporteComprasCEResumenController@getRe
 
 Route::post('/reporteacara', 'ReporteAcaraController@getReporte');
 
+Route::post('/reporterentacartera', 'ReporteRentabilidadCarteraTotalController@getReporte');
+
 Route::resource('reportecomprasmesactual', 'ReporteComprasMesActualController', ['parameters' => [
     'index' => 'list'
 ]]);

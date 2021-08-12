@@ -5,8 +5,8 @@
       ref="demoChart"
       type="bar"
       height="200"
-      :options="chartOptions_hard"
-      :series="series_hard"
+      :options="chartOptions"
+      :series="dataSeries"
     ></apexchart>
 
   </div>
@@ -19,18 +19,21 @@ import moment from "moment";
 export default {
   data: function () {
     return {
-
+      labels_categories: [],
       series: [],
-
+      cantAniosMax: 5, 
+      dataSeries: [],
+      seriesDB: [],
+      /*
       series_hard: [{
-            data: [22928, 452100, 687600, 967296, 494148], // Datos RB
+            data: this.dataSeries,//[22928, 452100, 687600, 967296, 494148], // Datos RB
 
           }],
-
+      */
       
-          chartOptions_hard: {
+          chartOptions: {
 
-            labels: ['2025', '2024', '2023', '2022', '2021'],
+            labels: [moment().format('YYYY')], //['2025', '2024', '2023', '2022', '2021'],
            
             chart: {
               type: 'bar',
@@ -105,7 +108,7 @@ export default {
                 colors: ['#000000']
               },
               formatter: function (val, opt) {
-                return "USD " + val
+                return "USD " + val   
               },
               offsetX: 0,
               dropShadow: {
@@ -113,7 +116,7 @@ export default {
               }
           },
           xaxis: {
-            categories: ['2025', '2024', '2023', '2022', '2021'],
+            categories: [moment().format('YYYY')],
           }
         },
         
@@ -123,7 +126,7 @@ export default {
 
   mounted() {
     this.$nextTick(function () {
-      this.getDatosSeries();
+     // this.getDatosSeries();
     })
   },
 
@@ -136,42 +139,34 @@ export default {
 
 
     loadingdetalle_proyec_anios(newValue) {
+      this.seriesDB = [];
+      this.labels_categories = [];
       if (!newValue) {
-
-        this.setOptions();
+        if (typeof(this.cobros_anuales) !== 'undefined'){
+          this.setDatosSeries();
+        }
+        
       } 
     }
   },
 
   methods: {
+    
+    setDatosSeries() {
 
-    setOptions(){
+      for (let index = 0; index < this.cantAniosMax; index++) {
+        this.labels_categories.unshift(parseInt(moment().format("YYYY")) + index); 
+        this.seriesDB.unshift(this.cobros_anuales.Valores['A'+index]);
+      }
 
+      this.dataSeries = [{data: this.seriesDB}];
 
-    },
-
-    ...mapActions({ getSeries: "graphindice/getSeries" }),
-    async getDatosSeries() {
-      let pars = {
-        reporteFechas: 0
-      };
-      await this.getSeries(pars);
-      this.series = this.seriesDB;
-      this.period = this.periodos;
-      let arrPer = this.periodos;
-      let lastPeriodStr = '';
-
-      lastPeriodStr = await this.getPeriodName(arrPer[arrPer.length - 1]);
       this.$refs.demoChart.updateOptions({
 
-        title: {
-          text: "Indices Mensuales - Enero 2015 a " + lastPeriodStr,
-          align: "left",
-        },
-
         xaxis: {
-          categories: this.period
+          categories: this.labels_categories
         },
+        /*
         yaxis: {
           title: {
             text: "%",
@@ -179,6 +174,7 @@ export default {
           min: parseInt(this.minValue),
           max: parseInt(this.maxValue) + 10
         }
+        */
       })
     },
 

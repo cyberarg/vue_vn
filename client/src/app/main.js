@@ -100,6 +100,7 @@ Vue.use(ColorThemePlugin, {
 router.beforeEach((to, from, next) => {
   //if (to.name !== "login" && !isAuthenticated) next({ name: "login" });
   
+/*
   if (to.name === "login") {
     localStorage.clear();
     store.commit("auth/LOGOUT");
@@ -123,9 +124,9 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
-  
+  */
   //store.commit("app/SET_LOADING", true);
-  //next();
+  next();
 });
 
 router.afterEach((to, from) => {

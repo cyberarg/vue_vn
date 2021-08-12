@@ -23,10 +23,26 @@ use App\Precio;
 class UtilsController extends Controller
 {
 
-    public function getArrayConcesionarios(){
+    public function getArrayConcesionarios($tipo){ // 0 - Todos, 1- RB, 2- RB + GF
 
-        return Concesionario::select('ID AS Codigo', 'MarcaDefault AS Marca', 'Nombre')->where('MarcaDefault', '<>', 99)->get();
-
+        switch($tipo){
+            case 0:
+                $conces = Concesionario::select('ID AS Codigo', 'MarcaDefault AS Marca', 'Nombre')->where('MarcaDefault', '<>', 99)->get();
+            break;
+            case 1:
+                $conces = Concesionario::select('ID AS Codigo', 'MarcaDefault AS Marca', 'Nombre')->where('Concesionario', '=', 8)->get();
+            break;  
+            case 2:
+                $conces = Concesionario::select('ID AS Codigo', 'MarcaDefault AS Marca', 'Nombre')
+                ->where('MarcaDefault', '<>', 99)
+                ->whereNotIn('ID', [4,5,6])
+                ->get();
+            break;
+            default:
+                $conces = Concesionario::select('ID AS Codigo', 'MarcaDefault AS Marca', 'Nombre')->where('MarcaDefault', '<>', 99)->get();
+            break;
+        } 
+        return $conces;
     }
 
     public function getNombreMarcaDatoWeb($codigo){

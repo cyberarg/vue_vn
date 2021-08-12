@@ -25,7 +25,7 @@ class HNProyectadoSelectsController extends Controller
 
         if (isset($request->ReporteFondo) && $concesionario == 8){
             $utils = new UtilsController;
-            $seleccionados = $utils->getArrayConcesionarios();
+            $seleccionados = $utils->getArrayConcesionarios(2); // 0 - Todos, 1- RB, 2- RB + GF
             $reporteFondoRB = true;
 
         }else{

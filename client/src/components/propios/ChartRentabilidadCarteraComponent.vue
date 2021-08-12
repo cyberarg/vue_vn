@@ -2,7 +2,9 @@
   <div>
 
     <apexchart type="pie" height="200" :options="chartOptions" :series="series"></apexchart>
-
+    <div class="detalle_renta">
+      {{this.rentabilidadCalculada}}
+    </div>
   </div>
 </template>
 
@@ -13,7 +15,8 @@ import moment from "moment";
 export default {
   data: function () {
     return {
-      series: [1716136, 907936, 651640],
+      series: [],//[1716136, 907936, 651640],
+      rentabilidadCalculada: '',
       chartOptions: {
         chart: {
           width: 200,
@@ -22,12 +25,17 @@ export default {
         toolbar: {
           show: false,
         },
+        colors: ['#7f8285', '#0e6d80', '#009ebe'],
         fill: {
-          colors: ['#266fbd', '#46bd89', '#009ebe']
+          colors: ['#7f8285', '#0e6d80', '#009ebe']
         },
+        
         dataLabels: {
-          enabled: true,
+          /*
+          enabled: false,
           colors: ['#266fbd', '#46bd89', '#009ebe']
+          */
+
           /*
           formatter: function (val) {
             return val + "%"
@@ -37,31 +45,23 @@ export default {
           }
           */
         },
-        labels: ['Inversión', 'Rentabilidad', 'Cobrados'],
+        labels: ['Inversión', 'Proy. Cobro', 'Cobrados'],
         legend: {
           position: 'right',
           horizontalAlign: 'left', 
           show: true,
-          customLegendItems: ['Inversión: USD 1716136', 'Rentabilidad: USD 907936', 'Cobrados: USD 651640'], // Datos RB
+          //customLegendItems: ['Inversión: USD 1716136', 'Rentabilidad: USD 907936', 'Cobrados: USD 651640'], // Datos RB
           offsetX: 0,
           offsetY: 0,
+          colors: ['#7f8285', '#0e6d80', '#009ebe'],
+          /*
           labels: {
-              colors: ['#266fbd', '#46bd89', '#009ebe']
+              colors: ['#266fbd', '#46bd89', '#009ebe'],
+              useSeriesColors: false
           },
+          */
         },
-        /*
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }]
-        */
+        
       },
     };
   },
@@ -74,40 +74,47 @@ export default {
   },
 */
   computed: {
-    ...mapState("graphindice", ["loadingDatos", "seriesDB", "periodos", "minValue", "maxValue", "dataStatus"]),
+    ...mapState("reporterentacartera", ["detalle_proyectado", "detalle_historico", "loading_renta", "dataStatus"]),
+    ...mapState("proyectadohn", ["cobros_anuales", "rentabilidades_anuales", "loadingdetalle_proyec_anios"]),
+  },
+
+  watch:{
+
+    loading_renta(newValue) {
+      this.series = [];
+
+      if (!newValue) {
+        if (typeof(this.detalle_historico) !== 'undefined'){
+          this.setDatosSeries();
+        }
+      } 
+    }
+
   },
 
   methods: {
-    ...mapActions({ getSeries: "graphindice/getSeries" }),
-    async getDatosSeries() {
-      let pars = {
-        reporteFechas: 0
-      };
-      await this.getSeries(pars);
-      this.series = this.seriesDB;
-      this.period = this.periodos;
-      let arrPer = this.periodos;
-      let lastPeriodStr = '';
+    
+    setDatosSeries() {
 
-      lastPeriodStr = await this.getPeriodName(arrPer[arrPer.length - 1]);
-      this.$refs.demoChart.updateOptions({
-        /*
-        title: {
-          text: "Indices Mensuales - Enero 2015 a " + lastPeriodStr,
-          align: "left",
-        },
-        */
-        xaxis: {
-          categories: this.period
-        },
-        yaxis: {
-          title: {
-            text: "%",
-          },
-          min: parseInt(this.minValue),
-          max: parseInt(this.maxValue) + 10
-        }
-      })
+      let teoricoCobro = 0;
+      let rentaAnual = 0;
+      let inversion = 0;
+      let objHistorico = {};
+      let objProyectado = {};
+      
+      objHistorico = this.detalle_historico.shift();
+      objProyectado = this.detalle_proyectado.shift();
+
+      rentaAnual = parseInt(objProyectado.RentabilidadTeorica);
+      teoricoCobro =  parseInt(objProyectado.HN_TotalACobrar);
+
+      inversion = (teoricoCobro - rentaAnual) + parseInt(objHistorico.CostoHistorico);
+
+      this.series.push(parseInt(inversion)); //Inversion
+      this.series.push(rentaAnual); //Rentabilidad
+      this.series.push(parseInt(objHistorico.CobroHistorico)); //CobroHistorico
+      
+      this.rentabilidadCalculada = 'Rentabilidad: USD ' + String(this.$options.filters.numFormat((rentaAnual + (parseInt(objHistorico.CobroHistorico)) - parseInt(inversion))));
     },
 
     getPeriodName(periodo){
@@ -123,6 +130,12 @@ export default {
 .contenedor {
   height: 360px;
   width: 100%;
+}
+
+.detalle_renta {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
 }
 
 </style>

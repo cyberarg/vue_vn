@@ -30,6 +30,7 @@ import * as reportefacturacion from "./modules/reportefacturacion.js";
 import * as graphindice from "./modules/graphindice.js";
 import * as stockhn from "./modules/stockhn.js";
 import * as parametros from "./modules/parametros.js";
+import * as reporterentacartera from "./modules/reporterentacartera.js";
 
 Vue.use(Vuex);
 
@@ -66,7 +67,8 @@ const store = new Vuex.Store({
     reportefacturacion,
     graphindice,
     stockhn,
-    parametros
+    parametros,
+    reporterentacartera
   },
   state: {
     tableList: [],

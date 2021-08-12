@@ -383,6 +383,7 @@ export default {
         getModeloControl: "modelohn/getModeloControl",
         getHNProyectados: "proyectadohn/getHNProyectados",
         getHNResumenPerformance: "resumenperformance/getHNResumenPerformance",
+        getReporteRentaCartera: "reporterentacartera/getReporteRentaCartera",
     }),
 
     getModelo() {
@@ -414,8 +415,8 @@ export default {
       
         this.detalle_subtitulo = this.codConcesSelected.Nombre + " " + this.codperiodo.Codigo + "S21";
 
-       console.log(this.codConcesSelected);
-       console.log(arrC);
+       //console.log(this.codConcesSelected);
+       //console.log(arrC);
 
         var pars = {
           //periodo: this.codperiodo.Codigo,
@@ -441,6 +442,7 @@ export default {
         this.getModelo(pars);
         this.getHNProyectados(pars);
         this.getHNResumenPerformance(pars);
+        this.getReporteRentaCartera(pars);
 
       }
       return;
