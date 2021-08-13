@@ -18,7 +18,7 @@ export const state = {
   loadingmes: true,
   loadingtextmes:
     "Cargando datos de Nuevos Casos del Mes Actual... Aguarde por favor",
-  loadinguniv: true,
+  loadinguniv: false,
   loadingtextuniv: "Cargando datos de Universo de Compra... Aguarde por favor",
   okResponse: false,
   showTable: false,

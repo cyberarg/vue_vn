@@ -101,6 +101,7 @@ export default {
       let inversion = 0;
       let objHistorico = {};
       let objProyectado = {};
+      let renglonRentabilidad = 0;
       
       objHistorico = this.detalle_historico.shift();
       objProyectado = this.detalle_proyectado.shift();
@@ -111,10 +112,12 @@ export default {
       inversion = (teoricoCobro - rentaAnual) + parseInt(objHistorico.CostoHistorico);
 
       this.series.push(parseInt(inversion)); //Inversion
-      this.series.push(rentaAnual); //Rentabilidad
+      this.series.push(teoricoCobro); //Proy. Cobro
       this.series.push(parseInt(objHistorico.CobroHistorico)); //CobroHistorico
-      
-      this.rentabilidadCalculada = 'Rentabilidad: USD ' + String(this.$options.filters.numFormat((rentaAnual + (parseInt(objHistorico.CobroHistorico)) - parseInt(inversion))));
+
+      renglonRentabilidad = (parseInt(teoricoCobro) - parseInt(inversion)) + parseInt(objHistorico.CobroHistorico);
+    
+      this.rentabilidadCalculada = 'Rentabilidad: USD ' + String(this.$options.filters.numFormat(renglonRentabilidad));
     },
 
     getPeriodName(periodo){

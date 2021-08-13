@@ -9,6 +9,7 @@
       :class="elevationComp"
       :loading="pars.loading"
       :loading-text="pars.loadingtext"
+      no-data-text="No hay datos disponibles"
       :hide-default-footer="ocultarPaginacion"
       :disable-sort="ocultarOredenamiento"
       :hide-default-header="ocultarHeaders"

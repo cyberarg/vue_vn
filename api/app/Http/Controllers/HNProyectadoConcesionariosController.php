@@ -201,11 +201,18 @@ class HNProyectadoConcesionariosController extends Controller
                 switch ($difAnios){
                     case ($difAnios < 0):
                     case 0:
+                        /*
                         $lstCompraARS['A0'] += round($it->MontoCompra);
                         $lstHNARS['A0'] += round($it->HaberNetoSubite);
 
                         $lstCompraUSD['A0'] += round($it->MontoCompraDolares);
                         $lstHNUSD['A0'] += round($it->HaberNetoSubiteUSD);
+                        */
+                        $lstCompraARS['A0'] += $it->MontoCompra;
+                        $lstHNARS['A0'] += $it->HaberNetoSubite;
+
+                        $lstCompraUSD['A0'] += $it->MontoCompraDolares;
+                        $lstHNUSD['A0'] += $it->HaberNetoSubiteUSD;  
                     break;
                     case 1:
                     case 2:
@@ -214,32 +221,44 @@ class HNProyectadoConcesionariosController extends Controller
                     case 5:
                     case 6:
                     case 7:
+                        /*
                         $lstCompraARS['A'.$difAnios] += round($it->MontoCompra);
                         $lstHNARS['A'.$difAnios] += round($it->HaberNetoSubite);
 
                         $lstCompraUSD['A'.$difAnios] += round($it->MontoCompraDolares);
                         $lstHNUSD['A'.$difAnios] += round($it->HaberNetoSubiteUSD);
+                        */
+
+                        $lstCompraARS['A'.$difAnios] += $it->MontoCompra;
+                        $lstHNARS['A'.$difAnios] += $it->HaberNetoSubite;
+
+                        $lstCompraUSD['A'.$difAnios] += $it->MontoCompraDolares;
+                        $lstHNUSD['A'.$difAnios] += $it->HaberNetoSubiteUSD;
                     break;
                 }
             }
         }//END FOREACH
 
         for ($i=0; $i < 8; $i++) { 
-            $lstRentaARS['A'.$i] = round($lstHNARS['A'.$i] - $lstCompraARS['A'.$i]);
+            //$lstRentaARS['A'.$i] = round($lstHNARS['A'.$i] - $lstCompraARS['A'.$i]);
+            $lstRentaARS['A'.$i] = $lstHNARS['A'.$i] - $lstCompraARS['A'.$i];
             $lstRentaARS['Total'] += $lstRentaARS['A'.$i];
 
             if($lstCompraARS['A'.$i] > 0){
-                $lstRentaARS_Porc['A'.$i] = round((($lstHNARS['A'.$i] / $lstCompraARS['A'.$i]) - 1) * 100);  
+                //$lstRentaARS_Porc['A'.$i] = round((($lstHNARS['A'.$i] / $lstCompraARS['A'.$i]) - 1) * 100);  
+                $lstRentaARS_Porc['A'.$i] = (($lstHNARS['A'.$i] / $lstCompraARS['A'.$i]) - 1) * 100;  
                 //$lstRentaARS_Porc['Total'] += $lstRentaARS_Porc['A'.$i]; 
             }
 
             $lstHNARS['Total'] += $lstHNARS['A'.$i];
             $lstCompraARS['Total'] += $lstCompraARS['A'.$i];
 
-            $lstRentaUSD['A'.$i] = round($lstHNUSD['A'.$i] - $lstCompraUSD['A'.$i]);
+           // $lstRentaUSD['A'.$i] = round($lstHNUSD['A'.$i] - $lstCompraUSD['A'.$i]);
+           $lstRentaUSD['A'.$i] = $lstHNUSD['A'.$i] - $lstCompraUSD['A'.$i];
             
             if($lstCompraUSD['A'.$i] > 0){
-                $lstRentaUSD_Porc['A'.$i] = round((($lstHNUSD['A'.$i] / $lstCompraUSD['A'.$i]) - 1) * 100);  
+               // $lstRentaUSD_Porc['A'.$i] = round((($lstHNUSD['A'.$i] / $lstCompraUSD['A'.$i]) - 1) * 100);  
+               $lstRentaUSD_Porc['A'.$i] = (($lstHNUSD['A'.$i] / $lstCompraUSD['A'.$i]) - 1) * 100;  
                // $lstRentaUSD_Porc['Total'] += $lstRentaUSD_Porc['A'.$i]; 
             }
 
@@ -250,13 +269,15 @@ class HNProyectadoConcesionariosController extends Controller
         }
 
         if ($lstCompraARS['Total'] > 0){
-            $lstRentaARS_Porc['Total'] = round((($lstHNARS['Total'] / $lstCompraARS['Total']) - 1) * 100); 
+           // $lstRentaARS_Porc['Total'] = round((($lstHNARS['Total'] / $lstCompraARS['Total']) - 1) * 100); 
+            $lstRentaARS_Porc['Total'] = (($lstHNARS['Total'] / $lstCompraARS['Total']) - 1) * 100; 
         }else{
             $lstRentaARS_Porc['Total'] = 0;
         }
          
         if ($lstCompraUSD['Total'] > 0){
-            $lstRentaUSD_Porc['Total'] = round((($lstHNUSD['Total'] / $lstCompraUSD['Total']) - 1) * 100); 
+            //$lstRentaUSD_Porc['Total'] = round((($lstHNUSD['Total'] / $lstCompraUSD['Total']) - 1) * 100); 
+            $lstRentaUSD_Porc['Total'] = (($lstHNUSD['Total'] / $lstCompraUSD['Total']) - 1) * 100; 
         }else{
             $lstRentaUSD_Porc['Total'] = 0; 
         }
@@ -313,8 +334,10 @@ class HNProyectadoConcesionariosController extends Controller
                 switch ($difAnios){
                     case ($difAnios < 0):
                     case 0:
-                        $lstHNARS['A0'] += round($it->HaberNetoSubite);
-                        $lstHNUSD['A0'] += round($it->HaberNetoSubiteUSD);
+                        //$lstHNARS['A0'] += round($it->HaberNetoSubite);
+                        //$lstHNUSD['A0'] += round($it->HaberNetoSubiteUSD);
+                        $lstHNARS['A0'] += $it->HaberNetoSubite;
+                        $lstHNUSD['A0'] += $it->HaberNetoSubiteUSD;
                         $lstCantCasos['A0'] += 1;
                     break;
                     case 1:
@@ -324,13 +347,16 @@ class HNProyectadoConcesionariosController extends Controller
                     case 5:
                     case 6:
                     case 7:
-                        $lstHNARS['A'.$difAnios] += round($it->HaberNetoSubite);
-                        $lstHNUSD['A'.$difAnios] += round($it->HaberNetoSubiteUSD);
+                        //$lstHNARS['A'.$difAnios] += round($it->HaberNetoSubite);
+                        //$lstHNUSD['A'.$difAnios] += round($it->HaberNetoSubiteUSD);
+                        $lstHNARS['A'.$difAnios] += $it->HaberNetoSubite;
+                        $lstHNUSD['A'.$difAnios] += $it->HaberNetoSubiteUSD;
                         $lstCantCasos['A'.$difAnios] += 1;
                     break;
                 }
             }
         } //END FOREACH
+
 
         $totalCobrar = $lstHNARS['A0'] + $lstHNARS['A1'] + $lstHNARS['A2'] + $lstHNARS['A3'] + $lstHNARS['A4'] + $lstHNARS['A5'] + $lstHNARS['A6'] + $lstHNARS['A7'];
         if ($totalCobrar == 0){
@@ -342,9 +368,13 @@ class HNProyectadoConcesionariosController extends Controller
             $lstHNUSD['Total'] += $lstHNUSD['A'.$i];
             $lstCantCasos['Total'] += $lstCantCasos['A'.$i];
             
-            $lstPorcPart['A'.$i] = round($lstHNARS['A'.$i] / $totalCobrar * 100);
+            //$lstPorcPart['A'.$i] = round($lstHNARS['A'.$i] / $totalCobrar * 100);
+            $lstPorcPart['A'.$i] = $lstHNARS['A'.$i] / $totalCobrar * 100;
 
             $lstPorcPart['Total'] += $lstPorcPart['A'.$i];
+
+            $lstHNARS['A'.$i] = round($lstHNARS['A'.$i]);
+            $lstHNUSD['A'.$i] = round($lstHNUSD['A'.$i]);
         }
 
         //$lstPorcPart['Total'] = "-";
@@ -423,32 +453,38 @@ class HNProyectadoConcesionariosController extends Controller
         } // END FOREACH
 
         for ($i=1; $i < 13; $i++) { 
-            $lstRentaARS['M'.$i] = round($lstHNARS['M'.$i] - $lstCompraARS['M'.$i]);
+            //$lstRentaARS['M'.$i] = round($lstHNARS['M'.$i] - $lstCompraARS['M'.$i]);
+            $lstRentaARS['M'.$i] = $lstHNARS['M'.$i] - $lstCompraARS['M'.$i];
             $lstRentaARS['Total'] += $lstRentaARS['M'.$i];
             if($lstCompraARS['M'.$i] > 0){
-                $lstRentaARS_Porc['M'.$i] = round((($lstHNARS['M'.$i] / $lstCompraARS['M'.$i]) - 1) * 100);  
+                //$lstRentaARS_Porc['M'.$i] = round((($lstHNARS['M'.$i] / $lstCompraARS['M'.$i]) - 1) * 100);  
+                $lstRentaARS_Porc['M'.$i] = (($lstHNARS['M'.$i] / $lstCompraARS['M'.$i]) - 1) * 100;  
                 
             }
             $lstHNARS['Total'] += $lstHNARS['M'.$i];
             $lstCompraARS['Total'] += $lstCompraARS['M'.$i];
 
-            $lstRentaUSD['M'.$i] = round($lstHNUSD['M'.$i] - $lstCompraUSD['M'.$i]);
+           // $lstRentaUSD['M'.$i] = round($lstHNUSD['M'.$i] - $lstCompraUSD['M'.$i]);
+            $lstRentaUSD['M'.$i] = $lstHNUSD['M'.$i] - $lstCompraUSD['M'.$i];
             $lstRentaUSD['Total'] += $lstRentaUSD['M'.$i];
             if($lstCompraUSD['M'.$i] > 0){
-                $lstRentaUSD_Porc['M'.$i] = round((($lstHNUSD['M'.$i] / $lstCompraUSD['M'.$i]) - 1) * 100);
+               // $lstRentaUSD_Porc['M'.$i] = round((($lstHNUSD['M'.$i] / $lstCompraUSD['M'.$i]) - 1) * 100);
+               $lstRentaUSD_Porc['M'.$i] = (($lstHNUSD['M'.$i] / $lstCompraUSD['M'.$i]) - 1) * 100;
             }
             $lstHNUSD['Total'] += $lstHNUSD['M'.$i];
             $lstCompraUSD['Total'] += $lstCompraUSD['M'.$i];
         }
 
         if ($lstCompraARS['Total'] > 0){
-            $lstRentaARS_Porc['Total'] = round((($lstHNARS['Total'] / $lstCompraARS['Total']) - 1) * 100);  
+            //$lstRentaARS_Porc['Total'] = round((($lstHNARS['Total'] / $lstCompraARS['Total']) - 1) * 100);  
+            $lstRentaARS_Porc['Total'] = (($lstHNARS['Total'] / $lstCompraARS['Total']) - 1) * 100;  
         }else{
             $lstRentaARS_Porc['Total'] = 0;
         }
       
         if ($lstCompraUSD['Total'] > 0){
-            $lstRentaUSD_Porc['Total'] = round((($lstHNUSD['Total'] / $lstCompraUSD['Total']) - 1) * 100);
+           // $lstRentaUSD_Porc['Total'] = round((($lstHNUSD['Total'] / $lstCompraUSD['Total']) - 1) * 100);
+           $lstRentaUSD_Porc['Total'] = (($lstHNUSD['Total'] / $lstCompraUSD['Total']) - 1) * 100;
         }else{
             $lstRentaUSD_Porc['Total'] = 0;
         }
@@ -516,8 +552,10 @@ class HNProyectadoConcesionariosController extends Controller
                     $ff = $hoy;
                 }
     
-                $lstCobrarARS['M'.$ff->format("n")] += round($it->HaberNetoSubite);
-                $lstCobrarUSD['M'.$ff->format("n")] += round($it->HaberNetoSubiteUSD);
+                //$lstCobrarARS['M'.$ff->format("n")] += round($it->HaberNetoSubite);
+                //$lstCobrarUSD['M'.$ff->format("n")] += round($it->HaberNetoSubiteUSD);
+                $lstCobrarARS['M'.$ff->format("n")] += $it->HaberNetoSubite;
+                $lstCobrarUSD['M'.$ff->format("n")] += $it->HaberNetoSubiteUSD;
                 $lstCantCasos['M'.$ff->format("n")] += 1;
            
 

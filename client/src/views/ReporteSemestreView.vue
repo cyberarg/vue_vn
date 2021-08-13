@@ -52,7 +52,7 @@
             <v-row class="left_pad">
               <v-col cols="12" md="12">
                   <div class="head_intro">
-                      Titulo Encabezado Introducción
+                      Descripción 
                   </div>
                   <div class="title_intro">
                       Objetivo de la Inversión
