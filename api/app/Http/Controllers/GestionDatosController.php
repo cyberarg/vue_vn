@@ -37,6 +37,8 @@ class GestionDatosController extends Controller
         $objOficial = Oficial::find($oficial);
         $supervisor = $objOficial->Supervisor;
 
+        $utils = new UtilsController;
+
        // switch($marca){
        //     case 2:
                 switch($concesionario){
@@ -89,7 +91,7 @@ class GestionDatosController extends Controller
                 $oCaida = new \stdClass();
 
                 $agregar = false;
-                if(!($this->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido))){
+                if(!($utils->enOtraSociedadOPropioMerge($oDet->Nombres, $oDet->Apellido))){
                     $agregar = true;
                 }
                 if ($agregar){

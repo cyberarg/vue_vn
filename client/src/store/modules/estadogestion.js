@@ -31,6 +31,7 @@ export const mutations = {
   DATOS_SUCCESS(state, datos) {
     console.log(datos["TotalDatos"]);
     state.items = datos["Estados"];
+    console.log(state.items);
     state.datos = datos["Estados"];
     state.datos_totales = datos["TotalDatos"];
     state.empresa = datos.Empresa;

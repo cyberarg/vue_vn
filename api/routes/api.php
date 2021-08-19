@@ -34,6 +34,8 @@ Route::resource('oficiales', 'OficialController');
 Route::resource('supervisores', 'SupervisorController');
 
 Route::post('/estadogestion', 'EstadoGestionController@getDatos');
+//Route::post('/estadogestion', 'EstadoGestionRealController@getDatos');
+
 
 //Route::resource('estadogestion', 'EstadoGestionController');
 

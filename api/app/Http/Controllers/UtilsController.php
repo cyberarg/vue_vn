@@ -149,11 +149,11 @@ class UtilsController extends Controller
 
     public function seEstaTrabajando($fechaUltimaObs){
 
-        if ($fechaUltimaObs === NULL){
+        if ((is_null($fechaUltimaObs))){
             return false;
         }
 
-        $dias = 100; // Lo pongo por arriba del corte de 90 por si viene con un tipo raro de NULL, que no quede luego debajo de 90 en el retorno
+        //$dias = 100; // Lo pongo por arriba del corte de 90 por si viene con un tipo raro de NULL, que no quede luego debajo de 90 en el retorno
         $fecha = strtotime(now());
         $fultObs = strtotime($fechaUltimaObs);    
 
@@ -201,6 +201,7 @@ class UtilsController extends Controller
             (strpos($apeLow,"sauma") !== false) ||   
             (strpos($apeLow,"torino autos") !== false) ||   
             (strpos($apeLow ,"itals") !== false) || 
+            (strpos($apeLow ,"itals sa") !== false) || 
             (strpos($apeLow ,"lombardia autos") !== false) || 
             (strpos($nomLow ,"itals") !== false) || 
             (strpos($nomLow ,"lombardia autos") !== false) || 
@@ -217,6 +218,7 @@ class UtilsController extends Controller
             (strpos($nomLow ,"auto financia") !== false) ||
             (strpos($apeLow,"car group") !== false) ||
             (strpos($apeLow,"car gruop") !== false) ||
+            (strpos($apeLow,"car gruop s.a.") !== false) ||
             (strpos($apeLow,"autonet") !== false) ||
             (strpos($apeLow,"mdplanes") !== false) ||
             (strpos($apeLow, "gestion financiera") !== false) ||
@@ -310,6 +312,10 @@ class UtilsController extends Controller
             (strpos($nomLow ,"autokar") !== false )||
             (strpos($nomLow,"autotag") !== false) ||
 
+            (strpos($apeUpp, 'HAUSWAGEN') !== false) ||
+            (strpos($apeUpp, 'TITO GONZALEZ AUTOMOTORES') !== false) ||
+            (strpos($apeUpp, 'MAYNAR') !== false) ||
+
             (strpos($apeUpp, 'SAUMA WAGEN SAN ISIDRO S.A.') !== false) ||
             (strpos($apeUpp, 'TORINO AUTOS') !== false) 
         ){
@@ -333,6 +339,9 @@ class UtilsController extends Controller
             (strpos($apeLow,"luxcar") !== false) ||
             (strpos($apeLow,"car group") !== false) ||
             (strpos($apeLow,"car gruop") !== false) ||
+            (strpos($apeLow,"car gruop s.a.") !== false) ||
+            (strpos($apeLow ,"itals") !== false) || 
+            (strpos($apeLow ,"itals sa") !== false) || 
             (strpos($apeLow,"autonet") !== false) ||
             (strpos($apeLow,"mdplanes") !== false) ||
             (strpos($apeLow, "gestion financiera") !== false) ||

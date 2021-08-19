@@ -7,6 +7,7 @@ use App\EstadoGestion;
 use Illuminate\Http\Request;
 use DB;
 use \stdClass;
+use DateTime;
 
 class ReporteComprasController extends Controller
 {
@@ -107,14 +108,16 @@ class ReporteComprasController extends Controller
 
                 $fvc2 = strtotime($dato->FechaVtoCuota2);
     
-                if ($dato->FechaVtoCuota2 === NULL){
+                //if ($dato->FechaVtoCuota2 === NULL){
+                if (is_null($dato->FechaVtoCuota2)){
                     $oDet->Avance = 0;
                 }else{
                     $oDet->Avance = $utils->getAvanceAutomaticoFiat($fvc2);
                 }
             }else{
 
-                if($dato->AvanceCalculado != null){
+                //if($dato->AvanceCalculado != null){
+                if (!is_null($dato->AvanceCalculado)){
                     $oDet->Avance = $dato->AvanceCalculado;
                 }else{
                     $oDet->Avance = $dato->Avance;
@@ -242,9 +245,18 @@ class ReporteComprasController extends Controller
         $arrFiat = array_merge($arrFiat, $datos_cg, $datos_ac, $datos_an);
         */
 
+        /*
         $periodoActPrimerDia = '2021-6-1';
         $periodoAct = 20210630; 
+        */
 
+        $hoy = new DateTime('NOW');
+        $hoy = $hoy->format('Y-m-d');
+
+        $periodoActPrimerDia = date('Y-m-01', strtotime($hoy));
+        $periodoAct = date('Y-m-t', strtotime($hoy));
+
+        
         $res_ac = DB::connection('AC')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
         $res_aut = DB::connection('AN')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
         $res_cg = DB::connection('CG')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
@@ -252,6 +264,8 @@ class ReporteComprasController extends Controller
         $datos_gf = DB::connection('GF')->select("CALL hnweb_subitereportecompras_cli('".$periodoAct."');");
 
         $arrFiat = array_merge($res_ac, $res_aut, $res_cg);
+       
+        //$arrFiat = DB::connection('CG')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
 
         $acumMenos45 = 0;
         $acumEntre45y60 = 0;
@@ -300,13 +314,15 @@ class ReporteComprasController extends Controller
 
         foreach ($datos_gf as $dato) {
 
-            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5)  && ($dato->HaberNeto > 14999)){
+            //if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5)  && ($dato->HaberNeto > 14999)){
+            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5)){    
 
                 $oDet = new \stdClass();
 
                 $oDet->Marca = $dato->Marca;
 
-                if($dato->AvanceCalculado != null){
+                //if($dato->AvanceCalculado != null){
+                if (!is_null($dato->AvanceCalculado)){
                     $oDet->Avance = $dato->AvanceCalculado;
                 }else{
                     $oDet->Avance = $dato->Avance;
@@ -361,24 +377,29 @@ class ReporteComprasController extends Controller
 
         }
 
+        $parPMaxFiat = 9000;
         
         $fcav = strtotime($periodoActPrimerDia);
 
         foreach ($arrFiat as $dato) {
 
-            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5) && ($dato->HaberNeto > 14999)){
+            $oDet = new \stdClass();
 
-                $oDet = new \stdClass();
+            $oDet->Marca = $dato->Marca;
+            $fvc2 = strtotime($dato->FechaVtoCuota2);
 
-                $oDet->Marca = $dato->Marca;
-                $fvc2 = strtotime($dato->FechaVtoCuota2);
+            // if ($dato->FechaVtoCuota2 === NULL){
+            if (is_null($dato->FechaVtoCuota2)){
+                $oDet->Avance = 0;
+            }else{
+                $oDet->Avance = $utils->getAvanceAutomaticoAFecha($fcav, $fvc2);
+            }
 
-                if ($dato->FechaVtoCuota2 === NULL){
-                    $oDet->Avance = 0;
-                }else{
-                    $oDet->Avance = $utils->getAvanceAutomaticoAFecha($fcav, $fvc2);
-                }
+            $pmaxCompra = $utils->getPrecioMaximoCompra($oDet->Avance, $dato->HaberNeto);
 
+           // if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5) && ($dato->HaberNeto > 14999)){
+            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5)){
+            
                 if ($oDet->Avance < 84){
 
                     $lstTabla_Cartera_Marcas[$dato->Marca]->CantDatos += 1;
@@ -387,7 +408,8 @@ class ReporteComprasController extends Controller
 
                         $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->Cantidad += 1;
 
-                        if($dato->HaberNeto < 15000){
+                        //if($dato->HaberNeto < 15000){
+                        if($pmaxCompra < $parPMaxFiat){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantHNBajo += 1;
                         }else{
                             if($utils->seEstaTrabajando($dato->FechaUltObs)){
@@ -399,7 +421,8 @@ class ReporteComprasController extends Controller
 
                         $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->Cantidad += 1;
 
-                        if($dato->HaberNeto < 15000){
+                        //if($dato->HaberNeto < 15000){
+                        if($pmaxCompra < $parPMaxFiat){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantHNBajo += 1;
                         }else{
                             if($utils->seEstaTrabajando($dato->FechaUltObs)){
@@ -411,7 +434,8 @@ class ReporteComprasController extends Controller
 
                         $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->Cantidad += 1;
 
-                        if($dato->HaberNeto < 15000){
+                        //if($dato->HaberNeto < 15000){
+                        if($pmaxCompra < $parPMaxFiat){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantHNBajo += 1;
                         }else{
                             if($utils->seEstaTrabajando($dato->FechaUltObs)){
@@ -437,13 +461,18 @@ class ReporteComprasController extends Controller
             $row['Mayor60'] = $tabla->Mayor60;
 
             if ($tabla->Codigo == 3){ // Para Peugeot se contabilizan todos los casos como posibles trabajables porque no se hace el corte por Avance
-                $row['CasosTrabajables'] = $tabla->Menor45->Cantidad + $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
+                //$row['CasosTrabajables'] = $tabla->Menor45->Cantidad + $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
+                $row['CasosTrabajables'] = ($tabla->Menor45->Cantidad - $tabla->Menor45->CantHNBajo) + ($tabla->Entre45y60->Cantidad - $tabla->Entre45y60->CantHNBajo) + ($tabla->Mayor60->Cantidad - $tabla->Mayor60->CantHNBajo);
+                $row['TotalesTrabajados'] = $tabla->Menor45->CantTrabajados + $tabla->Entre45y60->CantTrabajados + $tabla->Mayor60->CantTrabajados;
             }else{
-                $row['CasosTrabajables'] = $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
+                //$row['CasosTrabajables'] = $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
+                $row['CasosTrabajables'] = ($tabla->Entre45y60->Cantidad - $tabla->Entre45y60->CantHNBajo) + ($tabla->Mayor60->Cantidad - $tabla->Mayor60->CantHNBajo);
+                $row['TotalesTrabajados'] = $tabla->Entre45y60->CantTrabajados + $tabla->Mayor60->CantTrabajados;
             }
             
             $row['TotalesHNBajo'] = $tabla->Menor45->CantHNBajo + $tabla->Entre45y60->CantHNBajo + $tabla->Mayor60->CantHNBajo;
-            $row['TotalesTrabajados'] = $tabla->Menor45->CantTrabajados + $tabla->Entre45y60->CantTrabajados + $tabla->Mayor60->CantTrabajados;
+
+           // $row['TotalesTrabajados'] = $tabla->Menor45->CantTrabajados + $tabla->Entre45y60->CantTrabajados + $tabla->Mayor60->CantTrabajados;
 
             array_push($arrAux, $row);
         }
@@ -459,9 +488,15 @@ class ReporteComprasController extends Controller
         $arrFiat = array();
 
         $utils = new UtilsController;
-
+        /*
         $periodoActPrimerDia = '2021-5-1';
         $periodoAct = 20210531; 
+        */
+        $hoy = new DateTime('NOW');
+        $hoy = $hoy->format('Y-m-d');
+
+        $periodoActPrimerDia = date('Y-m-01', strtotime($hoy));
+        $periodoAct = date('Y-m-t', strtotime($hoy));
 
         $res_ac = DB::connection('AC')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
         $res_aut = DB::connection('AN')->select("CALL hnweb_subitereportecompras('".$periodoAct."');");
@@ -503,7 +538,8 @@ class ReporteComprasController extends Controller
 
         foreach ($datos_gf as $dato) {
 
-            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5) && ($dato->HaberNeto > 14999)){
+            //if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5) && ($dato->HaberNeto > 14999)){
+            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5) && ($dato->HaberNeto > 30000)){
 
                 $oDet = new \stdClass();
 
@@ -511,7 +547,7 @@ class ReporteComprasController extends Controller
 
                 $oDet->Marca = $dato->Marca;
 
-                if($dato->AvanceCalculado != null){
+                if(!(is_null($dato->AvanceCalculado))){
                     $oDet->Avance = $dato->AvanceCalculado;
                 }else{
                     $oDet->Avance = $dato->Avance;
@@ -576,21 +612,27 @@ class ReporteComprasController extends Controller
         }
 
         $fcav = strtotime($periodoActPrimerDia);
+        
+        $parPMaxFiat = 9000;
 
         foreach ($arrFiat as $dato) {
 
-            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5) && ($dato->HaberNeto > 14999)){
+            $oDet = new \stdClass();
 
-                $oDet = new \stdClass();
+            $oDet->Marca = $dato->Marca;
+            $fvc2 = strtotime($dato->FechaVtoCuota2);
 
-                $oDet->Marca = $dato->Marca;
-                $fvc2 = strtotime($dato->FechaVtoCuota2);
+            // if ($dato->FechaVtoCuota2 === NULL){
+            if (is_null($dato->FechaVtoCuota2)){
+                $oDet->Avance = 0;
+            }else{
+                $oDet->Avance = $utils->getAvanceAutomaticoAFecha($fcav, $fvc2);
+            }
 
-                if ($dato->FechaVtoCuota2 === NULL){
-                    $oDet->Avance = 0;
-                }else{
-                    $oDet->Avance = $utils->getAvanceAutomaticoAFecha($fcav, $fvc2);
-                }
+            $pmaxCompra = $utils->getPrecioMaximoCompra($oDet->Avance, $dato->HaberNeto);
+
+            if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5) && ($pmaxCompra > $parPMaxFiat)){
+
 
                 if ($oDet->Avance < 84){
 
@@ -598,7 +640,8 @@ class ReporteComprasController extends Controller
 
                     if ($oDet->Avance >= 45 && $oDet->Avance < 60) {
 
-                        if($dato->HaberNeto > 15000){
+                       // if($dato->HaberNeto > 15000){
+                        if($pmaxCompra > $parPMaxFiat){
                             
                             if(!($utils->seEstaTrabajando($dato->FechaUltObs))){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->Cantidad += 1;
@@ -623,7 +666,8 @@ class ReporteComprasController extends Controller
                         }
 
                     }elseif ($oDet->Avance >= 60 && $oDet->Avance < 84) {
-                        if($dato->HaberNeto > 15000){  
+                        //if($dato->HaberNeto > 15000){  
+                        if($pmaxCompra > $parPMaxFiat){
                             if(!($utils->seEstaTrabajando($dato->FechaUltObs))){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->Cantidad += 1;
 
