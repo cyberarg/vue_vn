@@ -38,21 +38,26 @@ class HNResumenPerformanceController extends Controller
         $uC = new UtilsController;
         $db = $uC->getDabaseName($marca, $concesionario);
 
-        switch($marca){
+        if ($marca == 99){
+            $lstRes = DB::connection('GF')->select("CALL hnweb_get_resumen_anual_2(".$anio.")");
+            $lstFlujo = DB::connection('GF')->select("CALL hnweb_get_saldo_caja(".$anio.")");
+        }else{
+            switch ($concesionario){
+                case 8:
+                    $lstRes_CE = DB::connection('GF')->select("CALL hnweb_get_resumen_anual_rb(".$anio.")");
 
-            case 99: //GIAMA
-                $lstRes = DB::connection('GF')->select("CALL hnweb_get_resumen_anual_2(".$anio.")");
-                $lstFlujo = DB::connection('GF')->select("CALL hnweb_get_saldo_caja(".$anio.")");
-            break;
-    
-            default:
+                    $lstFlujo = DB::connection($db)->select("CALL hnweb_get_saldo_caja_ce(".$anio.", ".$concesionario.", NULL)");
+                    $lstFlujo_RB = DB::connection($db)->select("CALL hnweb_get_saldo_caja_ce(".$anio.", ".$concesionario.", 1)");
+                    $lstFlujo_CE = DB::connection($db)->select("CALL hnweb_get_saldo_caja_ce(".$anio.", ".$concesionario.", 0)");
+                break;
+                default:
                 $lstRes_CE = DB::connection('GF')->select("CALL hnweb_get_resumen_anual_ce(".$anio.", ".$concesionario.")");
 
                 $lstFlujo = DB::connection($db)->select("CALL hnweb_get_saldo_caja_ce(".$anio.", ".$concesionario.", NULL)");
                 $lstFlujo_RB = DB::connection($db)->select("CALL hnweb_get_saldo_caja_ce(".$anio.", ".$concesionario.", 1)");
                 $lstFlujo_CE = DB::connection($db)->select("CALL hnweb_get_saldo_caja_ce(".$anio.", ".$concesionario.", 0)");
-            break;
-            
+                break;
+            }
         }
 
         $lstResumen['Grid1'] = $lstRes;
