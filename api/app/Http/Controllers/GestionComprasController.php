@@ -237,6 +237,17 @@ class GestionComprasController extends Controller
 
         if ($esFirmaCliente){
 
+            $result = DB::select("CALL hnweb_set_historial_datos(3, ".$request->ID.
+            ", ".$request->Concesionario.
+            ", NULL, NULL,
+            NULL, NULL,
+            NULL, NULL,
+            NULL, NULL,
+            NULL, NULL,
+            NULL, '".
+            $request->FechaAGuardar."', NULL, NULL);");
+
+            /*
             $hist_id = HistoricoCompra::where('ID_Dato', $dato->ID)->where('Concesionario', $dato->Concesionario)->orderBy('ID', 'desc')->take(1)->get();
         
             if ($hist_id){
@@ -248,6 +259,7 @@ class GestionComprasController extends Controller
 
                 $hist->save();
             }
+            */
         }
 
         $dato->save();

@@ -1075,7 +1075,17 @@ class HaberesNetosController extends Controller
             }else{
                 $hn_calc = DB::connection($db)->select("CALL hnweb_set_variables_hn(".$request->Marca.", ".$request->Concesionario.", ".$request->ID_Dato.", ".$montoCompraConComision.", ".$request->HaberNetoSubite.");");
             }
+
             
+            $result = DB::select("CALL hnweb_set_historial_datos(4, ".$request->ID_Dato.
+            ", ".$request->Concesionario.
+            ", ".$request->Grupo.', '.$request->Orden.
+            ", NULL, NULL, 
+            NULL, NULL, 
+            NULL, NULL, NULL, 
+            NULL, NULL, NULL, 1, ".$empGyO.");");
+            
+            /*
             if ($request->Concesionario == 8){
                 $hist_id = HistoricoCompra::where('ID_Dato', $request->ID_Dato)->where('Grupo', $request->Grupo)->where('Orden', $request->Orden)->orderBy('ID', 'desc')->take(1)->get();
             }else{
@@ -1092,6 +1102,7 @@ class HaberesNetosController extends Controller
 
                 $hist->save();
             }
+            */
 
             $hn = $hn_calc;
         }

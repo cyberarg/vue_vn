@@ -623,12 +623,30 @@ class GestionDatosController extends Controller
             $reqObs->login = 'hnweb';
             $reqObs->Automatica = 1;
             
+            
             $obs->store($reqObs);
         }
 
+        $codOficialUnificado = $util->getCodigoOficialUnificado($request->CodOficial, $request->Concesionario);
+
+        
         //Evaluo si fue una compra o una caida para actualizar el historico de compras
         //de donde sale el Reporte de Caidas
+        $resultHist = array();
         if ($esVendePlan){
+
+            $resultHist = DB::select("CALL hnweb_set_historial_datos(1, ".$request->ID.
+            ", ".$request->Concesionario.
+            ", ".$request->Grupo.
+            ", ".$request->Orden.
+            ", ".$request->CodOficial.
+            ", ".$codOficialUnificado.
+            ", ".$request->Avance.", ".$request->HaberNeto.
+            ", ".$request->CodEstado.", '".$util->formatFechaDB($request->FechaCompra).
+            "', ".$request->PrecioCompra.
+            ", NULL, NULL, NULL, NULL, NULL);");
+
+            /*
             $hist = new HistoricoCompra;
             
             $hist->ID_Dato = $dato->ID;
@@ -637,7 +655,7 @@ class GestionDatosController extends Controller
             $hist->Orden = $dato->Orden;
             
             $hist->CodOficial = $dato->CodOficial;
-            $hist->CodOficialUnificado = $util->getCodigoOficialUnificado($dato->CodOficial, $dato->Concesionario);
+            
 
             $hist->Avance = $dato->Avance;
             $hist->HaberNeto = $dato->HaberNeto;
@@ -646,10 +664,20 @@ class GestionDatosController extends Controller
             $hist->PrecioCompra = $dato->PrecioCompra;
 
             $hist->save();
+            */
+
         }
 
         if ($esVentaCaida){
 
+           $resultHist = DB::select("CALL hnweb_set_historial_datos(2, ".$request->ID.", ".
+           $request->Concesionario.
+           ", NULL, NULL, ".
+           $request->CodOficial.", ".$codOficialUnificado.
+           ", NULL, NULL, NULL, NULL, NULL, ".
+           $request->MotivoCaida.", ".$util->formatFechaDB($request->FechaVentaCaida).
+           ", NULL, NULL, NULL);");
+            /*
             $hist_id = HistoricoCompra::where('ID_Dato', $dato->ID)->where('Concesionario', $dato->Concesionario)->orderBy('ID', 'desc')->take(1)->get();
         
             if ($hist_id){
@@ -662,6 +690,7 @@ class GestionDatosController extends Controller
 
                 $hist->save();
             }
+            */
         }
 
         return $dato;

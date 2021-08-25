@@ -70,11 +70,14 @@ class UtilsController extends Controller
     
         switch($concesionario){
             case 4: // AutoCervo
-                return DB::select("SELECT Codigo FROM subite_oficiales WHERE Activo = 1 AND CodigoAutoCervo = ".$codOficial);
+                $codOficialUnificado = DB::select("SELECT Codigo FROM subite_oficiales WHERE Activo = 1 AND CodigoAutoCervo = ".$codOficial);
+                return $codOficialUnificado[0]->Codigo;
             case 5: //AutoNet
-                return DB::select("SELECT Codigo FROM subite_oficiales WHERE Activo = 1 AND CodigoAutoNet = ".$codOficial);
+                $codOficialUnificado = DB::select("SELECT Codigo FROM subite_oficiales WHERE Activo = 1 AND CodigoAutoNet = ".$codOficial);
+                return $codOficialUnificado[0]->Codigo; 
             case 6: //CarGroup
-                return DB::select("SELECT Codigo FROM subite_oficiales WHERE Activo = 1 AND CodigoCarGroup = ".$codOficial);
+                $codOficialUnificado =  DB::select("SELECT Codigo FROM subite_oficiales WHERE Activo = 1 AND CodigoCarGroup = ".$codOficial);
+                return $codOficialUnificado[0]->Codigo;
             default: //Para el resto de los CE, el codigo de oficial unificado es el que traen, porque sale de la DB pa7_gf
                 return $codOficial;
         }
@@ -123,6 +126,17 @@ class UtilsController extends Controller
                 return '';
 
         }
+    }
+
+    public function formatFechaDB($fecha){
+        
+        if ($fecha === NULL){
+            return '';
+        }
+        
+        $date = str_replace('/', '-', $fecha);
+        return date('Y-m-d', strtotime($date));
+
     }
 
     public function formatFecha($fecha){
