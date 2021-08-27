@@ -35,7 +35,8 @@ class ReporteComisionesController extends Controller
         //$periodoAnio = 2020;
 
         //$queryStrReport = "CALL hnweb_reportecomisiones(".$periodoMes.", ".$periodoAnio.");";
-        $queryStrReport = "CALL hnweb_reportecomisiones_trimestres_v3(".$periodoMes.", ".$periodoAnio.");";
+        //$queryStrReport = "CALL hnweb_reportecomisiones_trimestres_v3(".$periodoMes.", ".$periodoAnio.");";
+        $queryStrReport = "CALL hnweb_reportecomisiones_trimestres_v4(".$periodoMes.", ".$periodoAnio.");";
         
 
         $db = "GF";

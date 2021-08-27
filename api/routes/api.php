@@ -134,6 +134,7 @@ Route::post('/reportecarteradetalledashboard', 'ReporteComprasController@getRepo
 
 Route::post('/reportecaidas', 'ReporteCaidasController@getReporte');
 Route::post('/reportecomisiones', 'ReporteComisionesController@getReporte');
+
 Route::post('/reportefacturacion', 'ReporteFacturacionController@getReporte');
 Route::post('/detallefacturacion', 'ReporteFacturacionController@getDetalle');
 Route::post('/detalleporconces', 'ReporteFacturacionController@getDetalleConcesionario');
