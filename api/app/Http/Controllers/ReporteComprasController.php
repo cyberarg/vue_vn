@@ -27,7 +27,7 @@ class ReporteComprasController extends Controller
         $periodoAnio = substr($periodo, 0, 4);
 
         //$queryStrReport = "CALL hnweb_reportecompras(".$periodoMes.", ".$periodoAnio.");";
-        $queryStrReport = "CALL hnweb_reportecompras_objetivos(".$periodoMes.", ".$periodoAnio.");"; 
+        $queryStrReport = "CALL hnweb_reportecompras_objetivos_v3(".$periodoMes.", ".$periodoAnio.");"; 
 
         $db = "GF";
         
