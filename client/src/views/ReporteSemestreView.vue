@@ -41,8 +41,7 @@
           <v-icon left>mdi-file-pdf-outline</v-icon>PDF
         </v-btn>
       </v-card-title>
-      <div class="card-body" id="pdfDom">
-
+      <div class="card-body" id="pdfDom" >
         <div class="logo">
             <img src="../assets/images/logo-giama.png" width="100" height="130">
         </div>
@@ -220,13 +219,13 @@
             <ChartRentabilidadCarteraComponent></ChartRentabilidadCarteraComponent>
           </v-col>
         </v-row>
-
+        
         <div class="padded second_page">
           <div class="footer_gray">
             Reporte Performance HN - {{this.detalle_subtitulo}}
           </div>
         </div>
-
+        <div class="page-break"></div>
         <div class="padded second_page">
           <div class="head_intro">
             Utilidad de Gestión
@@ -486,8 +485,8 @@ export default {
 
 .logo {
   text-align: end;
-  padding-right: 35px;
-  padding-top: 10px;
+  padding-right: 2%;
+  padding-top: 1%;
   height: 130px;
 }
 
@@ -508,12 +507,17 @@ export default {
   padding-top: 20px;
 }
 
+.page-break {
+  display: block;
+  page-break-before: always;
+}
+
 .article {
   font-size: 12px;
-  width: 108em;
+  width: 100%;
   height: auto;
   columns: 2;
-  column-gap: 25px;
+  column-gap: 2%;
   column-fill: balance;
 }
 

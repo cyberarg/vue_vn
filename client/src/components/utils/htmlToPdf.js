@@ -13,6 +13,7 @@ export default {
         let contentWidth = canvas.width;
         let contentHeight = canvas.height;
         let pageHeight = (contentWidth / 592.28) * 841.89;
+        //let pageHeight = 408;
         let leftHeight = contentHeight;
         let position = 0;
         let imgWidth = 595.28;
