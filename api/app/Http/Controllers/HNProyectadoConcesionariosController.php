@@ -73,7 +73,7 @@ class HNProyectadoConcesionariosController extends Controller
 
             $lstHN_RB = DB::connection('RB')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' ");
 
-            $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND ComproGiama = 1");
+            $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 1 OR ContabilizarParaRB = 1)");
 
             $lstHN_AN = DB::connection('AN')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' ");
             $lstHN_CG = DB::connection('CG')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' ");
@@ -126,7 +126,7 @@ class HNProyectadoConcesionariosController extends Controller
 
             $lstHN_RB = DB::connection('RB')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' ");
 
-            $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND ComproGiama = 1");
+            $lstHN_GF = DB::connection('GF')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 1 OR ContabilizarParaRB = 1)");
 
             $lstHN_AN = DB::connection('AN')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' ");
             $lstHN_CG = DB::connection('CG')->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' ");
@@ -186,6 +186,7 @@ class HNProyectadoConcesionariosController extends Controller
 
         $lstRentaUSD_Porc = array();
         $lstRentaUSD_Porc = array_fill_keys($keys, 0);
+
 
         foreach ($listItems as $it) {
             if (!is_null($it->FechaCuota84)){
@@ -434,14 +435,20 @@ class HNProyectadoConcesionariosController extends Controller
                 $fecha = date('Y-m-d', strtotime("+1 months", strtotime($it->FechaCuota84)));
           
                 $ff = DateTime::createFromFormat("Y-m-d", $fecha);
+                $ffAnio = $ff->format("Y");
+                $ffMes =  $ff->format("m");
                 
                 $hoy = new DateTime('NOW');
                 $yearHoy = $hoy->format("Y");
                 $monthHoy = $hoy->format("m");
 
-               
-                if ($ff->format("Y") != $anio ||  ($anio == $yearHoy && $ff->format("m") < $monthHoy)){
+
+                if ($ffAnio > $anio){
                     continue;
+                }
+                
+                if (($ffAnio < $anio) || ($anio == $yearHoy && $ffMes < $monthHoy)){
+                    $ff = $hoy;
                 }
 
                 $lstCompraARS['M'.$ff->format("n")] += $it->MontoCompra;
