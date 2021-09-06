@@ -325,13 +325,13 @@ class HNResumenCobradosController extends Controller
                 switch ($ff->format("Y")){
 
                     case $anio:
-                        $lstCobradosARS_Anio['M'.$ff->format("n")] += round($it->MontoCobroReal);
-                        $lstCobradosUSD_Anio['M'.$ff->format("n")] += round($it->MontoCobroDolares); 
+                        $lstCobradosARS_Anio['M'.$ff->format("n")] += $it->MontoCobroReal;
+                        $lstCobradosUSD_Anio['M'.$ff->format("n")] += $it->MontoCobroDolares; 
                         
-                        $lstCompradosARS_Anio['M'.$ff->format("n")] += round($it->MontoCompra);
-                        $lstCompradosUSD_Anio['M'.$ff->format("n")] += round($it->MontoCompraDolares);
+                        $lstCompradosARS_Anio['M'.$ff->format("n")] += $it->MontoCompra;
+                        $lstCompradosUSD_Anio['M'.$ff->format("n")] += $it->MontoCompraDolares;
 
-                        $lstHNCompradosARS_Anio['M'.$ff->format("n")] += round($it->HaberNetoSubite);
+                        $lstHNCompradosARS_Anio['M'.$ff->format("n")] += $it->HaberNetoSubite;
                         
                         $SumHNARS_Anio += $it->HaberNetoSubite;
 
@@ -392,11 +392,11 @@ class HNResumenCobradosController extends Controller
                     break;
 
                     case $anio1:
-                        $lstCobradosARS_Anio1['M'.$ff->format("n")] += round($it->MontoCobroReal);
-                        $lstCobradosUSD_Anio1['M'.$ff->format("n")] += round($it->MontoCobroDolares); 
+                        $lstCobradosARS_Anio1['M'.$ff->format("n")] += $it->MontoCobroReal;
+                        $lstCobradosUSD_Anio1['M'.$ff->format("n")] += $it->MontoCobroDolares; 
                         
-                        $lstCompradosARS_Anio1['M'.$ff->format("n")] += round($it->MontoCompra);
-                        $lstCompradosUSD_Anio1['M'.$ff->format("n")] += round($it->MontoCompraDolares); 
+                        $lstCompradosARS_Anio1['M'.$ff->format("n")] += $it->MontoCompra;
+                        $lstCompradosUSD_Anio1['M'.$ff->format("n")] += $it->MontoCompraDolares; 
                        
                         $lstCobradosCantCasos_Anio1['M'.$ff->format("n")] += 1;
 
@@ -414,11 +414,11 @@ class HNResumenCobradosController extends Controller
                     break;
 
                     case $anio0:
-                        $lstCobradosARS_Anio0['M'.$ff->format("n")] += round($it->MontoCobroReal);
-                        $lstCobradosUSD_Anio0['M'.$ff->format("n")] += round($it->MontoCobroDolares); 
+                        $lstCobradosARS_Anio0['M'.$ff->format("n")] += $it->MontoCobroReal;
+                        $lstCobradosUSD_Anio0['M'.$ff->format("n")] += $it->MontoCobroDolares; 
                         
-                        $lstCompradosARS_Anio0['M'.$ff->format("n")] += round($it->MontoCompra);
-                        $lstCompradosUSD_Anio0['M'.$ff->format("n")] += round($it->MontoCompraDolares); 
+                        $lstCompradosARS_Anio0['M'.$ff->format("n")] += $it->MontoCompra;
+                        $lstCompradosUSD_Anio0['M'.$ff->format("n")] += $it->MontoCompraDolares; 
                        
                         $lstCobradosCantCasos_Anio0['M'.$ff->format("n")] += 1;
                         

@@ -422,21 +422,24 @@ class HNResumenCompradosController extends Controller
 
                         $itemHN_Mes = new \stdClass();
 
-                        $lstCompradosARS_Anio['M'.$ff->format("n")] += $it->MontoCompra;
-                        $lstCompradosUSD_Anio['M'.$ff->format("n")] += $it->MontoCompraDolares; 
+                        $lstCompradosARS_Anio['M'.$ff->format("n")] += round($it->MontoCompra);
+                        $lstCompradosUSD_Anio['M'.$ff->format("n")] += round($it->MontoCompraDolares); 
 
                         if (!is_null($it->MontoCobroReal)){
-                            $lstCobradosARS_Anio['M'.$ff->format("n")] += $it->MontoCobroReal;
-                            $lstCobradosUSD_Anio['M'.$ff->format("n")] += $it->MontoCobroDolares; 
+                            $lstCobradosARS_Anio['M'.$ff->format("n")] += round($it->MontoCobroReal);
+                            $lstCobradosUSD_Anio['M'.$ff->format("n")] += round($it->MontoCobroRealDolares); 
                         }else{
-                            $lstCobradosARS_Anio['M'.$ff->format("n")] += $it->HaberNetoSubite;
-                            $lstCobradosUSD_Anio['M'.$ff->format("n")] += $it->HaberNetoSubiteUSD; 
+                            $lstCobradosARS_Anio['M'.$ff->format("n")] += round($it->HaberNetoSubite);
+                            $lstCobradosUSD_Anio['M'.$ff->format("n")] += round($it->HaberNetoSubiteUSD); 
                         }
                         
 
-                        $lstCobradosUSD_Spot_Anio['M'.$ff->format("n")] += $it->HaberNetoOriginalUSD;     
+                        $lstCobradosUSD_Spot_Anio['M'.$ff->format("n")] += round($it->HaberNetoOriginalUSD);     
                         
-     
+                        $lstCobradosARS_Anio['M'.$ff->format("n")] += round($it->MontoCobroReal);
+                        $lstCobradosUSD_Anio['M'.$ff->format("n")] += round($it->MontoCobroDolares); 
+                        
+                        
                         $SumHNARS_Anio += $it->HaberNetoSubite;
                         $lstHNCompradosARS_Anio['M'.$ff->format("n")] += $it->HaberNetoSubite;
                         $lstCompradosCantCasos_Anio['M'.$ff->format("n")] += 1;
@@ -448,9 +451,6 @@ class HNResumenCompradosController extends Controller
 
                         $itemHN_Mes->HaberNetoSubite = $it->HaberNetoSubite;
                         $itemHN_Mes->HaberNetoSubiteUSD = $it->HaberNetoSubiteUSD;
-
-                        $itemHN_Mes->MontoCobroReal = $it->MontoCobroReal;
-                        $itemHN_Mes->MontoCobroDolares = $it->MontoCobroDolares;
 
                         $itemHN_Mes->HaberNetoOriginalUSD = $it->HaberNetoOriginalUSD;
                         $itemHN_Mes->TIR = $it->TIRActual;
@@ -506,56 +506,55 @@ class HNResumenCompradosController extends Controller
                     case $anio1: //Anio - 1
                         $itemHN = new \stdClass();
 
-                        $lstCompradosARS_Anio1['M'.$ff->format("n")] += $it->MontoCompra;
-                        $lstCompradosUSD_Anio1['M'.$ff->format("n")] += $it->MontoCompraDolares; 
+                        $lstCompradosARS_Anio1['M'.$ff->format("n")] += round($it->MontoCompra);
+                        $lstCompradosUSD_Anio1['M'.$ff->format("n")] += round($it->MontoCompraDolares); 
     
                         /* Cambio 6/9/2021
                         $lstCobradosARS_Anio1['M'.$ff->format("n")] += round($it->HaberNetoSubite);
                         $lstCobradosUSD_Anio1['M'.$ff->format("n")] += round($it->HaberNetoSubiteUSD); 
                         */
-                         /* Cambio 6/9/2021 */
-                        if (!is_null($it->MontoCobroReal)){
-                            $lstCobradosARS_Anio1['M'.$ff->format("n")] += $it->MontoCobroReal;
-                            $lstCobradosUSD_Anio1['M'.$ff->format("n")] += $it->MontoCobroDolares; 
-                        }else{
-                            $lstCobradosARS_Anio1['M'.$ff->format("n")] += $it->HaberNetoSubite;
-                            $lstCobradosUSD_Anio1['M'.$ff->format("n")] += $it->HaberNetoSubiteUSD; 
-                        }
-                        
 
-                        $lstCobradosUSD_Spot_Anio1['M'.$ff->format("n")] += $it->HaberNetoOriginalUSD; 
+                        $lstCobradosUSD_Spot_Anio1['M'.$ff->format("n")] += round($it->HaberNetoOriginalUSD); 
                        
                         $lstCompradosCantCasos_Anio1['M'.$ff->format("n")] += 1;
-             
+
+                         /* Cambio 6/9/2021 */
+                        if (!is_null($it->MontoCobroReal)){
+                            $SumHNARS_Anio1 += $it->MontoCobroReal;
+                            $lstCobradosARS_Anio1['M'.$ff->format("n")] += round($it->MontoCobroReal);
+                            $lstCobradosUSD_Anio1['M'.$ff->format("n")] += round($it->MontoCobroDolares); 
+
+                            $itemHN->HaberNetoSubite = $it->MontoCobroReal;
+                            $itemHN->HaberNetoSubiteUSD = $it->MontoCobroDolares;
+                        }else{
+                            $SumHNARS_Anio1 += $it->HaberNetoSubite;
+                            $lstCobradosARS_Anio1['M'.$ff->format("n")] += round($it->HaberNetoSubite);
+                            $lstCobradosUSD_Anio1['M'.$ff->format("n")] += round($it->HaberNetoSubiteUSD); 
+
+                            $itemHN->HaberNetoSubite = $it->HaberNetoSubite;
+                            $itemHN->HaberNetoSubiteUSD = $it->HaberNetoSubiteUSD;
+                        }
+                        /* Cambio 6/9/2021 
                         $SumHNARS_Anio1 += $it->HaberNetoSubite;
+                        */
 
                        
                         $itemHN->Duration = $it->DurationActual;
                         $itemHN->DurationCompra = $it->DurationCompra;
-                        $itemHN->HaberNetoSubite = $it->HaberNetoSubite;
-                        $itemHN->HaberNetoSubiteUSD = $it->HaberNetoSubiteUSD;
 
-                        $itemHN->MontoCobroReal = $it->MontoCobroReal;
-                        $itemHN->MontoCobroDolares = $it->MontoCobroDolares;
-
+                       
                         $itemHN->DurationPonderada = 0;
                 
                         array_push($itemsAnio1, $itemHN);
                     break;
                     case $anio0: //Anio - 2
-                        $lstCompradosARS_Anio0['M'.$ff->format("n")] += $it->MontoCompra;
-                        $lstCompradosUSD_Anio0['M'.$ff->format("n")] += $it->MontoCompraDolares; 
+                        $lstCompradosARS_Anio0['M'.$ff->format("n")] += round($it->MontoCompra);
+                        $lstCompradosUSD_Anio0['M'.$ff->format("n")] += round($it->MontoCompraDolares); 
     
-                        if (!is_null($it->MontoCobroReal)){
-                            $lstCobradosARS_Anio0['M'.$ff->format("n")] += $it->MontoCobroReal;
-                            $lstCobradosUSD_Anio0['M'.$ff->format("n")] += $it->MontoCobroDolares; 
-                        }else{
-                            $lstCobradosARS_Anio0['M'.$ff->format("n")] += $it->HaberNetoSubite;
-                            $lstCobradosUSD_Anio0['M'.$ff->format("n")] += $it->HaberNetoSubiteUSD; 
-                        }
-                        
+                        $lstCobradosARS_Anio0['M'.$ff->format("n")] += round($it->HaberNetoSubite);
+                        $lstCobradosUSD_Anio0['M'.$ff->format("n")] += round($it->HaberNetoSubiteUSD); 
 
-                        $lstCobradosUSD_Spot_Anio0['M'.$ff->format("n")] += $it->HaberNetoOriginalUSD; 
+                        $lstCobradosUSD_Spot_Anio0['M'.$ff->format("n")] += round($it->HaberNetoOriginalUSD); 
                        
                         $lstCompradosCantCasos_Anio0['M'.$ff->format("n")] += 1;
                         $SumHNARS_Anio0 += $it->HaberNetoSubite;

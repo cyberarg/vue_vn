@@ -303,7 +303,10 @@ class UtilsController extends Controller
             (strpos($apeLow,"biara srl") !== false) ||   
             (strpos($apeLow,"gras automotores") !== false) ||   
             (strpos($apeLow,"guido guidi") !== false) ||   
-            (strpos($apeLow,"guillermo dietrich") !== false) ||   
+            (strpos($apeLow,"guillermo dietrich") !== false) ||  
+            (strpos($apeLow,"hauswagen") !== false) ||  
+            (strpos($apeLow,"maynar") !== false) ||  
+            (strpos($apeLow,"tito gonzalez") !== false) ||  
             (strpos($apeLow,"sauma") !== false) ||   
             (strpos($apeLow,"plan oportunidad") !== false) ||   
             (strpos($apeLow,"plan reenganche") !== false) ||   
