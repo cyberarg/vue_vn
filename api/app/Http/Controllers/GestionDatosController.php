@@ -675,8 +675,8 @@ class GestionDatosController extends Controller
            ", NULL, NULL, ".
            $request->CodOficial.", ".$codOficialUnificado.
            ", NULL, NULL, NULL, NULL, NULL, ".
-           $request->MotivoCaida.", ".$util->formatFechaDB($request->FechaVentaCaida).
-           ", NULL, NULL, NULL);");
+           $request->MotivoCaida.", '".$request->FechaCaida.
+           "', NULL, NULL, NULL);");
             /*
             $hist_id = HistoricoCompra::where('ID_Dato', $dato->ID)->where('Concesionario', $dato->Concesionario)->orderBy('ID', 'desc')->take(1)->get();
         
