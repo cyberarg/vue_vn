@@ -239,6 +239,9 @@ export default {
     setValor(tipo, fila, valor) {
       var lastChar = tipo.slice(tipo.length - 2);
 
+      if (fila == 15){ //Rennglon enn blancos
+        return "";
+      }
       if (valor == 0) {
         return "-";
       }
@@ -251,6 +254,7 @@ export default {
         case 2:
         case 7:
         case 11:
+        case 12:
           return "USD " + this.$options.filters.numFormat(valor, "0,0");
           break;
         case 3:
@@ -262,8 +266,8 @@ export default {
         case 6:
         case 9:
         case 10:
-        case 12:
         case 13:
+        case 14:
           return this.$options.filters.numFormat(valor, "0,0") + "%";
           break;
         case 8:

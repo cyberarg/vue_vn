@@ -327,6 +327,7 @@ export default {
         { Codigo: 10, Nombre: "Alizze", Marca: 3 },
         { Codigo: 12, Nombre: "Peugeot Web", Marca: 3 },
         { Codigo: 13, Nombre: "Fiat Web", Marca: 2 },
+        { Codigo: 15, Nombre: "Volkswagen Web", Marca: 5 },
       ],
       listTitularesCompra: [
         { Codigo: 0, Nombre: "Concesionario", ComproGiama: 0 },

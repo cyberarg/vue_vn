@@ -349,6 +349,9 @@ class HNResumenCompradosController extends Controller
         $lstRentUnitariaUSD = array();
         $lstRentUnitariaUSD = array_fill_keys($keys, 0);
 
+        $lstTenenciaUSD = array();
+        $lstTenenciaUSD = array_fill_keys($keys, 0);
+
         $lstCompradosRentUSDPorc_Anio = array();
         $lstCompradosRentUSDPorc_Anio = array_fill_keys($keys, 0);
 
@@ -382,6 +385,9 @@ class HNResumenCompradosController extends Controller
 
         $lstPonderaciones_TIR_MesesAnio = array();
         $lstPonderaciones_TIR_MesesAnio = array_fill_keys($keys, 0);
+
+        $lst_Blank = array();
+        $lst_Blank = array_fill_keys($keys, '');
 
         $lstPonderaciones_TIRSpot_MesesAnio = array();
         $lstPonderaciones_TIRSpot_MesesAnio = array_fill_keys($keys, 0);
@@ -590,6 +596,7 @@ class HNResumenCompradosController extends Controller
 
             $lstCompradosRentUSD_Spot_Anio['M'.$i] =  $lstCobradosUSD_Spot_Anio['M'.$i] - $lstCompradosUSD_Anio['M'.$i];
 
+            $lstTenenciaUSD['M'.$i] = $lstCompradosRentUSD_Anio['M'.$i] - $lstCompradosRentUSD_Spot_Anio['M'.$i];
 
             if ($lstCompradosCantCasos_Anio['M'.$i]){
                 $lstRentUnitariaUSD['M'.$i] = $lstCompradosRentUSD_Anio['M'.$i] / $lstCompradosCantCasos_Anio['M'.$i];
@@ -631,7 +638,7 @@ class HNResumenCompradosController extends Controller
             $lstCompradosRentARS_Anio['Total'] += $lstCompradosRentARS_Anio['M'.$i];
             $lstCompradosRentUSD_Anio['Total'] += $lstCompradosRentUSD_Anio['M'.$i];
 
-
+            $lstTenenciaUSD['Total'] += $lstTenenciaUSD['M'.$i];
 
             //$lstCompradosRentUSD_Anio['Total'] += $lstCompradosRentUSD_Anio['M'.$i];
             //$lstCompradosRentUSD_Anio['Total'] += $lstCompradosRentUSD_Anio['M'.$i];
@@ -900,14 +907,16 @@ class HNResumenCompradosController extends Controller
         $lstPonderacionesMesesAnio['Total'] =  $lstPonderacionesCompra['A2'];
 
         if ($lstCompradosARS_Anio['Total'] > 0){
-            //$lstCompradosRentARSPorc_Anio['Total'] = round((($lstCobradosARS_Anio['Total'] /  $lstCompradosARS_Anio['Total']) - 1) * 100);
-            $lstCompradosRentARSPorc_Anio['Total'] = $lstCobradosARS_Anio['Total'] / $lstCompradosARS_Anio['Total'];
+           $lstCompradosRentARSPorc_Anio['Total'] = round((($lstCobradosARS_Anio['Total'] /  $lstCompradosARS_Anio['Total']) - 1) * 100);
+
+
+            //$lstCompradosRentARSPorc_Anio['Total'] = $lstCobradosARS_Anio['Total'] / $lstCompradosARS_Anio['Total'];
         }else{
             $lstCompradosRentARSPorc_Anio['Total'] = 0;
         }
         if ($lstCompradosUSD_Anio['Total'] > 0){
-            $lstCompradosRentUSDPorc_Anio['Total'] = round((($lstCobradosUSD_Anio['Total'] /  $lstCompradosUSD_Anio['Total']) - 1) * 100);
 
+            $lstCompradosRentUSDPorc_Anio['Total'] = ($lstCompradosRentUSD_Anio['Total'] /  $lstCompradosUSD_Anio['Total']) * 100;
             $lstCompradosRentUSDPorc_Spot_Anio['Total'] = round((($lstCobradosUSD_Spot_Anio['Total'] /  $lstCompradosUSD_Anio['Total']) - 1) * 100);
 
             if ($lstPonderacionesMesesAnio['Total'] > 0){
@@ -1054,6 +1063,11 @@ class HNResumenCompradosController extends Controller
         $arrDur['Valores'] = $lstPonderacionesMesesAnio;
         array_push($listMeses, $arrDur);
 
+        $arrBlank['Tipo'] = ''; //renglon blanco
+        $arrBlank['Fila'] = 15;
+        $arrBlank['Valores'] = $lst_Blank;
+        array_push($listMeses, $arrBlank);
+        
         $arrRentARS['Tipo'] = 'Rent. $';
         $arrRentARS['Fila'] = 5;
         $arrRentARS['Valores'] = $lstCompradosRentARS_Anio;
@@ -1063,6 +1077,17 @@ class HNResumenCompradosController extends Controller
         $arrRentARS_Porc['Fila'] = 6;
         $arrRentARS_Porc['Valores'] = $lstCompradosRentARSPorc_Anio;
         array_push($listMeses, $arrRentARS_Porc);
+
+        // $arrRentUSD['Tipo'] = 'Rent. USD Spot';
+        $arrRentUSD['Tipo'] = 'Utilidad de Gestión';
+        $arrRentUSD['Fila'] = 11;
+        $arrRentUSD['Valores'] = $lstCompradosRentUSD_Spot_Anio;
+        array_push($listMeses, $arrRentUSD);
+
+        $arrTenenciaUSD['Tipo'] = 'Tenencia';
+        $arrTenenciaUSD['Fila'] = 12;
+        $arrTenenciaUSD['Valores'] = $lstTenenciaUSD;
+        array_push($listMeses, $arrTenenciaUSD);
 
         $arrRentUSD['Tipo'] = 'Rent. USD';
         $arrRentUSD['Fila'] = 7;
@@ -1079,24 +1104,25 @@ class HNResumenCompradosController extends Controller
         $arrRentUSD_Porc['Valores'] = $lstCompradosRentUSDPorc_Anio;
         array_push($listMeses, $arrRentUSD_Porc);
 
+
         $arrRentUSD_Porc['Tipo'] = 'TIR';
         $arrRentUSD_Porc['Fila'] = 10;
         $arrRentUSD_Porc['Valores'] = $lstPonderaciones_TIR_MesesAnio;
         array_push($listMeses, $arrRentUSD_Porc);
 
-
-        $arrRentUSD['Tipo'] = 'Rent. USD Spot';
-        $arrRentUSD['Fila'] = 11;
-        $arrRentUSD['Valores'] = $lstCompradosRentUSD_Spot_Anio;
-        array_push($listMeses, $arrRentUSD);
+        $arrBlank['Tipo'] = ''; //renglon blanco
+        $arrBlank['Fila'] = 15;
+        $arrBlank['Valores'] = $lst_Blank;
+        array_push($listMeses, $arrBlank);
+      
 
         $arrRentUSD_Porc['Tipo'] = 'Rent. USD Spot (%)';
-        $arrRentUSD_Porc['Fila'] = 12;
+        $arrRentUSD_Porc['Fila'] = 13;
         $arrRentUSD_Porc['Valores'] = $lstCompradosRentUSDPorc_Spot_Anio;
         array_push($listMeses, $arrRentUSD_Porc);
 
         $arrRentUSD_Porc['Tipo'] = 'TIR Spot';
-        $arrRentUSD_Porc['Fila'] = 13;
+        $arrRentUSD_Porc['Fila'] = 14;
         $arrRentUSD_Porc['Valores'] = $lstPonderaciones_TIRSpot_MesesAnio; 
         array_push($listMeses, $arrRentUSD_Porc);
 
