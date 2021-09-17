@@ -154,7 +154,7 @@
                       color="success"
                       outlined
                       text
-                      @click="exportExcel(datos)"
+                      @click="exportExcel(datosHN_Vigentes)"
                     >
                       <v-icon left>mdi-file-excel-outline</v-icon>Excel
                     </v-btn>
@@ -1091,6 +1091,7 @@ export default {
     },
 
     exportExcel(items) {
+      console.log(items);
       let data = XLSX.utils.json_to_sheet(items);
 
       //datosHNCobrados

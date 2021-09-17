@@ -314,6 +314,8 @@ class HaberesNetosController extends Controller
             $oHN->Operacion = $oOp;
             $oHN->Id = $hn->Id;
             $oHN->ID_Dato = $hn->ID_Dato;
+            $oHN->Grupo = $oOp->Grupo;
+            $oHN->Orden = $oOp->Orden;
             $oHN->Rescindido = $hn->Rescindido;
             $oHN->Titular = $hn->Titular;
             $oHN->TipoCompra = $hn->TipoCompra;
@@ -590,6 +592,8 @@ class HaberesNetosController extends Controller
             $oHN->Operacion = $oOp;
             $oHN->Id = $hn->Id;
             $oHN->ID_Dato = $hn->ID_Dato;
+            $oHN->Grupo = $oOp->Grupo;
+            $oHN->Orden = $oOp->Orden;
             $oHN->Rescindido = $hn->Rescindido;
             $oHN->Titular = $hn->Titular;
             $oHN->TipoCompra = $hn->TipoCompra;

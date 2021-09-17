@@ -31,11 +31,12 @@ class ObservacionGestionCompra extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     
+     /*
     public function dato()
     {
         return $this->belongsTo('App\SubiteDato', 'ID_Datos', 'ID');
     }
-
+    */
     public $timestamps = false;
     
 }
