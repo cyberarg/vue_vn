@@ -26,7 +26,15 @@ class GestionDatosWebController extends Controller
 
     public function getDatos(Request $request)
     {
-        return DatoWeb::whereNull('PasarDato')->get();
+        return DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
+        DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
+        Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
+        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, 
+        (SELECT DATE_FORMAT(Fecha,'%Y/%m/%d')
+        FROM datos_web_hn_obs 
+        WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
+        FROM datos_web_hn DW");
+        // return DatoWeb::whereNull('PasarDato')->get();
     }
 
 

@@ -578,7 +578,7 @@ class GestionDatosController extends Controller
                         $dato->MontoCompraDato = $request->PrecioCompra + ($request->HaberNeto * $porcentajeComision);
 
                         $dato->PrecioMaximoCompra = $request->PrecioMaximoCompra;
-                        $dato->ComisionALiquidar = $util->getComisionALiquidar($dato->PrecioCompra, $dato->PrecioMaximoCompra);
+                        $dato->ComisionALiquidar = $util->getComisionALiquidar($request->PrecioCompra, $request->PrecioMaximoCompra);
                     }
                 break;
                 default:

@@ -1,88 +1,62 @@
 <template>
   <v-app class="contenedor">
-    <div class="row justify-content-center">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-body">
-            <GridFormWebComponent
-              :pars="{
-                titleform: 'Gestión de Datos WEB',
-              }"
-              :headers="[
-                {
-                  text: '',
-                  value: 'Star',
-                  align: 'center',
+    <div>
+      <v-card color="grey lighten-4" class="padded-card">
+        <v-card-title>
+          Gestión de Datos WEB
+          <v-divider class="mx-4" inset vertical></v-divider>
 
-                },
-                {
-                  text: 'Marca',
-                  value: 'MarcaPlan',
-                  align: 'center',
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Buscar"
+            single-line
+            hide-details
+          ></v-text-field>
+          <v-spacer></v-spacer>
+          <v-btn class="ma-2" color="primary" outlined text >
+            <v-icon left>mdi-refresh</v-icon>Actualizar
+          </v-btn>
+        </v-card-title>
 
-                },
-                
-                
-                {
-                  text: 'Grupo',
-                  value: 'Grupo',
-                  align: 'center',
+        <v-tabs v-model="tab" class="elevation-2" grow>
+          <v-tabs-slider></v-tabs-slider>
 
-                  width: '1%'
-                },
-                {
-                  text: 'Orden',
-                  value: 'Orden',
-                  align: 'center',
+          <v-tab
+            v-for="tab in tabitems"
+            :key="tab.Codigo"
+            :value="'tab-' + tab.Codigo"
+          >
+            {{ tab.Nombre }}
+          </v-tab>
+        </v-tabs>
 
-                  width: '1%'
-                },
-                
-                {
-                  text: 'Apellido y Nombre',
-                  value: 'FullName',
-                  align: 'left',
-
-                },
-
-                
-                
-                {
-                  text: 'Cuotas Lead',
-                  value: 'CantidadCuotas',
-                  align: 'center',
-                  width: '2%'
-                },
-
-                {
-                  text: 'Estado Lead',
-                  value: 'EstadoPlan',
-                  align: 'center',
-                  width: '2%',
-
-                },
-               
-                {
-                  text: 'Estado',
-                  value: 'CodEstado',
-                  align: 'center',
-      
-                },
-               
-        
-                {
-                  text: 'Fecha Lead',
-                  value: 'FechaLead',
-                  align: 'center',
-
-                },
-                
-                { text: '', value: 'VerDato', align: 'center', width: '1%' },
-              ]"
-            ></GridFormWebComponent>
-          </div>
-        </div>
-      </div>
+        <v-tabs-items v-model="tab" >
+          <v-tab-item color="grey lighten-4">
+            <v-card class="mt-5">
+              <GridFormWebComponent
+                :pars="{
+                  titleform: 'Gestión de Datos WEB',
+                }"
+                :search="this.search"
+                grid="Pendientes"
+              ></GridFormWebComponent>
+            </v-card>
+          </v-tab-item>
+          <v-tab-item>
+            <v-card class="mt-5">
+              <GridFormWebComponent
+                :pars="{
+                  titleform: '',
+                }"
+                :search="this.search"
+                grid="Verificados"
+              ></GridFormWebComponent>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
+      </v-card>
     </div>
   </v-app>
 </template>
@@ -99,7 +73,42 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      tab: null,
+      search: "",
+      tabitems: [
+        {
+          Codigo: 1,
+          Nombre: "Leads Pendientes",
+        },
+        {
+          Codigo: 2,
+          Nombre: "Leads Verificados",
+        },
+        /*
+        {
+          Codigo: 3,
+          Nombre: "Análisis de la Gestión",
+        },
+        */
+      ],
+
+      
+    };
+  },
+
+  watch: {
+
+    tab(newValue){
+      console.log('Cambio de Tab:');
+      console.log(newValue);
+
+      if (newValue == 4){
+        //
+      }else{
+        //
+      }
+    },
   },
 
   computed: {
@@ -111,6 +120,8 @@ export default {
   },
 
   methods: {
+
+
     goBack() {
       console.log(this.volverARuta);
       if (typeof this.volverARuta !== "undefined") {
@@ -128,4 +139,10 @@ export default {
 .contenedor {
   width: 100%;
 }
+
+.padded-card {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 </style>

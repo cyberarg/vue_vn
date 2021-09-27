@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-card color="grey lighten-4">
+    <v-card >
+      <!--
       <v-card-title>
         {{ pars.titleform }}
         <v-divider class="mx-4" inset vertical></v-divider>
@@ -18,12 +19,12 @@
           <v-icon left>mdi-refresh</v-icon>Actualizar
         </v-btn>
       </v-card-title>
-
+      -->
       <v-data-table
         dense
         fixed-header
         height="58vh"
-        :headers="headers"
+        :headers="headers_component"
         :items="items"
         :item-class="setClass"
         :search="search"
@@ -50,6 +51,7 @@
           {{ item.HaberNeto | numFormat("$0,0") }}
         </template>
         <template v-slot:item.ApeNom="{ item }">{{ item.ApeNom }}</template>
+        <template v-slot:item.Telefono="{ item }">{{ item.Telefono }}</template>
         <template v-slot:item.Avance="{ item }">{{ item.Avance }}</template>
         <template v-slot:item.CodEstado="{ item }">
           {{ getTextEstado(item.CodEstado) }}
@@ -70,7 +72,7 @@
           </v-btn>
         </template>
 
-        <!--
+        
         <template v-slot:top>
           <v-expansion-panels focusable>
             <v-expansion-panel>
@@ -81,22 +83,30 @@
 
                     <v-col cols="3">
                       <v-row class="pa-6">
-                        <v-select
-                          :items="statesList"
-                          v-model="stateFilterValue"
-                          label="Estado"
-                        ></v-select>
+                        <v-text-field
+                          type="date"
+                          dense
+                          class="fillable"
+                          :min="getMin"
+                          :max="getToday"
+                          label="Fecha Lead Desde"
+                          placeholder="Fecha Lead Desde"
+                          v-model="fecha_desde"
+                        ></v-text-field>
                       </v-row>
                     </v-col>
                     <v-col cols="3">
-                      <v-row class="pa-10">
-                        <v-slider
-                          label="Avance"
-                          v-model="sliderAvance"
-                          thumb-label="always"
-                          max="83"
-                          min="45"
-                        ></v-slider>
+                      <v-row class="pa-6">
+                        <v-text-field
+                          type="date"
+                          dense
+                          class="fillable"
+                          :min="getMin"
+                          :max="getToday"
+                          label="Fecha Lead Hasta"
+                          placeholder="Fecha Lead Hasta"
+                          v-model="fecha_hasta"
+                        ></v-text-field>
                       </v-row>
                     </v-col>
                   
@@ -106,7 +116,7 @@
             </v-expansion-panel>
           </v-expansion-panels>
         </template>
-        -->
+    
       </v-data-table>
 
       <v-card-actions v-show="exportable">
@@ -165,8 +175,13 @@ export default {
       type: Object,
       required: true,
     },
-    headers: {
-      type: Array,
+
+    search: {
+      type: String,
+      required: true,
+    },
+    grid: {
+      type: String,
       required: true,
     },
   },
@@ -179,6 +194,8 @@ export default {
       sliderAvance: 45,
       sliderHaberNeto: 15000,
       dialogAlta: false,
+      fecha_desde: null,
+      fecha_hasta: null,
 
       statesList: [
         { text: "Todos", value: 0 },
@@ -191,19 +208,106 @@ export default {
         { text: "En Gestión", value: "En Gestion" },
       ],
 
-      search: "",
+      //search: "",
       showTooltip: false,
       showBotones: null,
       //loading: true,
       cantItems: 15,
+
+      headers_component: [
+                {
+                  text: '',
+                  value: 'Star',
+                  align: 'center',
+
+                },
+                {
+                  text: 'Marca',
+                  value: 'MarcaPlan',
+                  align: 'center',
+
+                },
+                
+                
+                {
+                  text: 'Grupo',
+                  value: 'Grupo',
+                  align: 'center',
+
+                  width: '1%'
+                },
+                {
+                  text: 'Orden',
+                  value: 'Orden',
+                  align: 'center',
+
+                  width: '1%'
+                },
+                
+                {
+                  text: 'Apellido y Nombre',
+                  value: 'FullName',
+                  align: 'left',
+
+                },
+
+                {
+                  text: 'Telefono',
+                  value: 'Telefono',
+                  align: 'center',
+
+                },
+                
+                {
+                  text: 'Cuotas Lead',
+                  value: 'CantidadCuotas',
+                  align: 'center',
+                  width: '2%'
+                },
+
+                {
+                  text: 'Estado Lead',
+                  value: 'EstadoPlan',
+                  align: 'center',
+                  width: '2%',
+
+                },
+               
+                {
+                  text: 'Estado',
+                  value: 'CodEstado',
+                  align: 'center',
+      
+                },
+               
+        
+                {
+                  text: 'Fecha Lead',
+                  value: 'FechaLead',
+                  align: 'center',
+                  filterable: true,
+                  filter: this.dateFilter,
+                },
+
+                {
+                  text: 'Fecha Ult Obs',
+                  value: 'FechaUltObs',
+                  align: 'center',
+
+                },
+                
+                { text: '', value: 'VerDato', align: 'center', width: '1%' },
+              ],
+
     };
   },
 
   created() {
     this.getData();
   },
+  
   mounted() {
-    //this.checkEsConcesionario();
+   // 
   },
 
   computed: {
@@ -223,6 +327,13 @@ export default {
       "codigoConcesionario",
     ]),
 
+    getToday() {
+      return moment().format("DD/MM/YYYY");
+    },
+
+    getMin() {
+      return "2021-03-11";
+    },
 
 
     exportable() {
@@ -265,6 +376,32 @@ export default {
       return parseInt(value) >= this.sliderAvance;
     },
 
+    dateFilter(value) {
+      console.log(value);
+      console.log(this.fecha_desde);
+      console.log(this.fecha_hasta);
+
+      let fecha = moment(value).format('YYYY-MM-DD');
+      console.log(fecha);
+
+      if ((!this.fecha_desde) && (!this.fecha_hasta)) {
+        return true;
+      }
+
+      if ((this.fecha_desde) && (!this.fecha_hasta)) {
+        return fecha >= this.fecha_desde;
+      }
+
+      if ((!this.fecha_desde) && (this.fecha_hasta)) {
+        return fecha <= this.fecha_hasta;
+      }
+
+      if ((this.fecha_desde) && (this.fecha_hasta)) {
+        return (fecha >= this.fecha_desde) && (fecha <= this.fecha_hasta);
+      }
+
+    },
+
     exportExcel: function () {
       let data = XLSX.utils.json_to_sheet(this.items);
       const workbook = XLSX.utils.book_new();
@@ -274,7 +411,10 @@ export default {
     },
 
     getDatos() {
-      this.getData();
+      if (this.grid == "Pendientes"){
+        this.getData();
+      }
+      
     },
 
     setClass(item) {
