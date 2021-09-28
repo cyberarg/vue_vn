@@ -254,6 +254,14 @@ export default {
         { Codigo: 16, Nombre: "Datos Web - Ford", Marca: 9 },
         { Codigo: 17, Nombre: "Datos Web - Citroen", Marca: 10 },
       ],
+
+      concesB: [
+        { Codigo: 18, Nombre: "Alra", Marca: 5 },
+        { Codigo: 19, Nombre: "Autotag", Marca: 5 },
+        { Codigo: 20, Nombre: "Maynar", Marca: 5 },
+        { Codigo: 21, Nombre: "Sebastiani", Marca: 5 },
+        { Codigo: 22, Nombre: "Yacopini", Marca: 5 },
+      ],
     };
   },
 
@@ -283,6 +291,7 @@ export default {
     ...mapState("auth", [
       "login",
       "user",
+      "perfilUsuario",
       "esConcesionario",
       "esVinculo",
       "codigoConcesionario",
@@ -295,6 +304,7 @@ export default {
 
   mounted() {
     this.checkEsConcesionario();
+    this.checkPerfilUsuario();
   },
 
   methods: {
@@ -337,6 +347,20 @@ export default {
       if (this.esVinculo) {
         this.listMarcas.splice(0, 1);
       }
+    },
+
+    checkPerfilUsuario(){
+      switch (parseInt(this.perfilUsuario)){
+        case 5: //Administrador
+          Array.prototype.push.apply(this.listConcesionarios,this.concesB)
+        break;
+        case 4: //Supervisor
+        default:
+          //
+        break;
+        
+      }
+      
     },
 
     getReporte() {

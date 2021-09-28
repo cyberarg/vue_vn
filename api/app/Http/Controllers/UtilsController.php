@@ -314,6 +314,7 @@ class UtilsController extends Controller
             (strpos($apeLow,"torino autos") !== false) || 
             (strpos($apeLow ,"itals") !== false) || 
             (strpos($apeLow ,"lombardia autos") !== false) || 
+            (strpos($apeLow, 'sebastiani') !== false) || 
 
             (strpos($apeLow,"levy damian") !== false) ||  
             (strpos($apeLow,"levy esteban") !== false) ||  
@@ -334,7 +335,8 @@ class UtilsController extends Controller
             (strpos($apeUpp, 'MAYNAR') !== false) ||
 
             (strpos($apeUpp, 'SAUMA WAGEN SAN ISIDRO S.A.') !== false) ||
-            (strpos($apeUpp, 'TORINO AUTOS') !== false) 
+            (strpos($apeUpp, 'TORINO AUTOS') !== false) ||
+            (strpos($apeUpp, 'SEBASTIANI') !== false)
         ){
             return true;
         }else{
