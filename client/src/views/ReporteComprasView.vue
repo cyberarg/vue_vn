@@ -292,6 +292,7 @@ export default {
       "login",
       "user",
       "perfilUsuario",
+      "puedeVerConcesionariosB",
       "esConcesionario",
       "esVinculo",
       "codigoConcesionario",
@@ -350,17 +351,9 @@ export default {
     },
 
     checkPerfilUsuario(){
-      switch (parseInt(this.perfilUsuario)){
-        case 5: //Administrador
+      if (parseInt(this.puedeVerConcesionariosB) == 1){
           Array.prototype.push.apply(this.listConcesionarios,this.concesB)
-        break;
-        case 4: //Supervisor
-        default:
-          //
-        break;
-        
       }
-      
     },
 
     getReporte() {

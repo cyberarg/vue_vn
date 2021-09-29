@@ -14,6 +14,7 @@ export const state = {
   loading_items_detalle_cartera:false,
   getting_items_detalle_cartera:false,
   items_detalle_cartera:[],
+  items_detalle_compras:[],
 };
 
 export const mutations = {
@@ -37,6 +38,27 @@ export const mutations = {
     state.dataStatus = "Error";
     state.loading = false;
     state.loading_items_detalle_cartera = true;
+  },
+
+  GET_DETALLE_EVOL_STATUS(state) {
+    
+    state.dataStatus = "loading";
+    state.items_detalle_compras = [];
+    state.loading_detalle_evolucion = true;
+  },
+
+  DETALLE_EVOL_SUCCESS(state, datos) {
+    //console.log(datos);
+    state.items_detalle_compras = datos.Reporte;
+    state.loading_detalle_evolucion = false;
+
+    state.dataStatus = "success";
+  },
+
+  DETALLE_EVOL_ERROR(state) {
+    state.dataStatus = "Error";
+    state.loading_detalle_evolucion = false;
+    state.items_detalle_compras = [];
   },
 
   GET_CARTERA_STATUS(state) {
@@ -119,11 +141,11 @@ export const actions = {
       });
   },
 
-  getCarteraGral({ commit }) {
+  getCarteraGral({ commit }, pars) {
     //console.log(pars.periodo);
     commit("GET_CARTERA_STATUS");
     return axios
-      .post("/reportecarteradashboard")
+      .post("/reportecarteradashboard", pars)
       .then(response => {
         console.log(response.data);
         commit("CARTERA_SUCCESS", response.data);
@@ -146,6 +168,21 @@ export const actions = {
       .catch(err => {
         //console.log("get datos error");
         commit("CARTERA_DETALLE_ERROR");
+      });
+  },
+
+  getDetalle({ commit }) {
+    //console.log(pars.periodo);
+    commit("GET_DETALLE_EVOL_STATUS");
+    return axios
+      .post("/detalle_evol_compras")
+      .then(response => {
+        console.log(response.data);
+        commit("DETALLE_EVOL_SUCCESS", response.data);
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("DETALLE_EVOL_ERROR");
       });
   },
   

@@ -147,6 +147,7 @@ Route::post('/reportecomisionesanual', 'ReporteComisionesController@getReporteAn
 Route::post('/reportecomisionesdetalle', 'ReporteComisionesController@getReporteDetalle');
 
 Route::post('/tablerocontrol', 'TableroControlController@getDatos');
+Route::post('/detalle_evol_compras', 'TableroControlController@getDetalleEvolucionCompras');
 
 Route::post('/gestioncompras', 'GestionComprasController@getDatosComprados');
 Route::post('/setfechascontrol', 'GestionComprasController@setFechasDatos');

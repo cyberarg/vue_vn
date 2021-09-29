@@ -21,6 +21,7 @@
       :headers="headers"
       :hide-default-header="true"
       :items="datos_cartera"
+      :item-class="style"
       :search="search"
       item-key="itemkey"
       class="elevation-1"
@@ -28,6 +29,7 @@
       :loading-text="loadingtext"
       no-data-text="No hay datos disponibles"
       :hide-default-footer="true"
+      :items-per-page="-1"
     >
 
       <template v-slot:header="{ props }">
@@ -226,6 +228,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    detalle_ces: {
+      type: Boolean,
+      default: false,
+    },
+
   },
   data() {
     return {
@@ -303,7 +310,10 @@ export default {
   },
 
   created() {
-    this.getDatosCartera();
+    if (!(this.detalle_ces)){
+      this.getDatosCartera();
+    }
+    
   },
 
   computed: {
@@ -323,6 +333,12 @@ export default {
       getDatosCartera: "tablerocontrol/getCarteraGral",
       getDetalle: "tablerocontrol/getDetallePendientesCarteraGral" 
     }),
+
+    style(item) {
+      if (item.EsFilaMarca == 1) {
+        return "negrita";
+      }
+    },
 
     async detalleExcelPendientes(){
       
@@ -390,8 +406,10 @@ export default {
       let totCasos = 0;
       let totParte = 0;
       this.items_cartera.forEach(element => {
+        if (this.detalle_ces == element['EsFilaMarca']){
           totCasos += element[key];
           totParte += element[key2];
+        }
       });
 
       if (totCasos > 0){
@@ -405,8 +423,10 @@ export default {
       let totCasos = 0;
       let totParte = 0;
       this.items_cartera.forEach(element => {
+        if (this.detalle_ces == element['EsFilaMarca']){
           totCasos += element[key]['Cantidad'];
           totParte += element[key][key2];
+        }
       });
 
       if (totCasos > 0){
@@ -420,7 +440,10 @@ export default {
 
       let tot = 0;
       this.items_cartera.forEach(element => {
+        if (this.detalle_ces == element['EsFilaMarca']){
           tot += element[key]['Cantidad'];
+        }
+          
       });
 
       return tot;
@@ -431,7 +454,9 @@ export default {
 
       let tot = 0;
       this.items_cartera.forEach(element => {
+        if (this.detalle_ces == element['EsFilaMarca']){
           tot += element[key];
+        }
       });
 
       return tot;
@@ -453,9 +478,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .contenedor {
   height: 15px;
+}
+
+.v-data-table >>> .negrita {
+  font-weight: bold;
 }
 
 .lineH1 {

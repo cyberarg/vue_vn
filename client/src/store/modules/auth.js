@@ -14,7 +14,8 @@ export const state = {
   codigoConcesionario: null,
   loading: false,
   perfilUsuario: null,
-  verCalculadora: null
+  verCalculadora: null,
+  puedeVerConcesionariosB: null
 };
 
 export const mutations = {
@@ -46,6 +47,7 @@ export const mutations = {
     }
 
     state.perfilUsuario = user.HN_PerfilUsuario;
+    state.puedeVerConcesionariosB = user.HN_VerConcesionarioB;
 
     if (user.HN_PerfilUsuario == 2) {
       state.esVinculo = true;

@@ -26,6 +26,7 @@ import ReporteCaidasView from "@/views/ReporteCaidasRBView.vue";
 import ReporteComisionesView from "@/views/ReporteComisionesView.vue";
 import ReporteFacturacionView from "@/views/ReporteFacturacionView.vue";
 import ReporteSemestreView from "@/views/ReporteSemestreView.vue";
+import ReporteCarteraGralView from "@/views/ReporteCarteraGralView.vue";
 
 Vue.use(Router);
 
@@ -187,7 +188,12 @@ export default new Router({
           name: "reportecompras",
           component: ReporteComprasView
         },
-
+        
+        {
+          path: "reportecarteragral",
+          name: "reportecarteragral",
+          component: ReporteCarteraGralView
+        },
         {
           path: "detallereporte",
           name: "detallereporte",

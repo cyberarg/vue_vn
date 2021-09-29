@@ -52,4 +52,15 @@ class TableroControlController extends Controller
     }
 
 
+    public function getDetalleEvolucionCompras(Request $request){
+
+        $lst = array();
+        
+        $lst['Reporte'] = $reporte;
+        $lst['Datos'] = $datos;
+
+        return $lst;
+    }
+    
+
 }

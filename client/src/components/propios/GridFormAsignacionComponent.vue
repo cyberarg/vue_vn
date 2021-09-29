@@ -304,6 +304,14 @@ export default {
         { Codigo: 17, Nombre: "Datos Web - Citroen", Marca: 10 },
       ],
 
+       concesB: [
+        { Codigo: 18, Nombre: "Alra", Marca: 5 },
+        { Codigo: 19, Nombre: "Autotag", Marca: 5 },
+        { Codigo: 20, Nombre: "Maynar", Marca: 5 },
+        { Codigo: 21, Nombre: "Sebastiani", Marca: 5 },
+        { Codigo: 22, Nombre: "Yacopini", Marca: 5 },
+      ],
+
       statesList: [
         { text: "Todos", value: 0 },
         { text: "Sin Gestionar", value: "null" },
@@ -514,7 +522,11 @@ export default {
       ];
     },
 
-    ...mapState("auth", ["login"]),
+    ...mapState("auth", [
+      "login",
+      "puedeVerConcesionariosB"
+    ]),
+
     ...mapState("asignaciondatos", [
       "items",
       "items_totales",
@@ -523,6 +535,10 @@ export default {
       "listSupervisores",
       "unselect",
     ]),
+  },
+
+  mounted() {
+    this.checkPerfilUsuario();
   },
 
   methods: {
@@ -538,6 +554,12 @@ export default {
         this.listOficialesFilter = this.listOficiales;
         this.listOficialesFilter.unshift({ Codigo: -1, Nombre: "Sin Oficial" });
         this.listOficialesFilter.unshift({ Codigo: 0, Nombre: "Todos" });
+      }
+    },
+
+    checkPerfilUsuario(){
+      if (parseInt(this.puedeVerConcesionariosB) == 1){
+          Array.prototype.push.apply(this.listConcesionarios,this.concesB)
       }
     },
 

@@ -109,6 +109,10 @@ export const navigationRoutesAdmin = {
           displayName: "Reporte Cartera"
         },
         {
+          name: "reportecarteragral",
+          displayName: "Reporte Cartera Gral"
+        },
+        {
           name: "reporteasignaciones",
           displayName: "Reporte Asig. por Período"
         },

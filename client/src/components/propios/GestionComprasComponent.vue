@@ -454,6 +454,14 @@ export default {
         { Codigo: 17, Nombre: "Datos Web - Citroen", Marca: 10 },
       ],
 
+      concesB: [
+        { Codigo: 18, Nombre: "Alra", Marca: 5 },
+        { Codigo: 19, Nombre: "Autotag", Marca: 5 },
+        { Codigo: 20, Nombre: "Maynar", Marca: 5 },
+        { Codigo: 21, Nombre: "Sebastiani", Marca: 5 },
+        { Codigo: 22, Nombre: "Yacopini", Marca: 5 },
+      ],
+
       listTitularesCompra: [
         { Codigo: 1, Concesionario: 1, ComproGiama: 0, Nombre: "Sauma" },
         { Codigo: 2, Concesionario: 0, ComproGiama: 1, Nombre: "RB" },
@@ -470,12 +478,16 @@ export default {
 
   mounted() {
     this.checkEsConcesionario();
+    this.checkPerfilUsuario();
   },
+
+
 
   computed: {
     ...mapState("auth", [
       "login",
       "user",
+      "puedeVerConcesionariosB",
       "esConcesionario",
       "esVinculo",
       "codigoConcesionario",
@@ -499,6 +511,12 @@ export default {
       sendEmailTransferencia: "gestioncompras/sendEmailTransferencia",
       saveTitularCompra: "gestioncompras/saveTitularCompra",
     }),
+
+    checkPerfilUsuario(){
+      if (parseInt(this.puedeVerConcesionariosB) == 1){
+          Array.prototype.push.apply(this.listConcesionarios,this.concesB)
+      }
+    },
 
     onClose() {
       this.dato = null;

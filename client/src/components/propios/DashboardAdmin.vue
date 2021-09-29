@@ -158,10 +158,7 @@
       </v-row>
       <v-row justfy="center" class="evolucion">
         <v-col cols="12" xs="12" sm="12" lg="3" md="3">
-          <v-card hover elevation-2 color="grey lighten-4">
-            <v-card-title>Evolución Compras</v-card-title>
             <GridControlComponent></GridControlComponent>
-          </v-card>
         </v-col>
         <v-col cols="12" xs="12" sm="12" lg="9" md="9">
             <v-row>
@@ -226,7 +223,7 @@ export default {
 }
 
 .performance {
-  padding-top: 208px;
+  padding-top: 225px;
 }
 
 .row-equal {

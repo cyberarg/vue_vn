@@ -267,6 +267,14 @@ export default {
         { Codigo: 16, Nombre: "Datos Web - Ford", Marca: 9 },
         { Codigo: 17, Nombre: "Datos Web - Citroen", Marca: 10 },
       ],
+
+      concesB: [
+        { Codigo: 18, Nombre: "Alra", Marca: 5 },
+        { Codigo: 19, Nombre: "Autotag", Marca: 5 },
+        { Codigo: 20, Nombre: "Maynar", Marca: 5 },
+        { Codigo: 21, Nombre: "Sebastiani", Marca: 5 },
+        { Codigo: 22, Nombre: "Yacopini", Marca: 5 },
+      ],
     };
   },
 
@@ -278,6 +286,7 @@ export default {
 
   mounted() {
     this.checkEsConcesionario();
+    this.checkPerfilUsuario();
   },
 
   destroyed() {
@@ -306,6 +315,7 @@ export default {
       "login",
       "user",
       "esConcesionario",
+      "puedeVerConcesionariosB",
       "esVinculo",
       "codigoConcesionario",
     ]),
@@ -316,6 +326,13 @@ export default {
       showFiltrados: "estadogestion/showFiltrados",
       getData: "estadogestion/getData",
     }),
+
+
+    checkPerfilUsuario(){
+      if (parseInt(this.puedeVerConcesionariosB) == 1){
+          Array.prototype.push.apply(this.listConcesionarios,this.concesB)
+      }
+    },
 
     getDatos() {
       var pars = {

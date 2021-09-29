@@ -155,6 +155,10 @@ class UtilsController extends Controller
         return Marca::select('Codigo','Nombre')->where('MostrarReporteCartera',1)->get();
     }
 
+    public function getConcesionariosReporteCarteraDashboard(){
+        return Concesionario::select('ID','Nombre', 'MarcaDefault')->where('MostrarReporteCartera',1)->get();
+    }
+
     public function getNameConcesionario($concesionario){
 
         return Concesionario::select('Nombre')->where('ID',$concesionario)->get();

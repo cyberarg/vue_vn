@@ -228,27 +228,18 @@ class ReporteComprasController extends Controller
 
     public function getReporteCarteraDashboard(Request $request)
     {
+
+        $mostrarDetalleCEs = 0;
+        if (isset($request->detalleCEs)){
+            $mostrarDetalleCEs = $request->detalleCEs;
+        }
+
         $arrFiat = array();
         $datos_cg = array();
         $datos_ac = array();
         $datos_an = array();
 
         $utils = new UtilsController;
-
-        /*
-        $datos_gf =  SubiteDatos::on('GF')->select('ID','Marca','Concesionario','CodEstado','Avance','AvanceCalculado')->whereNull('CodEstado')->orWhere('CodEstado', '<>', 5)->get();
-       
-        $datos_cg =  SubiteDatos::on('CG')->select('ID','Marca','Concesionario','CodEstado','Avance','FechaVtoCuota2')->whereNull('CodEstado')->orWhere('CodEstado', '<>', 5)->get()->toArray();
-        $datos_ac =  SubiteDatos::on('AC')->select('ID','Marca','Concesionario','CodEstado','Avance','FechaVtoCuota2')->whereNull('CodEstado')->orWhere('CodEstado', '<>', 5)->get()->toArray();
-        $datos_an =  SubiteDatos::on('AN')->select('ID','Marca','Concesionario','CodEstado','Avance','FechaVtoCuota2')->whereNull('CodEstado')->orWhere('CodEstado', '<>', 5)->get()->toArray();
-        
-        $arrFiat = array_merge($arrFiat, $datos_cg, $datos_ac, $datos_an);
-        */
-
-        /*
-        $periodoActPrimerDia = '2021-6-1';
-        $periodoAct = 20210630; 
-        */
 
         $hoy = new DateTime('NOW');
         $hoy = $hoy->format('Y-m-d');
@@ -312,6 +303,46 @@ class ReporteComprasController extends Controller
 
         }
 
+        //if ($mostrarDetalleCEs == 1){
+            $concesionarios = $utils->getConcesionariosReporteCarteraDashboard();
+
+            $lstTabla_Cartera_CEs = array();
+
+            foreach ($concesionarios as $ce) {
+                $oCE = new \stdClass();
+                $oDetalleMenor_CE = new \stdClass();
+                $oDetalleEntre_CE = new \stdClass();
+                $oDetalleMayor_CE = new \stdClass();
+              
+                $oCE->Codigo = $ce->ID;
+                $oCE->Nombre = $ce->Nombre;
+                $oCE->Marca = $ce->MarcaDefault;
+    
+                $oCE->CantDatos = 0;
+    
+                $oDetalleMenor_CE->Cantidad = 0;
+                $oDetalleMenor_CE->CantTrabajados = 0;
+                $oDetalleMenor_CE->CantHNBajo = 0;
+    
+                $oDetalleEntre_CE->Cantidad = 0;
+                $oDetalleEntre_CE->CantTrabajados = 0;
+                $oDetalleEntre_CE->CantHNBajo = 0;
+    
+                $oDetalleMayor_CE->Cantidad = 0;
+                $oDetalleMayor_CE->CantTrabajados = 0;
+                $oDetalleMayor_CE->CantHNBajo = 0;
+    
+    
+                $oCE->Menor45 = $oDetalleMenor_CE;
+                $oCE->Entre45y60 = $oDetalleEntre_CE;
+                $oCE->Mayor60 = $oDetalleMayor_CE;
+    
+                $lstTabla_Cartera_CEs[$ce->ID] = $oCE;
+    
+            }
+        //}
+        
+
         foreach ($datos_gf as $dato) {
 
             //if (!($utils->enOtraSociedadOPropioMerge($dato->Nombres, $dato->Apellido)) && ($dato->CodEstado != 5)  && ($dato->HaberNeto > 14999)){
@@ -335,15 +366,23 @@ class ReporteComprasController extends Controller
 
                     $lstTabla_Cartera_Marcas[$dato->Marca]->CantDatos += 1;
 
+                    $lstTabla_Cartera_CEs[$dato->Concesionario]->CantDatos += 1;
+
                     if ($oDet->Avance < 45){
 
                         $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->Cantidad += 1;
 
+                        $lstTabla_Cartera_CEs[$dato->Concesionario]->Menor45->Cantidad += 1;
+
                         if($dato->HaberNeto < 30000){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantHNBajo += 1;
+
+                            $lstTabla_Cartera_CEs[$dato->Concesionario]->Menor45->CantHNBajo += 1;
                         }else{
                             if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantTrabajados += 1;
+
+                                $lstTabla_Cartera_CEs[$dato->Concesionario]->Menor45->CantTrabajados += 1;
                             }
                         }
 
@@ -351,11 +390,17 @@ class ReporteComprasController extends Controller
 
                         $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->Cantidad += 1;
 
+                        $lstTabla_Cartera_CEs[$dato->Concesionario]->Entre45y60->Cantidad += 1;
+
                         if($dato->HaberNeto < 30000){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantHNBajo += 1;
+
+                            $lstTabla_Cartera_CEs[$dato->Concesionario]->Entre45y60->CantHNBajo += 1;
                         }else{
                             if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantTrabajados += 1;
+
+                                $lstTabla_Cartera_CEs[$dato->Concesionario]->Entre45y60->CantTrabajados += 1;
                             }
                         }
 
@@ -363,11 +408,17 @@ class ReporteComprasController extends Controller
 
                         $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->Cantidad += 1;
 
+                        $lstTabla_Cartera_CEs[$dato->Concesionario]->Mayor60->Cantidad += 1;
+
                         if($dato->HaberNeto < 30000){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantHNBajo += 1;
+
+                            $lstTabla_Cartera_CEs[$dato->Concesionario]->Mayor60->CantHNBajo += 1;
                         }else{
                             if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantTrabajados += 1;
+
+                                $lstTabla_Cartera_CEs[$dato->Concesionario]->Mayor60->CantTrabajados += 1;
                             }
                         }
                     }
@@ -404,16 +455,24 @@ class ReporteComprasController extends Controller
 
                     $lstTabla_Cartera_Marcas[$dato->Marca]->CantDatos += 1;
 
+                    $lstTabla_Cartera_CEs[$dato->Concesionario]->CantDatos += 1;
+
                     if ($oDet->Avance < 45){
 
                         $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->Cantidad += 1;
 
+                        $lstTabla_Cartera_CEs[$dato->Concesionario]->Menor45->Cantidad += 1;
+
                         //if($dato->HaberNeto < 15000){
                         if($pmaxCompra < $parPMaxFiat){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantHNBajo += 1;
+
+                            $lstTabla_Cartera_CEs[$dato->Concesionario]->Menor45->CantHNBajo += 1;
                         }else{
                             if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Menor45->CantTrabajados += 1;
+
+                                $lstTabla_Cartera_CEs[$dato->Concesionario]->Menor45->CantTrabajados += 1;
                             }
                         }
 
@@ -421,12 +480,18 @@ class ReporteComprasController extends Controller
 
                         $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->Cantidad += 1;
 
+                        $lstTabla_Cartera_CEs[$dato->Concesionario]->Entre45y60->Cantidad += 1;
+
                         //if($dato->HaberNeto < 15000){
                         if($pmaxCompra < $parPMaxFiat){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantHNBajo += 1;
+
+                            $lstTabla_Cartera_CEs[$dato->Concesionario]->Entre45y60->CantHNBajo += 1;
                         }else{
                             if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Entre45y60->CantTrabajados += 1;
+
+                                $lstTabla_Cartera_CEs[$dato->Concesionario]->Entre45y60->CantTrabajados += 1;
                             }
                         }
 
@@ -434,12 +499,18 @@ class ReporteComprasController extends Controller
 
                         $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->Cantidad += 1;
 
+                        $lstTabla_Cartera_CEs[$dato->Concesionario]->Mayor60->Cantidad += 1;
+
                         //if($dato->HaberNeto < 15000){
                         if($pmaxCompra < $parPMaxFiat){
                             $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantHNBajo += 1;
+
+                            $lstTabla_Cartera_CEs[$dato->Concesionario]->Mayor60->CantHNBajo += 1;
                         }else{
                             if($utils->seEstaTrabajando($dato->FechaUltObs)){
                                 $lstTabla_Cartera_Marcas[$dato->Marca]->Mayor60->CantTrabajados += 1;
+
+                                $lstTabla_Cartera_CEs[$dato->Concesionario]->Mayor60->CantTrabajados += 1;
                             }
                         }
                     }
@@ -454,7 +525,8 @@ class ReporteComprasController extends Controller
         $arrAux = array();
         
         foreach ($lstTabla_Cartera_Marcas as $tabla) {
-            $row['NomMarca'] = $tabla->Nombre;
+            $row['NomMarca'] = strtoupper($tabla->Nombre);
+            $row['EsFilaMarca'] = $mostrarDetalleCEs;
             $row['CantDatos'] = $tabla->CantDatos;
             $row['Menor45'] = $tabla->Menor45;
             $row['Entre45y60'] = $tabla->Entre45y60;
@@ -473,9 +545,41 @@ class ReporteComprasController extends Controller
             $row['TotalesHNBajo'] = $tabla->Menor45->CantHNBajo + $tabla->Entre45y60->CantHNBajo + $tabla->Mayor60->CantHNBajo;
 
            // $row['TotalesTrabajados'] = $tabla->Menor45->CantTrabajados + $tabla->Entre45y60->CantTrabajados + $tabla->Mayor60->CantTrabajados;
-
+            
             array_push($arrAux, $row);
+
+            if ($mostrarDetalleCEs == 1){
+                foreach ($lstTabla_Cartera_CEs as $tabla_ce) {
+                    if ($tabla_ce->Marca == $tabla->Codigo){
+
+                        $rowCe['NomMarca'] = " - ".ucwords(strtolower($tabla_ce->Nombre));
+                        $rowCe['EsFilaMarca'] = 0;
+                        $rowCe['CantDatos'] = $tabla_ce->CantDatos;
+                        $rowCe['Menor45'] = $tabla_ce->Menor45;
+                        $rowCe['Entre45y60'] = $tabla_ce->Entre45y60;
+                        $rowCe['Mayor60'] = $tabla_ce->Mayor60;
+            
+                        if ($tabla_ce->Codigo == 3){ // Para Peugeot se contabilizan todos los casos como posibles trabajables porque no se hace el corte por Avance
+                            //$row['CasosTrabajables'] = $tabla->Menor45->Cantidad + $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
+                            $rowCe['CasosTrabajables'] = ($tabla_ce->Menor45->Cantidad - $tabla_ce->Menor45->CantHNBajo) + ($tabla_ce->Entre45y60->Cantidad - $tabla_ce->Entre45y60->CantHNBajo) + ($tabla_ce->Mayor60->Cantidad - $tabla_ce->Mayor60->CantHNBajo);
+                            $rowCe['TotalesTrabajados'] = $tabla_ce->Menor45->CantTrabajados + $tabla_ce->Entre45y60->CantTrabajados + $tabla_ce->Mayor60->CantTrabajados;
+                        }else{
+                            //$row['CasosTrabajables'] = $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
+                            $rowCe['CasosTrabajables'] = ($tabla_ce->Entre45y60->Cantidad - $tabla_ce->Entre45y60->CantHNBajo) + ($tabla_ce->Mayor60->Cantidad - $tabla_ce->Mayor60->CantHNBajo);
+                            $rowCe['TotalesTrabajados'] = $tabla_ce->Entre45y60->CantTrabajados + $tabla_ce->Mayor60->CantTrabajados;
+                        }
+                        
+                        $rowCe['TotalesHNBajo'] = $tabla_ce->Menor45->CantHNBajo + $tabla_ce->Entre45y60->CantHNBajo + $tabla_ce->Mayor60->CantHNBajo;
+            
+                    // $row['TotalesTrabajados'] = $tabla->Menor45->CantTrabajados + $tabla->Entre45y60->CantTrabajados + $tabla->Mayor60->CantTrabajados;
+            
+                        array_push($arrAux, $rowCe);
+                    }
+                }
+            }
         }
+
+        
 
         $lst['Reporte'] = $arrAux;
 
