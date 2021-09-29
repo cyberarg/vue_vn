@@ -122,6 +122,14 @@ class UtilsController extends Controller
                 return 'Sapac';
             case 10:
                 return 'Alizze';
+            case 12:
+                return 'Peugeot Web';
+            case 13:
+                return 'Fiat Web';
+            case 15:
+                return 'Volkswagen Web';
+            case 17:
+                return 'Citroen Web';
             default:
                 return '';
 
