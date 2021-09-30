@@ -559,7 +559,7 @@ class ReporteComprasController extends Controller
                         $rowCe['Entre45y60'] = $tabla_ce->Entre45y60;
                         $rowCe['Mayor60'] = $tabla_ce->Mayor60;
             
-                        if ($tabla_ce->Codigo == 3){ // Para Peugeot se contabilizan todos los casos como posibles trabajables porque no se hace el corte por Avance
+                        if ($tabla_ce->Marca == 3){ // Para Peugeot se contabilizan todos los casos como posibles trabajables porque no se hace el corte por Avance
                             //$row['CasosTrabajables'] = $tabla->Menor45->Cantidad + $tabla->Entre45y60->Cantidad + $tabla->Mayor60->Cantidad;
                             $rowCe['CasosTrabajables'] = ($tabla_ce->Menor45->Cantidad - $tabla_ce->Menor45->CantHNBajo) + ($tabla_ce->Entre45y60->Cantidad - $tabla_ce->Entre45y60->CantHNBajo) + ($tabla_ce->Mayor60->Cantidad - $tabla_ce->Mayor60->CantHNBajo);
                             $rowCe['TotalesTrabajados'] = $tabla_ce->Menor45->CantTrabajados + $tabla_ce->Entre45y60->CantTrabajados + $tabla_ce->Mayor60->CantTrabajados;

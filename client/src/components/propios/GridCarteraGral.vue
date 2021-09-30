@@ -407,8 +407,8 @@ export default {
       let totParte = 0;
       this.items_cartera.forEach(element => {
         if (this.detalle_ces == element['EsFilaMarca']){
-          totCasos += element[key];
-          totParte += element[key2];
+            totCasos += element[key];
+            totParte += element[key2];
         }
       });
 
