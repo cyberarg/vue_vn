@@ -26,6 +26,7 @@ class GestionDatosWebController extends Controller
 
     public function getDatos(Request $request)
     {
+
         return DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
         DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
         Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
@@ -34,9 +35,70 @@ class GestionDatosWebController extends Controller
         FROM datos_web_hn_obs 
         WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
         FROM datos_web_hn DW");
+
+        /*
+        $lstDatos = array();
+        $datosPendientes = array();
+        $datosVerificados = array();
+
+        $datosPendientes = DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
+        DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
+        Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
+        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, 
+        (SELECT DATE_FORMAT(Fecha,'%Y/%m/%d')
+        FROM datos_web_hn_obs 
+        WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
+        FROM datos_web_hn DW
+        WHERE DW.DatoVerificado = 0");
+
+        $datosVerificados = DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
+        DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
+        Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
+        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, 
+        (SELECT DATE_FORMAT(Fecha,'%Y/%m/%d')
+        FROM datos_web_hn_obs 
+        WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
+        FROM datos_web_hn DW
+        WHERE DW.DatoVerificado = 1");
+
+        $lstDatos['Pendientes'] = $datosPendientes;
+        $lstDatos['Verificados'] = $datosVerificados;
+
+        return $lstDatos;
+        */
         // return DatoWeb::whereNull('PasarDato')->get();
     }
 
+
+    public function getDatosPendientes(Request $request)
+    {
+
+        return DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
+        DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
+        Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
+        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, 
+        (SELECT DATE_FORMAT(Fecha,'%Y/%m/%d')
+        FROM datos_web_hn_obs 
+        WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
+        FROM datos_web_hn DW
+        WHERE DW.DatoVerificado = 0");
+
+    }
+
+    public function getDatosVerificados(Request $request)
+    {
+
+        return DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
+        DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
+        Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
+        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, 
+        (SELECT DATE_FORMAT(Fecha,'%Y/%m/%d')
+        FROM datos_web_hn_obs 
+        WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
+        FROM datos_web_hn DW
+        WHERE DW.DatoVerificado = 1");
+
+    }
 
     public function index(Request $request)
     {

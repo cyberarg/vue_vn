@@ -47,6 +47,11 @@ Route::post('/showdato', 'GestionDatosController@showDato');
 Route::post('/updatedato', 'GestionDatosController@updateDato');
 
 Route::post('/getdatosweb', 'GestionDatosWebController@getDatos');
+
+Route::post('/getdatosweb_pend', 'GestionDatosWebController@getDatosPendientes');
+Route::post('/getdatosweb_verif', 'GestionDatosWebController@getDatosVerificados');
+
+
 Route::post('/showdatoweb', 'GestionDatosWebController@showDato');
 Route::post('/updatedatoweb', 'GestionDatosWebController@updateDato');
 Route::post('/altadatoweb', 'GestionDatosWebController@createDato');
