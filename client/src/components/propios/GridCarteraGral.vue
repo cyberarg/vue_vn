@@ -200,6 +200,7 @@
 
       
     </v-data-table>
+    <div class="aclaracion">Nota: El Porcentaje de Trabajados se hace sobre la cantidad de "Trabajables" - Excluye Avace menor a 45 y HN Bajo -</div>
      </v-card>
   </div>
 </template>
@@ -535,5 +536,12 @@ export default {
 
 .rowclassBtn {
   padding-top: 2;
+}
+
+.aclaracion {
+  font-style: italic;
+  font-size: 9px;
+  text-align: right;
+  margin-right: 5px;
 }
 </style>

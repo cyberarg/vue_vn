@@ -15,7 +15,7 @@
             hide-details
           ></v-text-field>
           <v-spacer></v-spacer>
-          <v-btn class="ma-2" color="primary" outlined text >
+          <v-btn class="ma-2" color="primary" outlined text @click="this.getDatos()">
             <v-icon left>mdi-refresh</v-icon>Actualizar
           </v-btn>
         </v-card-title>
@@ -41,6 +41,7 @@
                 }"
                 :search="this.search"
                 grid="Pendientes"
+                :items="this.itemsPendientes"
               ></GridFormWebComponent>
             </v-card>
           </v-tab-item>
@@ -52,7 +53,27 @@
                 }"
                 :search="this.search"
                 grid="Verificados"
+                :items="this.itemsVerificados"
               ></GridFormWebComponent>
+            </v-card>
+          </v-tab-item>
+          <v-tab-item>
+            <v-card class="mt-5">
+              <GridFormComponent
+              :pars="{
+                titleform: 'Gestión de Datos',
+                routeapi: 'gestiondatos',
+                itemkey: 'Codigo',
+                module: 'gestiondatos',
+                //items: this.items,
+                origen: 'gestiondatos',
+                showCombo: true,
+                loading: 'loadingDatos',
+              }"
+              :headers="headers_datos"
+              :show_title="false"
+              :from_leads="true"
+            ></GridFormComponent>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
@@ -63,13 +84,14 @@
 
 <script>
 import GridFormWebComponent from "@/components/propios/GridFormWebComponent.vue";
+import GridFormComponent from "@/components/propios/GridFormComponent.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
   name: "gestiondatosweb",
   components: {
     GridFormWebComponent,
-    //GridFormCrud
+    GridFormComponent
   },
 
   data() {
@@ -85,14 +107,101 @@ export default {
           Codigo: 2,
           Nombre: "Leads Verificados",
         },
-        /*
+        
         {
           Codigo: 3,
-          Nombre: "Análisis de la Gestión",
+          Nombre: "Datos en Gestión",
         },
-        */
+        
       ],
 
+      headers_datos: [
+                {
+                  text: '',
+                  value: 'Star',
+                  align: 'center',
+                  sorteable: true,
+                },
+                {
+                  text: 'Grupo Orden',
+                  value: 'Grupo',
+                  align: 'center',
+                  sorteable: true,
+                  filterable: true,
+                },
+
+                {
+                  text: 'Concesionario',
+                  value: 'Concesionario',
+                  align: 'center',
+                  filterable: false,
+                },
+
+                {
+                  text: 'Haber Neto',
+                  value: 'HaberNeto',
+                  align: 'center',
+                  filterable: false,
+                },
+                {
+                  text: 'Apellido y Nombre',
+                  value: 'ApeNom',
+                  align: 'left',
+                  sorteable: true,
+                  filterable: true,
+                },
+
+                {
+                  text: 'Avance',
+                  value: 'Avance',
+                  align: 'center',
+                  filterable: false,
+                },
+
+                {
+                  text: 'Estado',
+                  value: 'NomEstado',
+                  align: 'left',
+                  filterable: false,
+                },
+                {
+                  text: 'Motivo',
+                  value: 'Motivo',
+                  align: 'left',
+                  filterable: false,
+                },
+                {
+                  text: 'Fecha Compra',
+                  value: 'FechaCompra',
+                  align: 'center',
+                  filterable: false,
+                },
+                {
+                  text: 'Precio Compra',
+                  value: 'PrecioCompra',
+                  align: 'center',
+                  filterable: false,
+                },
+                {
+                  text: 'Precio Max Compra',
+                  value: 'PrecioMaximoCompra',
+                  align: 'center',
+                  filterable: false,
+                },
+                {
+                  text: 'Fecha Asignación',
+                  value: 'FechaUltimaAsignacion',
+                  align: 'center',
+                  filterable: false,
+                },
+                {
+                  text: 'Fecha Ult. Obs',
+                  value: 'FechaUltObs',
+                  align: 'center',
+                  filterable: false,
+                },
+                { text: '', value: 'VerDatos', align: 'center', width: '1%' },
+      ],
       
     };
   },
@@ -112,11 +221,16 @@ export default {
   },
 
   computed: {
-    ...mapState("gestiondatosweb", ["items"]),
+    ...mapState("gestiondatosweb", ["itemsPendientes", "itemsVerificados"]),
+    ...mapState("gestiondatos", ["items"]),
   },
 
   created() {
-    //this.getData("gestiondatos");
+    //this.getData();
+    this.getDatosPendientes();
+    this.getDatosVerificados();
+    this.getDatosLeads();
+    //this.getData();
   },
 
   methods: {
@@ -131,7 +245,17 @@ export default {
     },
     ...mapActions({
       getData: "gestiondatosweb/getData",
+      getDatosPendientes: "gestiondatosweb/getDatosPendientes",
+      getDatosVerificados: "gestiondatosweb/getDatosVerificados",
+      getDatosLeads: "gestiondatos/getDatosLeads",
     }),
+
+    getDatos(){
+      //this.getData();
+      this.getDatosPendientes();
+      this.getDatosVerificados();
+      this.getDatosLeads();
+    }
   },
 };
 </script>

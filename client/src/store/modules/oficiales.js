@@ -5,6 +5,7 @@ export const namespaced = true;
 export const state = {
   dataStatus: "",
   items: [],
+  items_dw:[],
   listSupervisores: [],
   loading: true,
   okResponse: false,
@@ -27,6 +28,21 @@ export const mutations = {
     state.dataStatus = "success";
   },
 
+  OFICIALES_DW_STATUS(state) {
+    state.items_dw = [];
+    state.dataStatus = "loading";
+  },
+
+  OFICIALES_DW_SUCCESS(state, items) {
+    state.items_dw = items;
+    state.dataStatus = "success";
+  },
+
+  OFICIALES_DW_ERROR(state) {
+    state.items_dw = [];
+    state.dataStatus = "error";
+  },
+  
   OK_RESPONSE(state) {
     state.loading = false;
     state.okResponse = true;
@@ -104,6 +120,20 @@ export const actions = {
         commit("DATOS_ERROR");
       });
   },
+
+  getOficialesDatoWeb({commit}){
+    commit("OFICIALES_DW_STATUS");
+    return axios
+      .get("/getoficiales_dw")
+      .then(response => {
+        console.log(response.data);
+        commit("OFICIALES_DW_SUCCESS", response.data);
+      })
+      .catch(err => {
+        commit("OFICIALES_DW_ERROR");
+      });
+  },
+  
 
   getListSupervisores({ commit }) {
     return axios

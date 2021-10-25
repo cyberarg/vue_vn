@@ -19,6 +19,7 @@ import numFormat from "vue-filter-number-format";
 import VueApexCharts from "vue-apexcharts";
 Vue.use(VueApexCharts);
 
+
 /*
 import vueToPdf from 'vue-to-pdf';
 import VueEasyPrinter from 'vue-easy-printer';
@@ -45,6 +46,7 @@ Vue.use(VueSwal);
 
 Vue.i18n.set("es");
 
+
 import YmapPlugin from "vue-yandex-maps";
 import VueClipboard from "vue-clipboard2";
 import vuetify from "@/plugins/vuetify"; // path to vuetify export
@@ -60,9 +62,9 @@ Vue.prototype.$http = axios;
 
 // //axios.defaults.baseURL = "http://192.168.14.10:8080/api/";
 
-axios.defaults.baseURL = "http://testvue.test/api/";
+//axios.defaults.baseURL = "http://testvue.test/api/";
 
-//axios.defaults.baseURL = "http://api.giama.com.ar/api/";
+axios.defaults.baseURL = "http://api.giama.com.ar/api/";
 
  // //axios.defaults.baseURL = "http://52.41.224.173/api/";
 
@@ -100,7 +102,7 @@ Vue.use(ColorThemePlugin, {
 router.beforeEach((to, from, next) => {
   //if (to.name !== "login" && !isAuthenticated) next({ name: "login" });
   
-
+  /*
   if (to.name === "login") {
     localStorage.clear();
     store.commit("auth/LOGOUT");
@@ -124,9 +126,10 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+  */
   
   //store.commit("app/SET_LOADING", true);
-  //next();
+  next();
 });
 
 router.afterEach((to, from) => {

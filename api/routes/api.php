@@ -32,6 +32,8 @@ Route::post('/changepassword', 'UserController@changePassword');
 Route::resource('cotizaciondolar', 'CotizacionDolarController');
 Route::resource('oficiales', 'OficialController');
 Route::resource('supervisores', 'SupervisorController');
+Route::get('/getoficiales_dw', 'OficialController@getOficialesDatosWeb');
+
 
 Route::post('/estadogestion', 'EstadoGestionController@getDatos');
 //Route::post('/estadogestion', 'EstadoGestionRealController@getDatos');
@@ -45,6 +47,7 @@ Route::resource('gestiondatos', 'GestionDatosController', ['parameters' => [
 Route::post('/getdatos', 'GestionDatosController@getDatos');
 Route::post('/showdato', 'GestionDatosController@showDato');
 Route::post('/updatedato', 'GestionDatosController@updateDato');
+Route::post('/getdatosleads', 'GestionDatosController@getDatosLeads');
 
 Route::post('/getdatosweb', 'GestionDatosWebController@getDatos');
 

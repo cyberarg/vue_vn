@@ -30,6 +30,10 @@ class OficialController extends Controller
         dd("create");
     }
 
+    public function getOficialesDatosWeb(Request $request){
+        return Oficial::where('DatoWeb', '1')->get();
+    }
+
     /**
      * Store a newly created resource in storage.
      *

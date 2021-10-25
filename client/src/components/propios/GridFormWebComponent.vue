@@ -25,7 +25,7 @@
         fixed-header
         height="58vh"
         :headers="headers_component"
-        :items="items"
+        :items="this.items"
         :item-class="setClass"
         :search="search"
         item-key="pars.itemkey"
@@ -184,6 +184,10 @@ export default {
       type: String,
       required: true,
     },
+    items: {
+      type: Array,
+      default: []
+    },
   },
 
   data() {
@@ -303,7 +307,8 @@ export default {
   },
 
   created() {
-    this.getData();
+    //this.getData();
+   // this.getDatos();
   },
   
   mounted() {
@@ -312,7 +317,6 @@ export default {
 
   computed: {
     ...mapState("gestiondatosweb", [
-      "items",
       "items_filtered",
       "showItemsFiltered",
       "loadingDatos",
@@ -377,12 +381,8 @@ export default {
     },
 
     dateFilter(value) {
-      console.log(value);
-      console.log(this.fecha_desde);
-      console.log(this.fecha_hasta);
 
       let fecha = moment(value).format('YYYY-MM-DD');
-      console.log(fecha);
 
       if ((!this.fecha_desde) && (!this.fecha_hasta)) {
         return true;
@@ -411,14 +411,17 @@ export default {
     },
 
     getDatos() {
+      let pars = {};
       if (this.grid == "Pendientes"){
-        this.getData();
+         pars = {DatoVerificado: 0};
+      }else{
+         pars = {DatoVerificado: 1};
       }
       
+      this.getData(pars);
     },
 
     setClass(item) {
-      //console.log(item);
 
       if (item.EsDatoNuevo == "1") {
         return "classDatoNuevo"; //NARANJA

@@ -3,7 +3,7 @@
     <va-input
       v-model="username"
       type="text"
-      :label="$t('auth.username')"
+      label="Usuario"
       :error="!!userErrors.length"
       :error-messages="userErrors"
     />
@@ -12,7 +12,7 @@
       class="inputselec"
       v-model="password"
       type="password"
-      :label="$t('auth.password')"
+      label="Contraseña"
       :error="!!passwordErrors.length"
       :error-messages="passwordErrors"
     />
@@ -35,9 +35,7 @@
       <va-button type="submit" class="my-0">{{ $t("auth.login") }}</va-button>
       -->
       <v-btn outlined color="indigo" :disabled="disableLogin" @click="onsubmit">
-        {{
-        $t("auth.login")
-        }}
+        Iniciar Sesión
       </v-btn>
     </div>
   </form>

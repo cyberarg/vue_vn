@@ -288,14 +288,30 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="8" md="8">
-                    <v-text-field
-                      dense
-                      label="Modelo"
-                      placeholder="Modelo"
-                      class="importantDisabled"
-                      :filled="filled"
-                      v-model="item.Modelo"
-                    ></v-text-field>
+                    
+                      <v-text-field
+                        dense
+                        label="Modelo"
+                        placeholder="Modelo"
+                        class="importantDisabled"
+                        :filled="filled"
+                        v-model="item.Modelo"
+                      
+                        
+                      >
+                        <template v-slot:append>  
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-icon :color="colorIconMatchGrupo"
+                              v-bind="attrs"
+                              v-on="on">
+                              {{ iconMatchGrupo }}
+                              </v-icon> 
+                            </template>
+                            <span>{{ toolTipBusqueda }}</span>
+                          </v-tooltip>
+                        </template>
+                      </v-text-field>
                   </v-col>
 
                 </v-row>
@@ -347,7 +363,37 @@
                         @change="changeEstado"
                       ></v-select>
                   </v-col>
+    
                 </v-row>    
+                <v-row>
+                  <v-col class="d-flex justify-end check_verif">
+                    <v-checkbox
+                      :disabled="disableChKVerificado"
+                      v-model="item.DatoVerificado"
+                      false-value="0"
+                      true-value="1"
+                      label="Dato Verificado"
+                      class="check_verif"
+                    ></v-checkbox>
+                  </v-col>
+                  <template v-if="item.DatoVerificado == 1">
+                    <v-col class="d-flex justify-end check_verif">
+                      <v-select
+                        dense
+                        :disabled="this.disableSelectOficial"
+                        class="fillable"
+                        :items="items_dw"
+                        item-text="Nombre"
+                        item-value="Codigo"
+                        label="Asignar A"
+                        :value="codOficial"
+                        @input="setOficial"
+                        @change="changeOficial"
+                      ></v-select>
+                    </v-col>
+                  </template>
+                </v-row> 
+
                 <v-row>
                  
                 </v-row>            
@@ -453,6 +499,13 @@ export default {
 
   data() {
     return {
+      obtuvoBusquedaGrupo: false,
+      exactMatch: null,
+      grupoTabla: null,
+      toolTipBusqueda: "",
+      colorIconMatchGrupo:null,
+      disableSelectOficial:true,
+
       listMarcas: [
         { Codigo: 2, Nombre: "Fiat" },
         { Codigo: 5, Nombre: "Volkswagen" },
@@ -522,10 +575,11 @@ export default {
     console.log(params);
     await this.$store.dispatch(this.modulo + "/mostrarDato", params);
 
-    this.checkRulesEstado(this.item.CodEstado);
+    //this.checkRulesEstado(this.item.CodEstado);
     this.mostrarFechaCompraGrabada();
-    this.mostrarFechaCaidaGrabada();
+    //this.mostrarFechaCaidaGrabada();
     //this.setEstado();
+    this.getOficialesDatoWeb()
   },
 
   watch: {
@@ -545,6 +599,7 @@ export default {
       newObs: "gestiondatosweb/newObs",
       saveDato: "gestiondatosweb/saveDato",
       searchValuesByGroup: "gestiondatosweb/searchValuesByGroup",
+      getOficialesDatoWeb: "oficiales/getOficialesDatoWeb"
     }),
 
     setVentaCaida() {
@@ -559,13 +614,16 @@ export default {
 
     async getDatosPlan(){
       let pars = {
-        Marca: 5, 
-        Grupo: 1756
+        Marca: this.item.Marca, 
+        Grupo: this.item.Grupo
       }
-
+      console.log(pars);
       await this.searchValuesByGroup(pars);
       this.item.Plan = this.valores[0].CodigoPlan;
       this.item.Modelo = this.valores[0].NombreModelo;
+      this.exactMatch = this.valores[0].ExactMatch;
+      this.grupoTabla = this.valores[0].GrupoTabla;
+      this.obtuvoBusquedaGrupo=true;
       console.log(this.valores);
     },
 
@@ -578,8 +636,10 @@ export default {
       }
 
       console.log(this.item);
+      
       await this.saveDato(this.item);
       await this.showSwal();
+      
       this.volver();
     },
 
@@ -618,6 +678,10 @@ export default {
 
     setEstado(value) {
       this.item.CodEstado = value;
+    },
+
+    setOficial(value) {
+      this.item.CodOficial = value;
     },
 
 
@@ -695,7 +759,8 @@ export default {
         this.ocultarDatePicker = true;
         this.disabledCboEstado = true;
       } else {
-        this.ocultarDatePicker = false;
+        this.ocultarDatePicke
+        return parseInt(this.item.CodOficial);r = false;
         this.disabledCboEstado = false;
       }
       if (this.user.HN_PuedeCambiarVendePlan == 1) {
@@ -715,21 +780,63 @@ export default {
 
       switch(value){
         case 5: // Pasar A Asignacion
-          //
+          this.disableSelectOficial = false;
         break;
         case 4: //Llamar Mas Adelante
-          //
+          this.disableSelectOficial = true;
         break;
         default:
-          //
+          this.disableSelectOficial = true;
         break;
 
       }
 
+      this.datosParaVerificarOk();
+
+    },
+
+    changeOficial(value) {
+      //
+    },
+
+     datosParaVerificarOk(){
+        //console.log(this.item);
+        return (this.item.Grupo != null && this.item.Orden != null &&  
+        this.item.CPG != null &&
+        this.item.Avance != null && this.item.HaberNeto != null && 
+        this.item.CodEstado != null);
     },
   },
 
   computed: {
+
+    iconMatchGrupo(){
+
+      if (this.obtuvoBusquedaGrupo){
+          if (this.exactMatch == '1'){
+            this.toolTipBusqueda = "Coincidencia Exacta"
+            this.colorIconMatchGrupo = "success"
+            return "mdi-check-circle-outline"
+          }
+          this.toolTipBusqueda = "Concidencia Parcial, Grupo Comparación: " + this.grupoTabla
+          this.colorIconMatchGrupo = "warning"
+          return "mdi-alert-circle-outline"
+
+      }
+      return ""
+    },
+
+    disableChKVerificado(){
+      //console.log(this.item.DatoVerificado);
+      if (this.item.DatoVerificado == 1){
+        //console.log('disableChKVerificado: True');
+        return true;
+      }
+     // console.log('disableChKVerificado:'+ this.datosParaVerificarOk());
+      return !(this.datosParaVerificarOk());
+
+     
+    },
 
     getToday() {
       return moment().format("DD/MM/YYYY");
@@ -745,6 +852,10 @@ export default {
 
     codEstado() {
       return parseInt(this.item.CodEstado);
+    },
+
+    codOficial() {
+      return parseInt(this.item.CodOficial);
     },
 
     codMarca(){
@@ -777,6 +888,10 @@ export default {
       "esConcesionario",
       "esVinculo",
       "codigoConcesionario",
+    ]),
+
+    ...mapState("oficiales", [
+      "items_dw"
     ]),
 
     ...mapState("gestiondatosweb", [
@@ -815,6 +930,11 @@ export default {
 .v-select {
   height: 10px;
   font-size: 14px;
+}
+
+.check_verif {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .v-checkbox {

@@ -26,11 +26,79 @@ class GestionDatosController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function getDatosLeads(Request $request){
+
+        $utils = new UtilsController;
+
+        $result = DB::select("CALL hnweb_subitegetdatos_leads();"); 
+
+        $list = array();
+        if (isset($result)){
+
+            foreach ($result as $r) {
+
+                $oDet = json_decode(json_encode($r), FALSE);
+                $oEstado = new \stdClass();
+                $oCaida = new \stdClass();
+
+
+                $oDet->ApeNom = $oDet->Apellido;
+                if ($oDet->Nombres != ""){
+                    $oDet->ApeNom = $oDet->ApeNom.", ".$oDet->Nombres;
+                }
+                
+
+                $fcav = null;
+                $fvc2 = strtotime($oDet->FechaVtoCuota2);
+
+                if ($oDet->Marca == 2 ){
+                    if ($oDet->FechaVtoCuota2 === NULL){
+                        $oDet->AvanceAutomatico = 0;
+
+                        if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
+                            $oDet->AvanceCalculado = $oDet->AvanceAutomatico;
+                        }
+                        
+                    }else{
+                        $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fvc2);
+                        $oDet->Avance = $oDet->AvanceAutomatico;
+                        $oDet->AvanceCalculado = $oDet->AvanceAutomatico;
+                    }
+                }else{
+                    $oDet->AvanceAutomatico = $oDet->Avance;
+                    
+                    if ($oDet->AvanceCalculado !== NULL){
+                        $oDet->Avance = $oDet->AvanceCalculado;
+                    }
+                }
+
+                $oEstado->Codigo = $oDet->CodEstado;
+                $oEstado->Nombre = $oDet->NomEstado;
+
+                $oCaida->Codigo = $oDet->CodMotivoCaida;
+                $oCaida->Nombre = $oDet->NomMotivoCaida;
+
+                $totPagas = $oDet->CPG + $oDet->CAD;
+
+                $oDet->Estado = $oEstado;
+                $oDet->Caida = $oCaida;
+
+                $util = new UtilsController;
+                $oDet->FechaCompra = $util->reversarFecha($oDet->FechaCompra, 'FE');
+
+                $oDet->PrecioMaximoCompra = $util->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
+                
+                array_push($list, $oDet); 
+
+            } //end foreach
+        }
+        return $list;
+
+    }
+
     public function getDatos(Request $request)
     {
 
-        //$db3= "CG";
-        //$result = DB::select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
         $marca = $request->Marca;
         $concesionario = $request->Concesionario;
         $oficial = $request->oficial;
@@ -39,48 +107,33 @@ class GestionDatosController extends Controller
 
         $utils = new UtilsController;
 
-       // switch($marca){
-       //     case 2:
-                switch($concesionario){
-                    case 4:
-                        $db = 'AC';
-                        if (isset($objOficial->CodigoAutoCervo)){
-                            $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0, ".$objOficial->CodigoAutoCervo.");");   
-                        }
-                                
-                    break;
-                    case 5:
-                        $db = 'AN';
-                        if (isset($objOficial->CodigoAutoNet)){
-                            $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, ".$objOficial->SupervisorAutoNet.", 0, ".$objOficial->CodigoAutoNet.");");
-                        }
-                    break;
-                    case 6:
-                        $db = 'CG';
-                        if (isset($objOficial->CodigoCarGroup)){
-                            $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, ".$objOficial->SupervisorCarGroup.", 0, ".$objOficial->CodigoCarGroup.");");
-                        } 
-                    break;
-
-                    default:
-                        $db = 'GF';
-                        $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, ".$supervisor.", 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
-                    break;
+        switch($concesionario){
+            case 4:
+                $db = 'AC';
+                if (isset($objOficial->CodigoAutoCervo)){
+                    $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0, ".$objOficial->CodigoAutoCervo.");");   
                 }
-           // break;
-           // default:
-           //     $db = 'GF';
-           //     $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, ".$supervisor.", 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
-           // break;
-       // }
+                        
+            break;
+            case 5:
+                $db = 'AN';
+                if (isset($objOficial->CodigoAutoNet)){
+                    $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, ".$objOficial->SupervisorAutoNet.", 0, ".$objOficial->CodigoAutoNet.");");
+                }
+            break;
+            case 6:
+                $db = 'CG';
+                if (isset($objOficial->CodigoCarGroup)){
+                    $result = DB::connection($db)->select("CALL hnweb_subitegetdatos(NULL, ".$objOficial->SupervisorCarGroup.", 0, ".$objOficial->CodigoCarGroup.");");
+                } 
+            break;
 
-        
+            default:
+                $db = 'GF';
+                $result = DB::select("CALL hnweb_subitegetdatos_vw(NULL, ".$supervisor.", 0, ".$marca.", ".$concesionario.", ".$oficial.");"); 
+            break;
+        }
 
-        
-        //$resultcg = array();
-
-        //$result = array_merge($resultvw, $resultcg);
-       // $result = DB::connection($db3)->select("CALL hnweb_subitegetdatos(NULL, NULL, 0);");
         $list = array();
         if (isset($result)){
 
@@ -103,20 +156,6 @@ class GestionDatosController extends Controller
 
                     $fcav = null;
                     $fvc2 = strtotime($oDet->FechaVtoCuota2);
-
-                    /*
-                    if ($oDet->FechaVtoCuota2 === NULL){
-                        if ($oDet->Marca == 5){
-                            $oDet->AvanceAutomatico = $oDet->Avance;
-                        }else{
-                            $oDet->AvanceAutomatico = 0;
-                        }
-        
-                    }else{
-                        $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fvc2);
-                        $oDet->Avance = $oDet->AvanceAutomatico;
-                    }
-                    */
 
                     if ($oDet->Marca == 2 ){
                         if ($oDet->FechaVtoCuota2 === NULL){

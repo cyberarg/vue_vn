@@ -233,6 +233,23 @@ export const actions = {
       });
   },
 
+  getDatosLeads({commit}){
+    commit("GET_DATA_STATUS");
+    let user = JSON.parse(localStorage.getItem("user"));
+    let oficial = 29; // 29 Es el codigo de oficial Gral para la base GF
+    let pars = {};
+   
+    pars.oficial = oficial;
+    return axios
+      .post("/getdatosleads", pars)
+      .then(response => {
+        commit("DATOS_SUCCESS", response.data);
+      })
+      .catch(err => {
+        commit("DATOS_ERROR");
+      });
+  },
+
   setData({ commit }, coleccion) {
     commit("SET_DATA_STATUS", coleccion);
   },

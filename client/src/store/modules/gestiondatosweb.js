@@ -7,6 +7,8 @@ export const state = {
   dataStatusMsg: "",
   items_totales: [],
   items: [],
+  itemsPendientes: [],
+  itemsVerificados: [],
   items_filtered: [],
   motivos: [],
   motivosCaida: [],
@@ -36,6 +38,8 @@ export const mutations = {
     state.items = [];
     state.items_filtered = [];
     state.observaciones = [];
+    state.itemsPendientes = [];
+    state.itemsVerificados = [];
   },
 
   GET_FILTERED_DATA_STATUS(state) {
@@ -45,7 +49,7 @@ export const mutations = {
   },
 
   FILTERED_SUCCESS(state, datos) {
-    console.log(datos);
+    //console.log(datos);
     state.items = datos;
     state.showItemsFiltered = true;
     state.dataStatus = "success";
@@ -57,20 +61,46 @@ export const mutations = {
     state.dataStatus = "loading";
     state.items_totales = [];
     state.items = [];
+    state.itemsPendientes = [];
+    state.itemsVerificados = [];
     state.askData = true;
     state.loadingDatos = true;
     state.showMsg = false;
   },
 
   DATOS_SUCCESS(state, datos) {
-    console.log(datos);
-    state.items_totales = datos;
+    //console.log(datos);
     state.items = datos;
     state.loadingDatos = false;
     state.dataStatus = "success";
 
     state.showMsg = false;
   },
+
+  DATOS_SUCCESS_P(state, datos) {
+    //console.log(datos);
+    state.itemsPendientes = datos;
+    state.loadingDatos = false;
+    state.dataStatus = "success";
+
+    state.showMsg = false;
+  },
+
+  DATOS_SUCCESS_V(state, datos) {
+    //console.log(datos);
+    state.itemsVerificados = datos;
+    state.loadingDatos = false;
+    state.dataStatus = "success";
+
+    if (state.itemsPendientes == []){
+      state.items = datos;
+    }else{
+      state.items = state.itemsPendientes.concat(datos);
+    }
+
+    state.showMsg = false;
+  },
+
 
   SET_DATA_STATUS(state, colection) {
     state.loadingDatos = true;
@@ -90,7 +120,7 @@ export const mutations = {
     state.loadingStatusInsert = false;
     state.dataStatusInsert = "success";
     state.dataStatusMsgInsert = "El nuevo dato web se agregó exitosamente";
-    console.log(respuesta);
+    //console.log(respuesta);
   },
 
   ALTA_ERROR(state) {
@@ -111,7 +141,7 @@ export const mutations = {
   },
 
   SAVE_SUCCESS(state, dato) {
-    console.log(dato);
+    //console.log(dato);
     state.item = dato;
     state.dataStatus = "success";
     state.dataStatusMsg = "Los datos se grabaron correctamente.";
@@ -154,6 +184,27 @@ export const mutations = {
     state.dataStatusMsg = "Ocurrió un error al intentar guardar los datos.";
     state.showMsg = true;
     state.loadingDatos = false;
+    state.itemsPendientes = [];
+    state.itemsVerificados = [];
+    
+  },
+
+  DATOS_ERROR_P(state) {
+    state.dataStatus = "error";
+    state.dataStatusMsg = "Ocurrió un error al intentar guardar los datos pendientes.";
+    state.showMsg = true;
+    state.loadingDatos = false;
+    state.itemsPendientes = [];
+    
+  },
+
+  DATOS_ERROR_V(state) {
+    state.dataStatus = "error";
+    state.dataStatusMsg = "Ocurrió un error al intentar guardar los datos verificados.";
+    state.showMsg = true;
+    state.loadingDatos = false;
+    state.itemsVerificados = [];
+    
   },
 
 
@@ -164,7 +215,7 @@ export const mutations = {
   },
 
   GRUPO_SUCCESS(state, datos) {
-    console.log(datos);
+    //console.log(datos);
     state.valores = datos;
     state.dataStatus = "success";
     state.loadingSearch = false;
@@ -193,12 +244,12 @@ export const mutations = {
   },
 
   MOTIVOS_CAIDA_SUCCESS(state, respuesta) {
-    console.log(respuesta);
+    //console.log(respuesta);
     state.motivosCaida = respuesta;
   },
 
   ESTADOS_SUCCESS(state, respuesta) {
-    console.log(respuesta);
+    //console.log(respuesta);
     state.estados = respuesta;
   }
 };
@@ -217,7 +268,7 @@ export const getters = {
 
 export const actions = {
   saveDato({ commit }, req) {
-    console.log(req);
+    //console.log(req);
     commit("SAVING_DATA");
     return axios
       .post("/updatedatoweb", req)
@@ -231,19 +282,19 @@ export const actions = {
   },
 
   setColection({ commit }, items) {
-    console.log(items);
+   // console.log(items);
     commit("SET_COLECTION_ASIG", items);
   },
 
   filterData({ commit, getters }, conc) {
     commit("GET_FILTERED_DATA_STATUS");
-    console.log(conc);
+    //console.log(conc);
     var filtrado = getters.filterItemsByConcesionario(conc);
     //console.log(filtrado);
     commit("FILTERED_SUCCESS", filtrado);
   },
 
-  getData({ commit }) {
+  getData({ commit }, params) {
     commit("GET_DATA_STATUS");
     var user = JSON.parse(localStorage.getItem("user"));
     var oficial = 29; // 29 Es el codigo de oficial Gral para la base GF
@@ -254,17 +305,64 @@ export const actions = {
     //console.log(user);
     let pars = {};
     pars.oficial = oficial;
-
+    //pars.DatoVerificado = params.DatoVerificado;
     //console.log(oficial);
-    console.log(pars);
+    //(pars);
     return axios
       .post("/getdatosweb", pars)
       .then(response => {
-        commit("DATOS_SUCCESS", response.data);
+          commit("DATOS_SUCCESS", response.data);
       })
       .catch(err => {
         //console.log("get datos error");
         commit("DATOS_ERROR");
+      });
+  },
+
+  getDatosPendientes({ commit }, params) {
+    commit("GET_DATA_STATUS");
+    var user = JSON.parse(localStorage.getItem("user"));
+    var oficial = 29; // 29 Es el codigo de oficial Gral para la base GF
+
+    if (user.HNConcesionario == null && user.HN_PerfilUsuario !== "2") {
+      oficial = user.CodigoOficialHN;
+    }
+    //console.log(user);
+    let pars = {};
+    pars.oficial = oficial;
+    //console.log(oficial);
+    //console.log(pars);
+    return axios
+      .post("/getdatosweb_pend", pars)
+      .then(response => {
+          commit("DATOS_SUCCESS_P", response.data);
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("DATOS_ERROR_P");
+      });
+  },
+
+  getDatosVerificados({ commit }, params) {
+    var user = JSON.parse(localStorage.getItem("user"));
+    var oficial = 29; // 29 Es el codigo de oficial Gral para la base GF
+
+    if (user.HNConcesionario == null && user.HN_PerfilUsuario !== "2") {
+      oficial = user.CodigoOficialHN;
+    }
+    //console.log(user);
+    let pars = {};
+    pars.oficial = oficial;
+    //console.log(oficial);
+   // console.log(pars);
+    return axios
+      .post("/getdatosweb_verif", pars)
+      .then(response => {
+          commit("DATOS_SUCCESS_V", response.data);
+      })
+      .catch(err => {
+        //console.log("get datos error");
+        commit("DATOS_ERROR_V");
       });
   },
 
@@ -308,7 +406,7 @@ export const actions = {
     commit("RESET_ITEM");
     commit("RESET_OBS");
     var dato = getters.getDatoById(params.id);
-    console.log(dato);
+    //console.log(dato);
 
     if (dato) {
       commit("SET_DATO", dato);
@@ -318,8 +416,9 @@ export const actions = {
       return axios
         .post("/showdatoweb", params)
         .then(response => {
-          //console.log(response.data);
-          commit("SET_DATO", response.data[0]);
+          console.log('Response showdatoweb');
+          console.log(response.data);
+          commit("SET_DATO", response.data);
           dispatch("getObservacionesDato", params);
           dispatch("loadCombosMotivoEstado");
         })
@@ -344,21 +443,21 @@ export const actions = {
   },
 
   getObservacionesDato({ commit }, params) {
-    console.log(params);
+    //console.log(params);
     return axios
       .post("/getobservacionesweb", params)
       .then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         commit("OBS_SUCCESS", response.data);
       })
       .catch(err => {
-        console.log("get datos error");
+        //console.log("get datos error");
         commit("OBS_ERROR");
       });
   },
 
   newObs({ commit }, params) {
-    console.log(params);
+    //console.log(params);
     return axios
       .post("/observacionesweb", params)
       .then(response => {

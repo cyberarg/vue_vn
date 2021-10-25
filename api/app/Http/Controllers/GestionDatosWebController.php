@@ -7,6 +7,7 @@ use App\ObservacionWeb;
 use App\ReferenciaAvance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UtilsController;
+use App\SubiteDatos;
 use DateTime;
 use DB;
 
@@ -27,6 +28,7 @@ class GestionDatosWebController extends Controller
     public function getDatos(Request $request)
     {
 
+         /*
         return DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
         DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
         Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
@@ -36,7 +38,7 @@ class GestionDatosWebController extends Controller
         WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
         FROM datos_web_hn DW");
 
-        /*
+       
         $lstDatos = array();
         $datosPendientes = array();
         $datosVerificados = array();
@@ -66,7 +68,7 @@ class GestionDatosWebController extends Controller
 
         return $lstDatos;
         */
-        // return DatoWeb::whereNull('PasarDato')->get();
+        return DatoWeb::whereNull('PasarDato')->get();
     }
 
 
@@ -76,12 +78,12 @@ class GestionDatosWebController extends Controller
         return DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
         DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
         Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
-        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, 
+        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, DatoVerificado,
         (SELECT DATE_FORMAT(Fecha,'%Y/%m/%d')
         FROM datos_web_hn_obs 
         WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
         FROM datos_web_hn DW
-        WHERE DW.DatoVerificado = 0");
+        WHERE DW.DatoVerificado = 0 AND IFNULL(DW.CodOficial, 2) = 2");
 
     }
 
@@ -91,12 +93,12 @@ class GestionDatosWebController extends Controller
         return DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
         DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
         Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
-        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, 
+        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, DatoVerificado,
         (SELECT DATE_FORMAT(Fecha,'%Y/%m/%d')
         FROM datos_web_hn_obs 
         WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
         FROM datos_web_hn DW
-        WHERE DW.DatoVerificado = 1");
+        WHERE DW.DatoVerificado = 1 AND IFNULL(DW.CodOficial, 2) = 2");
 
     }
 
@@ -140,7 +142,8 @@ class GestionDatosWebController extends Controller
 
     public function showDato(Request $request)
     {
-        return DatoWeb::findOrFail($request->ID);
+        //dd(DatoWeb::findOrFail($request->id));        
+        return DatoWeb::findOrFail($request->id);
 
     }
 
@@ -198,6 +201,8 @@ class GestionDatosWebController extends Controller
         $marca = $request->Marca;
 
         return DB::select('CALL hnweb_get_informacion_dato_web('.$marca.', '.$grupo.');');
+
+        
 
     }
 
@@ -321,6 +326,10 @@ class GestionDatosWebController extends Controller
             $dato->PorcentajeValorHN = $request->PorcentajeValorHN; 
         }
 
+        if ($dato->DatoVerificado != $request->DatoVerificado){
+            $dato->DatoVerificado = $request->DatoVerificado; 
+        }
+
         $dato->EsDatoNuevo =  0;
 
         if ($request->CodEstado){
@@ -330,8 +339,43 @@ class GestionDatosWebController extends Controller
             if ($dato->CodEstado != $request->CodEstado){
                 $dato->CodEstado = $request->CodEstado;
 
-                if ($dato->CodEstado == 5){ //Pasar A Asignación
-                    //Generar Registro en SubiteDatos
+                if ($request->CodEstado == 5){ //Pasar A Asignación
+
+                    if (($request->DatoVerificado == 1) && ($request->CodOficial != null)){
+
+                        //Generar Registro en SubiteDatos
+                        $subite_dato = new SubiteDatos;
+
+                        $subite_dato->ID_DatoWeb = $request->ID;
+                        $subite_dato->Marca = $request->Marca;
+                        $subite_dato->Concesionario = $util->getConcesionarioWebMarca($request->Marca);
+                        $subite_dato->Grupo = $request->Grupo;
+                        $subite_dato->Orden = $request->Orden;
+                        $subite_dato->Apellido = $request->FullName;
+                        $subite_dato->NroDoc = $request->NroDoc;
+                        $subite_dato->Telefono1 = $request->Telefono;
+                        $subite_dato->Email1 = $request->Email;
+                        $subite_dato->Avance = $request->Avance;
+                        $subite_dato->CodOficial = $request->CodOficial;
+                        $subite_dato->CodSup = 60;
+                        $subite_dato->EsDatoWeb = 1;
+                        $subite_dato->EsDatoNuevo = 1;
+                        $subite_dato->HaberNeto = $request->HaberNeto;
+                        $subite_dato->CPG = $request->CPG;
+                        $subite_dato->CAD = $request->CAD;
+                        $subite_dato->Plan = $request->Plan;
+                        $subite_dato->FechaAltaRegistro = now();
+                        $subite_dato->FechaUltimaAsignacion = now();
+                        $subite_dato->FechaInicioPlan = $request->FechaVtoCuota2;
+                        $subite_dato->AvanceCalculado = $request->Avance;
+                        $subite_dato->CuotasReconocidas = $request->PorcentajeValorHN;
+
+                        $subite_dato->save();
+
+                        $dato->CodOficial = $request->CodOficial;
+
+                    }
+                
                 }
             }
 

@@ -11,7 +11,7 @@
             'sidebar-menu-item-icon vuestic-iconset',
             item.meta.iconClass,
           ]"
-          :title="$t(item.displayName)"
+          :title="item.displayName"
           :is-multi-row="item.children.length > 10"
         >
           <app-topbar-link-group-item
@@ -24,7 +24,7 @@
             :key="key"
             :to="{ name: subMenuItem.name }"
             :is-active="subMenuItem.name === $route.name"
-            :title="$t(subMenuItem.displayName)"
+            :title="subMenuItem.displayName"
           />
         </app-topbar-link-group>
         <app-topbar-link
@@ -37,7 +37,7 @@
             item.meta.iconClass,
           ]"
           :to="{ name: item.name }"
-          >{{ $t(item.displayName) }}</app-topbar-link
+          >{{ item.displayName }}</app-topbar-link
         >
       </template>
     </ul>

@@ -173,6 +173,37 @@ class UtilsController extends Controller
 
     }
 
+    public function getConcesionarioWebMarca($marca){
+
+        switch ($marca) {
+            case 2: //Fiat
+                $ce = 13;
+            break;
+            case 3: //Peugeot
+                $ce = 12;
+            break;
+            case 5: //VW
+                $ce = 15;
+            break;
+            case 7: //Jeep
+                $ce = 14;
+            break;
+            case 9: //Ford
+                $ce = 16; 
+            break;
+            case 10: //Citroem
+                $ce = 17;
+            break;
+            
+            default:
+                $ce = null;
+            break;
+        }
+
+        return $ce;
+
+    }
+
     public function seEstaTrabajando($fechaUltimaObs){
 
         if ((is_null($fechaUltimaObs))){

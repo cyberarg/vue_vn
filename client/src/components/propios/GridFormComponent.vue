@@ -1,20 +1,10 @@
 <template>
   <div>
     <v-card color="grey lighten-4">
-      <v-card-title>
+      <v-card-title v-if="this.show_title">
         {{ pars.titleform }}
         <v-divider class="mx-4" inset vertical></v-divider>
-        <!--
-        <v-combobox
-          v-show="mostrarCombo"
-          item-text="Nombre"
-          item-value="Codigo"
-          :items="listConcesionarios"
-          label="Concesionario"
-          :value="codConcesSelected"
-          @change="filterConcesionaria"
-        ></v-combobox>
-        -->
+
         <v-spacer></v-spacer>
         <template v-if="!esConcesionario">
           <v-row class="padded">
@@ -83,34 +73,7 @@
         loading-text="Cargando Datos... Aguarde"
         no-data-text="No hay datos disponibles"
       >
-        <!--
-        <template v-slot:item="{ item, headers }">
-          <template v-if="(pars.origen = 'gestiondatos')">
-            <tr :class="setClass(item)">
-         
-              <td align="center" width="1%">{{ item.Grupo }}-{{ item.Orden }}</td>
-              <td align="center">{{ getTextConc(item.Concesionario) }}</td>
-              <td align="center">${{ Math.round(item.HaberNeto) | numFormat }}</td>
-              <td align="start">{{ item.ApeNom }}</td>
-   
-              <td align="center">{{ item.Avance }}</td>
-              <td align="left">{{ getTextEstado(item.NomEstado) }}</td>
-              <td align="left">{{ getTextMotivo(item.Motivo) }}</td>
-              <td align="center">{{ item.FechaCompra }}</td>
-              <td align="center">${{ Math.round(item.PrecioCompra) | numFormat }}</td>
-              <td align="center">${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</td>
-              <td align="center">{{ formatFecha(item.FechaUltimaAsignacion) }}</td>
-              <td align="center">{{ formatFecha(item.FechaUltObs) }}</td>
-              <td>
-                <v-btn text @click="getDato(item)">
-                  <v-icon left>mdi-text-search</v-icon>Ver Dato
-                </v-btn>
-              </td>
-            </tr>
-          </template>
-        </template>
-        -->
-        <!--<template v-if="(pars.origen = 'gestiondatos')">-->
+
 
         <template v-slot:item.Star="{ item }">
           <v-tooltip bottom>
@@ -162,36 +125,6 @@
           </v-btn>
         </template>
 
-        <!--   </template> -->
-
-        <!--
-        <template v-else>
-          <template v-slot:item.ApeNom="{ item }">{{ item.Apellido }}, {{ item.Nombres }}</template>
-
-          <template v-slot:item.HaberNeto="{ item }">${{ Math.round(item.HaberNeto) | numFormat }}</template>
-
-          <template
-            v-slot:item.PrecioMaximoCompra="{ item }"
-          >${{ Math.round(item.PrecioMaximoCompra) | numFormat }}</template>
-
-          <template
-            v-slot:item.PrecioCompra="{ item }"
-          >${{ Math.round(item.PrecioCompra) | numFormat }}</template>
-
-          <template v-slot:item.GrupoOrden="{ item }">{{ item.Grupo }}/{{ item.Orden }}</template>
-
-          <template v-slot:item.FechaCompra="{ item }">{{ formatFecha(item.FechaCompra) }}</template>
-
-          <template v-slot:item.Motivo="{ item }">{{ getTextMotivo(item.Motivo) }}</template>
-
-          <template v-slot:item.FechaUltObs="{ item }">{{ formatFecha(item.FechaUltObs) }}</template>
-          <template v-slot:item.VerDatos="{ item }">
-            <v-btn text @click="getDato(item)">
-              <v-icon left>mdi-text-search</v-icon>Ver Dato
-            </v-btn>
-          </template>
-        </template>
-        -->
 
         <template v-slot:top>
           <v-expansion-panels focusable>
@@ -200,19 +133,7 @@
               <v-expansion-panel-content>
                 <v-container fluid>
                   <v-row>
-                    <!--
-                    <v-col cols="3">
-                      <v-row class="pa-6">
-                        <v-combobox
-                          v-model="oficialFilterValue"
-                          item-text="Nombre"
-                          item-value="Codigo"
-                          :items="listOficialesFilter"
-                          label="Oficial"
-                        ></v-combobox>
-                      </v-row>
-                    </v-col>
-                    -->
+
                     <v-col cols="3">
                       <v-row class="pa-6">
                         <v-select
@@ -233,18 +154,7 @@
                         ></v-slider>
                       </v-row>
                     </v-col>
-                    <!--
-                    <v-col cols="3">
-                      <v-row class="pa-10">
-                        <v-text-field
-                          label="Haber Neto"
-                          v-model="sliderHaberNeto"
-                          class="mt-0 pt-0"
-                          type="number"
-                        ></v-text-field>
-                      </v-row>
-                    </v-col>
-                    -->
+
                   </v-row>
                 </v-container>
               </v-expansion-panel-content>
@@ -284,6 +194,16 @@ export default {
       type: Array,
       required: true,
     },
+    show_title:{
+      type:Boolean,
+      required:false,
+      default:true
+    },
+    from_leads:{
+      type:Boolean,
+      required:false,
+      default:false
+    },
   },
 
   data() {
@@ -292,7 +212,7 @@ export default {
       oficialFilterValue: "",
       stateFilterValue: null,
       sliderAvance: 45,
-      minByBrand:45,
+      minByBrand: 45,
       sliderHaberNeto: 15000,
 
       statesList: [
@@ -356,6 +276,9 @@ export default {
 
   created() {
     //this.$store.dispatch(this.module + "/getData", this.api);
+    if (this.from_leads){
+      this.setMinimosFiltrosLeads()
+    }
   },
   mounted() {
     this.checkEsConcesionario();
@@ -589,6 +512,11 @@ export default {
       const filename = "archivoexcel";
       XLSX.utils.book_append_sheet(workbook, data, filename);
       XLSX.writeFile(workbook, `${filename}.xlsx`);
+    },
+
+    setMinimosFiltrosLeads(){
+      this.sliderAvance = 1;
+      this.minByBrand = 1;
     },
 
     filterListConcesionaria(value) {
