@@ -374,6 +374,7 @@
                       true-value="1"
                       label="Dato Verificado"
                       class="check_verif"
+                      @change="check_AsignarA($event)"
                     ></v-checkbox>
                   </v-col>
                   <template v-if="item.DatoVerificado == 1">
@@ -389,6 +390,7 @@
                         :value="codOficial"
                         @input="setOficial"
                         @change="changeOficial"
+                  
                       ></v-select>
                     </v-col>
                   </template>
@@ -577,6 +579,7 @@ export default {
 
     //this.checkRulesEstado(this.item.CodEstado);
     this.mostrarFechaCompraGrabada();
+    this.selectAsignarA_Behavior(this.item.CodEstado);
     //this.mostrarFechaCaidaGrabada();
     //this.setEstado();
     this.getOficialesDatoWeb()
@@ -612,6 +615,12 @@ export default {
         console.log(this.item.PorcentajeValorHN);
     },
 
+    check_AsignarA: function(e) {
+		  if (this.item.DatoVerificado == 1){
+        this.selectAsignarA_Behavior(this.item.CodEstado);
+      }
+    },
+
     async getDatosPlan(){
       let pars = {
         Marca: this.item.Marca, 
@@ -621,6 +630,7 @@ export default {
       await this.searchValuesByGroup(pars);
       this.item.Plan = this.valores[0].CodigoPlan;
       this.item.Modelo = this.valores[0].NombreModelo;
+      this.item.CodigoModelo = this.valores[0].CodigoModelo;
       this.exactMatch = this.valores[0].ExactMatch;
       this.grupoTabla = this.valores[0].GrupoTabla;
       this.obtuvoBusquedaGrupo=true;
@@ -778,6 +788,8 @@ export default {
 
     changeEstado(value) {
 
+      selectAsignarA_Behavior(value);
+      /*
       switch(value){
         case 5: // Pasar A Asignacion
           this.disableSelectOficial = false;
@@ -790,9 +802,18 @@ export default {
         break;
 
       }
-
+     
       this.datosParaVerificarOk();
+      */
+    },
 
+    selectAsignarA_Behavior(estado){
+      if (this.item.DatoVerificado == 1 && estado == 5){
+        this.disableSelectOficial = false;
+      }else{
+        this.disableSelectOficial = true;
+      }
+      this.datosParaVerificarOk();
     },
 
     changeOficial(value) {

@@ -78,7 +78,7 @@ class GestionDatosWebController extends Controller
         return DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
         DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
         Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
-        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, DatoVerificado,
+        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, DatoVerificado, Modelo, CodigoModelo,
         (SELECT DATE_FORMAT(Fecha,'%Y/%m/%d')
         FROM datos_web_hn_obs 
         WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
@@ -93,7 +93,7 @@ class GestionDatosWebController extends Controller
         return DB::select("SELECT DW.ID, FullName, MarcaPlan, ModeloAhorro, CantidadCuotas, Telefono, Email, EstadoPlan, 
         DATE_FORMAT(FechaLead,'%Y/%m/%d') AS FechaLead, Marca, Grupo, Orden, Solicitud, NroDoc, FechaVtoCuota2, 
         Avance, HaberNeto, PorcentajeValorHN, Domicilio, CodOficial, CodSup, CodEstado, PasarDato, EsDatoNuevo, 
-        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, DatoVerificado,
+        Telefono2, Email2, Plan, CPG, CAD, Comentarios, EsDatoViejo, OrigenLead, DatoVerificado, Modelo, CodigoModelo,
         (SELECT DATE_FORMAT(Fecha,'%Y/%m/%d')
         FROM datos_web_hn_obs 
         WHERE ID_DatoWeb = DW.ID ORDER BY Fecha DESC LIMIT 1) AS FechaUltObs
@@ -314,6 +314,14 @@ class GestionDatosWebController extends Controller
             $dato->Plan = $request->Plan; 
         }
 
+        if ($dato->Modelo != $request->Modelo){
+            $dato->Modelo = $request->Modelo; 
+        }
+
+        if ($dato->CodigoModelo != $request->CodigoModelo){
+            $dato->CodigoModelo = $request->CodigoModelo; 
+        }
+        
         if ($dato->Avance != $request->Avance){
             $dato->Avance = $request->Avance; 
         }
@@ -336,7 +344,7 @@ class GestionDatosWebController extends Controller
              $hoy = new DateTime('NOW');
              $ffHoy =  $hoy->format('Y-m-d H:i:s');
 
-            if ($dato->CodEstado != $request->CodEstado){
+            if ($dato->CodOficial == null && $request->CodOficial != null){
                 $dato->CodEstado = $request->CodEstado;
 
                 if ($request->CodEstado == 5){ //Pasar A Asignación
@@ -373,11 +381,17 @@ class GestionDatosWebController extends Controller
                         $subite_dato->save();
 
                         $dato->CodOficial = $request->CodOficial;
+                        $dato->CodSup = 60;
 
                     }
                 
                 }
+            }else{
+                if ($dato->CodEstado != $request->CodEstado){
+                    $dato->CodEstado = $request->CodEstado; 
+                }
             }
+
 
         
         }
