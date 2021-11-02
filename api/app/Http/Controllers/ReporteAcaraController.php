@@ -63,7 +63,7 @@ class ReporteAcaraController extends Controller
             */
 
             $fechaInicial = new DateTime('2005-01-01');
-            $fechaFinal = new DateTime('2021-09-01');
+            $fechaFinal = new DateTime('2021-11-01');
         }
 
         $intervalo = new DateInterval('P1M');
