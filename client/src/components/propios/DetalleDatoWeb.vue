@@ -624,17 +624,25 @@ export default {
     async getDatosPlan(){
       let pars = {
         Marca: this.item.Marca, 
-        Grupo: this.item.Grupo
+        Grupo: this.item.Grupo,
+        CPG: this.item.CPG,
+        CAD: this.item.CAD,
+        Porcentaje: this.item.PorcentajeValorHN,
       }
       console.log(pars);
       await this.searchValuesByGroup(pars);
-      this.item.Plan = this.valores[0].CodigoPlan;
-      this.item.Modelo = this.valores[0].NombreModelo;
-      this.item.CodigoModelo = this.valores[0].CodigoModelo;
-      this.exactMatch = this.valores[0].ExactMatch;
-      this.grupoTabla = this.valores[0].GrupoTabla;
-      this.obtuvoBusquedaGrupo=true;
       console.log(this.valores);
+      this.item.Plan = this.valores.CodigoPlan;
+      this.item.Modelo = this.valores.NombreModelo;
+      this.item.CodigoModelo = this.valores.CodigoModelo;
+      this.exactMatch = this.valores.ExactMatch;
+      this.grupoTabla = this.valores.GrupoTabla;
+      this.item.HaberNeto = this.valores.HaberNeto;
+      this.item.Avance = this.valores.AvanceCalculado;
+      this.obtuvoBusquedaGrupo=true;
+
+
+      
     },
 
     async submit() {

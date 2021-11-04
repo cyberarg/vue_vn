@@ -34,7 +34,7 @@
             <v-col cols="3">
               <v-text-field
                 v-show="mostrarbuscar"
-                v-model="search"
+                v-model="search_box"
                 append-icon="mdi-magnify"
                 label="Buscar"
                 single-line
@@ -46,7 +46,7 @@
         <template v-else>
           <v-text-field
             v-show="mostrarbuscar"
-            v-model="search"
+            v-model="search_box"
             append-icon="mdi-magnify"
             label="Buscar"
             single-line
@@ -204,6 +204,11 @@ export default {
       required:false,
       default:false
     },
+    search_str:{
+      type:String,
+      required:false,
+      default:""
+    }
   },
 
   data() {
@@ -227,7 +232,7 @@ export default {
         { text: "En Gestión", value: "En Gestion" },
       ],
 
-      search: "",
+      search_box: "",
       showTooltip: false,
       showBotones: null,
       //loading: true,
@@ -279,6 +284,7 @@ export default {
     if (this.from_leads){
       this.setMinimosFiltrosLeads()
     }
+    
   },
   mounted() {
     this.checkEsConcesionario();
@@ -306,6 +312,13 @@ export default {
       "esVinculo",
       "codigoConcesionario",
     ]),
+
+    search(){
+      if (this.search_str == ""){
+        return this.search_box;
+      }
+      return this.search_str;
+    },
 
     getMinByBrand(){
       if (this.codMarcaSelected == 3){

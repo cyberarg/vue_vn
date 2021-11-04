@@ -199,10 +199,54 @@ class GestionDatosWebController extends Controller
     {
         $grupo = $request->Grupo;
         $marca = $request->Marca;
+        $cpg = $request->CPG;
+        $cad = $request->CAD;
 
-        return DB::select('CALL hnweb_get_informacion_dato_web('.$marca.', '.$grupo.');');
-
+        $respuesta = array();
+        $hn = array();
+        $data_return = array();
+        $utils = new UtilsController;
+        $obj = new \stdClass;
         
+
+        $respuesta = DB::select('CALL hnweb_get_informacion_dato_web('.$marca.', '.$grupo.');');
+        $result = $respuesta[0];
+        
+        $obj = $result;
+        $obj->Marca = $marca;
+        $obj->CPG = $cpg;
+        if (is_null($cad)){
+            $cad = 0;
+        }
+        $obj->CAD = $cad;
+        $obj->Porcentaje = 0;
+       
+        $data_return['CodigoModelo'] = $result->CodigoModelo;
+        $obj->CodigoModelo = $data_return['CodigoModelo'];
+        $data_return['NombreModelo'] = $result->NombreModelo;
+        $data_return['FechaCalculoAvance'] = $result->FechaCalculoAvance;
+        $data_return['AvanceCalculado'] = $utils->getAvanceAutomaticoDatosWeb(strtotime($result->FechaCalculoAvance));
+        $obj->AvanceCalculado = $data_return['AvanceCalculado'];
+        $data_return['CodigoPlan'] = $result->CodigoPlan;
+        $data_return['TipoPlan'] = $result->TipoPlan;
+        $data_return['Plazo'] = $result->Plazo;
+        $data_return['CE_Origen'] = $result->CE_Origen;
+        $data_return['ExactMatch'] = $result->ExactMatch;
+        $data_return['GrupoTabla'] = $result->GrupoTabla;
+        $data_return['HaberNeto'] = null;
+
+        if ($result->ExactMatch == 1){
+            switch ($marca) {
+                case 5:
+                    $hn = $utils->getHaberNetoDatoWeb($obj);
+                    $hn_result = $hn[0];
+                    $data_return['HaberNeto'] = $hn_result->HN_Real;
+                break;
+
+            }
+        }
+
+        return $data_return;
 
     }
 

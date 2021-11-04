@@ -73,6 +73,7 @@
               :headers="headers_datos"
               :show_title="false"
               :from_leads="true"
+              :search_str="this.search"
             ></GridFormComponent>
             </v-card>
           </v-tab-item>

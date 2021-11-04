@@ -468,6 +468,37 @@ class UtilsController extends Controller
         return $avance;
     }
 
+    public function getAvanceAutomaticoDatosWeb($FechaVtoCuota2){
+
+        $avance = 0;
+
+        $fecha = strtotime(now());
+
+        if ($FechaVtoCuota2 === NULL){
+            return 0;
+        }else{
+            $fvtoc2 = date_create(date('Y-m-d', $FechaVtoCuota2));
+            $ff = date_create(date('Y-m-d', $fecha));       
+    
+            if (checkdate(date('m', $FechaVtoCuota2), date('d', $FechaVtoCuota2), date('Y', $FechaVtoCuota2))){
+                $diff = date_diff($fvtoc2 , $ff);
+                $avance = ($diff->format('%a') / 365) * 12;
+                $avance = round($avance, 0);
+            }
+        }
+
+        if ($avance > 84){
+            $avance = 84;
+        }
+
+        return $avance;
+    }
+
+    public function getHaberNetoDatoWeb($object){
+
+        return DB::select("CALL hnweb_calculo_hn_dato_web(".$object->Marca.", ".$object->CodigoModelo.", '".$object->CodigoPlan."', ".$object->CPG.", ".$object->CAD.", ".$object->AvanceCalculado.", ".$object->Porcentaje.");");
+
+    }
 
     public function getAvanceAutomaticoFiat($FechaVtoCuota2){
 
