@@ -91,6 +91,7 @@ class AsignacionDatosController extends Controller
                     $totPagas = $oDet->CPG + $oDet->CAD;
                 }
                 
+                $oDet->PMaxCompra = $utils->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
 
                 //Pedido Dani Fernandez 01/10/2020 SACAR los casos cuota 84
                 //Pedido Guido 12/11/2020 SACAR los casos Cuotas Pagas < 10
@@ -101,8 +102,8 @@ class AsignacionDatosController extends Controller
 
                    if ( (!($utils->enOtraSociedadOPropioMerge($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $oDet->CodEstado <> 5)){
 
-    
-                    if ($oDet->Avance == 84 && $oDet->CodOficial == null){
+                    //Pedido Dani Fernandez 04/11/2021 SACAR los casos de Fiat que tiene pmax de compra menor a 9000
+                    if (($oDet->Avance == 84 && $oDet->CodOficial == null) || ($oDet->Marca == 2 && $oDet->PMaxCompra < 9000)){
                         continue;
                     }
 
