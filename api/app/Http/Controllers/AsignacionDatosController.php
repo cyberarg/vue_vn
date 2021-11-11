@@ -102,18 +102,26 @@ class AsignacionDatosController extends Controller
 
                    if ( (!($utils->enOtraSociedadOPropioMerge($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $oDet->CodEstado <> 5)){
 
-                    //Pedido Dani Fernandez 04/11/2021 SACAR los casos de Fiat que tiene pmax de compra menor a 9000
-                    if (($oDet->Avance == 84 && $oDet->CodOficial == null) || ($oDet->Marca == 2 && $oDet->PMaxCompra < 9000)){
-                        continue;
+
+                    //CHEQUEOS BASE B 18,19,20,21,22
+                    if ($oDet->Concesionario == 18 || $oDet->Concesionario == 19 || $oDet->Concesionario == 20 || $oDet->Concesionario == 21 || $oDet->Concesionario == 22 ){
+
+                        if (($oDet->Avance < 84 ) && ($oDet->Avance >= 70) && ($oDet->HaberNeto >= 160000)){
+                            array_push($list, $oDet);
+                        }
+                    }else{
+                        //Pedido Dani Fernandez 04/11/2021 SACAR los casos de Fiat que tiene pmax de compra menor a 9000
+                        if (($oDet->Avance == 84 && $oDet->CodOficial == null) || ($oDet->Marca == 2 && $oDet->PMaxCompra < 9000)){
+                            continue;
+                        }
+
+                        //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
+                        
+                        if ($oDet->Marca == 2 || ($oDet->Marca == 3 && $oDet->HaberNeto > 29999) || ($oDet->Marca == 5 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
+                            array_push($list, $oDet);
+                        }
                     }
 
-                    //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
-                    
-                    if ($oDet->Marca == 2 || ($oDet->Marca == 3 && $oDet->HaberNeto > 29999) || ($oDet->Marca == 5 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
-                        array_push($list, $oDet);
-                    }
-
-                  
                 }
 
                 
