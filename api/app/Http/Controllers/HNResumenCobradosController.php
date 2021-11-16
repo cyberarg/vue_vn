@@ -541,7 +541,7 @@ class HNResumenCobradosController extends Controller
         $lstResumenMeses->offsetSet(9, $arrSep);
         $lstResumenMeses->offsetSet(10, $arrOct);
         $lstResumenMeses->offsetSet(11, $arrNov);
-        $lstResumenMeses->offsetSet(11, $arrDic);
+        $lstResumenMeses->offsetSet(12, $arrDic);
 
         $arrTotHNAnio = array();
         $arrTotHNAnio[0] = $SumHNARS_Anio0;

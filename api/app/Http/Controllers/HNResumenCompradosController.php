@@ -745,7 +745,7 @@ class HNResumenCompradosController extends Controller
         $lstResumenMeses->offsetSet(9, $arrSep);
         $lstResumenMeses->offsetSet(10, $arrOct);
         $lstResumenMeses->offsetSet(11, $arrNov);
-        $lstResumenMeses->offsetSet(11, $arrDic);
+        $lstResumenMeses->offsetSet(12, $arrDic);
 
         $arrTotHNAnio = array();
         $arrTotHNAnio[0] = $SumHNARS_Anio0;
@@ -795,7 +795,8 @@ class HNResumenCompradosController extends Controller
 
         $i = 1;
         $cantMeses = 1;
-        //dd($lstHNCompradosARS_Anio['M1']);
+      
+        //return $lstResumenMeses;
         foreach ($lstResumenMeses as $itemsMeses) {
            
             foreach ($itemsMeses as $item) {
