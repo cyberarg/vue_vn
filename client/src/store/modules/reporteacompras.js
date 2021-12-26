@@ -116,7 +116,7 @@ export const actions = {
     commit("GET_RESUMEN_STATUS");
 
     var endPoint = "/reportecomprasceresumen";
-    if (params.marca == 2) {
+    if (params.marca == 2 || params.marca == 7) {
       endPoint = "/reportecomprasresumen";
     }
 

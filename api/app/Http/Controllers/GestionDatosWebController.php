@@ -201,6 +201,7 @@ class GestionDatosWebController extends Controller
         $marca = $request->Marca;
         $cpg = $request->CPG;
         $cad = $request->CAD;
+        $mesesLista = 2;
 
         $respuesta = array();
         $hn = array();
@@ -234,9 +235,16 @@ class GestionDatosWebController extends Controller
         $data_return['ExactMatch'] = $result->ExactMatch;
         $data_return['GrupoTabla'] = $result->GrupoTabla;
         $data_return['HaberNeto'] = null;
+        $data_return['ModeloMarca'] = null;
+        $data_return['ValorAuto'] = null;
 
         if ($result->ExactMatch == 1){
             switch ($marca) {
+                case 2:
+                    $modelo_marca = $utils->getModelosSMarca($marca,2);
+                    $data_return['ModeloMarca'] = $modelo_marca;
+                break;
+
                 case 5:
                     $hn = $utils->getHaberNetoDatoWeb($obj);
                     $hn_result = $hn[0];
@@ -244,10 +252,31 @@ class GestionDatosWebController extends Controller
                 break;
 
             }
+        }else{
+
+            $modelo_marca = $utils->getModelosSMarca($marca,2);
+            $data_return['ModeloMarca'] = $modelo_marca;
+            
         }
 
         return $data_return;
 
+    }
+
+    public function getHaberNetoFCA(Request $request){
+        $utils = new UtilsController;
+        $obj = new \stdClass;
+
+        $obj->Marca = $request->Marca;
+        $obj->ValorAuto = $request->ValorAuto;
+        $obj->PagoBruto = $request->Porcentaje;
+        $obj->TipoPlan = $request->TipoPlan;
+        $obj->CantCuotas = $request->CantCuotas;
+        $obj->CPG = $request->CPG;
+ 
+        $hn = $utils->getHaberNetoDatoWebFCA($obj);
+        $hn_result = $hn[0];
+        return $hn_result->HaberNetoFCA;
     }
 
     public function createDato(Request $request)

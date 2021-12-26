@@ -64,7 +64,7 @@ class AsignacionDatosController extends Controller
                 //$fvc2 = strtotime($oDet->FechaVtoCuota2);
                 $fvc2 = $oDet->FechaVtoCuota2;
 
-                if ($oDet->Marca == 2){
+                if ($oDet->Marca == 2 || $oDet->Marca == 7){
                     if ($oDet->FechaVtoCuota2 === NULL){
                         if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
                             $oDet->AvanceAutomatico = 0;
@@ -111,13 +111,13 @@ class AsignacionDatosController extends Controller
                         }
                     }else{
                         //Pedido Dani Fernandez 04/11/2021 SACAR los casos de Fiat que tiene pmax de compra menor a 9000
-                        if (($oDet->Avance == 84 && $oDet->CodOficial == null) || ($oDet->Marca == 2 && $oDet->PMaxCompra < 9000)){
+                        if (($oDet->Avance == 84 && $oDet->CodOficial == null) || (($oDet->Marca == 2 || $oDet->Marca == 7 ) && $oDet->PMaxCompra < 9000)){
                             continue;
                         }
 
                         //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
                         
-                        if ($oDet->Marca == 2 || ($oDet->Marca == 3 && $oDet->HaberNeto > 29999) || ($oDet->Marca == 5 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
+                        if ($oDet->Marca == 2 || $oDet->Marca == 7 || ($oDet->Marca == 3 && $oDet->HaberNeto > 29999) || ($oDet->Marca == 5 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
                             array_push($list, $oDet);
                         }
                     }

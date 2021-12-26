@@ -9,7 +9,7 @@
       <v-container>
         <v-form ref="form" v-model="validForm">
           <v-row>
-            <v-col cols="6" md="6">
+            <v-col cols="6" md="6" sm="12" xs="12">
               <v-container>
                 <v-row>
                   <v-col cols="12" md="12">
@@ -102,7 +102,7 @@
                 
               </v-container>
             </v-col>
-            <v-col cols="6" md="6">
+            <v-col cols="6" md="6" sm="12" xs="12">
               <v-container>
                 <v-row>
                   <v-col cols="8" md="8">
@@ -245,22 +245,43 @@
                       v-model="item.Orden"
                     ></v-text-field>
                   </v-col>
+
+                  <v-col cols="4" md="4" class="check_activo">
+                    <v-checkbox
+                      v-model="item.PlanActivo"
+                      false-value="0"
+                      true-value="1"
+                      label="Plan Activo"
+                     
+                    ></v-checkbox>
+                  </v-col>
                   
-                  <v-col cols="2" md="2">
+                </v-row>
+                <v-row>
+                   <v-col cols="4" md="4" sm="12" xs="12" class="d-flex align-items-start check_activo px-3">
                     <v-btn
-                      class="ma-2"
+
                       small
                       :loading="loadingSearch"
                       :disabled="loadingSearch"
                       color="secondary"
                       @click="getDatosPlan"
                     >
-                      Obtener Datos del Grupo
-                      <v-icon right>mdi-cached</v-icon>
+                      Datos del Grupo
+                      <v-icon right>mdi-magnify</v-icon>
                     </v-btn>
-
+                  </v-col>
+                  <v-col cols="8" md="8" sm="12" xs="12" class="check_activo px-3">
+                    <v-text-field
+                        dense
+                        :color="this.color_datos_grupo"
+                        :loading="this.loading_datos_grupo"
+                        :value="this.detail_datos_grupo"
+                        readonly
+                    ></v-text-field>
                   </v-col>
                 </v-row>
+
                 <v-row> 
                   <v-col cols="12" md="12" class="margintopdivider">
                     <v-divider class="mx-1" horizontal></v-divider>
@@ -288,7 +309,7 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="8" md="8">
-                    
+                    <template v-if="this.exactMatch == null" >
                       <v-text-field
                         dense
                         label="Modelo"
@@ -296,9 +317,19 @@
                         class="importantDisabled"
                         :filled="filled"
                         v-model="item.Modelo"
-                      
-                        
                       >
+                      </v-text-field>
+                    </template>
+                    <template v-else-if="this.exactMatch == 1">
+                        <v-text-field
+                        dense
+                        label="Modelo"
+                        placeholder="Modelo"
+                        class="importantDisabled"
+                        :filled="filled"
+                        v-model="item.Modelo"
+                      >
+                      
                         <template v-slot:append>  
                           <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
@@ -312,6 +343,20 @@
                           </v-tooltip>
                         </template>
                       </v-text-field>
+                    </template>
+                    <template v-else>
+                      <v-select
+                        dense
+                        class="fillable"
+                        :items="modelos_marca"
+                        item-text="Nombre"
+                        item-value="Codigo"
+                        label="Modelo"
+                        :value="ObjModelo"
+                        @input="setModelo"
+                        @change="changeModelo"
+                      ></v-select>
+                    </template>
                   </v-col>
 
                 </v-row>
@@ -321,21 +366,23 @@
                       dense
                       suffix="%"
                       v-mask="'##.##'"
-                      label="Porcentaje"
-                      placeholder="Porcentaje"
+                      :label="this.labelPorcentaje"
+                      :placeholder="this.labelPorcentaje"
                       class="importantDisabled"
                       :filled="filled"
                       v-model="item.PorcentajeValorHN"
-                      :disabled="this.codMarca != 2 && this.codMarca != 7"
+                      :disabled="this.codMarca != 2 && this.codMarca != 7 && this.codMarca != 3"
                     ></v-text-field>
                   </v-col>
                    <v-col cols="1" md="1">
                      <v-btn
                       icon
-                      :disabled="(this.codMarca != 2 && this.codMarca != 7) || item.PorcentajeValorHN == ''"
+                      :disabled="((this.codMarca != 2 && this.codMarca != 7 && this.codMarca != 3) || item.PorcentajeValorHN == '' || loadingHN)"
                       @click="calculateHaberNeto"
+                      :loading="loadingHN"
+   
                       >
-                      <v-icon>mdi-calculator</v-icon>
+                        <v-icon>mdi-calculator</v-icon>
                     </v-btn>
                   </v-col>
                   <v-col cols="4" md="4">
@@ -504,9 +551,18 @@ export default {
       obtuvoBusquedaGrupo: false,
       exactMatch: null,
       grupoTabla: null,
+      valorVehiculo: 0,
+      modelos_marca:[],
       toolTipBusqueda: "",
+      labelPorcentaje: "Porcentaje",
       colorIconMatchGrupo:null,
       disableSelectOficial:true,
+
+      loading_datos_grupo: false,
+      color_datos_grupo: "primary",
+      detail_datos_grupo: "",
+
+      ObjModelo:{},
 
       listMarcas: [
         { Codigo: 2, Nombre: "Fiat" },
@@ -602,7 +658,8 @@ export default {
       newObs: "gestiondatosweb/newObs",
       saveDato: "gestiondatosweb/saveDato",
       searchValuesByGroup: "gestiondatosweb/searchValuesByGroup",
-      getOficialesDatoWeb: "oficiales/getOficialesDatoWeb"
+      getOficialesDatoWeb: "oficiales/getOficialesDatoWeb",
+      getHN_FCA: "gestiondatosweb/getHN_FCA"
     }),
 
     setVentaCaida() {
@@ -611,8 +668,28 @@ export default {
       //this.dialog = true;
     },
 
-    calculateHaberNeto(){
+    setValorVehiculo(value){
+      console.log(value);
+      //this.valorVehiculo = 
+    },
+
+    async calculateHaberNeto(){
+      if (this.valorVehiculo > 0 && this.item.PorcentajeValorHN != ""){
+        if (this.item.Marca == 2){
+            let pars = {
+              Marca: this.item.Marca,
+              ValorAuto: this.valorVehiculo,
+              Porcentaje: this.item.PorcentajeValorHN,
+              TipoPlan: this.ObjModelo.TipoPlan,
+              CantCuotas: this.ObjModelo.CantCuotas,
+              CPG: this.item.CPG
+            };
+            await this.getHN_FCA(pars);
+            this.item.HaberNeto = this.hn_FCA;
+        }
         console.log(this.item.PorcentajeValorHN);
+      }
+        
     },
 
     check_AsignarA: function(e) {
@@ -622,6 +699,11 @@ export default {
     },
 
     async getDatosPlan(){
+
+      this.loading_datos_grupo = true;
+      this.detail_datos_grupo = "";
+      this.color_datos_grupo = "primary";
+
       let pars = {
         Marca: this.item.Marca, 
         Grupo: this.item.Grupo,
@@ -631,6 +713,9 @@ export default {
       }
       console.log(pars);
       await this.searchValuesByGroup(pars);
+
+      this.loading_datos_grupo = false;
+
       console.log(this.valores);
       this.item.Plan = this.valores.CodigoPlan;
       this.item.Modelo = this.valores.NombreModelo;
@@ -641,12 +726,44 @@ export default {
       this.item.Avance = this.valores.AvanceCalculado;
       this.obtuvoBusquedaGrupo=true;
 
+      if (this.item.Marca == 2){
+        
+        this.modelos_marca = this.valores.ModeloMarca;
+        this.item.Modelo = null;
+        this.item.CodigoModelo = null;
+
+        if (this.exactMatch == 0){
+          this.color_datos_grupo = "error";
+          this.detail_datos_grupo = "Coincidencia Parcial - Grupo Testigo: "+ this.valores.GrupoTabla;
+        }else{
+          this.color_datos_grupo = "success";
+          this.detail_datos_grupo = "Coincidencia Exacta";
+        }  
+        this.exactMatch = 0; // Lo dejo en 0 para que se muestre el combo del Modelo
+      }else{
+        if (this.exactMatch == 0){
+          this.modelos_marca = this.valores.ModeloMarca;
+          this.item.Modelo = null;
+          this.item.CodigoModelo = null;
+          this.color_datos_grupo = "error";
+          this.detail_datos_grupo = "Coincidencia Parcial - Grupo Testigo: "+ this.valores.GrupoTabla;
+        }else{
+          this.color_datos_grupo = "success";
+          this.detail_datos_grupo = "Coincidencia Exacta";
+        }
+      }
+
+      
 
       
     },
 
     async submit() {
       this.disabledAceptar = true;
+      if (this.ObjModelo != {}){
+        this.item.CodigoModelo = ObjModelo.Codigo;
+        this.item.Modelo = ObjModelo.Nombre;
+      }
 
       if (!this.$refs.form.validate()) {
         this.disabledAceptar = false;
@@ -696,6 +813,12 @@ export default {
 
     setEstado(value) {
       this.item.CodEstado = value;
+    },
+
+    setModelo(value) {
+      console.log(value);
+      this.item.CodigoModelo = value;
+      //this.codModelo = value;
     },
 
     setOficial(value) {
@@ -777,8 +900,8 @@ export default {
         this.ocultarDatePicker = true;
         this.disabledCboEstado = true;
       } else {
-        this.ocultarDatePicke
-        return parseInt(this.item.CodOficial);r = false;
+        this.ocultarDatePicker = false;
+        //return parseInt(this.item.CodOficial);
         this.disabledCboEstado = false;
       }
       if (this.user.HN_PuedeCambiarVendePlan == 1) {
@@ -792,7 +915,28 @@ export default {
 
     changeMarca(value){
       console.log(value);
+      if (this.codMarca == 2 || this.codMarca == 7){
+        this.labelPorcentaje = 'Porcentaje';
+      }
+      if (this.codMarca == 3){
+        this.labelPorcentaje = 'Ctas. Reconocidas';
+      }
     },  
+
+    changeModelo(value){
+
+      this.item.HaberNeto = "";
+      this.ObjModelo = this.modelos_marca.find(function (item) {
+        return item.Codigo === value;
+      });
+
+      console.log(this.ObjModelo);
+
+      if (typeof this.ObjModelo !== "undefined"){
+        this.valorVehiculo = parseInt(this.ObjModelo.Precio);
+      }
+       
+    },
 
     changeEstado(value) {
 
@@ -883,6 +1027,10 @@ export default {
       return parseInt(this.item.CodEstado);
     },
 
+    codModelo(){
+      return parseInt(this.item.CodigoModelo);
+    },
+
     codOficial() {
       return parseInt(this.item.CodOficial);
     },
@@ -937,6 +1085,8 @@ export default {
       "motivosCaida",
       "valores",
       "loadingSearch",
+      "hn_FCA",
+      "loadingHN"
     ]),
   },
 };
@@ -959,6 +1109,11 @@ export default {
 .v-select {
   height: 10px;
   font-size: 14px;
+}
+
+.check_activo {
+  margin: 0;
+  padding: 0;
 }
 
 .check_verif {

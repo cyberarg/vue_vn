@@ -446,6 +446,12 @@ export default {
         { Codigo: 13, Nombre: "Datos Web - Fiat", Marca: 2 },
         { Codigo: 14, Nombre: "Datos Web - Jeep", Marca: 7 },
         { Codigo: 15, Nombre: "Datos Web - Volkswagen", Marca: 5 },
+
+        { Codigo: 18, Nombre: "Alra", Marca: 5 },
+        { Codigo: 19, Nombre: "Autotag", Marca: 5 },
+        { Codigo: 20, Nombre: "Maynar", Marca: 5 },
+        { Codigo: 21, Nombre: "Sebastiani", Marca: 5 },
+        { Codigo: 22, Nombre: "Yacopini", Marca: 5 },
         /*
         { Codigo: 16, Nombre: "Datos Web - Ford", Marca: 9 },
         { Codigo: 17, Nombre: "Datos Web - Citroen", Marca: 10 },

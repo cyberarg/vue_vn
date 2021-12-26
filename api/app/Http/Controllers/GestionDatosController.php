@@ -51,7 +51,7 @@ class GestionDatosController extends Controller
                 $fcav = null;
                 $fvc2 = strtotime($oDet->FechaVtoCuota2);
 
-                if ($oDet->Marca == 2 ){
+                if ($oDet->Marca == 2 || $oDet->Marca == 7 ){
                     if ($oDet->FechaVtoCuota2 === NULL){
                         $oDet->AvanceAutomatico = 0;
 
@@ -157,7 +157,7 @@ class GestionDatosController extends Controller
                     $fcav = null;
                     $fvc2 = strtotime($oDet->FechaVtoCuota2);
 
-                    if ($oDet->Marca == 2 ){
+                    if ($oDet->Marca == 2 || $oDet->Marca == 7 ){
                         if ($oDet->FechaVtoCuota2 === NULL){
                             $oDet->AvanceAutomatico = 0;
 
@@ -198,7 +198,7 @@ class GestionDatosController extends Controller
                     if ($oDet->Avance < 84 && ($oDet->Marca == 3 || $oDet->Avance > 44)){
 
                         //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
-                        if ($oDet->Marca == 2 || $oDet->Marca == 3 || ($oDet->Marca != 2 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
+                        if ($oDet->Marca == 2 || $oDet->Marca == 7 || $oDet->Marca == 3 || ($oDet->Marca != 2 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
                             array_push($list, $oDet); 
                         }
                     }
@@ -400,7 +400,7 @@ class GestionDatosController extends Controller
                     $oDet->Avance = $oDet->AvanceAutomatico;
                 }
                 */
-                if ($oDet->Marca == 2){
+                if ($oDet->Marca == 2 || $oDet->Marca == 7 ){
                     if ($oDet->FechaVtoCuota2 === NULL){
                         if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
                             $oDet->AvanceAutomatico = 0;

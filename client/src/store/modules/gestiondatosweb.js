@@ -23,7 +23,8 @@ export const state = {
   showMsg: false,
   askData: false,
   showItemsFiltered: false,
-
+  hn_FCA: 0,
+  loadingHN:false,
   loadingStatusInsert: false,
   dataStatusInsert: "",
   dataStatusMsgInsert: "",
@@ -207,6 +208,27 @@ export const mutations = {
     
   },
 
+  
+
+  GET_HN_FCA_STATUS(state) {
+    state.dataStatus = "loading";
+    state.hn_FCA = 0;
+    state.loadingHN = true;
+  },
+
+  HN_FCA_SUCCESS(state, datos) {
+    //console.log(datos);
+    state.hn_FCA = datos;
+    state.dataStatus = "success";
+    state.loadingHN = false;
+
+  },
+
+  HN_FCA_ERROR(state) {
+    state.dataStatus = "error";
+    state.hn_FCA = 0;
+    state.loadingHN = false;
+  },
 
   GET_GRUPO_STATUS(state) {
     state.dataStatus = "loading";
@@ -365,6 +387,20 @@ export const actions = {
         commit("DATOS_ERROR_V");
       });
   },
+
+  getHN_FCA({ commit }, pars) {
+    commit("GET_HN_FCA_STATUS");
+   
+    return axios
+      .post("/hn_fca", pars)
+      .then(response => {
+        commit("HN_FCA_SUCCESS", response.data);
+      })
+      .catch(err => {
+        commit("HN_FCA_ERROR");
+      });
+  },
+
 
   
   searchValuesByGroup({ commit }, pars) {

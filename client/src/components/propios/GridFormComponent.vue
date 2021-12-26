@@ -266,6 +266,7 @@ export default {
         { Codigo: 15, Nombre: "Datos Web - Volkswagen", Marca: 5 },
         { Codigo: 16, Nombre: "Datos Web - Ford", Marca: 9 },
         { Codigo: 17, Nombre: "Datos Web - Citroen", Marca: 10 },
+        { Codigo: 23, Nombre: "Detroit", Marca: 7 },
       ],
 
       concesB: [

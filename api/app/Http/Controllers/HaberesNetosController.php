@@ -332,6 +332,7 @@ class HaberesNetosController extends Controller
             $oHN->Transferencia = $hn->Transferencia;
             $oHN->ConcesionarioPropio = $hn->ConcesionarioPropio;
             $oHN->ComproGiama = $hn->ComproGiama; 
+            $oHN->TitularHN = $hn->TitularHN; 
             $oHN->TIRSpot = $hn->TIRSpot; 
 
             /*
@@ -633,6 +634,7 @@ class HaberesNetosController extends Controller
             $oHN->TIRActual = $hn->TIRActual;
             $oHN->FechaCuota84 = $hn->FechaCuota84;
            
+            $oHN->TitularHN = $hn->TitularHN;
             if($hn->ComproGiama == 1){
                 array_push($listHN_C_ComproGiama, $oHN);
             }else{
@@ -1012,6 +1014,13 @@ class HaberesNetosController extends Controller
                         $porcentajeComision = 0.06;
                         //$empGyO = 10;
                     break;
+                    case 13:
+                        $db = 'GF';
+                        $porcentajeComision = 0.08;
+
+                        $empGyO = 'NULL';
+                    break;
+                    
                     default:
                         $db = 'GF';
                         $porcentajeComision = 0.06;
@@ -1019,12 +1028,17 @@ class HaberesNetosController extends Controller
                         $empGyO = 'NULL';
                     break;
                 }
-                
-                
 
             break;
             case 3: //PEU
-                $porcentajeComision = 0.06;
+                switch($request->Concesionario){
+                    case 10:
+                        $porcentajeComision = 0.06;
+                    break;
+                    case 12:
+                        $porcentajeComision = 0.08;
+                    break;
+                }
 
                 $db = 'GF';
                 $empGyO = 'NULL';
@@ -1044,12 +1058,24 @@ class HaberesNetosController extends Controller
                         // LuxCar pasa a tener solo el 8% de comision, ya no es 8% + 12%
                         $porcentajeComision = 0.08;
                     break;
+                    default:
+                        //Para los datos web y los CEs B va el 8%
+                        $porcentajeComision = 0.08;
+                    break;
 
                 }
                 $db = 'GF';
                 $empGyO = 'NULL';
                 $request->NroTransferencia = 'NULL';
             break;
+
+            case 7: //JEEP
+                $porcentajeComision = 0.06;
+
+                $db = 'GF';
+                $empGyO = 'NULL';
+            break;
+
             case 9: //FORD
                 $porcentajeComision = 0.08;
 

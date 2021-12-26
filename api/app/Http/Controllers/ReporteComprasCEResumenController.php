@@ -230,7 +230,6 @@ class ReporteComprasCEResumenController extends Controller
             $fvc2 = strtotime($oDet->FechaVtoCuota2);
             $fcomp = strtotime($oDet->FechaAltaRegistro);
   
-
           //$oDet->AvanceAutomatico = $r->Avance;
           $oDet->AvanceAutomatico = $r->AvanceCalculado;
 

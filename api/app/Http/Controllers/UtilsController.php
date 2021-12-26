@@ -396,6 +396,7 @@ class UtilsController extends Controller
 
         if (
 
+            (strpos($apeLow,"detroit") !== false) ||
             (strpos($apeLow,"iruna") !== false) ||
             (strpos($apeLow,"mirage") !== false) ||
             (strpos($apeLow,"luxcar") !== false) ||
@@ -409,6 +410,7 @@ class UtilsController extends Controller
             (strpos($apeLow, "gestion financiera") !== false) ||
             (strpos($apeLow,"margian") !== false) ||
             (strpos($apeLow,"ricardo bevacqua") !== false) ||
+            (strpos($nomLow,"detroit") !== false) ||
             (strpos($nomLow,"luxcar") !== false) ||
             (strpos($nomLow,"iruna") !== false) ||
             (strpos($nomLow,"iruña") !== false) ||
@@ -498,6 +500,27 @@ class UtilsController extends Controller
 
         return DB::select("CALL hnweb_calculo_hn_dato_web(".$object->Marca.", ".$object->CodigoModelo.", '".$object->CodigoPlan."', ".$object->CPG.", ".$object->CAD.", ".$object->AvanceCalculado.", ".$object->Porcentaje.");");
 
+    }
+
+    public function getHaberNetoDatoWebFCA($object){
+        return DB::select("CALL hnweb_calculo_hn_fca(".$object->Marca.", ".$object->ValorAuto.", ".$object->PagoBruto.", ".$object->TipoPlan.", ".$object->CantCuotas.", ".$object->CPG.");");
+    }
+
+    public function getModelosSMarca($marca, $mesesAtras){
+        $db = 'GF';
+        
+        /*
+        if ($marca == 2 || $marca == 7){
+            $db = 'CG';
+        }*/
+
+        if ($marca == 2){
+            return DB::connection($db)->select("CALL hnweb_get_modelos_precios_fca(".$marca.", ".$mesesAtras.");");
+        }else{
+            return DB::connection($db)->select("CALL hnweb_get_modelos_precios(".$marca.", ".$mesesAtras.");");
+        }
+
+       
     }
 
     public function getAvanceAutomaticoFiat($FechaVtoCuota2){

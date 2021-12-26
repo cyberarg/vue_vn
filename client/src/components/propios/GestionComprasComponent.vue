@@ -471,7 +471,8 @@ export default {
         { Codigo: 6, Concesionario: 6, ComproGiama: 0, Nombre: "Car Group" },
         { Codigo: 7, Concesionario: 7, ComproGiama: 0, Nombre: "LuxCar" },
         { Codigo: 8, Concesionario: 10, ComproGiama: 0, Nombre: "Alizze" },
-
+        { Codigo: 9, Concesionario: 0, ComproGiama: 1, Nombre: "GB" },
+       
       ],
     };
   },

@@ -25,11 +25,12 @@
         }}
       </template>
       <template v-slot:item.ComproGiama="{ item }">{{
-        getTextTitularHN(item.ComproGiama, item.Operacion.Concesionario)
+        getTextTitularHN(item.TitularHN, item.Operacion.Concesionario)
       }}</template>
       <template v-slot:item.Titular="{ item }">{{
         getTextTipoTitular(item.Titular)
       }}</template>
+
       <template v-slot:item.FechaCompra="{ item }">{{
         formatFecha(item.FechaCompra)
       }}</template>
@@ -45,6 +46,8 @@
       <template v-slot:item.TipoCompra="{ item }">{{
         getTextTipoCompra(item.TipoCompra)
       }}</template>
+
+     
 
       <template v-slot:item.MontoCompra="{ item }">{{
         item.MontoCompra | numFormat("$0,0")
@@ -713,6 +716,8 @@ export default {
         await this.getHistorialCobros(item.Operacion.Marca, item.Operacion.Concesionario, item.Id);
         this.editedItem = editIt;
         console.log(this.editedItem);
+        this.editedItemNuevoCobro.MontoCobrado = ''; 
+        this.editedItemNuevoCobro.FechaCobrado = '';
         this.dialogcobros = true;
         //console.log(item);
     },
@@ -887,11 +892,13 @@ export default {
               return "Alizze";
               break;
             default:
-              return "";
+              return "Conces.";
           }
           break;
         case "1":
-          return "Giama";
+          return "RB";
+        case "2":
+          return "GB";
           break;
         default:
           return "";
@@ -933,6 +940,19 @@ export default {
         default:
           return valor;
           break;
+      }
+    },
+
+    getTextTitular(valor){
+      switch(valor){
+        case 0:
+          return "CE";
+        case 1:
+          return "RB";
+        case 2:
+          return "GB";
+        default:
+          return "";
       }
     },
 

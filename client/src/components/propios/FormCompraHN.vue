@@ -328,6 +328,12 @@ export default {
         { Codigo: 12, Nombre: "Peugeot Web", Marca: 3 },
         { Codigo: 13, Nombre: "Fiat Web", Marca: 2 },
         { Codigo: 15, Nombre: "Volkswagen Web", Marca: 5 },
+        { Codigo: 18, Nombre: "Alra", Marca: 5 },
+        { Codigo: 19, Nombre: "Autotag", Marca: 5 },
+        { Codigo: 20, Nombre: "Maynar", Marca: 5 },
+        { Codigo: 21, Nombre: "Sebastiani", Marca: 5 },
+        { Codigo: 22, Nombre: "Yacopini", Marca: 5 },
+        
       ],
       listTitularesCompra: [
         { Codigo: 0, Nombre: "Concesionario", ComproGiama: 0 },
