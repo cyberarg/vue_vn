@@ -36,6 +36,7 @@ class HaberesNetosController extends Controller
         $arrResultados['ListHN_CE'] =  array();
         
         $p = 0;
+
         foreach ($seleccionados as $seleccionado) {
             
             $array_result = array();
@@ -43,6 +44,7 @@ class HaberesNetosController extends Controller
             $concesionario = $seleccionado['Codigo'];
 
             $array_result = $this->getHaberesNetosVigentes($marca, $concesionario, $rbConsolidado);
+           
 
             if ($p == 0){
                 $arrResultados['NoEncontrados'] = $array_result['NoEncontrados'];
@@ -187,7 +189,7 @@ class HaberesNetosController extends Controller
 
         $codEmpresa = 0;
 
-        if ($marca == 2){
+        if ($marca == 2 && $concesionario != 13){
 
             switch($concesionario){
                 case 4:
@@ -258,7 +260,6 @@ class HaberesNetosController extends Controller
         }else{
             $esInterempresa = false;
         }
-
 
         //$haberesNetos = $result;
 
@@ -356,7 +357,7 @@ class HaberesNetosController extends Controller
             $oHN->TIRActual = $hn->TIRActual;
             $oHN->FechaCuota84 = $hn->FechaCuota84;
            
-            if($hn->ComproGiama == 1){
+            if($hn->ComproGiama == 1 || $hn->ContabilizarParaRB == 1){
                 array_push($listHN_ComproGiama, $oHN);
             }else{
                 array_push($listHN_CE, $oHN);
@@ -450,7 +451,7 @@ class HaberesNetosController extends Controller
 
         //$db = "CG";
         $codEmpresa = 0;
-        if ($marca == 2){
+        if ($marca == 2 && $concesionario != 13){
 
             switch($concesionario){
                 case 4:
@@ -635,7 +636,7 @@ class HaberesNetosController extends Controller
             $oHN->FechaCuota84 = $hn->FechaCuota84;
            
             $oHN->TitularHN = $hn->TitularHN;
-            if($hn->ComproGiama == 1){
+            if($hn->ComproGiama == 1 || $hn->ContabilizarParaRB == 1 ){
                 array_push($listHN_C_ComproGiama, $oHN);
             }else{
                 array_push($listHN_C_CE, $oHN);
