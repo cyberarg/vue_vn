@@ -11,9 +11,11 @@ export const state = {
   observaciones: [],
   datos: [],
   datosGiama: [],
+  datosTotalGiama:[],
   datosCE: [],
   datosHNCobrados: [],
   datosHNCobradosGiama: [],
+  datosHNCobradosTotalGiama:[],
   datosHNCobradosCE: [],
   items_modelos: [],
   items_planes: [],
@@ -69,10 +71,12 @@ export const mutations = {
 
     state.datos = [];
     state.datosGiama = [];
+    state.datosTotalGiama = [];
     state.datosCE = [];
 
     state.datosHNCobrados = [];
     state.datosHNCobradosGiama = [];
+    state.datosHNCobradosTotalGiama = [];
     state.datosHNCobradosCE = [];
 
     /*
@@ -86,10 +90,12 @@ export const mutations = {
    
     state.datos = [];
     state.datosGiama = [];
+    state.datosTotalGiama = [];
     state.datosCE = [];
 
     state.datosHNCobrados = [];
     state.datosHNCobradosGiama = [];
+    state.datosHNCobradosTotalGiama = [];
     state.datosHNCobradosCE = [];
 
     state.dataStatus = "loading";
@@ -102,6 +108,7 @@ export const mutations = {
 
     state.datos = datos.ListHN;
     state.datosGiama = datos.ListHN_ComproGiama;
+    state.datosTotalGiama = datos.ListHN_TotalGiama;
     state.datosCE = datos.ListHN_CE;
 
     state.dataStatus = "success";
@@ -115,10 +122,12 @@ export const mutations = {
 
     state.datos = [];
     state.datosGiama = [];
+    state.datosTotalGiama = [];
     state.datosCE = [];
 
     state.datosHNCobrados = [];
     state.datosHNCobradosGiama = [];
+    state.datosHNCobradosTotalGiama = [];
     state.datosHNCobradosCE = [];
   },
 
@@ -126,6 +135,7 @@ export const mutations = {
     //console.datos;
     state.datosHNCobrados = datos.ListHNCobrados;
     state.datosHNCobradosGiama = datos.ListHN_C_ComproGiama;
+    state.datosHNCobradosTotalGiama = datos.ListHN_C_TotalGiama;
     state.datosHNCobradosCE = datos.ListHN_C_CE;
 
     state.loadingHNC = false;

@@ -820,6 +820,28 @@ export default {
         case "10":
           return "ALIZZE";
           break;
+        case "13":
+          return "FIAT-Web";
+        case "14":
+          return "JEEP-Web";
+        case "15":
+          return "VW-Web";
+        case "16":
+          return "FORD-Web";
+        case "17":
+          return "CITROEN-Web";
+        case "18":
+          return "ALRA";
+        case "19":
+          return "AUTOTAG";
+        case "20":
+          return "MAYNAR";
+        case "21":
+          return "SEBASTIANI";
+        case "22":
+          return "YACOPINI";
+        case "23":
+          return "DETROIT";
       }
     },
 
@@ -843,6 +865,28 @@ export default {
         case "10":
           return "ALIZZE"
           break;
+          case "13":
+          return "FIAT-Web";
+        case "14":
+          return "JEEP-Web";
+        case "15":
+          return "VW-Web";
+        case "16":
+          return "FORD-Web";
+        case "17":
+          return "CITROEN-Web";
+        case "18":
+          return "ALRA";
+        case "19":
+          return "AUTOTAG";
+        case "20":
+          return "MAYNAR";
+        case "21":
+          return "SEBASTIANI";
+        case "22":
+          return "YACOPINI";
+        case "23":
+          return "DETROIT";
       }
     },
 

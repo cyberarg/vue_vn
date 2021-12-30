@@ -443,9 +443,13 @@ export default {
       "detalle_grid2_compras",
       "detalle_grid2_cobros",
       "detalle_grid1_compras_Giama",
+      "detalle_grid1_compras_TotalGiama",
       "detalle_grid1_cobros_Giama",
+      "detalle_grid1_cobros_TotalGiama",
       "detalle_grid2_compras_Giama",
+      "detalle_grid2_compras_TotalGiama",
       "detalle_grid2_cobros_Giama",
+      "detalle_grid2_cobros_TotalGiama",
       "detalle_grid1_compras_CE",
       "detalle_grid1_cobros_CE",
       "detalle_grid2_compras_CE",
@@ -522,7 +526,6 @@ export default {
             this.datosDetalleGrid3 = this.detalle_grid3;
           break;
           case 1: //Giama
-          case 3: // Total Giama
               this.datosDetalleGrid1_Compras = this.detalle_grid1_compras_Giama;
               this.datosDetalleGrid2_Compras = this.detalle_grid2_compras_Giama;
 
@@ -533,6 +536,7 @@ export default {
               this.datosDetalleGrid2 = this.detalle_grid2_Giama;
               this.datosDetalleGrid3 = this.detalle_grid3_Giama;
           break;
+          
           case 2: //Conces
               this.datosDetalleGrid1_Compras = this.detalle_grid1_compras_CE;
               this.datosDetalleGrid2_Compras = this.detalle_grid2_compras_CE;
@@ -543,6 +547,18 @@ export default {
               this.datosDetalleGrid1 = this.detalle_grid1;
               this.datosDetalleGrid2 = this.detalle_grid2_CE;
               this.datosDetalleGrid3 = this.detalle_grid3_CE;
+          break;
+
+          case 3: // Total Giama
+              this.datosDetalleGrid1_Compras = this.detalle_grid1_compras_TotalGiama;
+              this.datosDetalleGrid2_Compras = this.detalle_grid2_compras_TotalGiama;
+
+              this.datosDetalleGrid1_Cobros = this.detalle_grid1_cobros_TotalGiama;
+              this.datosDetalleGrid2_Cobros = this.detalle_grid2_cobros_TotalGiama;
+
+              this.datosDetalleGrid1 = this.detalle_grid1;
+              this.datosDetalleGrid2 = this.detalle_grid2_Giama;
+              this.datosDetalleGrid3 = this.detalle_grid3_Giama;
           break;
 
         }

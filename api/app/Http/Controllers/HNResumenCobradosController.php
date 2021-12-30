@@ -44,7 +44,7 @@ class HNResumenCobradosController extends Controller
         $lstHN = array();
         $lstHN_CE = array();
 
-        if ($marca == 2){
+        if ($marca == 2 && $concesionario != 13){
             switch($concesionario){
                 case 4:
                     $db = "AC";
@@ -101,10 +101,15 @@ class HNResumenCobradosController extends Controller
                         $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') <> '' AND Concesionario = ".$concesionario);
                     break;
                     case 1: // GIAMA
-                        $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') <> '' AND (ComproGiama = 1 OR ContabilizarParaRB = 1) AND Concesionario = ".$concesionario);
+                        //$lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') <> '' AND (ComproGiama = 1 OR ContabilizarParaRB = 1) AND Concesionario = ".$concesionario);
+                        $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') <> '' AND (ComproGiama = 1) AND Concesionario = ".$concesionario);
                     break;
                     case 2: //SOLO CE
-                        $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') <> '' AND (ComproGiama = 0 AND IFNULL(ContabilizarParaRB, 2) = 2) AND Concesionario = ".$concesionario);
+                        //$lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') <> '' AND (ComproGiama = 0 AND IFNULL(ContabilizarParaRB, 2) = 2) AND Concesionario = ".$concesionario);
+                        $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') <> '' AND (ComproGiama = 0) AND Concesionario = ".$concesionario);
+                    break;
+                    case 3: // TOTAL GIAMA
+                        $lstHN = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') <> '' AND (ComproGiama = 1 OR ContabilizarParaRB = 1) AND Concesionario = ".$concesionario);
                     break;
                 }
 
@@ -121,7 +126,7 @@ class HNResumenCobradosController extends Controller
         $lstHN = array();
         $lstHN_CE = array();
 
-        if ($marca == 2){
+        if ($marca == 2 && $concesionario != 13){
             switch($concesionario){
                 case 4:
                     $db = "AC";

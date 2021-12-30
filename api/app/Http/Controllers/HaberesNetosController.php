@@ -33,6 +33,7 @@ class HaberesNetosController extends Controller
         $arrResultados['NoEncontrados'] = array();
         $arrResultados['ListHN'] = array();
         $arrResultados['ListHN_ComproGiama'] = array();
+        $arrResultados['ListHN_TotalGiama'] = array();
         $arrResultados['ListHN_CE'] =  array();
         
         $p = 0;
@@ -50,12 +51,14 @@ class HaberesNetosController extends Controller
                 $arrResultados['NoEncontrados'] = $array_result['NoEncontrados'];
                 $arrResultados['ListHN'] = $array_result['ListHN']; 
                 $arrResultados['ListHN_ComproGiama'] = $array_result['ListHN_ComproGiama'];
+                $arrResultados['ListHN_TotalGiama'] = $array_result['ListHN_TotalGiama'];
                 $arrResultados['ListHN_CE'] = $array_result['ListHN_CE'];
                 
             }else{
                 $arrResultados['NoEncontrados'] = array_merge($arrResultados['NoEncontrados'], $array_result['NoEncontrados']);
                 $arrResultados['ListHN'] = array_merge( $arrResultados['ListHN'], $array_result['ListHN']); 
                 $arrResultados['ListHN_ComproGiama'] = array_merge($arrResultados['ListHN_ComproGiama'], $array_result['ListHN_ComproGiama']);
+                $arrResultados['ListHN_TotalGiama'] = array_merge($arrResultados['ListHN_TotalGiama'], $array_result['ListHN_TotalGiama']);
                 $arrResultados['ListHN_CE'] = array_merge($arrResultados['ListHN_CE'], $array_result['ListHN_CE']);    
             }
            
@@ -175,6 +178,7 @@ class HaberesNetosController extends Controller
         $lista = array();
 
         $listHN_ComproGiama = array();
+        $listHN_TotalGiama =  array();
         $listHN_CE = array();
 
         $idConc = $concesionario;
@@ -357,10 +361,17 @@ class HaberesNetosController extends Controller
             $oHN->TIRActual = $hn->TIRActual;
             $oHN->FechaCuota84 = $hn->FechaCuota84;
            
-            if($hn->ComproGiama == 1 || $hn->ContabilizarParaRB == 1){
+            if($hn->ComproGiama == 1){
                 array_push($listHN_ComproGiama, $oHN);
+                array_push($listHN_TotalGiama, $oHN);
             }else{
-                array_push($listHN_CE, $oHN);
+                if ($hn->ContabilizarParaRB == 1){
+                    array_push($listHN_TotalGiama, $oHN);
+                    array_push($listHN_CE, $oHN);
+                }else{
+                    array_push($listHN_CE, $oHN);
+                }
+                
             }
 
             array_push($listHN, $oHN);
@@ -369,6 +380,7 @@ class HaberesNetosController extends Controller
         $lista['NoEncontrados'] = $errObtenerOp;
         $lista['ListHN'] = $listHN;
         $lista['ListHN_ComproGiama'] = $listHN_ComproGiama;
+        $lista['ListHN_TotalGiama'] = $listHN_TotalGiama;
         $lista['ListHN_CE'] = $listHN_CE;
         return $lista;
         //dd($listHN);
@@ -388,6 +400,7 @@ class HaberesNetosController extends Controller
         $arrResultados['NoEncontrados'] = array();
         $arrResultados['ListHNCobrados'] = array();
         $arrResultados['ListHN_C_ComproGiama'] = array();
+        $arrResultados['ListHN_C_TotalGiama'] = array();
         $arrResultados['ListHN_C_CE'] =  array();
 
         
@@ -404,12 +417,14 @@ class HaberesNetosController extends Controller
                 $arrResultados['NoEncontrados'] = $array_result['NoEncontrados'];
                 $arrResultados['ListHNCobrados'] = $array_result['ListHNCobrados']; 
                 $arrResultados['ListHN_C_ComproGiama'] = $array_result['ListHN_C_ComproGiama'];
+                $arrResultados['ListHN_C_TotalGiama'] =  $array_result['ListHN_C_TotalGiama'];
                 $arrResultados['ListHN_C_CE'] = $array_result['ListHN_C_CE'];
                 
             }else{
                 $arrResultados['NoEncontrados'] = array_merge($arrResultados['NoEncontrados'], $array_result['NoEncontrados']);
                 $arrResultados['ListHNCobrados'] = array_merge( $arrResultados['ListHNCobrados'], $array_result['ListHNCobrados']); 
                 $arrResultados['ListHN_C_ComproGiama'] = array_merge($arrResultados['ListHN_C_ComproGiama'], $array_result['ListHN_C_ComproGiama']);
+                $arrResultados['ListHN_C_TotalGiama'] =  array_merge($arrResultados['ListHN_C_TotalGiama'], $array_result['ListHN_C_TotalGiama']); 
                 $arrResultados['ListHN_C_CE'] = array_merge($arrResultados['ListHN_C_CE'], $array_result['ListHN_C_CE']);    
             }
            
@@ -436,6 +451,7 @@ class HaberesNetosController extends Controller
         $lista = array();
 
         $listHN_C_ComproGiama = array();
+        $listHN_C_TotalGiama = array();
         $listHN_C_CE = array();
 
         $idConc = $concesionario;
@@ -636,10 +652,17 @@ class HaberesNetosController extends Controller
             $oHN->FechaCuota84 = $hn->FechaCuota84;
            
             $oHN->TitularHN = $hn->TitularHN;
-            if($hn->ComproGiama == 1 || $hn->ContabilizarParaRB == 1 ){
+            if($hn->ComproGiama == 1 ){
                 array_push($listHN_C_ComproGiama, $oHN);
+                array_push($listHN_C_TotalGiama, $oHN);
             }else{
-                array_push($listHN_C_CE, $oHN);
+                if ($hn->ContabilizarParaRB == 1){
+                    array_push($listHN_C_TotalGiama, $oHN);
+                    array_push($listHN_C_CE, $oHN);
+                }else{
+                    array_push($listHN_C_CE, $oHN);
+                }
+                
             }
 
             array_push($listHNCobrados, $oHN);
@@ -649,6 +672,7 @@ class HaberesNetosController extends Controller
         $lista['ListHNCobrados'] = $listHNCobrados;
 
         $lista['ListHN_C_ComproGiama'] = $listHN_C_ComproGiama;
+        $lista['ListHN_C_TotalGiama'] = $listHN_C_TotalGiama;
         $lista['ListHN_C_CE'] = $listHN_C_CE;
         
        // dd($listHNCobrados);
@@ -866,8 +890,15 @@ class HaberesNetosController extends Controller
            
             if($hn->ComproGiama == 1){
                 array_push($listHN_C_ComproGiama, $oHN);
+                array_push($listHN_C_TotalGiama, $oHN);
             }else{
-                array_push($listHN_C_CE, $oHN);
+                if ($hn->ContabilizarParaRB == 1){
+                    array_push($listHN_C_TotalGiama, $oHN);
+                    array_push($listHN_C_CE, $oHN);
+                }else{
+                    array_push($listHN_C_CE, $oHN);
+                }
+                
             }
 
             array_push($listHNCobrados, $oHN);
@@ -877,6 +908,7 @@ class HaberesNetosController extends Controller
         $lista['ListHNCobrados'] = $listHNCobrados;
 
         $lista['ListHN_C_ComproGiama'] = $listHN_C_ComproGiama;
+        $lista['ListHN_C_TotalGiama'] = $listHN_C_TotalGiama;
         $lista['ListHN_C_CE'] = $listHN_C_CE;
         
        // dd($listHNCobrados);

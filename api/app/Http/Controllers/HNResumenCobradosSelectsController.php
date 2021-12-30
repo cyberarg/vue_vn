@@ -30,6 +30,7 @@ class HNResumenCobradosSelectsController extends Controller
         $array_result_CE = array();
         $lstItemsHN_Resumen = array();  
         $lstItemsHN_Resumen_Giama = array();
+        $lstItemsHN_Resumen_TotalGiama = array();
         $lstItemsHN_Resumen_CE = array();        
 
         $p = 0;
@@ -45,6 +46,7 @@ class HNResumenCobradosSelectsController extends Controller
             $lstItemsHN_Resumen = array_merge($lstItemsHN_Resumen, $resCobros->getItemsResumen_Selecteds($anio, $marca, $concesionario, 0, $filtros, 1));
             $lstItemsHN_Resumen_Giama = array_merge($lstItemsHN_Resumen_Giama, $resCobros->getItemsResumen_Selecteds($anio, $marca, $concesionario, 1, $filtros, 1));
             $lstItemsHN_Resumen_CE = array_merge($lstItemsHN_Resumen_CE, $resCobros->getItemsResumen_Selecteds($anio, $marca, $concesionario, 2, $filtros, 0));
+            $lstItemsHN_Resumen_TotalGiama = array_merge($lstItemsHN_Resumen_TotalGiama, $resCobros->getItemsResumen_Selecteds($anio, $marca, $concesionario, 3, $filtros, 1));
 
             $p++;
         }
@@ -52,6 +54,7 @@ class HNResumenCobradosSelectsController extends Controller
         $lstCobrados = $resCobros->getResumenCobradosMeses($anio, $lstItemsHN_Resumen, $marca);
         $lstCobrados_Giama = $resCobros->getResumenCobradosMeses($anio, $lstItemsHN_Resumen_Giama, $marca);
         $lstCobrados_CE = $resCobros->getResumenCobradosMeses($anio, $lstItemsHN_Resumen_CE, $marca);
+        $lstCobrados_TotalGiama = $resCobros->getResumenCobradosMeses($anio, $lstItemsHN_Resumen_TotalGiama, $marca);
 
 
         $lstResumenCobro['Grid1_Cobrados'] = $lstCobrados['lstMeses'];
@@ -62,6 +65,9 @@ class HNResumenCobradosSelectsController extends Controller
 
         $lstResumenCobro['Grid1_Cobrados_CE'] = $lstCobrados_CE['lstMeses'];
         $lstResumenCobro['Grid2_Cobrados_CE'] = $lstCobrados_CE['listAnios'];
+
+        $lstResumenCobro['Grid1_Cobrados_TotalGiama'] = $lstCobrados_TotalGiama['lstMeses'];
+        $lstResumenCobro['Grid2_Cobrados_TotalGiama'] = $lstCobrados_TotalGiama['listAnios'];
         
         return $lstResumenCobro;
 

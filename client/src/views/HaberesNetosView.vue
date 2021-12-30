@@ -763,6 +763,9 @@ export default {
           case 2:
             this.datosHN_Cobrados = this.datosHNCobradosCE;
           break;
+          case 3:
+            this.datosHN_Cobrados = this.datosHNCobradosTotalGiama;
+          break;
         }
         
       } else {
@@ -776,12 +779,19 @@ export default {
         switch(this.selectFiltro.Codigo){
           case 0:
             this.datosHN_Vigentes = this.datos;
+            console.log('DatosTotal');
           break;
           case 1:
             this.datosHN_Vigentes = this.datosGiama;
+            console.log('DatosRB');
           break;
           case 2:
             this.datosHN_Vigentes = this.datosCE;
+            console.log('DatosCE');
+          break;
+          case 3:
+            this.datosHN_Vigentes = this.datosTotalGiama;
+            console.log('TotalGiama');
           break;
         }
       } else {
@@ -813,11 +823,13 @@ export default {
       "datos",
       "dataStatus",
       "datosGiama",
+      "datosTotalGiama",
       "datosCE",
       "loadingDatos",
       "datosHNCobrados",
       "datosHNCobradosCE",
       "datosHNCobradosGiama",
+      "datosHNCobradosTotalGiama",
       "loadingHNV",
       "loadingHNC",
     ]),
@@ -953,6 +965,10 @@ export default {
             this.datosHN_Vigentes = this.datosCE;
             this.datosHN_Cobrados = this.datosHNCobradosCE;
           break;
+          case 3: //TotalGiama
+            this.datosHN_Vigentes = this.datosTotalGiama;
+            this.datosHN_Cobrados = this.datosHNCobradosTotalGiama;
+          break;
 
         }
         console.log(this.datosHN_Vigentes);
@@ -997,6 +1013,7 @@ export default {
         ConsolidadoRB: this.selectedConsolidado,
       };
 
+      console.log(pars);
       this.codMarcaSel = pars.Marca;
       this.codConcesSel = pars.Concesionario;
       //this.nomConcesSel =  this.codConcesSelected.Nombre;

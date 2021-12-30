@@ -223,7 +223,7 @@ export default {
 }
 
 .performance {
-  padding-top: 225px;
+  padding-top: 260px;
 }
 
 .row-equal {

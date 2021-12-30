@@ -7,14 +7,18 @@ export const state = {
   detalle_grid1_compras: [],
   detalle_grid1_cobros: [],
   detalle_grid1_compras_Giama: [],
+  detalle_grid1_compras_TotalGiama: [],
   detalle_grid1_cobros_Giama: [],
+  detalle_grid1_cobros_TotalGiama: [],
   detalle_grid1_compras_CE: [],
   detalle_grid1_cobros_CE: [],
 
   detalle_grid2_compras: [],
   detalle_grid2_cobros: [],
   detalle_grid2_compras_Giama: [],
+  detalle_grid2_compras_TotalGiama: [],
   detalle_grid2_cobros_Giama: [],
+  detalle_grid2_cobros_TotalGiama: [],
   detalle_grid2_compras_CE: [],
   detalle_grid2_cobros_CE: [],
 
@@ -31,6 +35,8 @@ export const mutations = {
     state.detalle_grid2_compras = [];
     state.detalle_grid1_compras_Giama = [];
     state.detalle_grid2_compras_Giama = [];
+    state.detalle_grid1_compras_TotalGiama = [];
+    state.detalle_grid2_compras_TotalGiama = [];
     state.detalle_grid1_compras_CE = [];
     state.detalle_grid2_compras_CE = [];
   },
@@ -42,6 +48,8 @@ export const mutations = {
     state.detalle_grid2_compras = [];
     state.detalle_grid1_compras_Giama = [];
     state.detalle_grid2_compras_Giama = [];
+    state.detalle_grid1_compras_TotalGiama = [];
+    state.detalle_grid2_compras_TotalGiama = [];
     state.detalle_grid1_compras_CE = [];
     state.detalle_grid2_compras_CE = [];
 
@@ -54,11 +62,13 @@ export const mutations = {
     console.log(datos);
     state.detalle_grid1_compras = datos["Grid1_Comprados"];
     state.detalle_grid1_compras_Giama = datos["Grid1_Comprados_Giama"];
+    state.detalle_grid1_compras_TotalGiama = datos["Grid1_Comprados_TotalGiama"];
     state.detalle_grid1_compras_CE = datos["Grid1_Comprados_CE"];
     state.loadingdetalle_grid1_compras = false;
 
     state.detalle_grid2_compras = datos["Grid2_Comprados"];
     state.detalle_grid2_compras_Giama = datos["Grid2_Comprados_Giama"];
+    state.detalle_grid2_compras_TotalGiama = datos["Grid2_Comprados_TotalGiama"];
     state.detalle_grid2_compras_CE = datos["Grid2_Comprados_CE"];
     state.loadingdetalle_grid2_compras = false;
 
@@ -74,6 +84,10 @@ export const mutations = {
   CLEAR_COBROS_HN(state) {
     state.detalle_grid1_cobros = [];
     state.detalle_grid2_cobros = [];
+    state.detalle_grid1_cobros_Giama = [];
+    state.detalle_grid2_cobros_Giama = [];
+    state.detalle_grid1_cobros_TotalGiama = [];
+    state.detalle_grid2_cobros_TotalGiama = [];
     state.detalle_grid1_cobros_CE = [];
     state.detalle_grid2_cobros_CE = [];
   },
@@ -83,6 +97,13 @@ export const mutations = {
 
     state.detalle_grid1_cobros = [];
     state.detalle_grid2_cobros = [];
+
+    state.detalle_grid1_cobros_Giama = [];
+    state.detalle_grid2_cobros_Giama = [];
+
+    state.detalle_grid1_cobros_TotalGiama = [];
+    state.detalle_grid2_cobros_TotalGiama = [];
+    
     state.detalle_grid1_cobros_CE = [];
     state.detalle_grid2_cobros_CE = [];
 
@@ -95,11 +116,13 @@ export const mutations = {
     console.log(datos);
     state.detalle_grid1_cobros = datos["Grid1_Cobrados"];
     state.detalle_grid1_cobros_Giama = datos["Grid1_Cobrados_Giama"];
+    state.detalle_grid1_cobros_TotalGiama = datos["Grid1_Cobrados_TotalGiama"];
     state.detalle_grid1_cobros_CE = datos["Grid1_Cobrados_CE"];
     state.loadingdetalle_grid1_cobros = false;
 
     state.detalle_grid2_cobros = datos["Grid2_Cobrados"];
     state.detalle_grid2_cobros_Giama = datos["Grid2_Cobrados_Giama"];
+    state.detalle_grid2_cobros_TotalGiama = datos["Grid2_Cobrados_TotalGiama"];
     state.detalle_grid2_cobros_CE = datos["Grid2_Cobrados_CE"];
     state.loadingdetalle_grid2_cobros = false;
 
