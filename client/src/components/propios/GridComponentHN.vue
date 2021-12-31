@@ -253,8 +253,23 @@
         >
         <v-card-text>
           <v-container>
+             <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="editedItem.Grupo"
+                  label="Grupo"
+                  disabled
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="editedItem.Orden"
+                  label="Orden"
+                  disabled
+                ></v-text-field>
+              </v-col>
+            </v-row>
             <v-row>
-
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
                   v-model="editedItemNuevoCobro.MontoCobrado"
@@ -390,6 +405,8 @@ export default {
         Concesionario: "",
         MontoCobrado: "",
         FechaCobrado: "",
+        Grupo: "",
+        Orden: "",
       },
 
       headersCobros:[
@@ -601,6 +618,7 @@ export default {
     },
 
     closeNuevoCobro() {
+      this.clearNuevoCobro();
       this.dialogcobros = false;
     },
 
@@ -623,7 +641,7 @@ export default {
            this.getHistorialCobros(this.editedItem.Marca, this.editedItem.Concesionario, this.editedItem.ID);
       }
       await this.showSwal();
-      this.close();
+      await this.closeNuevoCobro();
       //this.refreshHNCobrados();
     },
 
@@ -649,6 +667,7 @@ export default {
         ID_Dato: this.editedItem.ID_Dato,
         MontoCobroReal: this.editedItem.Importe,
         FechaCobroReal: moment(this.editedItem.Fecha).format("YYYY-MM-DD"),
+        UsuarioAlta: this.login
       };
 
       await this.cobroHaberNeto(pars);
@@ -696,6 +715,22 @@ export default {
       this.editedItem = itemClear;
     },
 
+    clearNuevoCobro() {
+      var itemNuevoClear = {
+        Index: null,
+        ID: null,
+        ID_Dato: null,
+        Marca: null,
+        Grupo: null,
+        Orden: null,
+        Concesionario: null,
+        MontoCobrado: null,
+        FechaCobrado: null,
+      };
+
+      this.editedItemNuevoCobro = itemNuevoClear;
+    },
+
    async accionesCobrados(item){
         this.editedIndex = this.datos_items.indexOf(item);
         console.log(item);
@@ -705,13 +740,11 @@ export default {
           ID_Dato: item.ID_Dato,
           Marca: item.Operacion.Marca,
           Concesionario: item.Operacion.Concesionario,
+          Grupo: item.Operacion.Grupo,
+          Orden: item.Operacion.Orden,
           Importe: null,
           Fecha: null,
         };
-
-        console.log(editIt);
-        this.editedItem = editIt;
-        console.log(this.editedItem)
 
         await this.getHistorialCobros(item.Operacion.Marca, item.Operacion.Concesionario, item.Id);
         this.editedItem = editIt;

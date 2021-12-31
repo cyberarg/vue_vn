@@ -95,14 +95,16 @@ class HNProyectadoConcesionariosController extends Controller
                     $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND Concesionario = ".$concesionario);
                 break;
                 case 1: // GIAMA (RB)
-                    $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 1 OR ContabilizarParaRB = 1) AND Concesionario = ".$concesionario);
+                    //$lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 1 OR ContabilizarParaRB = 1) AND Concesionario = ".$concesionario);
+                    $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 1) AND Concesionario = ".$concesionario);
                 break;
                 case 3: // Total GIAMA 
                     $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 1 OR ContabilizarParaRB = 1) AND Concesionario = ".$concesionario);
                     
                 break;
                 case 2: //SOLO CE
-                    $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 0 AND IFNULL(ContabilizarParaRB, 2) = 2) AND Concesionario = ".$concesionario);
+                    //$lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 0 AND IFNULL(ContabilizarParaRB, 2) = 2) AND Concesionario = ".$concesionario);
+                    $lstProy = DB::connection($db)->select("SELECT *  FROM haberesnetosok WHERE IFNULL(FechaCobroReal, '') = '' AND (ComproGiama = 0) AND Concesionario = ".$concesionario);
                 break;
             }
        }
