@@ -15,7 +15,7 @@
             hide-details
           ></v-text-field>
           <v-spacer></v-spacer>
-          <v-btn class="ma-2" color="primary" outlined text @click="this.getDatos()">
+          <v-btn class="ma-2" color="primary" outlined text @click="getDatos()">
             <v-icon left>mdi-refresh</v-icon>Actualizar
           </v-btn>
         </v-card-title>

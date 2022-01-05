@@ -52,7 +52,7 @@ Route::post('/getdatosleads', 'GestionDatosController@getDatosLeads');
 Route::post('/getdatosweb', 'GestionDatosWebController@getDatos');
 
 Route::post('/hn_fca', 'GestionDatosWebController@getHaberNetoFCA');
-
+Route::post('/hn_dato_web', 'GestionDatosWebController@getHaberNeto');
 
 Route::post('/getdatosweb_pend', 'GestionDatosWebController@getDatosPendientes');
 Route::post('/getdatosweb_verif', 'GestionDatosWebController@getDatosVerificados');

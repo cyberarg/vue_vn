@@ -506,21 +506,24 @@ class UtilsController extends Controller
         return DB::select("CALL hnweb_calculo_hn_fca(".$object->Marca.", ".$object->ValorAuto.", ".$object->PagoBruto.", ".$object->TipoPlan.", ".$object->CantCuotas.", ".$object->CPG.");");
     }
 
-    public function getModelosSMarca($marca, $mesesAtras){
-        $db = 'GF';
-        
-        /*
-        if ($marca == 2 || $marca == 7){
-            $db = 'CG';
-        }*/
+    
+    public function getPlanesSModelo($marca){
+        $planes = array();
 
-        if ($marca == 2){
-            return DB::connection($db)->select("CALL hnweb_get_modelos_precios_fca(".$marca.", ".$mesesAtras.");");
-        }else{
-            return DB::connection($db)->select("CALL hnweb_get_modelos_precios(".$marca.", ".$mesesAtras.");");
+        if ($marca != 2){
+            $planes = CodigoPlan::where('Marca',$marca)->get();
         }
 
-       
+        return $planes;
+    }
+
+    public function getModelosSMarca($marca, $mesesAtras){
+
+        if ($marca == 2){
+            return DB::select("CALL hnweb_get_modelos_precios_fca(".$marca.", ".$mesesAtras.");");
+        }else{
+            return DB::select("CALL hnweb_get_modelos_precios(".$marca.", ".$mesesAtras.");");
+        }
     }
 
     public function getAvanceAutomaticoFiat($FechaVtoCuota2){

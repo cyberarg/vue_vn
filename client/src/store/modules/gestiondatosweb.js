@@ -24,6 +24,7 @@ export const state = {
   askData: false,
   showItemsFiltered: false,
   hn_FCA: 0,
+  hn_Web: 0,
   loadingHN:false,
   loadingStatusInsert: false,
   dataStatusInsert: "",
@@ -209,6 +210,26 @@ export const mutations = {
   },
 
   
+
+  GET_HN_WEB_STATUS(state) {
+    state.dataStatus = "loading";
+    state.hn_Web = 0;
+    state.loadingHN = true;
+  },
+
+  HN_WEB_SUCCESS(state, datos) {
+    //console.log(datos);
+    state.hn_Web = datos;
+    state.dataStatus = "success";
+    state.loadingHN = false;
+
+  },
+
+  HN_WEB_ERROR(state) {
+    state.dataStatus = "error";
+    state.hn_Web = 0;
+    state.loadingHN = false;
+  },
 
   GET_HN_FCA_STATUS(state) {
     state.dataStatus = "loading";
@@ -401,7 +422,19 @@ export const actions = {
       });
   },
 
+  getHaberNeto({commit}, pars){
+    commit("GET_HN_WEB_STATUS");
+   
+    return axios
+      .post("/hn_dato_web", pars)
+      .then(response => {
+        commit("HN_WEB_SUCCESS", response.data);
+      })
+      .catch(err => {
+        commit("HN_WEB_ERROR");
+      });
 
+  },
   
   searchValuesByGroup({ commit }, pars) {
     commit("GET_GRUPO_STATUS");

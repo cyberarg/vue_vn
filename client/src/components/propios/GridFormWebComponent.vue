@@ -153,7 +153,7 @@
         >
           <FormAltaDatoWeb
             @hide="dialogAlta = false"
-            @refresh="getDatos()"
+            @refresh="this.getDatos()"
           ></FormAltaDatoWeb>
         </v-dialog>
       </template>

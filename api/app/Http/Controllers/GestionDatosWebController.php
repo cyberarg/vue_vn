@@ -237,6 +237,7 @@ class GestionDatosWebController extends Controller
         $data_return['HaberNeto'] = null;
         $data_return['ModeloMarca'] = null;
         $data_return['ValorAuto'] = null;
+        $data_return['ModeloPlanes'] = null;
 
         if ($result->ExactMatch == 1){
             switch ($marca) {
@@ -256,11 +257,33 @@ class GestionDatosWebController extends Controller
 
             $modelo_marca = $utils->getModelosSMarca($marca,2);
             $data_return['ModeloMarca'] = $modelo_marca;
+
+            $modelo_planes = $utils->getPlanesSModelo($marca);
+            $data_return['ModeloPlanes'] = $modelo_planes;
             
         }
 
         return $data_return;
 
+    }
+
+    public function getHaberNeto(Request $request){
+
+        $utils = new UtilsController;
+        $obj = new \stdClass;
+
+        $obj->Marca = $request->Marca;
+        $obj->CodigoModelo = $request->Modelo;
+        $obj->CodigoPlan = $request->Plan;
+        $obj->CPG = $request->CPG;
+        $obj->CAD = $request->CAD == null ? 0 : $request->CAD;
+        $obj->AvanceCalculado = $request->Avance;
+        $obj->Porcentaje = $request->Porcentaje == null ? 'NULL' : $request->Porcentaje;
+ 
+        $hn = $utils->getHaberNetoDatoWeb($obj);
+        $hn_result = $hn[0];
+        return $hn_result->HN_Real;
+        
     }
 
     public function getHaberNetoFCA(Request $request){

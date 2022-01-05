@@ -298,16 +298,7 @@
                       v-model="item.Avance"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="2" md="2">
-                    <v-text-field
-                      dense
-                      label="Plan Real"
-                      placeholder="Plan Real"
-                      class="importantDisabled"
-                      :filled="filled"
-                      v-model="item.Plan"
-                    ></v-text-field>
-                  </v-col>
+                  
                   <v-col cols="8" md="8">
                     <template v-if="this.exactMatch == null" >
                       <v-text-field
@@ -358,7 +349,43 @@
                       ></v-select>
                     </template>
                   </v-col>
-
+                  <v-col cols="2" md="2">
+                    <template v-if="this.exactMatch == null" >
+                      <v-text-field
+                        dense
+                        label="Plan Real"
+                        placeholder="Plan Real"
+                        class="importantDisabled"
+                        :filled="filled"
+                        v-model="item.Plan"
+                      ></v-text-field>
+                    </template>
+                    <template v-else-if="this.exactMatch == 1">
+                        <v-text-field
+                        dense
+                        label="Plan Real"
+                        placeholder="Plan Real"
+                        class="importantDisabled"
+                        :filled="filled"
+                        v-model="item.Plan"
+                      >
+                    </v-text-field>
+                    </template>
+                    <template v-else>
+                      <v-combobox
+                        dense
+                        class="fillable"
+                        :items="planes_modelo"
+                        item-text="Plan"
+                        item-value="Plan"
+                        label="Plan Real"
+                        :value="ObjPlan"
+                        @input="setPlan"
+                        @change="changePlan"
+              
+                      ></v-combobox>
+                    </template>
+                  </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="3" md="3">
@@ -553,6 +580,11 @@ export default {
       grupoTabla: null,
       valorVehiculo: 0,
       modelos_marca:[],
+      modelos_planes:[],
+
+      planes_modelo:[],
+      codPlanSelected:null,
+
       toolTipBusqueda: "",
       labelPorcentaje: "Porcentaje",
       colorIconMatchGrupo:null,
@@ -563,6 +595,7 @@ export default {
       detail_datos_grupo: "",
 
       ObjModelo:{},
+      ObjPlan:null,
 
       listMarcas: [
         { Codigo: 2, Nombre: "Fiat" },
@@ -659,7 +692,8 @@ export default {
       saveDato: "gestiondatosweb/saveDato",
       searchValuesByGroup: "gestiondatosweb/searchValuesByGroup",
       getOficialesDatoWeb: "oficiales/getOficialesDatoWeb",
-      getHN_FCA: "gestiondatosweb/getHN_FCA"
+      getHN_FCA: "gestiondatosweb/getHN_FCA",
+      getHN_Web: "gestiondatosweb/getHaberNeto"
     }),
 
     setVentaCaida() {
@@ -686,6 +720,7 @@ export default {
             };
             await this.getHN_FCA(pars);
             this.item.HaberNeto = this.hn_FCA;
+            
         }
         console.log(this.item.PorcentajeValorHN);
       }
@@ -725,10 +760,11 @@ export default {
       this.item.HaberNeto = this.valores.HaberNeto;
       this.item.Avance = this.valores.AvanceCalculado;
       this.obtuvoBusquedaGrupo=true;
-
+      
       if (this.item.Marca == 2){
         
         this.modelos_marca = this.valores.ModeloMarca;
+        this.modelos_planes = [];
         this.item.Modelo = null;
         this.item.CodigoModelo = null;
 
@@ -743,7 +779,9 @@ export default {
       }else{
         if (this.exactMatch == 0){
           this.modelos_marca = this.valores.ModeloMarca;
+          this.modelos_planes = this.valores.ModeloPlanes;
           this.item.Modelo = null;
+          this.item.Plan = null;
           this.item.CodigoModelo = null;
           this.color_datos_grupo = "error";
           this.detail_datos_grupo = "Coincidencia Parcial - Grupo Testigo: "+ this.valores.GrupoTabla;
@@ -761,8 +799,8 @@ export default {
     async submit() {
       this.disabledAceptar = true;
       if (this.ObjModelo != {}){
-        this.item.CodigoModelo = ObjModelo.Codigo;
-        this.item.Modelo = ObjModelo.Nombre;
+        this.item.CodigoModelo = this.ObjModelo.Codigo;
+        this.item.Modelo = this.ObjModelo.Nombre;
       }
 
       if (!this.$refs.form.validate()) {
@@ -819,6 +857,12 @@ export default {
       console.log(value);
       this.item.CodigoModelo = value;
       //this.codModelo = value;
+    },
+
+    setPlan(value){
+      console.log('Plan Selected');
+      console.log(value);
+      this.ObjPlan = value;
     },
 
     setOficial(value) {
@@ -923,24 +967,49 @@ export default {
       }
     },  
 
+    async changePlan(value){
+      this.item.HaberNeto = "";
+
+      console.log(this.ObjModelo);
+      //Si no es Fiat, Jeep ni Peugeot, debo hacer el llamado en el change
+      if (this.codMarca != 2 && this.codMarca != 7 && this.codMarca != 3){
+          let pars = {
+            Marca: this.ObjModelo.Marca, 
+            Modelo: this.ObjModelo.Codigo,
+            Plan: this.ObjPlan.Plan,
+            CPG: this.item.CPG,
+            CAD: this.item.CAD,
+            Avance: this.item.Avance,
+            Porcentaje: this.item.PorcentajeValorHN,
+          }
+          console.log(pars);
+          await this.getHN_Web(pars);
+          this.item.HaberNeto = this.hn_Web;
+      }
+
+    },
+
     changeModelo(value){
 
-      this.item.HaberNeto = "";
+     // this.item.HaberNeto = "";
       this.ObjModelo = this.modelos_marca.find(function (item) {
         return item.Codigo === value;
       });
 
-      console.log(this.ObjModelo);
-
+      this.planes_modelo = [];
       if (typeof this.ObjModelo !== "undefined"){
         this.valorVehiculo = parseInt(this.ObjModelo.Precio);
+
+        this.planes_modelo = this.modelos_planes.filter(function (item) {
+          return item.CodigoModelo === value;
+        });
       }
-       
+
     },
 
     changeEstado(value) {
 
-      selectAsignarA_Behavior(value);
+      this.selectAsignarA_Behavior(value);
       /*
       switch(value){
         case 5: // Pasar A Asignacion
@@ -1086,6 +1155,7 @@ export default {
       "valores",
       "loadingSearch",
       "hn_FCA",
+      "hn_Web",
       "loadingHN"
     ]),
   },
