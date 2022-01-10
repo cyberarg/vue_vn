@@ -681,7 +681,7 @@ export default {
         
         // TABLA COMISIONES
         doc.setFontSize(10);
-        doc.text(15, 147, 'Comisiones a Pagar');
+        doc.text(15, 163, 'Comisiones a Pagar');
         doc.autoTable({
           styles: { fontSize: 9, halign: 'center' },
           headStyles: {fillColor: [60, 162, 118]},
@@ -693,7 +693,7 @@ export default {
             4:{ halign: 'right' }, 
 
           }, // Cells in first column centered 
-          startY: 150,
+          startY: 166,
           //tableWidth: this.cantAcum_RB * 17,
           columns: ['Destinatario','Porcentaje', 'Concesionarios', 'Aclaración', 'Importe'],
           body: rows_comision,
