@@ -62,7 +62,8 @@ Vue.prototype.$http = axios;
 
 // //axios.defaults.baseURL = "http://192.168.14.10:8080/api/";
 
-//axios.defaults.baseURL = "http://testvue.test/api/";
+// //axios.defaults.baseURL = "http://testvue.test/api/";
+//axios.defaults.baseURL = "http://localhost:7080/api/";
 
 axios.defaults.baseURL = "http://api.giama.com.ar/api/";
 

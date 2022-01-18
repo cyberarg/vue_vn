@@ -71,7 +71,7 @@ export default {
       itemsAnios: [
         "2020",
         "2021",
-
+        "2022"
       ],
 
       headers_1: [

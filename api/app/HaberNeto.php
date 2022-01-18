@@ -17,7 +17,7 @@ class HaberNeto extends Model
     //protected $table = 'haberesnetosok';
 
     protected $table = 'haberesnetosok';
-    //protected $table = 'haberesnetosok_BACKUP_20200916';
+   // protected $table = 'haberesnetosok_HIST_20220101';
     /**
      * The primary key for the model.
      * 

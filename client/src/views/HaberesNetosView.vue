@@ -18,35 +18,6 @@
                 Concesionario: RB - AutoNet - CarGroup - Volkswagen
               </template>
             </v-row>
-            <!--
-            <v-combobox
-              item-text="Nombre"
-              item-value="Codigo"
-              :items="listMarcas"
-              label="Marca"
-              :value="codMarcaSelected"
-              @change="filterListConcesionaria"
-              class="padded"
-            ></v-combobox>
-
-            <v-combobox
-              item-text="Nombre"
-              item-value="Codigo"
-              :items="listC"
-              label="Concesionario"
-              v-model="codConcesSelected"
-              @change="setSelected"
-              class="padded"
-            ></v-combobox>
-
-            <v-checkbox
-              v-show="showchkConsolidado"
-              dense
-              id="chk_consolidado"
-              v-model="selectedConsolidado"
-              label="Consolidado"
-            ></v-checkbox>
-          --> 
           </template>
           <template v-else >
             <v-btn
@@ -90,7 +61,7 @@
           </div>
         </template>
         <template v-else>
-            <v-row>
+            <v-row v-show="showSelectTitularHN">
               <v-spacer></v-spacer>
               <v-col cols="3" sm="3" lg="3">
                 <v-combobox
@@ -314,6 +285,7 @@ export default {
     return {
 
       showListCE: true,
+      showSelectTitularHN: true,
 
       headersReportHNV: ['Conces.', 'Titular', 'Grupo', 'Orden', 'Fecha Compra',
        'Monto Compra', 'Monto Compra USD', 'HN Subite', 'HN Subite USD', 'Util.', 
@@ -720,8 +692,9 @@ export default {
       console.log('Cambio de Tab:');
       console.log(newValue);
 
-      if (newValue == 4){
+      if (newValue == 4){ // Resumen Performance
         this.showListCE = false;
+        this.showSelectTitularHN = false;
         if (!this.loading_resumen){
           
           var params = {
@@ -735,6 +708,7 @@ export default {
         }
       }else{
         this.showListCE = true;
+        this.showSelectTitularHN = true;
       }
     },
 
