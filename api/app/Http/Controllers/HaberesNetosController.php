@@ -1107,6 +1107,7 @@ class HaberesNetosController extends Controller
 
                 $db = 'GF';
                 $empGyO = 'NULL';
+                $request->NroTransferencia = 'NULL';
             break;
 
             case 9: //FORD

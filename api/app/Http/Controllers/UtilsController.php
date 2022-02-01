@@ -741,9 +741,9 @@ class UtilsController extends Controller
     public function getComisionALiquidar($precioCompra, $precioMaximoCompra){
 
         $comision = ($precioMaximoCompra - $precioCompra) * 0.1;
-
-        if ($comision < 250){
-            $comision = 250;
+        //A partir del 1/2/2022 la comision minima es de $400 en vez de $250
+        if ($comision < 400){
+            $comision = 400;
         }
         return $comision;
     }

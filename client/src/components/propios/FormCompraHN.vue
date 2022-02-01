@@ -333,6 +333,7 @@ export default {
         { Codigo: 20, Nombre: "Maynar", Marca: 5 },
         { Codigo: 21, Nombre: "Sebastiani", Marca: 5 },
         { Codigo: 22, Nombre: "Yacopini", Marca: 5 },
+        { Codigo: 23, Nombre: "Detroit", Marca: 7 },
         
       ],
       listTitularesCompra: [
@@ -460,7 +461,7 @@ export default {
     setTitularesCompra(value) {
       console.log(value);
 
-      if (value.Marca == 2) {
+      if (value.Marca == 2 || value.Marca == 7) {
         this.codTitularCSelected = { Codigo: 1, Nombre: "Giama (RB)", ComproGiama: 1 };
       }
     },

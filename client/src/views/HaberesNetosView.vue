@@ -424,6 +424,8 @@ export default {
         { Codigo: 20, Nombre: "Maynar", Marca: 5 },
         { Codigo: 21, Nombre: "Sebastiani", Marca: 5 },
         { Codigo: 22, Nombre: "Yacopini", Marca: 5 },
+
+        { Codigo: 23, Nombre: "Detroit", Marca: 7 },
         /*
         { Codigo: 16, Nombre: "Datos Web - Ford", Marca: 9 },
         { Codigo: 17, Nombre: "Datos Web - Citroen", Marca: 10 },
