@@ -648,7 +648,7 @@ export default {
     disabledTransferencia() {
       if (this.codConcesSelected != null) {
         var retorno = false;
-        retorno = this.codConcesSelected.Marca != 2;
+        retorno = this.codConcesSelected.Marca != 2 && (this.codConcesSelected.Marca != 7 && this.codConcesSelected.Codigo != 23);
         this.disabledAceptar = !retorno;
 
         return retorno;

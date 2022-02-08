@@ -503,21 +503,21 @@ class ReporteFacturacionController extends Controller
         $arrAcum_GB = array();
         $rowHeader = array();
         $rowValores = array();
-        $acum = 0;
+        $acum_GB = 0;
         $cant_Acum_GB = 0;
 
         foreach ($lstTabla_CE_GB as $acumGB) {
             if ($acumGB->AFacturar > 0){
                 array_push($rowHeader, $acumGB->Nombre);
                 array_push($rowValores, round($acumGB->AFacturar,2));
-                $acum += round($acumGB->AFacturar,2);
+                $acum_GB += round($acumGB->AFacturar,2);
                 $cant_Acum_GB ++;
             } 
         }
          
-        if ($acum > 0){
+        if ($acum_GB > 0){
             array_push($rowHeader, 'TOTAL GB');
-            array_push($rowValores, $acum);
+            array_push($rowValores, $acum_GB);
             $cant_Acum_GB ++;
         }
 
@@ -557,8 +557,8 @@ class ReporteFacturacionController extends Controller
         $acum_Tot = 0;
         $cant_Acum_Tot = 1;
 
-        if ($acum > 0 || $acum_CE > 0){
-            $acum_tot = $acum + $acum_CE;
+        if ($acum > 0 || $acum_GB > 0 || $acum_CE > 0){
+            $acum_tot = $acum + $acum_GB + $acum_CE;
             array_push($rowHeader_Tot, 'TOTAL');
             array_push($rowValores_Tot, round($acum_tot, 2));
         }

@@ -49,6 +49,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import XLSX from "xlsx";
 export default {
   name: "gridcontrolcomponent",
   props: {
@@ -131,13 +132,13 @@ export default {
       return this.$options.filters.numFormat(tot, "0,0");
     },
 
-    async detalleExcelPendientes(){
-      /*
+    async detalleExcel(){
+      
       await this.getDetalle();
 
       console.log(this.items_detalle_compras);
       this.generateExcel();
-      */
+      
 
     },
 
@@ -145,11 +146,14 @@ export default {
     generateExcel(){
       
       const workbook = XLSX.utils.book_new();
-      const filename = "DetalleCompras";
-      
-      let sheetname1 = "";
-      let sheetname2 = "";
+      const filename = "DetalleComprasMesActual";
+      let sheetname1 = "COMPRAS MES ACTUAL";
+      let data1 = XLSX.utils.json_to_sheet(this.items_detalle_compras);
+         
+      XLSX.utils.book_append_sheet(workbook, data1, sheetname1);
 
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
+      /*
       //console.log(this.detalle_gral);
       this.items_detalle_compras.forEach(element => {
          
@@ -159,18 +163,13 @@ export default {
           let data1 = XLSX.utils.json_to_sheet(dataAyer);
           let data2 = XLSX.utils.json_to_sheet(dataHoy);
          
-          sheetname1 = 'Hasta Ayer';
-          sheetname2 = 'Hoy';
+          sheetname1 = 'COMPRAS MES ACTUAL';
          
           XLSX.utils.book_append_sheet(workbook, data1, sheetname1);
-          XLSX.utils.book_append_sheet(workbook, data2, sheetname2);
         });
-       
-      
 
-      XLSX.writeFile(workbook, `${filename}.xlsx`);
-
-
+        XLSX.writeFile(workbook, `${filename}.xlsx`);
+      */
     },
 
   },

@@ -49,7 +49,7 @@ export const mutations = {
 
   DETALLE_EVOL_SUCCESS(state, datos) {
     //console.log(datos);
-    state.items_detalle_compras = datos.Reporte;
+    state.items_detalle_compras = datos.Datos;
     state.loading_detalle_evolucion = false;
 
     state.dataStatus = "success";

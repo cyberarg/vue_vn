@@ -56,8 +56,17 @@ class TableroControlController extends Controller
 
         $lst = array();
         
-        $lst['Reporte'] = $reporte;
-        $lst['Datos'] = $datos;
+        $query = "SELECT hcc.Concesionario AS CodCE, ces.Nombre AS Concesionario, hcc.grupo AS Grupo, hcc.orden AS Orden, date_format(hcc.fechacompra, '%d/%m/%Y') AS FechaCompra, hcc.PrecioCompra,
+        sof.Nombre AS Oficial, CASE hcc.Vendido WHEN 1 THEN 'SI' ELSE '' END AS Transferido
+        FROM pa7_gf.hnweb_historial_compras_caidas hcc
+        LEFT JOIN pa7_gf.hnweb_concesionarios ces ON ces.ID = hcc.Concesionario
+        LEFT JOIN pa7_gf.subite_oficiales sof ON sof.Codigo = hcc.CodOficialUnificado
+        WHERE hcc.CodEstado = 5 
+        AND YEAR(hcc.fechacompra) = YEAR(NOW()) 
+        AND MONTH(hcc.fechacompra) = MONTH(NOW())
+        ORDER BY CodCe, FechaCompra, Oficial ASC ";
+
+        $lst['Datos'] = DB::select($query);
 
         return $lst;
     }
