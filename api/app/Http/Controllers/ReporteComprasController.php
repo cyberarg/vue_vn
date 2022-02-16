@@ -343,6 +343,7 @@ class ReporteComprasController extends Controller
             }
         //}
         
+        $fcav = strtotime($periodoActPrimerDia);
 
         foreach ($datos_gf as $dato) {
 
@@ -352,14 +353,31 @@ class ReporteComprasController extends Controller
                 $oDet = new \stdClass();
 
                 $oDet->Marca = $dato->Marca;
+                
+                // if ($dato->FechaVtoCuota2 === NULL){
+                if (is_null($dato->FechaVtoCuota2)){ // SI es nulo es de una marca que NO usamos FechaVtoCuota para Avance
+                    if (!is_null($dato->AvanceCalculado)){
+                        $oDet->Avance = $dato->AvanceCalculado;
+                    }else{
+                        $oDet->Avance = $dato->Avance;
+                        if (is_null($dato->Avance)){
+                            $oDet->Avance = 0;
+                        }
+                    }
+                }else{
+                    $fvc2 = strtotime($dato->FechaVtoCuota2);
+                    $oDet->Avance = $utils->getAvanceAutomaticoAFecha($fcav, $fvc2);
+                }
 
+                /*
                 //if($dato->AvanceCalculado != null){
                 if (!is_null($dato->AvanceCalculado)){
                     $oDet->Avance = $dato->AvanceCalculado;
                 }else{
                     $oDet->Avance = $dato->Avance;
                 }
-                
+                */
+
                 if ($oDet->Avance < 84){
 
                     //return 'ID: '.$dato->ID.', FechaUltObs: '.$dato->FechaUltObs.', Avance: '.$oDet->Avance;
@@ -431,7 +449,7 @@ class ReporteComprasController extends Controller
 
         $parPMaxFiat = 9000;
         
-        $fcav = strtotime($periodoActPrimerDia);
+        //$fcav = strtotime($periodoActPrimerDia);
 
         foreach ($arrFiat as $dato) {
 
