@@ -21,7 +21,7 @@ class HaberesNetosCobroController extends Controller
         $db = $uC->getDabaseName($request->Marca, $request->Concesionario);
 
         if ($db == 'GF'){
-            $hn_cobrado = DB::connection($db)->select("CALL hnweb_grabar_cobro_hn(".$request->ID.", ".$request->ID_Dato.", ".$request->MontoCobroReal.", '".$request->FechaCobroReal."');");   
+            $hn_cobrado = DB::connection($db)->select("CALL hnweb_grabar_cobro_hn(".$request->ID.", ".$request->ID_Dato.", ".$request->MontoCobroReal.", '".$request->FechaCobroReal."', '".$request->UsuarioAlta."');");   
         }else{
             $hn_cobrado = DB::connection($db)->select("CALL hnweb_grabar_cobro_hn(".$request->ID.", ".$request->MontoCobroReal.", '".$request->FechaCobroReal."');");      
         }
