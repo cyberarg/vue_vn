@@ -58,6 +58,10 @@ export const navigationRoutesAdmin = {
           name: "datosweb",
           displayName: "Datos Web"
         },
+        {
+          name: "calendario",
+          displayName: "Calendario"
+        },
       ]
     },
     {

@@ -31,6 +31,7 @@ import * as graphindice from "./modules/graphindice.js";
 import * as stockhn from "./modules/stockhn.js";
 import * as parametros from "./modules/parametros.js";
 import * as reporterentacartera from "./modules/reporterentacartera.js";
+import * as calendario from "./modules/calendario.js";
 
 Vue.use(Vuex);
 
@@ -68,7 +69,8 @@ const store = new Vuex.Store({
     graphindice,
     stockhn,
     parametros,
-    reporterentacartera
+    reporterentacartera,
+    calendario
   },
   state: {
     tableList: [],

@@ -58,6 +58,10 @@ export const navigationRoutesFull = {
           name: "datosweb",
           displayName: "Datos Web"
         },
+        {
+          name: "calendario",
+          displayName: "Calendario"
+        },
       ]
     },
     {

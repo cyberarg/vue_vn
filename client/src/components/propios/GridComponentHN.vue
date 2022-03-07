@@ -875,6 +875,8 @@ export default {
           return "YACOPINI";
         case "23":
           return "DETROIT";
+        case "24":
+          return "PUSSETTO";
       }
     },
 
@@ -920,6 +922,8 @@ export default {
           return "YACOPINI";
         case "23":
           return "DETROIT";
+        case "24":
+          return "PUSSETTO";
       }
     },
 

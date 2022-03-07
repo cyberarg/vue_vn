@@ -111,7 +111,7 @@ export const actions = {
     commit("LOGOUT");
   },
 
-  async signIn({ commit }, userData) {
+  async signIn({ commit, dispatch }, userData) {
     return new Promise((resolve, reject) => {
       commit("AUTH_REQUEST");
       axios
@@ -136,6 +136,8 @@ export const actions = {
             localStorage.setItem("perfilUsuario", user.HN_PerfilUsuario);
           } else {
             localStorage.setItem("esConcesionario", false);
+            
+            dispatch('calendario/getDatosCombos', null, {root:true})
           }
 
           if (user.HN_PerfilUsuario === 2) {

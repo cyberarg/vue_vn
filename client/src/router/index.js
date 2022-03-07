@@ -27,6 +27,7 @@ import ReporteComisionesView from "@/views/ReporteComisionesView.vue";
 import ReporteFacturacionView from "@/views/ReporteFacturacionView.vue";
 import ReporteSemestreView from "@/views/ReporteSemestreView.vue";
 import ReporteCarteraGralView from "@/views/ReporteCarteraGralView.vue";
+import CalendarioEventosView from "@/views/CalendarioEventosView.vue";
 
 Vue.use(Router);
 
@@ -270,6 +271,12 @@ export default new Router({
           path: "modelo",
           name: "modelo",
           component: ModeloHNView
+        },
+
+        {
+          path: "calendario",
+          name: "calendario",
+          component: CalendarioEventosView
         },
 
         {

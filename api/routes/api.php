@@ -87,6 +87,8 @@ Route::post('/haberesnetos_select', 'HaberesNetosController@getDatosHaberesNetos
 route::post('/haberesnetoscobrados', 'HaberesNetosController@getHaberesNetosCobrados');
 route::post('/haberesnetoscobrados_select', 'HaberesNetosController@getHaberesNetosCobrados_Selecteds');
 
+Route::get('/calendario_combos', 'CalendarioEventosController@getCombosCalendario');
+Route::post('/eventos_calendario', 'CalendarioEventosController@getEventosCalendario');
 
 Route::post('/nuevocobrohn', 'HaberesNetosCobroController@grabarNuevoCobro');
 Route::post('/getcobroshn', 'HaberesNetosCobroController@getCobrosHN');

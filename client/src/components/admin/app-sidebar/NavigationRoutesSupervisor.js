@@ -58,6 +58,10 @@ export const navigationRoutesSupervisor = {
           name: "datosweb",
           displayName: "Datos Web"
         },
+        {
+          name: "calendario",
+          displayName: "Calendario"
+        },
       ]
     },
     {

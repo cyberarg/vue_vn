@@ -104,7 +104,7 @@ class AsignacionDatosController extends Controller
 
 
                     //CHEQUEOS BASE B 18,19,20,21,22
-                    if ($oDet->Concesionario == 18 || $oDet->Concesionario == 19 || $oDet->Concesionario == 20 || $oDet->Concesionario == 21 || $oDet->Concesionario == 22 ){
+                    if ($oDet->Concesionario == 18 || $oDet->Concesionario == 19 || $oDet->Concesionario == 20 || $oDet->Concesionario == 21 || $oDet->Concesionario == 22 || $oDet->Concesionario == 24 ){
 
                         if (($oDet->Avance < 84 ) && ($oDet->Avance >= 70) && ($oDet->HaberNeto >= 160000)){
                             array_push($list, $oDet);
