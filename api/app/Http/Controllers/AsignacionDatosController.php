@@ -117,7 +117,7 @@ class AsignacionDatosController extends Controller
 
                         //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
                         
-                        if ($oDet->Marca == 2 || $oDet->Marca == 7 || ($oDet->Marca == 3 && $oDet->HaberNeto > 29999) || ($oDet->Marca == 5 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
+                        if ($oDet->Marca == 2 || $oDet->Marca == 7 || ($oDet->Marca == 3 && $oDet->Avance > 45 && $oDet->HaberNeto > 29999) || ($oDet->Marca == 5 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
                             array_push($list, $oDet);
                         }
                     }
