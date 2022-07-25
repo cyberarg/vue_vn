@@ -210,6 +210,7 @@ export default {
         { text: "No le interesa", value: "No le interesa" },
         { text: "Vende Plan", value: "Vende el Plan" },
         { text: "En Gestión", value: "En Gestion" },
+        { text: "Descartados", value: "Descartados" },
       ],
 
       //search: "",
@@ -478,6 +479,8 @@ export default {
             return "Pasar A Asignación";
           case "6":
             return "Deje Mensaje";
+          case "7":
+            return "Descartados";  
           default:
             return estado;
         }

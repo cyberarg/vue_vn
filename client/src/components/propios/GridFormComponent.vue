@@ -230,6 +230,7 @@ export default {
         { text: "Vende Plan", value: "Vende el Plan" },
         { text: "Venta Caida", value: "Venta Caida" },	
         { text: "En Gestión", value: "En Gestion" },
+        { text: "Descartados", value: "Descartados" },
       ],
 
       search_box: "",
