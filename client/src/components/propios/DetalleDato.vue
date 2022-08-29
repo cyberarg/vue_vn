@@ -782,9 +782,12 @@ export default {
       );
     },
 
-    getPrecioMaximoCompra(avance, haberNeto) {
-      console.log(avance);
-      console.log(haberNeto);
+    getPrecioMaximoCompra(avance, haberNeto, esCircularFiat, pMaxCompra) {
+      
+      if (esCircularFiat === 1){
+        return pMaxCompra;
+      }
+
       if (45 <= avance && avance <= 61) {
         return haberNeto * 0.2;
       }
@@ -1036,34 +1039,13 @@ export default {
       return this.$options.filters.numFormat(
         this.getPrecioMaximoCompra(
           parseInt(this.item.Avance),
-          parseInt(this.item.HaberNeto)
+          parseInt(this.item.HaberNeto),
+          parseInt(this.item.EsCircularFiat),
+          parseInt(this.item.PMaxCompra)
         ),
         "$0,0"
       );
-      /*
-      if (typeof this.item.PrecioMaximoCompra !== "undefined") {
-        if (this.item.PrecioMaximoCompra !== null) {
-          return (
-            "$" + this.$options.filters.numFormat(this.item.PrecioMaximoCompra)
-          );
-        } else {
-          return this.$options.filters.numFormat(
-            this.getPrecioMaximoCompra(
-              parseInt(this.item.Avance),
-              parseInt(this.item.HaberNeto)
-            ),
-            "$0,0"
-          );
-        }
-      } else {
-        return this.$options.filters.numFormat(
-          this.getPrecioMaximoCompra(
-            parseInt(this.item.Avance),
-            parseInt(this.item.HaberNeto)
-          ),
-          "$0,0"
-        );
-        */
+
     },
 
     module() {

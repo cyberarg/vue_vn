@@ -114,7 +114,7 @@
           >${{ Math.round(item.HaberNeto) | numFormat }}</template
         >
         <template v-slot:item.PrecioMaximoCompra="{ item }">
-          {{ getPrecioMaxCompra(item.Avance, item.HaberNeto) }}
+          {{ getPrecioMaxCompra(item.Avance, item.HaberNeto, item.EsCircularFiat, item.PMaxCompra) }}
         </template>
 
         <template v-slot:item.FechaVtoCuota2="{ item }">
@@ -140,18 +140,6 @@
           <td>Total = {{ getCountTotal }}</td>
           <td>Sel = {{ getCountSelected }}</td>
         </template>
-        <!--
-        <template v-slot:top>
-          <v-toolbar flat>
-            <v-spacer></v-spacer>
-            <v-switch
-              v-model="showSinOficial"
-              label="Filtrar Sin Asignar"
-              class="mt-2"
-            ></v-switch>
-          </v-toolbar>
-        </template>
-        -->
 
         <template v-slot:top>
           <v-expansion-panels focusable>
@@ -160,7 +148,7 @@
               <v-expansion-panel-content>
                 <v-container fluid>
                   <v-row>
-                    <v-col cols="3">
+                    <v-col cols="2">
                       <v-row class="pa-6">
                         <v-combobox
                           v-model="oficialFilterValue"
@@ -171,7 +159,7 @@
                         ></v-combobox>
                       </v-row>
                     </v-col>
-                    <v-col cols="3">
+                    <v-col cols="2">
                       <v-row class="pa-6">
                         <v-select
                           :items="statesList"
@@ -210,6 +198,16 @@
                         ></v-switch>
                       </v-row>
                     </v-col>
+                    <v-col cols="2">
+                      <v-row class="pa-10">
+                        <v-switch
+                          label="Solo Circ. Fiat"
+                          v-model="solodatocircular"
+                          class="mt-0 pt-0"
+                        ></v-switch>
+                      </v-row>
+                    </v-col>
+
                   </v-row>
                 </v-container>
               </v-expansion-panel-content>
@@ -264,6 +262,7 @@ export default {
       minByBrand:45,
       sliderHaberNeto: 15000,
       solodatonuevo:false,
+      solodatocircular:false,
       showSinOficial: false,
       codOficialSelected: null,
       codSupervisorSelected: null,
@@ -345,7 +344,11 @@ export default {
       if (this.codMarcaSelected == 3){
         return 1
       }else{
-        return 45
+        if (this.codMarcaSelected == 2){
+          return 30
+        }else{
+          return 45
+        }
       }
     },
 
@@ -409,16 +412,7 @@ export default {
     },
 
     computedHeaders() {
-      //return this.headers.filter((header) => header.text !== "ID");
-
-      //return this.headers_2.filter((headers_2) => headers_2.text !== "ID");
-
       return this.headers_2.filter((headers_2) => headers_2.ocultar !== true);
-      /*
-      return this.headers_2.filter(
-        ((headers_2) => headers_2.text !== "ID") &&
-          ((headers_2) => headers_2.text !== "CodEstado")
-      );*/
     },
 
     headers_2() {
@@ -512,6 +506,7 @@ export default {
         },
        
         { text: "", value: "VerDatos", align: "end", width: "1%" , sortable: false},
+        
          {
           text: "",
           value: "EsDatoNuevo",
@@ -521,6 +516,17 @@ export default {
           width:"0%",
           sortable: false
         },
+        
+        {
+          text: "",
+          value: "EsCircularFiat",
+          align: "center",
+          filterable: true,
+          filter: this.filterSoloDatoCircularFiat,
+          width:"0%",
+          sortable: false
+        },
+
       ];
     },
 
@@ -571,6 +577,14 @@ export default {
       }
       return true;
     },
+
+    filterSoloDatoCircularFiat(value){
+      if (this.solodatocircular) {
+        return value === 1;
+      }
+      return true;
+    },
+
 
     filterHaberNeto(value) {
       if (!this.sliderHaberNeto) {
@@ -646,8 +660,13 @@ export default {
         this.sliderAvance = 1
         this.minByBrand = 1
       }else{
-        this.sliderAvance = 45
-        this.minByBrand = 45
+        if (value.Codigo == 2){
+          this.sliderAvance = 30
+          this.minByBrand = 30
+        }else{  
+          this.sliderAvance = 45
+          this.minByBrand = 45
+        }  
       }
 
     },
@@ -666,7 +685,12 @@ export default {
       console.log(this.codConcesSelected);
     },
 
-    getPrecioMaxCompra(avance, haberNeto) {
+    getPrecioMaxCompra(avance, haberNeto, esCircularFiat, pMaxCompra) {
+
+      if (esCircularFiat === 1){
+        return "$" + this.$options.filters.numFormat(pMaxCompra);
+      }
+
       var av = parseInt(avance);
       var hn = parseInt(haberNeto);
       var pmax = 0;

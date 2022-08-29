@@ -776,6 +776,7 @@ class UtilsController extends Controller
 
     }
 
+
     public function getAvanceAutomatico($FechaVtoCuota2){
 
         $avance = 0;

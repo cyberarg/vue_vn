@@ -64,6 +64,7 @@ class AsignacionDatosController extends Controller
                 //$fvc2 = strtotime($oDet->FechaVtoCuota2);
                 $fvc2 = $oDet->FechaVtoCuota2;
 
+
                 if ($oDet->Marca == 2 || $oDet->Marca == 7){
                     if ($oDet->FechaVtoCuota2 === NULL){
                         if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
@@ -85,46 +86,62 @@ class AsignacionDatosController extends Controller
                     }
                 }
 
-                if ($oDet->Marca == 3){
-                    $totPagas = 80; //Para Peugeot que NO tiene CPG ni CAD informada, le pongo un valor alto para que pase el filtro
-                }else{
-                    $totPagas = $oDet->CPG + $oDet->CAD;
-                }
-                
-                $oDet->PMaxCompra = $utils->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
+                if ($oDet->HaberNeto_Fiat !== NULL){
 
-                //Pedido Dani Fernandez 01/10/2020 SACAR los casos cuota 84
-                //Pedido Guido 12/11/2020 SACAR los casos Cuotas Pagas < 10
-                //if(!($this->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->HaberNeto > 29999 && $oDet->CodEstado <> 5){
-                //if((!($utils->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->CodEstado <> 5) || ($oDet->Marca == 3 && $oDet->CodEstado <> 5)){
-                    // Los casos cuotas pagas < 10 NO aplican para Fiat. Audio WA Dani 1/6/21 
+                    //REEMPLAZO VARIABLES
+                    $oDet->HaberNeto = $oDet->HaberNeto_Fiat;
+                    $oDet->PMaxCompra = $oDet->PMaxCompra_Fiat;
+                    $oDet->EsCircularFiat = 1;
 
-
-                   if ( (!($utils->enOtraSociedadOPropioMerge($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $oDet->CodEstado <> 5)){
-
-
-                    //CHEQUEOS BASE B 18,19,20,21,22
-                    if ($oDet->Concesionario == 18 || $oDet->Concesionario == 19 || $oDet->Concesionario == 20 || $oDet->Concesionario == 21 || $oDet->Concesionario == 22 || $oDet->Concesionario == 24 ){
-
-                        if (($oDet->Avance < 84 ) && ($oDet->Avance >= 70) && ($oDet->HaberNeto >= 160000)){
-                            array_push($list, $oDet);
-                        }
-                    }else{
-                        //Pedido Dani Fernandez 04/11/2021 SACAR los casos de Fiat que tiene pmax de compra menor a 9000
-                        if (($oDet->Avance == 84 && $oDet->CodOficial == null) || (($oDet->Marca == 2 || $oDet->Marca == 7 ) && $oDet->PMaxCompra < 9000)){
-                            continue;
-                        }
-
-                        //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
-                        
-                        if ($oDet->Marca == 2 || $oDet->Marca == 7 || ($oDet->Marca == 3 && $oDet->Avance > 45 && $oDet->HaberNeto > 29999) || ($oDet->Marca == 5 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
-                            array_push($list, $oDet);
-                        }
+                    if ( (!($utils->enOtraSociedadOPropioMerge($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $oDet->CodEstado <> 5)){
+                        array_push($list, $oDet);
                     }
 
-                }
+                }else{
 
-                
+                    
+                    $oDet->EsCircularFiat = 0;
+
+                    if ($oDet->Marca == 3){
+                        $totPagas = 80; //Para Peugeot que NO tiene CPG ni CAD informada, le pongo un valor alto para que pase el filtro
+                    }else{
+                        $totPagas = $oDet->CPG + $oDet->CAD;
+                    }
+                    
+                    $oDet->PMaxCompra = $utils->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
+
+                    //Pedido Dani Fernandez 01/10/2020 SACAR los casos cuota 84
+                    //Pedido Guido 12/11/2020 SACAR los casos Cuotas Pagas < 10
+                    //if(!($this->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->HaberNeto > 29999 && $oDet->CodEstado <> 5){
+                    //if((!($utils->enOtraSociedadOPropio($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $totPagas > 9 && $oDet->CodEstado <> 5) || ($oDet->Marca == 3 && $oDet->CodEstado <> 5)){
+                        // Los casos cuotas pagas < 10 NO aplican para Fiat. Audio WA Dani 1/6/21 
+
+
+                    if ( (!($utils->enOtraSociedadOPropioMerge($oDet->Nombres, $oDet->Apellido)) && $oDet->Avance < 84 && $oDet->CodEstado <> 5)){
+
+
+                        //CHEQUEOS BASE B 18,19,20,21,22
+                        if ($oDet->Concesionario == 18 || $oDet->Concesionario == 19 || $oDet->Concesionario == 20 || $oDet->Concesionario == 21 || $oDet->Concesionario == 22 || $oDet->Concesionario == 24 ){
+
+                            if (($oDet->Avance < 84 ) && ($oDet->Avance >= 70) && ($oDet->HaberNeto >= 160000)){
+                                array_push($list, $oDet);
+                            }
+                        }else{
+                            //Pedido Dani Fernandez 04/11/2021 SACAR los casos de Fiat que tiene pmax de compra menor a 9000
+                            if (($oDet->Avance == 84 && $oDet->CodOficial == null) || (($oDet->Marca == 2 || $oDet->Marca == 7 ) && $oDet->PMaxCompra < 9000)){
+                                continue;
+                            }
+
+                            //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
+                            
+                            if ($oDet->Marca == 2 || $oDet->Marca == 7 || ($oDet->Marca == 3 && $oDet->Avance > 45 && $oDet->HaberNeto > 29999) || ($oDet->Marca == 5 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
+                                array_push($list, $oDet);
+                            }
+                        }
+
+                    }
+
+                } 
             }
         }
 

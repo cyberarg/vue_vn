@@ -192,14 +192,25 @@ class GestionDatosController extends Controller
                     $util = new UtilsController;
                     $oDet->FechaCompra = $util->reversarFecha($oDet->FechaCompra, 'FE');
 
-                    $oDet->PrecioMaximoCompra = $util->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
-                    
-                    //Cambio minimo HN a Mostrar $30000 WA Dani 3/12/20 para Peugeot dejo pasar avances menores a 45 WA Dani 12/3/21
-                    if ($oDet->Avance < 84 && ($oDet->Marca == 3 || $oDet->Avance > 44)){
+                    if ($oDet->HaberNeto_Fiat !== NULL){
+                        //REEMPLAZO VARIABLES
+                        $oDet->HaberNeto = $oDet->HaberNeto_Fiat;
+                        $oDet->PMaxCompra = $oDet->PMaxCompra_Fiat;
+                        $oDet->EsCircularFiat = 1;
+                       
+                        array_push($list, $oDet); 
+    
+                    }else{
 
-                        //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
-                        if ($oDet->Marca == 2 || $oDet->Marca == 7 || $oDet->Marca == 3 || ($oDet->Marca != 2 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
-                            array_push($list, $oDet); 
+                        $oDet->PrecioMaximoCompra = $util->getPrecioMaximoCompra($oDet->Avance, $oDet->HaberNeto);
+                        
+                        //Cambio minimo HN a Mostrar $30000 WA Dani 3/12/20 para Peugeot dejo pasar avances menores a 45 WA Dani 12/3/21
+                        if ($oDet->Avance < 84 && ($oDet->Marca == 3 || $oDet->Avance > 44)){
+
+                            //El minimo HN a Mostrar $30000 es SOLO para los casos que NO sean Fiat Mail Dani 6/1/21
+                            if ($oDet->Marca == 2 || $oDet->Marca == 7 || $oDet->Marca == 3 || ($oDet->Marca != 2 && $totPagas > 9 && $oDet->HaberNeto > 29999)){
+                                array_push($list, $oDet); 
+                            }
                         }
                     }
                    
@@ -388,18 +399,7 @@ class GestionDatosController extends Controller
                 $oDet = json_decode(json_encode($r), FALSE);
 
                 $fvc2 = strtotime($oDet->FechaVtoCuota2);
-                /*
-                if ($oDet->FechaVtoCuota2 === NULL){
-                    if ($oDet->Marca == 5){
-                        $oDet->AvanceAutomatico = $oDet->Avance;
-                    }else{
-                        $oDet->AvanceAutomatico = 0;
-                    }
-                }else{
-                    $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fvc2);
-                    $oDet->Avance = $oDet->AvanceAutomatico;
-                }
-                */
+
                 if ($oDet->Marca == 2 || $oDet->Marca == 7 ){
                     if ($oDet->FechaVtoCuota2 === NULL){
                         if (isset($oDet->AvanceCalculado) && $oDet->AvanceCalculado === NULL){
@@ -412,9 +412,19 @@ class GestionDatosController extends Controller
                         $oDet->AvanceAutomatico = $this->getAvanceAutomatico($fvc2);
                         $oDet->Avance = $oDet->AvanceAutomatico;
                     }
+
                 }else{
                     $oDet->AvanceAutomatico = $oDet->Avance;
                 }
+
+                if ($oDet->HaberNeto_Fiat !== NULL){
+
+                    //REEMPLAZO VARIABLES
+                    $oDet->HaberNeto = $oDet->HaberNeto_Fiat;
+                    $oDet->PMaxCompra = $oDet->PMaxCompra_Fiat;
+                    $oDet->EsCircularFiat = 1;
+
+                } 
 
                 array_push($list, $oDet);
             }
