@@ -302,6 +302,7 @@ export default {
         PrecioCompra: null,
         NroTransferencia: null,
         EmpresaGyO: null,
+        HaberNeto_Fiat: null,
       },
       listMarcas: [
         { Codigo: 2, Nombre: "Fiat" },
@@ -523,6 +524,12 @@ export default {
       if (!this.encontroOp) {
         this.showSwalBusqueda();
       } else {
+
+        console.log('HaberNeto_Fiat', this.operacionBuscada.HaberNeto_Fiat)
+        if (this.operacionBuscada.HaberNeto_Fiat !== NULL){
+          this.operacionBuscada.HaberNeto = this.HaberNeto_Fiat
+        }
+
         this.operacion = this.operacionBuscada;
         this.cargoOperacion = true;
       }

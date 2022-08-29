@@ -154,6 +154,15 @@
                         ></v-slider>
                       </v-row>
                     </v-col>
+                    <v-col cols="2">
+                      <v-row class="pa-10">
+                        <v-switch
+                          label="Solo Circ. Fiat"
+                          v-model="solodatocircular"
+                          class="mt-0 pt-0"
+                        ></v-switch>
+                      </v-row>
+                    </v-col>
 
                   </v-row>
                 </v-container>
@@ -216,6 +225,7 @@ export default {
       // Filter models.
       oficialFilterValue: "",
       stateFilterValue: null,
+      solodatocircular:false,
       sliderAvance: 45,
       minByBrand: 45,
       sliderHaberNeto: 15000,
@@ -403,7 +413,7 @@ export default {
           align: "left",
           filterable: true,
           filter: this.stateFilter,
-        },
+        },        
         {
           text: "Motivo",
           value: "Motivo",
@@ -441,6 +451,15 @@ export default {
           filterable: false,
         },
         { text: "", value: "VerDatos", align: "center", width: "1%" },
+        {
+          text: "",
+          value: "EsCircularFiat",
+          align: "center",
+          filterable: true,
+          filter: this.filterSoloDatoCircularFiat,
+          width:"0%",
+          sortable: false
+        },
       ];
     },
 
@@ -515,6 +534,14 @@ export default {
       return value === this.stateFilterValue;
     },
 
+
+    filterSoloDatoCircularFiat(value){
+      if (this.solodatocircular) {
+        return value === 1;
+      }
+      return true;
+    },
+
     avanceFilter(value) {
       if (!this.sliderAvance) {
         return true;
@@ -547,8 +574,13 @@ export default {
         this.sliderAvance = 1;
         this.minByBrand = 1;
       }else{
-        this.sliderAvance = 45;
-        this.minByBrand = 45;
+        if (value.Codigo == 2){
+          this.sliderAvance = 30;
+          this.minByBrand = 30;
+        }else{
+          this.sliderAvance = 45;
+          this.minByBrand = 45;
+        }
       }
       
     },
@@ -558,8 +590,13 @@ export default {
         this.sliderAvance = 1;
         this.minByBrand = 1;
       }else{
-        this.sliderAvance = 45;
-        this.minByBrand = 45;
+        if (value.Codigo == 2){
+          this.sliderAvance = 30;
+          this.minByBrand = 30;
+        }else{
+          this.sliderAvance = 45;
+          this.minByBrand = 45;
+        }
       }
     },
 

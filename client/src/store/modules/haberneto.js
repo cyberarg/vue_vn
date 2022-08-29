@@ -37,7 +37,8 @@ export const state = {
     HaberNeto: null,
     PrecioCompra: null,
     NroTransferencia: null,
-    EmpresaGyO: null
+    EmpresaGyO: null,
+    HaberNeto_Fiat: null,
   },
   loadingBusqueda: false,
   encontroOp: true,
@@ -63,7 +64,8 @@ export const mutations = {
     state.operacionBuscada = {
       ID: null,
       HaberNeto: null,
-      PrecioCompra: null
+      PrecioCompra: null,
+      HaberNeto_Fiat: null,
     };
   },
 
