@@ -1132,7 +1132,8 @@ class HaberesNetosController extends Controller
         $hn = DB::connection($db)->select("CALL hnweb_haberesnetos('C', NULL, ".$request->ID_Dato.", ".$request->Marca.", ".$request->Concesionario.", ".$request->Grupo.", "
         .$request->Orden.", ".$empGyO.", ".$request->Titular.", ".$request->TipoCompra.", NULL, NULL, 0, ".$montoCompraConComision.", "
         .$request->MontoCobroEstimado.", NULL, NULL, ".$request->HaberNetoSubite.", ".$request->HaberNetoOriginal.", NULL, '".$request->Login."', ".$request->NroTransferencia.", 0, ".$request->ComproGiama.",".$request->TitularCompraHN.", ".$request->TIRSpot.");");
-        
+
+
         if ($hn){
             if ($request->Concesionario == 8){
                 $hn_calc = DB::connection($db)->select("CALL hnweb_set_variables_hn(".$request->Marca.", ".$request->Concesionario.", ".$empGyO.", ".$request->ID_Dato.", ".$montoCompraConComision.", ".$request->HaberNetoSubite.");");

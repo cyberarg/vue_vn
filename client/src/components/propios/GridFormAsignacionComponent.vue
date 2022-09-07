@@ -660,7 +660,7 @@ export default {
         this.sliderAvance = 1
         this.minByBrand = 1
       }else{
-        if (value.Codigo == 2){
+        if (value.Codigo == 2 || value.Codigo == 7 ){
           this.sliderAvance = 30
           this.minByBrand = 30
         }else{  
