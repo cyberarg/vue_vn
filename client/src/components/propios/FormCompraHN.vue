@@ -526,7 +526,7 @@ export default {
       } else {
 
         console.log('HaberNeto_Fiat', this.operacionBuscada.HaberNeto_Fiat)
-        if (this.operacionBuscada.HaberNeto_Fiat !== NULL){
+        if (this.operacionBuscada.HaberNeto_Fiat){
           this.operacionBuscada.HaberNeto = this.HaberNeto_Fiat
         }
 
